@@ -61,7 +61,11 @@ const dummySimpegPegawaiDetail = `{
         "tingkat_pdd_pertama": "Sekolah Menengah Umum",
         "uuid_tingkat_pdd_pertama": "uuid-sekolah-menengah-umum",
         "jenis_pdd_pertama": "SMU Umum",
-        "uuid_jenis_pdd_pertama": "uuid-jenis-smu-umum"
+        "uuid_jenis_pdd_pertama": "uuid-jenis-smu-umum",
+        "tingkat_pdd_terakhir": "Diploma 3",
+        "uuid_tingkat_pdd_terakhir": "uuid-d3",
+        "jenis_pdd_terakhir": "D3 Komputer",
+        "uuid_jenis_pdd_terakhir": "uuid-jenis-d3"
     },
     "kepegawaian": {
         "jenis_pegawai": "Administratif",
