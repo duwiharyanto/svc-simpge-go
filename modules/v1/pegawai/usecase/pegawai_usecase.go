@@ -125,5 +125,10 @@ const dummySimpegPegawaiDetail = `{
         "instansi_asal_ptt": "Pengatur, II/C",
         "uuid_instansi_asal_ptt": "uuid-pengatur-ii-c",
         "keterangan_ptt": ""
+    },
+    "status_aktif": {
+        "flag_aktif_pegawai": 1,
+        "status_aktif_pegawai": "Cuti diluar tanggungan",
+        "uuid_status_aktif_pegawai": "uuid-cuti-diluar-tanggungan"
     }
 }`
