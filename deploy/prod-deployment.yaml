@@ -1,0 +1,122 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: svc-insani-go
+  labels:
+    svc: svc-insani-go
+    tier: backend
+  namespace: hcm-production
+spec:
+  minReadySeconds: 5
+  selector:
+    matchLabels:
+      svc: svc-insani-go
+      tier: backend
+  revisionHistoryLimit: 5
+  template:
+    metadata:
+      labels:
+        svc: svc-insani-go
+        tier: backend
+    spec:
+      imagePullSecrets:
+        - name: gcr-uii-key
+      containers:
+        - name: svc-insani-go
+          image: asia.gcr.io/uii-cloud-project/hcm/backend/svc-insani-go:prod
+          imagePullPolicy: Always
+          resources:
+            requests:
+              cpu: 100m
+              memory: 64Mi
+            limits:
+              cpu: 200m
+              memory: 128Mi
+          ports:
+            - name: http-api
+              containerPort: 80
+          env:
+            - name: DBMS
+              value: "mysql"
+            - name: DB_USER
+              value: "hcmpersonal_app"
+            - name: DB_PASSWORD
+              value: "ayvSYKtr4TeJp8tcnyQw"
+            - name: DB_HOST
+              value: "dbproduction.bsi.io"
+            - name: DB_PORT
+              value: "6033"
+            - name: DB_NAME
+              value: "hcm_insani"
+            - name: DB_MAX_OPEN_CONNECTION
+              value: "10"
+            - name: DB_MAX_IDLE_CONNECTION
+              value: "5"
+            - name: DB_MAX_CONNECTION_LIFETIME
+              value: "300s"
+            - name: MINIO_ENDPOINT
+              value: "s3.uii.ac.id"
+            - name: MINIO_ACCESSKEYID
+              value: "AjeBhr2B5WUFFmPS9FYf"
+            - name: MINIO_SECRETACCESSKEY
+              value: "M3432ax42q377V39qGQ3Dp9N4R2w5452efY876wd"
+            - name: MINIO_SSL
+              value: "false"
+            - name: MINIO_BUCKETNAME
+              value: "personal"
+            - name: MINIO_LOCATION
+              value: "us-east-1"
+            - name: MINIO_CONN_TIMEOUT
+              value: "10s"
+            - name: MINIO_EXPIRATION_SECOND
+              value: "36000"
+            - name: RESPONSE_TIMEOUT_MS
+              value: "13000"
+
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc-insani-go
+  labels:
+    svc: svc-insani-go
+    tier: backend
+  namespace: hcm-production
+  annotations:
+    getambassador.io/config: |
+      ---
+      apiVersion: ambassador/v1
+      kind:  Mapping
+      name:  svc-insani-go-mapping
+      prefix: /v1/personal
+      rewrite: /public/api/v1
+      service: svc-insani-go.hcm-production
+      timeout_ms: 15000
+spec:
+  selector:
+    svc: svc-insani-go
+    tier: backend
+  ports:
+    - name: http
+      port: 80
+      targetPort: http-api
+      protocol: TCP
+---
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  labels:
+    svc: svc-insani-go
+    tier: backend
+  name: svc-insani-go
+  namespace: hcm-production
+spec:
+  maxReplicas: 5
+  minReplicas: 1
+  scaleTargetRef:
+    apiVersion: apps/v1beta1
+    kind: Deployment
+    name: svc-insani-go
+  targetCPUUtilizationPercentage: 75
