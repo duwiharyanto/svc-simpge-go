@@ -90,7 +90,7 @@ metadata:
       apiVersion: ambassador/v1
       kind:  Mapping
       name:  svc-insani-go-mapping
-      prefix: /v1/personal
+      prefix: /v1/insani
       rewrite: /public/api/v1
       service: svc-insani-go.hcm-production
       timeout_ms: 15000
