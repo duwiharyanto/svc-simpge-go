@@ -6,8 +6,13 @@ import (
 	"net/http"
 	"svc-insani-go/app"
 	"svc-insani-go/app/database"
+	jabatanFungsional "svc-insani-go/modules/v1/master-jabatan-fungsional/usecase"
+	jeniNoRegis "svc-insani-go/modules/v1/master-jenis-nomor-registrasi/usecase"
 	jenisPegawai "svc-insani-go/modules/v1/master-jenis-pegawai/usecase"
 	kelompokPegawai "svc-insani-go/modules/v1/master-kelompok-pegawai/usecase"
+	lokasiKerja "svc-insani-go/modules/v1/master-lokasi-kerja/usecase"
+	pangkatPegawai "svc-insani-go/modules/v1/master-pangkat-golongan-pegawai/usecase"
+	statusPegawai "svc-insani-go/modules/v1/master-status-pegawai/usecase"
 	unitKerja "svc-insani-go/modules/v1/master-unit-kerja/usecase"
 	pegawai "svc-insani-go/modules/v1/pegawai/usecase"
 
@@ -20,9 +25,18 @@ func InitRoute(a app.App, e *echo.Echo) {
 	insaniGroupingPath.GET("/pegawai", pegawai.HandleGetPegawai(a))
 	insaniGroupingPath.GET("/pegawai-simpeg/:uuidPegawai", pegawai.HandleGetSimpegPegawaiByUUID(a))
 	insaniGroupingPath.PUT("/pegawai-simpeg/:uuidPegawai", pegawai.HandleUpdateSimpegPegawaiByUUID(a))
+
+	// Data Master
 	insaniGroupingPath.GET("/master-jenis-pegawai", jenisPegawai.HandleGetAllJenisPegawai(a))
 	insaniGroupingPath.GET("/master-kelompok-pegawai", kelompokPegawai.HandleGetKelompokPegawai(a))
+	insaniGroupingPath.GET("/master-status-pegawai", statusPegawai.HandleGetAllJenisPegawai(a))
 	insaniGroupingPath.GET("/master-unit-kerja", unitKerja.HandleGetUnitKerja(a))
+	insaniGroupingPath.GET("/master-jabatan-fungsional", jabatanFungsional.HandleGetJabatanFungsional(a))
+	insaniGroupingPath.GET("/master-pangkat-golongan", pangkatPegawai.HandleGetPangkatGolonganPegawai(a))
+
+	// Dummy
+	insaniGroupingPath.GET("/master-lokasi-kerja", lokasiKerja.HandleGetLokasiKerjaDummy(a))
+	insaniGroupingPath.GET("/master-jenis-nomor-registrasi", jeniNoRegis.HandleGetJenisNoRegisDummy(a))
 }
 
 func healthCheck(db *sql.DB) echo.HandlerFunc {
