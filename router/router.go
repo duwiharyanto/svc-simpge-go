@@ -7,7 +7,8 @@ import (
 	"svc-insani-go/app"
 	"svc-insani-go/app/database"
 	jabatanFungsional "svc-insani-go/modules/v1/master-jabatan-fungsional/usecase"
-	jeniNoRegis "svc-insani-go/modules/v1/master-jenis-nomor-registrasi/usecase"
+	jenisNoRegis "svc-insani-go/modules/v1/master-jenis-nomor-registrasi/usecase"
+	jenisPTT "svc-insani-go/modules/v1/master-jenis-pegawai-tidak-tetap/usecase"
 	jenisPegawai "svc-insani-go/modules/v1/master-jenis-pegawai/usecase"
 	kelompokPegawai "svc-insani-go/modules/v1/master-kelompok-pegawai/usecase"
 	lokasiKerja "svc-insani-go/modules/v1/master-lokasi-kerja/usecase"
@@ -33,10 +34,9 @@ func InitRoute(a app.App, e *echo.Echo) {
 	insaniGroupingPath.GET("/master-unit-kerja", unitKerja.HandleGetUnitKerja(a))
 	insaniGroupingPath.GET("/master-jabatan-fungsional", jabatanFungsional.HandleGetJabatanFungsional(a))
 	insaniGroupingPath.GET("/master-pangkat-golongan", pangkatPegawai.HandleGetPangkatGolonganPegawai(a))
-
-	// Dummy
-	insaniGroupingPath.GET("/master-lokasi-kerja", lokasiKerja.HandleGetLokasiKerjaDummy(a))
-	insaniGroupingPath.GET("/master-jenis-nomor-registrasi", jeniNoRegis.HandleGetJenisNoRegisDummy(a))
+	insaniGroupingPath.GET("/master-lokasi-kerja", lokasiKerja.HandleGetLokasiKerja(a))
+	insaniGroupingPath.GET("/master-jenis-nomor-registrasi", jenisNoRegis.HandleGetJenisNoRegis(a))
+	insaniGroupingPath.GET("/master-jenis-pegawai-tidak-tetap", jenisPTT.HandleGetJenisPTT(a))
 }
 
 func healthCheck(db *sql.DB) echo.HandlerFunc {
