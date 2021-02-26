@@ -58,14 +58,49 @@ func HandleUpdateSimpegPegawaiByUUID(a app.App) echo.HandlerFunc {
 
 const dummySimpegPegawaiDetail = `{
     "pendidikan": {
-        "tingkat_pdd_pertama": "Sekolah Menengah Umum",
-        "uuid_tingkat_pdd_pertama": "uuid-sekolah-menengah-umum",
-        "jenis_pdd_pertama": "SMU Umum",
-        "uuid_jenis_pdd_pertama": "uuid-jenis-smu-umum",
-        "tingkat_pdd_terakhir": "Diploma 3",
-        "uuid_tingkat_pdd_terakhir": "uuid-d3",
-        "jenis_pdd_terakhir": "D3 Komputer",
-        "uuid_jenis_pdd_terakhir": "uuid-jenis-d3"
+        "SMU" : [
+            {
+                "kd_jenjang_pendidikan": "SMU",
+                "nama_institusi": "SMA N 1 Sleman",
+                "jurusan": "IPA",
+                "tgl_kelulusan": "2015-01-01",
+                "flag_ijazah_tertinggi_diakui" : "0"
+                "flag_ijazah_terakhir" : "0",
+                "uuid_pendidikan" : "uuid-pendidikan"
+            }
+        ],
+        "S1" : [
+            {
+                "kd_jenjang_pendidikan": "S1",
+                "nama_institusi": "Universitas Islam Indonesia",
+                "jurusan": "Teknik Informatika",
+                "tgl_kelulusan": "2019-01-01",
+                "flag_ijazah_tertinggi_diakui" : "1"
+                "flag_ijazah_terakhir" : "0",
+                "uuid_pendidikan" : "uuid-pendidikan",
+            },
+            {
+                "kd_jenjang_pendidikan": "S1",
+                "nama_institusi": "Universitas Gajah Mada",
+                "uuid_pendidikan" : "uuid-pendidikan",
+                "jurusan": "Teknologi Informasi",
+                "tgl_kelulusan": "2020-01-01",
+                "flag_ijazah_tertinggi_diakui" : "0"
+                "flag_ijazah_terakhir" : "0",
+                "uuid_pendidikan" : "uuid-pendidikan"
+            }
+        ],
+        "S2" : [
+            {
+                "kd_jenjang_pendidikan": "S2",
+                "nama_institusi": "Universitas Indonesia",
+                "jurusan": "Teknik Informatika",
+                "tgl_kelulusan": "2021-01-01",
+                "flag_ijazah_tertinggi_diakui" : "0"
+                "flag_ijazah_terakhir" : "1",
+                "uuid_pendidikan" : "uuid-pendidikan"
+            }
+        ] 
     },
     "kepegawaian": {
         "jenis_pegawai": "Administratif",
