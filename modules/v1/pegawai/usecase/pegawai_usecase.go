@@ -58,24 +58,24 @@ func HandleUpdateSimpegPegawaiByUUID(a app.App) echo.HandlerFunc {
 
 const dummySimpegPegawaiDetail = `{
     "pendidikan": {
-        "SMU" : [
+        "smu" : [
             {
                 "kd_jenjang_pendidikan": "SMU",
                 "nama_institusi": "SMA N 1 Sleman",
                 "jurusan": "IPA",
                 "tgl_kelulusan": "2015-01-01",
-                "flag_ijazah_tertinggi_diakui" : "0"
+                "flag_ijazah_tertinggi_diakui" : "0",
                 "flag_ijazah_terakhir" : "0",
                 "uuid_pendidikan" : "uuid-pendidikan"
             }
         ],
-        "S1" : [
+        "s1" : [
             {
                 "kd_jenjang_pendidikan": "S1",
                 "nama_institusi": "Universitas Islam Indonesia",
                 "jurusan": "Teknik Informatika",
                 "tgl_kelulusan": "2019-01-01",
-                "flag_ijazah_tertinggi_diakui" : "1"
+                "flag_ijazah_tertinggi_diakui" : "1",
                 "flag_ijazah_terakhir" : "0",
                 "uuid_pendidikan" : "uuid-pendidikan",
             },
@@ -85,18 +85,18 @@ const dummySimpegPegawaiDetail = `{
                 "uuid_pendidikan" : "uuid-pendidikan",
                 "jurusan": "Teknologi Informasi",
                 "tgl_kelulusan": "2020-01-01",
-                "flag_ijazah_tertinggi_diakui" : "0"
+                "flag_ijazah_tertinggi_diakui" : "0",
                 "flag_ijazah_terakhir" : "0",
                 "uuid_pendidikan" : "uuid-pendidikan"
             }
         ],
-        "S2" : [
+        "s2" : [
             {
                 "kd_jenjang_pendidikan": "S2",
                 "nama_institusi": "Universitas Indonesia",
                 "jurusan": "Teknik Informatika",
                 "tgl_kelulusan": "2021-01-01",
-                "flag_ijazah_tertinggi_diakui" : "0"
+                "flag_ijazah_tertinggi_diakui" : "0",
                 "flag_ijazah_terakhir" : "1",
                 "uuid_pendidikan" : "uuid-pendidikan"
             }
