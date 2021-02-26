@@ -77,7 +77,7 @@ const dummySimpegPegawaiDetail = `{
                 "tgl_kelulusan": "2019-01-01",
                 "flag_ijazah_tertinggi_diakui" : "1",
                 "flag_ijazah_terakhir" : "0",
-                "uuid_pendidikan" : "uuid-pendidikan",
+                "uuid_pendidikan" : "uuid-pendidikan"
             },
             {
                 "kd_jenjang_pendidikan": "S1",
