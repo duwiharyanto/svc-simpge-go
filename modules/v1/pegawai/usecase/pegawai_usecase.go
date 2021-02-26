@@ -82,7 +82,6 @@ const dummySimpegPegawaiDetail = `{
             {
                 "kd_jenjang_pendidikan": "S1",
                 "nama_institusi": "Universitas Gajah Mada",
-                "uuid_pendidikan" : "uuid-pendidikan",
                 "jurusan": "Teknologi Informasi",
                 "tgl_kelulusan": "2020-01-01",
                 "flag_ijazah_tertinggi_diakui" : "0",
