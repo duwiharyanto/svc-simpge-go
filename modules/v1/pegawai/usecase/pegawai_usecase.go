@@ -44,9 +44,62 @@ func HandleGetPegawai(a app.App) echo.HandlerFunc {
 
 func HandleGetSimpegPegawaiByUUID(a app.App) echo.HandlerFunc {
 	h := func(c echo.Context) error {
-		return c.JSONBlob(http.StatusOK, []byte(dummySimpegPegawaiDetail))
+		uuidPegawai := c.Param("uuidPegawai")
+		if uuidPegawai == "" {
+			return c.JSON(http.StatusBadRequest, map[string]string{"message": "parameter uuid pegawai wajib diisi"})
+		}
+
+		pegawaiDetail, err := PrepareGetSimpegPegawaiByUUID(a, uuidPegawai)
+		if err != nil {
+			fmt.Printf("[ERROR] repo get kepegawaian yayasan uuid, %s\n", err.Error())
+			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
+		}
+		return c.JSON(http.StatusOK, pegawaiDetail)
 	}
 	return echo.HandlerFunc(h)
+}
+
+func PrepareGetSimpegPegawaiByUUID(a app.App, uuidPegawai string) (model.PegawaiDetail, error) {
+	pegawaiDetail := model.PegawaiDetail{}
+
+	pegawaiPribadi, err := repo.GetPegawaiPribadi(a, uuidPegawai)
+	if err != nil {
+		return model.PegawaiDetail{}, fmt.Errorf("error repo get pribadi pegawai uuid, %w", err)
+	}
+
+	kepegawaianYayasan, err := repo.GetKepegawaianYayasan(a, uuidPegawai)
+	if err != nil {
+		return model.PegawaiDetail{}, fmt.Errorf("error repo get kepegawaian yayasan uuid, %w", err)
+	}
+
+	unitKerjaPegawai, err := repo.GetUnitKerjaPegawai(a, uuidPegawai)
+	if err != nil {
+		return model.PegawaiDetail{}, fmt.Errorf("error repo get unit kerja pegawai by uuid, %w", err)
+	}
+
+	pegawaiPNS, err := repo.GetPegawaiPNS(a, uuidPegawai)
+	if err != nil {
+		return model.PegawaiDetail{}, fmt.Errorf("error repo get pegawai pns by uuid, %w", err)
+	}
+
+	pegawaiPTT, err := repo.GetPegawaiPTT(a, uuidPegawai)
+	if err != nil {
+		return model.PegawaiDetail{}, fmt.Errorf("error repo get pegawai tidak tetap by uuid, %w", err)
+	}
+
+	statusPegawaiAktif, err := repo.GetStatusPegawaiAktif(a, uuidPegawai)
+	if err != nil {
+		return model.PegawaiDetail{}, fmt.Errorf("error repo get status aktif pegawai by uuid, %w", err)
+	}
+
+	pegawaiDetail.PegawaiYayasan = kepegawaianYayasan
+	pegawaiDetail.UnitKerjaPegawai = unitKerjaPegawai
+	pegawaiDetail.PegawaiPNSPTT = pegawaiPNS
+	pegawaiDetail.PegawaiPNSPTT = pegawaiPTT
+	pegawaiDetail.StatusAktif = statusPegawaiAktif
+	pegawaiDetail.PegawaiPribadi = pegawaiPribadi
+
+	return pegawaiDetail, nil
 }
 
 func HandleUpdateSimpegPegawaiByUUID(a app.App) echo.HandlerFunc {
@@ -77,7 +130,7 @@ const dummySimpegPegawaiDetail = `{
                 "tgl_kelulusan": "2019-01-01",
                 "flag_ijazah_tertinggi_diakui" : "1",
                 "flag_ijazah_terakhir" : "0",
-                "uuid_pendidikan" : "uuid-pendidikan",
+                "uuid_pendidikan" : "uuid-pendidikan"
             },
             {
                 "kd_jenjang_pendidikan": "S1",
