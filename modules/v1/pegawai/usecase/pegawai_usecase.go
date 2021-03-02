@@ -117,6 +117,14 @@ func HandleGetSimpegPegawaiByUUIDDummy(a app.App) echo.HandlerFunc {
 }
 
 const dummySimpegPegawaiDetail = `{
+    "pribadi": {
+        "nik": "785110101",
+        "nama": "Abdul Kadir Aboe",
+        "jenis_pegawai": "Administratif",
+        "kelompok_pegawai": "Dosen Tidak Tetap Perjanjian Kerja",
+        "unit_kerja": "Direktorat Sumber Daya Manusia",
+        "uuid": "d8c26983-1437-11eb-a014-7eb0d4a3c7a0"
+    },
     "pendidikan": 
         [
             {
