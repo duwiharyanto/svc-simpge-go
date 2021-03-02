@@ -109,6 +109,7 @@ func HandleUpdateSimpegPegawaiByUUID(a app.App) echo.HandlerFunc {
 	return echo.HandlerFunc(h)
 }
 
+// Data Dummy Sementara Consume
 func HandleGetSimpegPegawaiByUUIDDummy(a app.App) echo.HandlerFunc {
 	h := func(c echo.Context) error {
 		return c.JSONBlob(http.StatusOK, []byte(dummySimpegPegawaiDetail))
