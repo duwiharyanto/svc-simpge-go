@@ -1,6 +1,6 @@
-FROM asia.gcr.io/uii-cloud-project/hcm/docker/ubuntu:latest
+FROM asia.gcr.io/uii-cloud-project/panduba/alpine:3.12-musl-1
 
-LABEL MAINTAINER="Ahmad Haris Fahmi<ahmadharis@uii.ac.id>"
+RUN apk add --no-cache bash
 
 ADD main /
 

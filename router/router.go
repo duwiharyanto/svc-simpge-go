@@ -24,7 +24,7 @@ func InitRoute(a app.App, e *echo.Echo) {
 	insaniGroupingPath := e.Group("/public/api/v1")
 	// Route di bawah akan dikelola oleh handler
 	insaniGroupingPath.GET("/pegawai", pegawai.HandleGetPegawai(a))
-	insaniGroupingPath.GET("/pegawai-simpeg/:uuidPegawai/detail", pegawai.HandleGetSimpegPegawaiByUUIDDummy(a))
+	insaniGroupingPath.GET("/pegawai-simpeg/:uuidPegawai/detail", pegawai.HandleGetSimpegPegawaiByUUID(a))
 	insaniGroupingPath.PUT("/pegawai-simpeg/:uuidPegawai", pegawai.HandleUpdateSimpegPegawaiByUUID(a))
 
 	// Data Master
@@ -37,10 +37,6 @@ func InitRoute(a app.App, e *echo.Echo) {
 	insaniGroupingPath.GET("/master-lokasi-kerja", lokasiKerja.HandleGetLokasiKerja(a))
 	insaniGroupingPath.GET("/master-jenis-nomor-registrasi", jenisNoRegis.HandleGetJenisNoRegis(a))
 	insaniGroupingPath.GET("/master-jenis-pegawai-tidak-tetap", jenisPTT.HandleGetJenisPTT(a))
-
-	// Test
-	insaniGroupingPath.GET("/pegawai-simpeg2/:uuidPegawai/detail", pegawai.HandleGetSimpegPegawaiByUUID(a))
-
 }
 
 func healthCheck(db *sql.DB) echo.HandlerFunc {
@@ -48,6 +44,8 @@ func healthCheck(db *sql.DB) echo.HandlerFunc {
 		err := database.Healthz(c.Request().Context(), db)
 		if err != nil {
 			return fmt.Errorf("[ERROR] health check, %w", err)
+			// fmt.Printf("[ERROR] health check, %s\n", err.Error())
+			// return echo.NewHTTPError(http.StatusGatewayTimeout)
 		}
 
 		return c.JSON(http.StatusOK, map[string]string{"message": "Layanan ok"})
