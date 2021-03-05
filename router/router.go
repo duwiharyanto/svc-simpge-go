@@ -14,6 +14,7 @@ import (
 	kelompokPegawai "svc-insani-go/modules/v1/master-kelompok-pegawai/usecase"
 	lokasiKerja "svc-insani-go/modules/v1/master-lokasi-kerja/usecase"
 	pangkatPegawai "svc-insani-go/modules/v1/master-pangkat-golongan-pegawai/usecase"
+	statusPegawaiAktif "svc-insani-go/modules/v1/master-status-pegawai-aktif/usecase"
 	statusPegawai "svc-insani-go/modules/v1/master-status-pegawai/usecase"
 	unitKerja "svc-insani-go/modules/v1/master-unit-kerja/usecase"
 	pegawai "svc-insani-go/modules/v1/pegawai/usecase"
@@ -38,7 +39,7 @@ func InitRoute(a app.App, e *echo.Echo) {
 	insaniGroupingPath.GET("/master-lokasi-kerja", lokasiKerja.HandleGetLokasiKerja(a))
 	insaniGroupingPath.GET("/master-jenis-nomor-registrasi", jenisNoRegis.HandleGetJenisNoRegis(a))
 	insaniGroupingPath.GET("/master-jenis-pegawai-tidak-tetap", jenisPTT.HandleGetJenisPTT(a))
-	insaniGroupingPath.GET("/master-jenis-pegawai-tidak-tetap", jenisPTT.HandleGetJenisPTT(a))
+	insaniGroupingPath.GET("/master-status-pegawai-aktif", statusPegawaiAktif.HandleGetStatusPegawaiAktif(a))
 	insaniGroupingPath.GET("/master-induk-kerja", indukKerja.HandleGetIndukKerja(a))
 
 	// Testing
