@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"svc-insani-go/app"
 	"svc-insani-go/app/database"
+	indukKerja "svc-insani-go/modules/v1/master-induk-kerja/usecase"
 	jabatanFungsional "svc-insani-go/modules/v1/master-jabatan-fungsional/usecase"
 	jenisNoRegis "svc-insani-go/modules/v1/master-jenis-nomor-registrasi/usecase"
 	jenisPTT "svc-insani-go/modules/v1/master-jenis-pegawai-tidak-tetap/usecase"
@@ -37,6 +38,8 @@ func InitRoute(a app.App, e *echo.Echo) {
 	insaniGroupingPath.GET("/master-lokasi-kerja", lokasiKerja.HandleGetLokasiKerja(a))
 	insaniGroupingPath.GET("/master-jenis-nomor-registrasi", jenisNoRegis.HandleGetJenisNoRegis(a))
 	insaniGroupingPath.GET("/master-jenis-pegawai-tidak-tetap", jenisPTT.HandleGetJenisPTT(a))
+	insaniGroupingPath.GET("/master-jenis-pegawai-tidak-tetap", jenisPTT.HandleGetJenisPTT(a))
+	insaniGroupingPath.GET("/master-induk-kerja", indukKerja.HandleGetIndukKerja(a))
 
 	// Testing
 	insaniGroupingPath.GET("/pegawai-simpeg2/:uuidPegawai/detail", pegawai.HandleGetSimpegPegawaiByUUID(a))

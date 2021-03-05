@@ -247,3 +247,51 @@ func GetPegawaiPribadi(a app.App, uuid string) (*model.PegawaiPribadi, error) {
 
 	return &pegawaiPribadi, nil
 }
+
+func GetPegawaiPendidikan(a app.App, uuid string) (*model.PegawaiPribadi, error) {
+	sqlQuery := getPegawaiPribadiQuery(uuid)
+	var pegawaiPribadi model.PegawaiPribadi
+
+	err := a.DB.QueryRow(sqlQuery).Scan(
+		&pegawaiPribadi.Nama,
+		&pegawaiPribadi.NIK,
+		&pegawaiPribadi.JenisPegawai,
+		&pegawaiPribadi.KelompokPegawai,
+		&pegawaiPribadi.UnitKerja,
+		&pegawaiPribadi.UUID,
+	)
+
+	if err == sql.ErrNoRows {
+		return nil, nil
+	}
+
+	if err != nil {
+		return nil, fmt.Errorf("error querying and scanning data pribadi pegawai, %s", err.Error())
+	}
+
+	return &pegawaiPribadi, nil
+}
+
+func GetPegawaiFilePendidikan(a app.App, uuid string) (*model.PegawaiPribadi, error) {
+	sqlQuery := getPegawaiPribadiQuery(uuid)
+	var pegawaiPribadi model.PegawaiPribadi
+
+	err := a.DB.QueryRow(sqlQuery).Scan(
+		&pegawaiPribadi.Nama,
+		&pegawaiPribadi.NIK,
+		&pegawaiPribadi.JenisPegawai,
+		&pegawaiPribadi.KelompokPegawai,
+		&pegawaiPribadi.UnitKerja,
+		&pegawaiPribadi.UUID,
+	)
+
+	if err == sql.ErrNoRows {
+		return nil, nil
+	}
+
+	if err != nil {
+		return nil, fmt.Errorf("error querying and scanning data pribadi pegawai, %s", err.Error())
+	}
+
+	return &pegawaiPribadi, nil
+}
