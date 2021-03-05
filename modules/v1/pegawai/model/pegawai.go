@@ -1,6 +1,7 @@
 package model
 
 import (
+	"mime/multipart"
 	jenisPegawai "svc-insani-go/modules/v1/master-jenis-pegawai/model"
 	kelompokPegawai "svc-insani-go/modules/v1/master-kelompok-pegawai/model"
 	statusPegawai "svc-insani-go/modules/v1/master-status-pegawai/model"
@@ -135,3 +136,76 @@ type StatusAktif struct {
 	KdStatusAktifPegawai   string `json:"kd_status_aktif_pegawai"`
 	UuidStatusAktifPegawai string `json:"uuid_status_aktif_pegawai"`
 }
+
+type PegawaiPendidikan struct {
+	ID                      string                `form:"-" json:"-"`
+	IDPersonal              string                `form:"-" json:"-"`
+	NamaPersonal            string                `form:"-" json:"-"`
+	Akreditasi              string                `form:"-" json:"akreditasi"`
+	UUIDAkreditasi          string                `form:"uuid_akreditasi" json:"uuid_akreditasi"`
+	KonsentrasiBidang       string                `form:"konsentrasi_bidang_ilmu" json:"konsentrasi_bidang_ilmu"`
+	Jurusan                 string                `form:"jurusan" json:"jurusan"`
+	KdJenjang               string                `form:"-" json:"kd_jenjang"`
+	Jenjang                 string                `form:"-" json:"jenjang"`
+	KeteranganJenjang       string                `form:"-" json:"-"`
+	FlagPerguruanTinggi     int                   `form:"-" json:"flag_perguruan_tinggi"`
+	UUIDJenjang             string                `form:"uuid_jenjang" json:"uuid_jenjang"`
+	Gelar                   string                `form:"gelar" json:"gelar"`
+	NomorInduk              string                `form:"nomor_induk" json:"nomor_induk"`
+	TahunMasuk              string                `form:"tahun_masuk" json:"tahun_masuk"`
+	TahunLulus              string                `form:"-" json:"tahun_lulus"`
+	JudulTugasAkhir         string                `form:"judul_tugas_akhir" json:"judul_tugas_akhir"`
+	NamaInstitusi           string                `form:"nama_institusi" json:"nama_institusi"`
+	FlagInstitusiLuarNegeri int                   `form:"flag_institusi_luar_negeri" json:"flag_institusi_luar_negeri"`
+	NomorIjazah             string                `form:"nomor_ijazah" json:"nomor_ijazah"`
+	TglIjazah               string                `form:"tgl_ijazah" json:"tgl_ijazah"`
+	TglIjazahIDN            string                `form:"-" json:"tgl_ijazah_idn"`
+	PathIjazah              string                `form:"-" json:"-"`
+	FileIjazah              *multipart.FileHeader `form:"-" json:"-"`
+	URLIjazah               string                `form:"-" json:"url_ijazah"`
+	NamaFileIjazah          string                `form:"-" json:"nama_file_ijazah"`
+	FlagIjazahTerverifikasi int                   `form:"flag_ijazah_terverifikasi" json:"flag_ijazah_terverifikasi"`
+	Nilai                   float64               `form:"nilai" json:"nilai"`
+	JumlahPelajaran         int                   `form:"jumlah_pelajaran" json:"jumlah_pelajaran"`
+	TglKelulusan            string                `form:"tgl_kelulusan" json:"tgl_kelulusan"`
+	TglKelulusanIDN         string                `form:"-" json:"tgl_kelulusan_idn"`
+	PathSKPenyetaraan       string                `form:"-" json:"-"`
+	FileSKPenyetaraan       *multipart.FileHeader `form:"-" json:"-"`
+	URLSKPenyetaraan        string                `form:"-" json:"url_sk_penyetaraan"`
+	NamaFileSKPenyetaraan   string                `form:"-" json:"nama_file_sk_penyetaraan"`
+	NomorSKPenyetaraan      string                `form:"nomor_sk_penyetaraan" json:"nomor_sk_penyetaraan"`
+	TglSKPenyetaraan        string                `form:"tgl_sk_penyetaraan" json:"tgl_sk_penyetaraan"`
+	TglSKPenyetaraanIDN     string                `form:"-" json:"tgl_sk_penyetaraan_idn"`
+	UUIDPersonal            string                `form:"-" json:"uuid_personal"`
+	UserInput               string                `form:"-" json:"-"`
+	TglInput                string                `form:"-" json:"-"`
+	UserUpdate              string                `form:"-" json:"-"`
+	IsUser                  string                `form:"user" json:"-"`
+	UUID                    string                `form:"uuid" json:"uuid"`
+	BerkasPendukungList     `form:"-" json:"berkas_pendukung"`
+	BerkasPendukung         BerkasPendukungMap  `form:"-" json:"-"`
+	OldBerkasPendukungList  BerkasPendukungList `form:"-" json:"-"`
+}
+
+type BerkasPendukung struct {
+	IDPendidikan  string                `json:"-"`
+	IDPersonal    string                `json:"-"`
+	NamaPersonal  string                `json:"-"`
+	IDJenisFile   string                `json:"-"`
+	KdJenisFile   string                `json:"kd_jenis_file_pendidikan"`
+	JenisFile     string                `json:"jenis_file_pendidikan"`
+	UUIDJenisFile string                `json:"uuid_jenis_file_pendidikan"`
+	File          *multipart.FileHeader `json:"-"`
+	Folder        string                `json:"-"`
+	SubFolder     string                `json:"-"` // folder terakhir di mana file berada
+	NamaFile      string                `json:"nama_file_pendidikan"`
+	PathFile      string                `json:"-"`
+	URLFile       string                `json:"url_file_pendidikan"`
+	UUIDFile      string                `json:"uuid_file_pendidikan"`
+	UserUpdate    string                `json:"-"`
+	UUIDPersonal  string                `json:"-"`
+}
+
+type BerkasPendukungList []BerkasPendukung
+
+type BerkasPendukungMap map[int]BerkasPendukung

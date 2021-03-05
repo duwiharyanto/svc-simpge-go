@@ -163,10 +163,6 @@ const dummySimpegPegawaiDetail = `{
                     "nomor_sk_penyetaraan": "",
                     "tgl_sk_penyetaraan": "",
                     "tgl_sk_penyetaraan_idn": "",
-                    "kd_status_validasi": "DTL",
-                    "status_validasi": "Ditolak",
-                    "flag_status_validasi": "0",
-                    "keterangan_validasi": "Data Tidak Lengkap",
                     "berkas_pendukung": [
                         {
                             "kd_jenis_file_pendidikan": "TRN",
@@ -214,10 +210,6 @@ const dummySimpegPegawaiDetail = `{
                     "nomor_sk_penyetaraan": "",
                     "tgl_sk_penyetaraan": "",
                     "tgl_sk_penyetaraan_idn": "",
-                    "kd_status_validasi": "DTL",
-                    "status_validasi": "Ditolak",
-                    "flag_status_validasi": "0",
-                    "keterangan_validasi": "Data Tidak Lengkap",
                     "berkas_pendukung": [
                         {
                             "kd_jenis_file_pendidikan": "TRN",
@@ -265,10 +257,6 @@ const dummySimpegPegawaiDetail = `{
                     "nomor_sk_penyetaraan": "",
                     "tgl_sk_penyetaraan": "",
                     "tgl_sk_penyetaraan_idn": "",
-                    "kd_status_validasi": "DTL",
-                    "status_validasi": "Ditolak",
-                    "flag_status_validasi": "0",
-                    "keterangan_validasi": "Data Tidak Lengkap",
                     "berkas_pendukung": [
                         {
                             "kd_jenis_file_pendidikan": "TRN",
@@ -312,10 +300,6 @@ const dummySimpegPegawaiDetail = `{
                     "nomor_sk_penyetaraan": "",
                     "tgl_sk_penyetaraan": "",
                     "tgl_sk_penyetaraan_idn": "",
-                    "kd_status_validasi": "DTL",
-                    "status_validasi": "Ditolak",
-                    "flag_status_validasi": "0",
-                    "keterangan_validasi": "Data Tidak Lengkap",
                     "berkas_pendukung": [
                         {
                             "kd_jenis_file_pendidikan": "TRN",
