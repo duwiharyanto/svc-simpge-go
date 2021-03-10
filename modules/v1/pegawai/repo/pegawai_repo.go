@@ -3,8 +3,15 @@ package repo
 import (
 	"database/sql"
 	"fmt"
+	"sort"
+	"strings"
 	"svc-insani-go/app"
 	"svc-insani-go/modules/v1/pegawai/model"
+)
+
+const (
+	BucketIjazah    = "personal-ijazah"
+	JenisFileIjazah = "ijazah"
 )
 
 func GetAllPegawai(a app.App, req *model.PegawaiRequest) ([]model.Pegawai, error) {
@@ -248,50 +255,151 @@ func GetPegawaiPribadi(a app.App, uuid string) (*model.PegawaiPribadi, error) {
 	return &pegawaiPribadi, nil
 }
 
-func GetPegawaiPendidikan(a app.App, uuid string) (*model.PegawaiPribadi, error) {
-	sqlQuery := getPegawaiPribadiQuery(uuid)
-	var pegawaiPribadi model.PegawaiPribadi
+func GetPegawaiFilePendidikan(a app.App, id ...string) (model.BerkasPendukungList, error) {
 
-	err := a.DB.QueryRow(sqlQuery).Scan(
-		&pegawaiPribadi.Nama,
-		&pegawaiPribadi.NIK,
-		&pegawaiPribadi.JenisPegawai,
-		&pegawaiPribadi.KelompokPegawai,
-		&pegawaiPribadi.UnitKerja,
-		&pegawaiPribadi.UUID,
-	)
+	sqlQuery := getPegawaiFilePendidikanQuery(id...)
 
-	if err == sql.ErrNoRows {
-		return nil, nil
-	}
-
+	rows, err := a.DB.Query(sqlQuery)
 	if err != nil {
-		return nil, fmt.Errorf("error querying and scanning data pribadi pegawai, %s", err.Error())
+		return nil, fmt.Errorf("error querying get pendidikan file, %w", err)
+	}
+	defer rows.Close()
+
+	berkasPendukungList := model.BerkasPendukungList{}
+	for rows.Next() {
+		var pegawaiFilePendidikan model.BerkasPendukung
+		err := rows.Scan(
+			&pegawaiFilePendidikan.KdJenisFile,
+			&pegawaiFilePendidikan.JenisFile,
+			&pegawaiFilePendidikan.PathFile,
+			&pegawaiFilePendidikan.IDPendidikan,
+		)
+		if err != nil {
+			return nil, fmt.Errorf("error scanning berkas pendukung, %w", err)
+		}
+		pegawaiFilePendidikan.SetDownloadFileName(a.TimeLocation)
+		berkasPendukungList = append(berkasPendukungList, pegawaiFilePendidikan)
 	}
 
-	return &pegawaiPribadi, nil
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("error from berkas pendukung rows, %w", err)
+	}
+
+	return berkasPendukungList, nil
 }
 
-func GetPegawaiFilePendidikan(a app.App, uuid string) (*model.PegawaiPribadi, error) {
-	sqlQuery := getPegawaiPribadiQuery(uuid)
-	var pegawaiPribadi model.PegawaiPribadi
+func GetPegawaiPendidikan(a app.App, uuid string) ([]model.JenjangPendidikan, error) {
+	sqlQuery := getPegawaiPendidikanQuery(uuid)
 
-	err := a.DB.QueryRow(sqlQuery).Scan(
-		&pegawaiPribadi.Nama,
-		&pegawaiPribadi.NIK,
-		&pegawaiPribadi.JenisPegawai,
-		&pegawaiPribadi.KelompokPegawai,
-		&pegawaiPribadi.UnitKerja,
-		&pegawaiPribadi.UUID,
-	)
-
-	if err == sql.ErrNoRows {
-		return nil, nil
+	rows, err := a.DB.Query(sqlQuery)
+	if err != nil {
+		return nil, fmt.Errorf("error querying get pendidikan file, %w", err)
 	}
+	defer rows.Close()
+
+	m := make(map[string][]model.PegawaiPendidikan)
+	idPendidikanList := []string{}
+	for rows.Next() {
+		var pegawaiPendidikan model.PegawaiPendidikan
+		err := rows.Scan(
+			&pegawaiPendidikan.UuidPendidikan,
+			&pegawaiPendidikan.IdPendidikan,
+			&pegawaiPendidikan.KdJenjang,
+			&pegawaiPendidikan.UrutanJenjang,
+			&pegawaiPendidikan.NamaInstitusi,
+			&pegawaiPendidikan.Jurusan,
+			&pegawaiPendidikan.TglKelulusan,
+			&pegawaiPendidikan.FlagIjazahDiakui,
+			&pegawaiPendidikan.FlagIjazahTerakhir,
+			&pegawaiPendidikan.Akreditasi,
+			&pegawaiPendidikan.KonsentrasiBidang,
+			&pegawaiPendidikan.Gelar,
+			&pegawaiPendidikan.NomorInduk,
+			&pegawaiPendidikan.TahunMasuk,
+			&pegawaiPendidikan.JudulTugasAkhir,
+			&pegawaiPendidikan.FlagInstitusiLuarNegeri,
+			&pegawaiPendidikan.NomorIjazah,
+			&pegawaiPendidikan.TglIjazah,
+			&pegawaiPendidikan.PathIjazah,
+			&pegawaiPendidikan.FlagIjazahTerverifikasi,
+			&pegawaiPendidikan.Nilai,
+			&pegawaiPendidikan.JumlahPelajaran,
+			&pegawaiPendidikan.PathSKPenyetaraan,
+			&pegawaiPendidikan.NomorSKPenyetaraan,
+			&pegawaiPendidikan.TglSKPenyetaraan,
+			&pegawaiPendidikan.UUIDPersonal,
+		)
+		if err != nil {
+			return nil, fmt.Errorf("error scanning pendidikan pegawai, %w", err)
+		}
+		pegawaiPendidikan.SetTanggalIDN()
+		pegawaiPendidikan.SetNamaFileIjazah()
+		pegawaiPendidikan.SetNamaFilePenyetaraan()
+		pegawaiPendidikan.SetDownloadFileNamePendidikan(a.TimeLocation)
+		idPendidikanList = append(idPendidikanList, pegawaiPendidikan.IdPendidikan)
+		m[fmt.Sprint(pegawaiPendidikan.KdJenjang, ".", pegawaiPendidikan.UrutanJenjang)] = append(m[fmt.Sprint(pegawaiPendidikan.KdJenjang, ".", pegawaiPendidikan.UrutanJenjang)], pegawaiPendidikan)
+
+	}
+
+	filePegawaiList, err := GetPegawaiFilePendidikan(a, idPendidikanList...)
+	if err != nil {
+		return nil, fmt.Errorf("error get file pendidikan: %w", err)
+	}
+
+	setBerkasPendukungWithURL(a, filePegawaiList)
+
+	filePegawaiMap := filePegawaiList.MapByIdPendidikan()
+
+	jenjangPendidikan := []model.JenjangPendidikan{}
+	for kdJenjangUrut, pendidikanList := range m {
+		for n, pendidikan := range pendidikanList {
+			pendidikanList[n].BerkasPendukungList = filePegawaiMap[pendidikan.IdPendidikan]
+		}
+		splittedKdJenjangUrut := strings.Split(kdJenjangUrut, ".")
+		kdJenjang := splittedKdJenjangUrut[0]
+		urutanJenjang := splittedKdJenjangUrut[1]
+		jenjangPendidikan = append(jenjangPendidikan, model.JenjangPendidikan{
+			JenjangPendidikan: kdJenjang,
+			UrutanJenjang:     urutanJenjang,
+			Data:              pendidikanList,
+		})
+	}
+
+	sort.SliceStable(jenjangPendidikan, func(i, j int) bool {
+		return jenjangPendidikan[i].UrutanJenjang < jenjangPendidikan[j].UrutanJenjang
+	})
 
 	if err != nil {
-		return nil, fmt.Errorf("error querying and scanning data pribadi pegawai, %s", err.Error())
+		return nil, fmt.Errorf("error querying and scanning data pendidikan pegawai, %s", err.Error())
 	}
 
-	return &pegawaiPribadi, nil
+	return jenjangPendidikan, nil
+}
+
+func GetURLFilePendidikan(a app.App, pendidikanList []*model.PegawaiPendidikan) []*model.PegawaiPendidikan {
+	for _, pendidikan := range pendidikanList {
+		if pendidikan.PathIjazah != "" {
+			var err error
+			pendidikan.URLIjazah, err = a.MinioClient.GetDownloadURL(a.MinioBucketName, pendidikan.PathIjazah, "")
+			if err != nil {
+				fmt.Printf("error getting file url, %s", err.Error())
+				pendidikan.URLIjazah = ""
+			}
+		}
+	}
+	return pendidikanList
+}
+
+func setBerkasPendukungWithURL(a app.App, list model.BerkasPendukungList) {
+	for i, berkas := range list {
+		if berkas.PathFile == "" {
+			continue
+		}
+		var err error
+		list[i].URLFile, err = a.MinioClient.GetDownloadURL(a.MinioBucketName, berkas.PathFile, berkas.NamaFile)
+		if err != nil {
+			fmt.Printf("error get url berkas pendukung, %s", err.Error())
+			list[i].URLFile = ""
+		}
+	}
 }

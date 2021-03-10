@@ -2,6 +2,7 @@ package repo
 
 import (
 	"fmt"
+	"strings"
 	"svc-insani-go/helper"
 	"svc-insani-go/modules/v1/pegawai/model"
 )
@@ -112,7 +113,7 @@ func getPegawaiYayasanQuery(uuid string) string {
 	LEFT JOIN 
 		jenis_nomor_registrasi jnr ON pf.id_jenis_nomor_registrasi = jnr.id
 	WHERE
-		p.uuid = %q`, uuid)
+		p.uuid = %q AND p.flag_aktif = 1`, uuid)
 
 	return helper.FlatQuery(q)
 }
@@ -143,7 +144,7 @@ func getUnitKerjaPegawaiQuery(uuid string) string {
 	LEFT JOIN
 		lokasi_kerja lk ON p.lokasi_kerja = lk.lokasi_kerja 
 	WHERE 
-		p.uuid = %q`, uuid)
+		p.uuid = %q AND p.flag_aktif = 1`, uuid)
 
 	return helper.FlatQuery(q)
 }
@@ -173,7 +174,7 @@ func getPegawaiPNSQuery(uuid string) string {
 	LEFT JOIN
 		jabatan_fungsional jf ON pp.id_jabatan_fungsional = jf.id
 	WHERE 
-		p.uuid = %q`, uuid)
+		p.uuid = %q AND p.flag_aktif = 1`, uuid)
 
 	return helper.FlatQuery(q)
 }
@@ -192,7 +193,7 @@ func getPegawaiPTTQuery(uuid string) string {
 	LEFT JOIN
 		jenis_pegawai_tidak_tetap jptt ON ptt.id_jenis_ptt = jptt.id
 	WHERE
-		p.uuid = %q`, uuid)
+		p.uuid = %q AND p.flag_aktif = 1`, uuid)
 
 	return helper.FlatQuery(q)
 }
@@ -210,7 +211,7 @@ func getStatusPegawaiAktifQuery(uuid string) string {
 	LEFT JOIN
 		status_pegawai_aktif spa ON pf.id_status_pegawai_aktif = spa.id 
 	WHERE
-		p.uuid = %q`, uuid)
+		p.uuid = %q AND p.flag_aktif = 1`, uuid)
 
 	return helper.FlatQuery(q)
 }
@@ -233,7 +234,62 @@ func getPegawaiPribadiQuery(uuid string) string {
 	LEFT JOIN
 		unit2 u2 ON p.id_unit_kerja2 = u2.id 
 	WHERE
-		p.uuid = %q`, uuid)
+		p.uuid = %q AND p.flag_aktif = 1`, uuid)
+
+	return helper.FlatQuery(q)
+}
+
+func getPegawaiPendidikanQuery(uuid string) string {
+	q := fmt.Sprintf(`
+	SELECT 
+		COALESCE(pp.uuid,''),
+		COALESCE(pp.id,''),
+		COALESCE(pp.kd_jenjang,''),
+		COALESCE(LPAD(pp.urutan_jenjang,2,"0"),''),
+		COALESCE(pp.nama_institusi,''),
+		COALESCE(pp.jurusan,''),
+		COALESCE(pp.tgl_kelulusan,''),
+		COALESCE(pp.flag_ijazah_diakui,''),
+		COALESCE(pp.flag_ijazah_terakhir,''),
+		COALESCE(pp.kd_akreditas,''),
+		COALESCE(pp.konsentrasi_bidang_ilmu,''),
+		COALESCE(pp.gelar,''),
+		COALESCE(pp.nomor_induk,''),
+		COALESCE(pp.tahun_masuk,''),
+		COALESCE(pp.judul_tugas_akhir,''),
+		COALESCE(pp.flag_institusi_luar_negeri,''),
+		COALESCE(pp.nomor_ijazah,''),
+		COALESCE(pp.tgl_ijazah,''),
+		COALESCE(pp.path_ijazah,''),
+		COALESCE(pp.flag_ijazah_terverifikasi,''),
+		COALESCE(pp.nilai,''),
+		COALESCE(pp.jumlah_pelajaran,''),
+		COALESCE(pp.path_sk_penyetaraan,''),
+		COALESCE(pp.nomor_sk_penyetaraan,''),
+		COALESCE(pp.tgl_sk_penyetaraan,''),
+		COALESCE(pp.uuid_personal,'')
+	FROM 
+		pegawai_pendidikan pp
+	LEFT JOIN
+		pegawai p ON pp.id_personal_data_pribadi = p.id_personal_data_pribadi
+	WHERE
+		p.uuid = %q AND pp.flag_aktif = 1`, uuid)
+
+	return helper.FlatQuery(q)
+}
+
+func getPegawaiFilePendidikanQuery(idList ...string) string {
+	joinedId := strings.Join(idList, "', '")
+	q := fmt.Sprintf(`
+	SELECT
+		kd_jenis_file,
+		jenis_file,
+		path_file_pendidikan,
+		id_personal_pendidikan
+	FROM 
+		pegawai_file_pendidikan
+	WHERE
+		id_personal_pendidikan IN ('%s') AND flag_aktif = 1`, joinedId)
 
 	return helper.FlatQuery(q)
 }
