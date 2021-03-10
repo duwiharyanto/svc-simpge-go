@@ -25,6 +25,11 @@ func main() {
 		lg.Println("Can't connect to db:", err.Error())
 	}
 
+	gormDB, err := database.InitGorm(db)
+	if err != nil {
+		lg.Println("Can't connect to gorm db:", err.Error())
+	}
+
 	minioClient, err := minio.Connect()
 	if err != nil {
 		lg.Println("Can't connect to minio:", err.Error())
@@ -34,8 +39,10 @@ func main() {
 	// Variabel a akan digunakan sepanjang proses service
 	// berisi koneksi database
 	// dan data lain yang memungkinkan untuk digunakan secara berulang
+
 	a := app.App{
 		DB:              db,
+		GormDB:          gormDB,
 		HttpClient:      &http.Client{},
 		MinioBucketName: os.Getenv("MINIO_BUCKET_PERSONAL"),
 		MinioClient:     minioClient,

@@ -9,6 +9,8 @@ import (
 	"time"
 
 	_ "github.com/go-sql-driver/mysql"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
 )
 
 var (
@@ -59,4 +61,14 @@ func Healthz(ctx context.Context, db *sql.DB) error {
 		return fmt.Errorf("error querying healthz, %w", err)
 	}
 	return nil
+}
+
+func InitGorm(db *sql.DB) (*gorm.DB, error) {
+	gormDB, err := gorm.Open(mysql.New(mysql.Config{
+		Conn: db,
+	}), &gorm.Config{})
+	if err != nil {
+		return nil, fmt.Errorf("error connection gorm, %w", err)
+	}
+	return gormDB, nil
 }

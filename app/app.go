@@ -7,10 +7,13 @@ import (
 	"strconv"
 	"svc-insani-go/app/minio"
 	"time"
+
+	"gorm.io/gorm"
 )
 
 type App struct {
 	DB              *sql.DB
+	GormDB          *gorm.DB
 	HttpClient      *http.Client
 	MinioBucketName string
 	MinioClient     minio.MinioClient

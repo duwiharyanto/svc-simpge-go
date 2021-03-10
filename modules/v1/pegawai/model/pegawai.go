@@ -1,11 +1,14 @@
 package model
 
 import (
+	"fmt"
 	"mime/multipart"
+	"strings"
 	jenisPegawai "svc-insani-go/modules/v1/master-jenis-pegawai/model"
 	kelompokPegawai "svc-insani-go/modules/v1/master-kelompok-pegawai/model"
 	statusPegawai "svc-insani-go/modules/v1/master-status-pegawai/model"
 	unitKerja "svc-insani-go/modules/v1/master-unit-kerja/model"
+	"time"
 )
 
 type Pegawai struct {
@@ -57,11 +60,12 @@ type PegawaiPribadi struct {
 }
 
 type PegawaiDetail struct {
-	PegawaiPribadi   *PegawaiPribadi   `json:"pribadi"`
-	PegawaiYayasan   *PegawaiYayasan   `json:"kepegawaian"`
-	UnitKerjaPegawai *UnitKerjaPegawai `json:"unit_kerja"`
-	PegawaiPNSPTT    *PegawaiPNSPTT    `json:"negara_ptt"`
-	StatusAktif      *StatusAktif      `json:"status_aktif"`
+	PegawaiPribadi    *PegawaiPribadi     `json:"pribadi"`
+	JenjangPendidikan []JenjangPendidikan `json:"pendidikan"`
+	PegawaiYayasan    *PegawaiYayasan     `json:"kepegawaian"`
+	UnitKerjaPegawai  *UnitKerjaPegawai   `json:"unit_kerja"`
+	PegawaiPNSPTT     *PegawaiPNSPTT      `json:"negara_ptt"`
+	StatusAktif       *StatusAktif        `json:"status_aktif"`
 }
 
 type PegawaiYayasan struct {
@@ -138,50 +142,45 @@ type StatusAktif struct {
 }
 
 type PegawaiPendidikan struct {
-	ID                      string                `form:"-" json:"-"`
-	IDPersonal              string                `form:"-" json:"-"`
-	NamaPersonal            string                `form:"-" json:"-"`
-	Akreditasi              string                `form:"-" json:"akreditasi"`
-	UUIDAkreditasi          string                `form:"uuid_akreditasi" json:"uuid_akreditasi"`
-	KonsentrasiBidang       string                `form:"konsentrasi_bidang_ilmu" json:"konsentrasi_bidang_ilmu"`
-	Jurusan                 string                `form:"jurusan" json:"jurusan"`
-	KdJenjang               string                `form:"-" json:"kd_jenjang"`
-	Jenjang                 string                `form:"-" json:"jenjang"`
-	KeteranganJenjang       string                `form:"-" json:"-"`
-	FlagPerguruanTinggi     int                   `form:"-" json:"flag_perguruan_tinggi"`
-	UUIDJenjang             string                `form:"uuid_jenjang" json:"uuid_jenjang"`
-	Gelar                   string                `form:"gelar" json:"gelar"`
-	NomorInduk              string                `form:"nomor_induk" json:"nomor_induk"`
-	TahunMasuk              string                `form:"tahun_masuk" json:"tahun_masuk"`
-	TahunLulus              string                `form:"-" json:"tahun_lulus"`
-	JudulTugasAkhir         string                `form:"judul_tugas_akhir" json:"judul_tugas_akhir"`
-	NamaInstitusi           string                `form:"nama_institusi" json:"nama_institusi"`
-	FlagInstitusiLuarNegeri int                   `form:"flag_institusi_luar_negeri" json:"flag_institusi_luar_negeri"`
-	NomorIjazah             string                `form:"nomor_ijazah" json:"nomor_ijazah"`
-	TglIjazah               string                `form:"tgl_ijazah" json:"tgl_ijazah"`
-	TglIjazahIDN            string                `form:"-" json:"tgl_ijazah_idn"`
-	PathIjazah              string                `form:"-" json:"-"`
-	FileIjazah              *multipart.FileHeader `form:"-" json:"-"`
-	URLIjazah               string                `form:"-" json:"url_ijazah"`
-	NamaFileIjazah          string                `form:"-" json:"nama_file_ijazah"`
-	FlagIjazahTerverifikasi int                   `form:"flag_ijazah_terverifikasi" json:"flag_ijazah_terverifikasi"`
-	Nilai                   float64               `form:"nilai" json:"nilai"`
-	JumlahPelajaran         int                   `form:"jumlah_pelajaran" json:"jumlah_pelajaran"`
-	TglKelulusan            string                `form:"tgl_kelulusan" json:"tgl_kelulusan"`
-	TglKelulusanIDN         string                `form:"-" json:"tgl_kelulusan_idn"`
-	PathSKPenyetaraan       string                `form:"-" json:"-"`
+	UuidPendidikan          string                `json:"uuid_pendidikan"`
+	IdPendidikan            string                `json:"id_pendidikan"`
+	KdJenjang               string                `json:"kd_jenjang_pendidikan"`
+	IDJenjang               string                `json:"id_jenjang"`
+	UrutanJenjang           string                `json:"-"`
+	NamaInstitusi           string                `json:"nama_institusi"`
+	Jurusan                 string                `json:"jurusan"`
+	TglKelulusan            string                `json:"tgl_kelulusan"`
+	TglKelulusanIDN         string                `json:"tgl_kelulusan_idn"`
+	FlagIjazahDiakui        string                `json:"flag_ijazah_tertinggi_diakui"`
+	FlagIjazahTerakhir      string                `json:"flag_ijazah_terakhir"`
+	Akreditasi              string                `json:"akreditasi"`
+	KonsentrasiBidang       string                `json:"konsentrasi_bidang_ilmu"`
+	FlagPerguruanTinggi     int                   `json:"flag_perguruan_tinggi"`
+	Gelar                   string                `json:"gelar"`
+	NomorInduk              string                `json:"nomor_induk"`
+	TahunMasuk              string                `json:"tahun_masuk"`
+	JudulTugasAkhir         string                `json:"judul_tugas_akhir"`
+	FlagInstitusiLuarNegeri int                   `json:"flag_institusi_luar_negeri"`
+	NomorIjazah             string                `json:"nomor_ijazah"`
+	TglIjazah               string                `json:"tgl_ijazah"`
+	TglIjazahIDN            string                `json:"tgl_ijazah_idn"`
+	PathIjazah              string                `json:"path_ijazah"`
+	URLIjazah               string                `json:"url_ijazah"`
+	NamaFileIjazah          string                `json:"nama_file_ijazah"`
+	FlagIjazahTerverifikasi int                   `json:"flag_ijazah_terverifikasi"`
+	Nilai                   float64               `json:"nilai"`
+	JumlahPelajaran         int                   `json:"jumlah_pelajaran"`
+	NamaFileSKPenyetaraan   string                `json:"nama_file_sk_penyetaraan"`
+	NomorSKPenyetaraan      string                `json:"nomor_sk_penyetaraan"`
+	TglSKPenyetaraan        string                `json:"tgl_sk_penyetaraan"`
+	TglSKPenyetaraanIDN     string                `json:"tgl_sk_penyetaraan_idn"`
+	PathSKPenyetaraan       string                `json:"path_sk_penyetaraan"`
+	URLSKPenyetaraan        string                `json:"url_sk_penyetaraan"`
 	FileSKPenyetaraan       *multipart.FileHeader `form:"-" json:"-"`
-	URLSKPenyetaraan        string                `form:"-" json:"url_sk_penyetaraan"`
-	NamaFileSKPenyetaraan   string                `form:"-" json:"nama_file_sk_penyetaraan"`
-	NomorSKPenyetaraan      string                `form:"nomor_sk_penyetaraan" json:"nomor_sk_penyetaraan"`
-	TglSKPenyetaraan        string                `form:"tgl_sk_penyetaraan" json:"tgl_sk_penyetaraan"`
-	TglSKPenyetaraanIDN     string                `form:"-" json:"tgl_sk_penyetaraan_idn"`
 	UUIDPersonal            string                `form:"-" json:"uuid_personal"`
 	UserInput               string                `form:"-" json:"-"`
 	TglInput                string                `form:"-" json:"-"`
 	UserUpdate              string                `form:"-" json:"-"`
-	IsUser                  string                `form:"user" json:"-"`
-	UUID                    string                `form:"uuid" json:"uuid"`
 	BerkasPendukungList     `form:"-" json:"berkas_pendukung"`
 	BerkasPendukung         BerkasPendukungMap  `form:"-" json:"-"`
 	OldBerkasPendukungList  BerkasPendukungList `form:"-" json:"-"`
@@ -197,7 +196,7 @@ type BerkasPendukung struct {
 	UUIDJenisFile string                `json:"uuid_jenis_file_pendidikan"`
 	File          *multipart.FileHeader `json:"-"`
 	Folder        string                `json:"-"`
-	SubFolder     string                `json:"-"` // folder terakhir di mana file berada
+	SubFolder     string                `json:"-"`
 	NamaFile      string                `json:"nama_file_pendidikan"`
 	PathFile      string                `json:"-"`
 	URLFile       string                `json:"url_file_pendidikan"`
@@ -206,6 +205,108 @@ type BerkasPendukung struct {
 	UUIDPersonal  string                `json:"-"`
 }
 
+type JenjangPendidikan struct {
+	JenjangPendidikan string              `json:"jenjang"`
+	UrutanJenjang     string              `json:"-"`
+	Data              []PegawaiPendidikan `json:"data"`
+}
+
 type BerkasPendukungList []BerkasPendukung
 
+func (list BerkasPendukungList) MapByIdPendidikan() map[string][]BerkasPendukung {
+	m := make(map[string][]BerkasPendukung)
+	for _, pendidikan := range list {
+		m[pendidikan.IDPendidikan] = append(m[pendidikan.IDPendidikan], pendidikan)
+	}
+	return m
+}
+
 type BerkasPendukungMap map[int]BerkasPendukung
+
+var indonesianMonths = [...]string{
+	"Januari",
+	"Februari",
+	"Maret",
+	"April",
+	"Mei",
+	"Juni",
+	"Juli",
+	"Agustus",
+	"September",
+	"Oktober",
+	"November",
+	"Desember",
+}
+
+func GetIndonesianMonth(date string) string {
+	t, _ := time.Parse("2006-01-02", date)
+	month := t.Month()
+	var idnMonth string
+	if time.January <= month && month <= time.December {
+		idnMonth = indonesianMonths[month-1]
+	}
+	return idnMonth
+}
+
+func GetIndonesianDate(date string) string {
+	dateTime, err := time.Parse("2006-01-02", date)
+	if err != nil {
+		return ""
+	}
+	idnMonth := GetIndonesianMonth(date)
+	return fmt.Sprintf("%d %s %d", dateTime.Day(), idnMonth, dateTime.Year())
+}
+
+func (p *PegawaiPendidikan) SetTanggalIDN() {
+	p.TglSKPenyetaraanIDN = GetIndonesianDate(p.TglSKPenyetaraan)
+	p.TglKelulusanIDN = GetIndonesianDate(p.TglKelulusan)
+	p.TglIjazahIDN = GetIndonesianDate(p.TglIjazah)
+}
+
+func (p *PegawaiPendidikan) SetNamaFileIjazah() {
+	if p.PathIjazah == "" {
+		return
+	}
+	uploadedFileName := strings.Split(p.PathIjazah, "/")[2]
+	splittedPathIjazah := strings.Split(p.PathIjazah, ".")
+	fileExtensionIjazah := splittedPathIjazah[1]
+	p.NamaFileIjazah = fmt.Sprintf("%s.%s", uploadedFileName, fileExtensionIjazah)
+}
+
+func (p *PegawaiPendidikan) SetNamaFilePenyetaraan() {
+	if p.PathSKPenyetaraan == "" {
+		return
+	}
+	uploadedFileName := strings.Split(p.PathSKPenyetaraan, "/")[2]
+	splittedPathPenyetaraan := strings.Split(p.PathSKPenyetaraan, ".")
+	fileExtensionPenyetaraan := splittedPathPenyetaraan[1]
+	p.NamaFileSKPenyetaraan = fmt.Sprintf("%s.%s", uploadedFileName, fileExtensionPenyetaraan)
+}
+
+func (b *BerkasPendukung) SetDownloadFileName(loc *time.Location) {
+	if b.PathFile == "" {
+		return
+	}
+	// now := time.Now().In(loc)
+	// datetime := now.Format("2006-01-02 150405")
+	splittedPath := strings.Split(b.PathFile, ".")
+	fileExtension := splittedPath[1]
+	b.NamaFile = fmt.Sprintf("%s.%s", b.JenisFile, fileExtension)
+}
+
+func (b *PegawaiPendidikan) SetDownloadFileNamePendidikan(loc *time.Location) {
+	if b.PathIjazah == "" || b.PathSKPenyetaraan == "" {
+		return
+	}
+	// now := time.Now().In(loc)
+	// datetime := now.Format("2006-01-02 150405")
+	ijazah := "Ijazah"
+	splittedPathIjazah := strings.Split(b.PathIjazah, ".")
+	fileExtensionIjazah := splittedPathIjazah[1]
+	b.NamaFileIjazah = fmt.Sprintf("%s.%s", ijazah, fileExtensionIjazah)
+
+	penyetaraan := "SK Penyetaraan"
+	splittedPathPenyetaraan := strings.Split(b.PathSKPenyetaraan, ".")
+	fileExtensionPenyetaraan := splittedPathPenyetaraan[1]
+	b.NamaFileSKPenyetaraan = fmt.Sprintf("%s.%s", penyetaraan, fileExtensionPenyetaraan)
+}

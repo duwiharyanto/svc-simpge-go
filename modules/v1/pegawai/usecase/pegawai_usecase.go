@@ -92,12 +92,24 @@ func PrepareGetSimpegPegawaiByUUID(a app.App, uuidPegawai string) (model.Pegawai
 		return model.PegawaiDetail{}, fmt.Errorf("error repo get status aktif pegawai by uuid, %w", err)
 	}
 
+	pegawaiPendidikan, err := repo.GetPegawaiPendidikan(a, uuidPegawai)
+	if err != nil {
+		return model.PegawaiDetail{}, fmt.Errorf("error repo get pendidikan pegawai by uuid, %w", err)
+	}
+
+	// pegawaiFilePendidikan, err := repo.GetPegawaiFilePendidikan(a, uuidPegawai)
+	// if err != nil {
+	// 	return model.PegawaiDetail{}, fmt.Errorf("error repo get file pendidikan pegawai by uuid, %w", err)
+	// }
+
 	pegawaiDetail.PegawaiYayasan = kepegawaianYayasan
 	pegawaiDetail.UnitKerjaPegawai = unitKerjaPegawai
 	pegawaiDetail.PegawaiPNSPTT = pegawaiPNS
 	pegawaiDetail.PegawaiPNSPTT = pegawaiPTT
 	pegawaiDetail.StatusAktif = statusPegawaiAktif
 	pegawaiDetail.PegawaiPribadi = pegawaiPribadi
+	pegawaiDetail.JenjangPendidikan = pegawaiPendidikan
+	// pegawaiDetail.PegawaiPendidikan.BerkasPendukung = pegawaiFilePendidikan
 
 	return pegawaiDetail, nil
 }
@@ -135,6 +147,7 @@ const dummySimpegPegawaiDetail = `{
                     "nama_institusi": "SMA N 1 Sleman",
                     "jurusan": "IPA",
                     "tgl_kelulusan": "2015-01-01",
+                    "tgl_kelulusan_idn": "2 Februari 2021",
                     "flag_ijazah_tertinggi_diakui" : "0",
                     "flag_ijazah_terakhir" : "0",
                     "uuid_pendidikan" : "uuid-pendidikan",
@@ -157,7 +170,6 @@ const dummySimpegPegawaiDetail = `{
                     "flag_ijazah_terverifikasi": 0,
                     "nilai": 23,
                     "jumlah_pelajaran": 32,
-                    "tgl_kelulusan_idn": "2 Februari 2021",
                     "url_sk_penyetaraan": "",
                     "nama_file_sk_penyetaraan": "",
                     "nomor_sk_penyetaraan": "",
