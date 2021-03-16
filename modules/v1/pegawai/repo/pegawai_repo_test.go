@@ -38,3 +38,27 @@ func TestGetPegawaiFilePendidikan(t *testing.T) {
 
 	t.Logf("berkas:\n%s\n", j)
 }
+
+// func TestGetAllPegawai(t *testing.T) {
+// 	db, err := database.Connect()
+// 	if err != nil {
+// 		t.Fatal("failed connect to db:", err)
+// 	}
+// 	a := app.App{DB: db}
+
+// 	gormDB, err := database.InitGorm(a.DB)
+// 	if err != nil {
+// 		t.Fatal("failed connect to gorm db:", err)
+// 	}
+// 	ax := app.App{GormDB: gormDB}
+// 	allPegawai, err := GetAllPegawaix(ax)
+
+// 	if err != nil {
+// 		t.Fatal("failed get all pegawai:", err)
+// 	}
+
+// 	j, _ := json.MarshalIndent(allPegawai, "", "\t")
+
+// 	t.Logf("pegawai:\n%s\n", j)
+
+// }

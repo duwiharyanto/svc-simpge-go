@@ -1,6 +1,7 @@
 package repo
 
 import (
+	"context"
 	"database/sql"
 	"fmt"
 	"sort"
@@ -402,4 +403,99 @@ func setBerkasPendukungWithURL(a app.App, list model.BerkasPendukungList) {
 			list[i].URLFile = ""
 		}
 	}
+}
+
+func GetAllPegawaix(a app.App, ctx context.Context, limit int, offset int) (*model.PegawaiResponseTest, error) {
+
+	var pegawaiAll []model.Pegawai2
+	var count int64
+
+	tx := a.GormDB.WithContext(ctx)
+	results := model.PegawaiResponseTest{}
+	res := tx.Limit(limit).
+		Offset(offset).
+		Find(&pegawaiAll).Count(&count)
+	if res.Error != nil {
+		return nil, res.Error
+	}
+
+	countConv := int(count)
+
+	results.Data = pegawaiAll
+	results.Count = countConv
+
+	return &results, nil
+}
+
+func GetPegawaiByUUIDx(a app.App, ctx context.Context, uuid string) (*model.Pegawai, error) {
+
+	var pegawaiAll model.Pegawai
+	tx := a.GormDB.WithContext(ctx)
+
+	res := tx.First(&pegawaiAll, "uuid = ?", uuid)
+	if res.Error != nil {
+		return nil, res.Error
+	}
+
+	return &pegawaiAll, nil
+}
+
+func UpdatePegawaiPendidikan(a app.App, ctx context.Context, uuid string) (*model.PegawaiPendidikan, error) {
+	var pegawaiPendidikan model.PegawaiPendidikan
+
+	tx := a.GormDB.WithContext(ctx)
+	res := tx.First(&pegawaiPendidikan, "uuid = ?", uuid)
+	if res.Error != nil {
+		return nil, res.Error
+	}
+
+	return &pegawaiPendidikan, nil
+}
+
+func UpdatePegawaiYayasan(a app.App, ctx context.Context, uuid string) (*model.PegawaiYayasan, error) {
+	var pegawaiYayasan model.PegawaiYayasan
+
+	tx := a.GormDB.WithContext(ctx)
+	res := tx.First(&pegawaiYayasan, "uuid = ?", uuid)
+	if res.Error != nil {
+		return nil, res.Error
+	}
+
+	return &pegawaiYayasan, nil
+}
+
+func UpdatePegawaiUnit(a app.App, ctx context.Context, uuid string) (*model.UnitKerjaPegawai, error) {
+	var pegawaiUnit model.UnitKerjaPegawai
+
+	tx := a.GormDB.WithContext(ctx)
+	res := tx.First(&pegawaiUnit, "uuid = ?", uuid)
+	if res.Error != nil {
+		return nil, res.Error
+	}
+
+	return &pegawaiUnit, nil
+}
+
+func UpdatePegawaiPNSPTT(a app.App, ctx context.Context, uuid string) (*model.PegawaiPNSPTT, error) {
+	var pegawaiPNSPTT model.PegawaiPNSPTT
+
+	tx := a.GormDB.WithContext(ctx)
+	res := tx.First(&pegawaiPNSPTT, "uuid = ?", uuid)
+	if res.Error != nil {
+		return nil, res.Error
+	}
+
+	return &pegawaiPNSPTT, nil
+}
+
+func UpdatePegawaiStatus(a app.App, ctx context.Context, uuid string) (*model.StatusAktif, error) {
+	var pegawaiStatus model.StatusAktif
+
+	tx := a.GormDB.WithContext(ctx)
+	res := tx.First(&pegawaiStatus, "uuid = ?", uuid)
+	if res.Error != nil {
+		return nil, res.Error
+	}
+
+	return &pegawaiStatus, nil
 }

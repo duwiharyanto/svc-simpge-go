@@ -49,6 +49,10 @@ func InitRoute(a app.App, e *echo.Echo) {
 
 	// Testing
 	insaniGroupingPath.GET("/pegawai-simpeg2/:uuidPegawai/detail", pegawai.HandleGetSimpegPegawaiByUUIDDummy(a))
+	insaniGroupingPath.GET("/pegawai2", pegawai.HandleGetPegawaix(a))
+	insaniGroupingPath.GET("/pegawai2/:uuidPersonal", pegawai.HandleGetPegawaiByUUIDx(a))
+	insaniGroupingPath.PUT("/pegawai2/:uuidPersonal", pegawai.HandleUpdatePegawaix(a))
+
 }
 
 func healthCheck(db *sql.DB) echo.HandlerFunc {

@@ -12,25 +12,50 @@ import (
 )
 
 type Pegawai struct {
-	ID                              string `json:"-"`
-	NIK                             string `json:"nik"`
-	Nama                            string `json:"nama"`
-	GelarDepan                      string `json:"gelar_depan"`
-	GelarBelakang                   string `json:"gelar_belakang"`
+	ID                              string `json:"-" gorm:"primaryKey"`
+	NIK                             string `json:"nik" gorm:"type:varchar;not null"`
+	Nama                            string `json:"nama" gorm:"type:varchar;not null"`
+	GelarDepan                      string `json:"gelar_depan" gorm:"type:varchar"`
+	GelarBelakang                   string `json:"gelar_belakang" gorm:"type:varchar"`
 	FlagDosen                       int    `json:"flag_dosen"`
+	KdUnit2                         int    `json:"kd_unit2"`
 	jenisPegawai.JenisPegawai       `json:"jenis_pegawai"`
 	kelompokPegawai.KelompokPegawai `json:"kelompok_pegawai"`
 	statusPegawai.StatusPegawai     `json:"status_pegawai"`
-	unitKerja.UnitKerja             `json:"unit_kerja"`
-	UserInput                       string `json:"-"`
-	UserUpdate                      string `json:"-"`
-	UUID                            string `json:"uuid"`
+	UnitKerja                       unitKerja.UnitKerja `json:"unit_kerja" gorm:"foreignKey:KdUnit2"`
+	UserInput                       string              `json:"-"`
+	UserUpdate                      string              `json:"-"`
+	UUID                            string              `json:"uuid"`
 }
 
 func (p *Pegawai) SetFlagDosen() {
 	if !p.JenisPegawai.IsEmpty() && p.JenisPegawai.KDJenisPegawai == "ED" {
 		p.FlagDosen = 1
 	}
+}
+
+type Pegawai2 struct {
+	ID            string `gorm:"primaryKey;not null"`
+	NIK           string `gorm:"type:varchar;not null"`
+	Nama          string `gorm:"type:varchar;not null"`
+	GelarDepan    string `gorm:"type:varchar"`
+	GelarBelakang string `gorm:"type:varchar"`
+	KdUnit2       int    `gorm:"type:varchar; column:kd_unit2"`
+	Unit2         *Unit2 `gorm:"foreignKey:KdUnit2"`
+	UserInput     string `gorm:"type:varchar"`
+	UserUpdate    string `gorm:"type:varchar"`
+	UUID          string `gorm:"type:varchar"`
+}
+
+func (*Pegawai2) TableName() string {
+	return "pegawai"
+}
+
+type Unit2 struct {
+	ID            string `gorm:"primaryKey;not null"`
+	KdUnit2       string `gorm:"type:varchar;unique;column:kd_unit2"`
+	NamaUnitKerja string `gorm:"type:varchar;column:unit2"`
+	UUID          string `gorm:"type:varchar"`
 }
 
 type PegawaiRequest struct {
@@ -40,6 +65,14 @@ type PegawaiRequest struct {
 	Offset            int    `query:"offset"`
 	Cari              string `query:"cari"`
 }
+
+type PegawaiResponseTest struct {
+	Count  int        `json:"count"`
+	Data   []Pegawai2 `json:"data"`
+	Limit  int        `json:"limit"`
+	Offset int        `json:"offset"`
+}
+
 type PegawaiResponse struct {
 	Count  int       `json:"count"`
 	Data   []Pegawai `json:"data"`
@@ -69,6 +102,7 @@ type PegawaiDetail struct {
 }
 
 type PegawaiYayasan struct {
+	ID                   string `json:"-" gorm:"primaryKey;not null"`
 	KDJenisPegawai       string `json:"kd_jenis_pegawai"`
 	JenisPegawai         string `json:"jenis_pegawai"`
 	KdKelompokPegawai    string `json:"kd_kelompok_pegawai"`
@@ -142,8 +176,8 @@ type StatusAktif struct {
 }
 
 type PegawaiPendidikan struct {
-	UuidPendidikan          string                `json:"uuid_pendidikan"`
-	IdPendidikan            string                `json:"id_pendidikan"`
+	UuidPendidikan          string                `form:"uuid_pendidikan" json:"uuid_pendidikan"`
+	IdPendidikan            string                `form:"id_pendidikan" json:"id_pendidikan"`
 	KdJenjang               string                `json:"kd_jenjang_pendidikan"`
 	IDJenjang               string                `json:"id_jenjang"`
 	UrutanJenjang           string                `json:"-"`
@@ -151,8 +185,8 @@ type PegawaiPendidikan struct {
 	Jurusan                 string                `json:"jurusan"`
 	TglKelulusan            string                `json:"tgl_kelulusan"`
 	TglKelulusanIDN         string                `json:"tgl_kelulusan_idn"`
-	FlagIjazahDiakui        string                `json:"flag_ijazah_tertinggi_diakui"`
-	FlagIjazahTerakhir      string                `json:"flag_ijazah_terakhir"`
+	FlagIjazahDiakui        string                `form:"flag_ijazah_tertinggi_diakui json:"flag_ijazah_tertinggi_diakui"`
+	FlagIjazahTerakhir      string                `form:"flag_ijazah_terakhir json:"flag_ijazah_terakhir"`
 	Akreditasi              string                `json:"akreditasi"`
 	KonsentrasiBidang       string                `json:"konsentrasi_bidang_ilmu"`
 	FlagPerguruanTinggi     int                   `json:"flag_perguruan_tinggi"`
@@ -187,11 +221,12 @@ type PegawaiPendidikan struct {
 }
 
 type BerkasPendukung struct {
-	IDPendidikan  string                `json:"-"`
-	IDPersonal    string                `json:"-"`
-	NamaPersonal  string                `json:"-"`
-	IDJenisFile   string                `json:"-"`
-	KdJenisFile   string                `json:"kd_jenis_file_pendidikan"`
+	IDPendidikan string `json:"-"`
+	IDPersonal   string `json:"-"`
+	NamaPersonal string `json:"-"`
+	IDJenisFile  string `json:"-"`
+	KdJenisFile  string `json:"kd_jenis_file_pendidikan"`
+
 	JenisFile     string                `json:"jenis_file_pendidikan"`
 	UUIDJenisFile string                `json:"uuid_jenis_file_pendidikan"`
 	File          *multipart.FileHeader `json:"-"`
@@ -209,6 +244,14 @@ type JenjangPendidikan struct {
 	JenjangPendidikan string              `json:"jenjang"`
 	UrutanJenjang     string              `json:"-"`
 	Data              []PegawaiPendidikan `json:"data"`
+}
+
+type PegawaiUpdate struct {
+	PegawaiPendidikan *PegawaiPendidikan
+	PegawaiYayasan    *PegawaiYayasan
+	PegawaiPNSPTT     *PegawaiPNSPTT
+	pegawaiUnit       *UnitKerjaPegawai
+	pegawaiStatus     *StatusAktif
 }
 
 type BerkasPendukungList []BerkasPendukung

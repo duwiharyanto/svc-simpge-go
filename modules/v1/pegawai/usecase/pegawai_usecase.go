@@ -2,6 +2,8 @@ package usecase
 
 import (
 	"fmt"
+	"strconv"
+
 	"net/http"
 	"svc-insani-go/app"
 	"svc-insani-go/modules/v1/pegawai/model"
@@ -390,3 +392,52 @@ const dummySimpegPegawaiDetail = `{
         "uuid_status_aktif_pegawai": "uuid-cuti-diluar-tanggungan"
     }
 }`
+
+func HandleGetPegawaix(a app.App) echo.HandlerFunc {
+	h := func(c echo.Context) error {
+		limit, err := strconv.Atoi(c.QueryParam("limit"))
+		if err != nil {
+			fmt.Printf("[ERROR] convert string to int, %s\n", err.Error())
+		}
+
+		offset, err := strconv.Atoi(c.QueryParam("offset"))
+		if err != nil {
+			fmt.Printf("[ERROR] convert string to int, %s\n", err.Error())
+		}
+
+		pp, err := repo.GetAllPegawaix(a, c.Request().Context(), limit, offset)
+		if err != nil {
+			fmt.Printf("[ERROR] repo get all pegawai, %s\n", err.Error())
+			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
+		}
+		return c.JSON(http.StatusOK, pp)
+	}
+	return echo.HandlerFunc(h)
+}
+
+func HandleGetPegawaiByUUIDx(a app.App) echo.HandlerFunc {
+	h := func(c echo.Context) error {
+		uuidPersonal := c.Param("uuidPersonal")
+		pp, err := repo.GetPegawaiByUUIDx(a, c.Request().Context(), uuidPersonal)
+		if err != nil {
+			fmt.Printf("[ERROR] repo get pegawai by uuid, %s\n", err.Error())
+			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
+		}
+		return c.JSON(http.StatusOK, pp)
+	}
+	return echo.HandlerFunc(h)
+}
+
+func HandleUpdatePegawaix(a app.App) echo.HandlerFunc {
+	h := func(c echo.Context) error {
+		pegawaiRequest := new(model.PegawaiUpdate)
+		err := c.Bind(pegawaiRequest)
+		if err != nil {
+			return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+		}
+
+		return c.JSON(http.StatusOK, nil)
+	}
+
+	return echo.HandlerFunc(h)
+}
