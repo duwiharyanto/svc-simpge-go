@@ -32,6 +32,19 @@ func HandleGetLokasiKerjaDummy(a app.App) echo.HandlerFunc {
 	return echo.HandlerFunc(h)
 }
 
+func HandleLokasiKerjaByUUID(a app.App) echo.HandlerFunc {
+	h := func(c echo.Context) error {
+		uuid := c.QueryParam("uuid")
+		pp, err := repo.GetLokasiKerjaByUUID(a, c.Request().Context(), uuid)
+		if err != nil {
+			fmt.Printf("[ERROR] repo get lokasi kerja by uuid, %s\n", err.Error())
+			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
+		}
+		return c.JSON(http.StatusOK, pp)
+	}
+	return echo.HandlerFunc(h)
+}
+
 const dummyLokasiKerja = `{
     "data": [
         {

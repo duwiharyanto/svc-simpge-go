@@ -170,7 +170,7 @@ func getPegawaiPNSQuery(uuid string) string {
 	LEFT JOIN
 		pegawai_pns pp ON p.id = pp.id_pegawai 
 	LEFT JOIN
-		pangkat_golongan_pegawai pgp ON pp.id_pangkat_golongan 
+		pangkat_golongan_pegawai pgp ON pp.id_pangkat_golongan = pgp.id
 	LEFT JOIN
 		jabatan_fungsional jf ON pp.id_jabatan_fungsional = jf.id
 	WHERE 

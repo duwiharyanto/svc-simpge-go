@@ -1,6 +1,7 @@
 package repo
 
 import (
+	"context"
 	"fmt"
 	"svc-insani-go/app"
 	"svc-insani-go/modules/v1/master-induk-kerja/model"
@@ -97,4 +98,37 @@ func GetBagianKerja(a app.App, UnitKerja string) ([]model.IndukKerja, error) {
 	}
 
 	return pp, nil
+}
+
+func GetIndukKerjaByUUID(a app.App, ctx context.Context, uuid string) (*model.Unit1, error) {
+	var indukKerja model.Unit1
+
+	tx := a.GormDB.WithContext(ctx)
+	res := tx.First(&indukKerja, "uuid = ?", uuid)
+	if res.Error != nil {
+		return nil, fmt.Errorf("error querying induk kerja by uuid %s", res.Error)
+	}
+	return &indukKerja, nil
+}
+
+func GetUnitKerjaByUUID(a app.App, ctx context.Context, uuid string) (*model.Unit2, error) {
+	var unitKerja model.Unit2
+
+	tx := a.GormDB.WithContext(ctx)
+	res := tx.First(&unitKerja, "uuid = ?", uuid)
+	if res.Error != nil {
+		return nil, fmt.Errorf("error querying unit kerja by uuid %s", res.Error)
+	}
+	return &unitKerja, nil
+}
+
+func GetBagianKerjaByUUID(a app.App, ctx context.Context, uuid string) (*model.Unit3, error) {
+	var bagianKerja model.Unit3
+
+	tx := a.GormDB.WithContext(ctx)
+	res := tx.First(&bagianKerja, "uuid = ?", uuid)
+	if res.Error != nil {
+		return nil, fmt.Errorf("error querying bagian kerja by uuid %s", res.Error)
+	}
+	return &bagianKerja, nil
 }

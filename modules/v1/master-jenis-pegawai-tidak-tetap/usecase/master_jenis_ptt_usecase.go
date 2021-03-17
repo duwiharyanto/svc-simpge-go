@@ -25,9 +25,22 @@ func HandleGetJenisPTT(a app.App) echo.HandlerFunc {
 	return echo.HandlerFunc(h)
 }
 
-func HandleGetJenisNoRegisDummy(a app.App) echo.HandlerFunc {
+// func HandleGetJenisNoRegisDummy(a app.App) echo.HandlerFunc {
+// 	h := func(c echo.Context) error {
+// 		return c.JSONBlob(http.StatusOK, []byte(dummyJenisNoRegis))
+// 	}
+// 	return echo.HandlerFunc(h)
+// }
+
+func HandleJenisPTTByUUID(a app.App) echo.HandlerFunc {
 	h := func(c echo.Context) error {
-		return c.JSONBlob(http.StatusOK, []byte(dummyJenisNoRegis))
+		uuid := c.QueryParam("uuid")
+		pp, err := repo.GetJenisPTTByUUID(a, c.Request().Context(), uuid)
+		if err != nil {
+			fmt.Printf("[ERROR] repo get jenis pegawai tidak tetap by uuid, %s\n", err.Error())
+			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
+		}
+		return c.JSON(http.StatusOK, pp)
 	}
 	return echo.HandlerFunc(h)
 }

@@ -47,11 +47,12 @@ func InitRoute(a app.App, e *echo.Echo) {
 	insaniGroupingPath.GET("/sk-kgb/:uuidSk/detail", sk.HandleGetSkKenaikanGajiDummy(a))
 	insaniGroupingPath.PUT("/sk-kgb/:uuidSk", sk.HandleUpdateSkKenaikanGaji(a))
 
-	// Testing
-	insaniGroupingPath.GET("/pegawai-simpeg2/:uuidPegawai/detail", pegawai.HandleGetSimpegPegawaiByUUIDDummy(a))
+	// Testing Gorm
 	insaniGroupingPath.GET("/pegawai2", pegawai.HandleGetPegawaix(a))
 	insaniGroupingPath.GET("/pegawai2/:uuidPersonal", pegawai.HandleGetPegawaiByUUIDx(a))
-	insaniGroupingPath.PUT("/pegawai2/:uuidPersonal", pegawai.HandleUpdatePegawaix(a))
+
+	// Testing
+	insaniGroupingPath.PUT("/pegawai/:uuidPegawai", pegawai.HandleUpdatePegawai(a))
 
 }
 

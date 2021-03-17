@@ -1,12 +1,16 @@
 package model
 
 type JenisNomorRegistrasi struct {
-	ID              string `json:"-"`
-	JenisNomorRegis string `json:"jenis_no_regis"`
+	ID              string `json:"-" gorm:"primaryKey"`
+	JenisNomorRegis string `json:"jenis_no_regis" gorm:"column:jenis_no_regis"`
 	KdJenisRegis    string `json:"kd_jenis_regis"`
 	UserInput       string `json:"-"`
 	UserUpdate      string `json:"-"`
 	UUID            string `json:"uuid"`
+}
+
+func (*JenisNomorRegistrasi) TableName() string {
+	return "jenis_nomor_registrasi"
 }
 
 type JenisNomorRegistrasiResponse struct {

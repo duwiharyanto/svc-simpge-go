@@ -1,6 +1,7 @@
 package repo
 
 import (
+	"context"
 	"fmt"
 	"svc-insani-go/app"
 	"svc-insani-go/modules/v1/master-kelompok-pegawai/model"
@@ -56,4 +57,15 @@ func GetAllKelompokPegawaiByUUID(a app.App, uuid string) ([]model.KelompokPegawa
 	}
 
 	return KelompokPegawai, nil
+}
+
+func GetKelompokPegawaiByUUID(a app.App, ctx context.Context, uuid string) (*model.KelompokPegawai, error) {
+	var kelompokPegawai model.KelompokPegawai
+
+	tx := a.GormDB.WithContext(ctx)
+	res := tx.First(&kelompokPegawai, "uuid = ?", uuid)
+	if res.Error != nil {
+		return nil, fmt.Errorf("error querying kelompok pegawai by uuid %s", res.Error)
+	}
+	return &kelompokPegawai, nil
 }
