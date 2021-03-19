@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"svc-insani-go/app"
 	"svc-insani-go/modules/v1/pegawai/model"
-	"svc-insani-go/modules/v1/pegawai/repo"
 
 	indukKerjaRepo "svc-insani-go/modules/v1/master-induk-kerja/repo"
 	jabatanFungsionalRepo "svc-insani-go/modules/v1/master-jabatan-fungsional/repo"
@@ -40,19 +39,13 @@ func ValidateUpdatePegawaiByUUID(a app.App, c echo.Context) (*model.PegawaiUpdat
 		return nil, fmt.Errorf("uuid pegawai tidak boleh kosong")
 	}
 
-	pegawai, err := repo.GetPegawaiByUUID(a, uuidPegawai)
-	if err != nil {
-		return nil, fmt.Errorf("error from repo get uuid pegawai, %w", err)
-	}
-
 	//Binding Form Input To Struct
 	pegawaiRequest := &model.PegawaiUpdate{}
-	err = c.Bind(pegawaiRequest)
+	err := c.Bind(pegawaiRequest)
 	if err != nil {
 		fmt.Printf("[ERROR] binding request, %s\n", err.Error())
 	}
 	pegawaiRequest.Uuid = uuidPegawai
-	pegawaiRequest.Id = pegawai.ID
 
 	//Pengecekan Jenis Pegawai
 	if pegawaiRequest.UuidJenisPegawai != "" {

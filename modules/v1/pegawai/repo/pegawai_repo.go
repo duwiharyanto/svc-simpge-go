@@ -3,6 +3,7 @@ package repo
 import (
 	"context"
 	"database/sql"
+	"encoding/json"
 	"fmt"
 	"sort"
 	"strings"
@@ -441,34 +442,41 @@ func GetPegawaiByUUIDx(a app.App, ctx context.Context, uuid string) (*model.Pega
 }
 
 func UpdatePegawaix(a app.App, ctx context.Context, PegawaiUpdate *model.PegawaiUpdate) error {
-	var PegawaiOld model.PegawaiUpdate
+	fmt.Printf("[DEBUG] tes update pegawai\n")
+	var pegawaiOld model.PegawaiUpdate
+	db := a.GormDB.WithContext(ctx)
+	// get old pegawai by uuid
+	res := db.First(&pegawaiOld, "uuid = ?", PegawaiUpdate.Uuid)
+	if res.Error != nil {
+		return res.Error
+	}
+	// fmt.Printf("[DEBUG] res: %+v\n", pegawaiOld)
+	j, _ := json.MarshalIndent(pegawaiOld, "", "\t")
+	fmt.Printf("[DEBUG] res: %s\n", j)
+	return nil
 
-	tx := a.GormDB.WithContext(ctx)
-	res := tx.First(&PegawaiOld, PegawaiUpdate.Uuid)
+	// res = db.Model(&pegawaiOld).Updates(PegawaiUpdate)
+	pegawaiOld.UserUpdate = "ahmad h f"
+	res = db.Save(&pegawaiOld)
 	if res.Error != nil {
 		return res.Error
 	}
 
-	tx = a.GormDB.WithContext(ctx)
-	res = tx.Model(&PegawaiOld).Updates(PegawaiUpdate)
+	return nil
+
+	var pegawaiFungsionalOld model.PegawaiFungsionalUpdate
+
+	res = db.Where("id_pegawai = ?", PegawaiUpdate.Id).
+		First(&pegawaiFungsionalOld)
 	if res.Error != nil {
 		return res.Error
 	}
 
-	var PegawaiFungsionalOld model.PegawaiFungsionalUpdate
-
-	tx = a.GormDB.WithContext(ctx)
-	res = tx.Where("id_pegawai = ?", PegawaiUpdate.Id).
-		First(&PegawaiFungsionalOld)
-	if res.Error != nil {
-		return res.Error
-	}
-
-	tx = a.GormDB.WithContext(ctx)
-	res = tx.Model(&PegawaiFungsionalOld).Updates(PegawaiUpdate.PegawaiFungsional)
-	if res.Error != nil {
-		return res.Error
-	}
+	// tx = a.GormDB.WithContext(ctx)
+	// res = db.Model(&PegawaiFungsionalOld).Updates(PegawaiUpdate.PegawaiFungsional)
+	// if res.Error != nil {
+	// 	return res.Error
+	// }
 
 	return nil
 }

@@ -187,7 +187,10 @@ func HandleUpdatePegawai(a app.App) echo.HandlerFunc {
 			fmt.Printf("[ERROR], %s\n", err.Error())
 			return c.JSON(http.StatusBadRequest, map[string]string{"message": err.Error()})
 		}
+		// fmt.Printf("[DEBUG] pegawai: %+v\n", pegawaiUpdate)
+		// return nil
 		// fmt.Println("Ini Id Pegawai Usecase : ", pegawaiUpdate.Id)
+
 		// Update Data
 		err = repo.UpdatePegawaix(a, c.Request().Context(), pegawaiUpdate)
 		if err != nil {

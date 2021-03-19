@@ -29,6 +29,23 @@ func InitRoute(a app.App, e *echo.Echo) {
 	insaniGroupingPath.GET("/pegawai", pegawai.HandleGetPegawai(a))
 	insaniGroupingPath.GET("/pegawai-simpeg/:uuidPegawai/detail", pegawai.HandleGetSimpegPegawaiByUUID(a))
 	insaniGroupingPath.PUT("/pegawai-simpeg/:uuidPegawai", pegawai.HandleUpdateSimpegPegawaiByUUID(a))
+	// insaniGroupingPath.POST("/pegawai-simpeg/:uuidPegawai", pegawai.HandleUpdateSimpegPegawaiByUUID(a))
+	// 	FE
+	// data
+	// uuid_personal
+	// nik_pegawai
+	// (nik_ktp)
+	// data-data UI SIMPEG
+	// kirim ke POST /pegawai-simpeg
+	// BE
+	// terima request dari POST /pegawai-simpeg
+	// persiapan tambah pegawai baru
+	// ambil data pribadi berdasarkan uuid_personal dari personal_data_pribadi
+	// buat id pegawai
+	// simpan
+	// data pribadi + data pegawai simpeg ke tabel pegawai
+	// data pns jika dia pns ke tabel pegawai_pns
+	// dll sesuai data ketika update pegawai
 
 	// Data Master
 	insaniGroupingPath.GET("/master-jenis-pegawai", jenisPegawai.HandleGetAllJenisPegawai(a))
