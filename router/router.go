@@ -43,7 +43,10 @@ func InitRoute(a app.App, e *echo.Echo) {
 	insaniGroupingPath.GET("/master-status-pegawai-aktif", statusPegawaiAktif.HandleGetStatusPegawaiAktif(a))
 	insaniGroupingPath.GET("/master-induk-kerja", indukKerja.HandleGetIndukKerja(a))
 
-	// SK
+	// SK list
+	insaniGroupingPath.GET("/sk-pegawai", sk.HandleGetAllSKPegawai(a))
+
+	// SK Kenaikan Gaji Berkala
 	insaniGroupingPath.GET("/sk-kgb/:uuidSk/detail", sk.HandleGetSkKenaikanGajiDummy(a))
 	insaniGroupingPath.PUT("/sk-kgb/:uuidSk", sk.HandleUpdateSkKenaikanGaji(a))
 
