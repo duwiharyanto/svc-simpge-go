@@ -63,9 +63,9 @@ spec:
             - name: MINIO_ENDPOINT
               value: "s3-dev.uii.ac.id"
             - name: MINIO_ACCESSKEYID
-              value: "lmZPXbUgOtkgHa7yiTO65bG3"
+              value: "lmZPXbUgOtkgHa7yiTO6"
             - name: MINIO_SECRETACCESSKEY
-              value: "uwW22P4SkVTdTsIS429eI58xe0GoarShtLH0XrqmjHcUQLHu"
+              value: "uwW22P4SkVTdTsIS429eI58xe0GoarShtLH0Xrqm"
             - name: MINIO_SSL
               value: "false"
             - name: MINIO_BUCKETNAME
