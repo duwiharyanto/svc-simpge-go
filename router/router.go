@@ -18,6 +18,7 @@ import (
 	statusPegawai "svc-insani-go/modules/v1/master-status-pegawai/usecase"
 	unitKerja "svc-insani-go/modules/v1/master-unit-kerja/usecase"
 	pegawai "svc-insani-go/modules/v1/pegawai/usecase"
+	skPengangkatan "svc-insani-go/modules/v1/sk-pengangkatan/usecase"
 	sk "svc-insani-go/modules/v1/sk/usecase"
 
 	"github.com/labstack/echo"
@@ -31,17 +32,32 @@ func InitRoute(a app.App, e *echo.Echo) {
 	insaniGroupingPath.PUT("/pegawai-simpeg/:uuidPegawai", pegawai.HandleUpdateSimpegPegawaiByUUID(a))
 
 	// Data Master
-	insaniGroupingPath.GET("/master-jenis-pegawai", jenisPegawai.HandleGetAllJenisPegawai(a))
-	insaniGroupingPath.GET("/master-kelompok-pegawai", kelompokPegawai.HandleGetKelompokPegawai(a))
-	insaniGroupingPath.GET("/master-status-pegawai", statusPegawai.HandleGetAllStatusPegawai(a))
-	insaniGroupingPath.GET("/master-unit-kerja", unitKerja.HandleGetUnitKerja(a))
+	insaniGroupingPath.GET("/master-ijazah-pegawai", sk.HandleGetAllJenisIjazah(a))
+	insaniGroupingPath.GET("/master-induk-kerja", indukKerja.HandleGetIndukKerja(a)) // bentrok dengan unit
 	insaniGroupingPath.GET("/master-jabatan-fungsional", jabatanFungsional.HandleGetJabatanFungsional(a))
-	insaniGroupingPath.GET("/master-pangkat-golongan", pangkatPegawai.HandleGetPangkatGolonganPegawai(a))
-	insaniGroupingPath.GET("/master-lokasi-kerja", lokasiKerja.HandleGetLokasiKerja(a))
+	insaniGroupingPath.GET("/master-jabatan-peneteap", sk.HandleGetJabatanPenetap(a))
 	insaniGroupingPath.GET("/master-jenis-nomor-registrasi", jenisNoRegis.HandleGetJenisNoRegis(a))
+	insaniGroupingPath.GET("/master-jenis-pegawai", jenisPegawai.HandleGetAllJenisPegawai(a))
 	insaniGroupingPath.GET("/master-jenis-pegawai-tidak-tetap", jenisPTT.HandleGetJenisPTT(a))
+	insaniGroupingPath.GET("/master-jenis-sk", sk.HandleGetAllJenisSK(a))
+	insaniGroupingPath.GET("/master-jenis-sk-pengangkatan", sk.HandleGetAllJenisSKPengangkatan(a))
+	insaniGroupingPath.GET("/master-kelompok-pegawai", kelompokPegawai.HandleGetKelompokPegawai(a))
+	insaniGroupingPath.GET("/master-lokasi-kerja", lokasiKerja.HandleGetLokasiKerja(a))
+	insaniGroupingPath.GET("/master-makul", sk.HandleGetAllMataKuliah(a)) // still dummy
+	insaniGroupingPath.GET("/master-pangkat-golongan", pangkatPegawai.HandleGetPangkatGolonganPegawai(a))
+	insaniGroupingPath.GET("/master-pegawai-penetap", sk.HandleGetPegawaiPenetap(a)) // still error
+	insaniGroupingPath.GET("/master-status-pegawai", statusPegawai.HandleGetAllStatusPegawai(a))
 	insaniGroupingPath.GET("/master-status-pegawai-aktif", statusPegawaiAktif.HandleGetStatusPegawaiAktif(a))
-	insaniGroupingPath.GET("/master-induk-kerja", indukKerja.HandleGetIndukKerja(a))
+	insaniGroupingPath.GET("/master-status-pengangkatan", sk.HandleGetAllStatusPengangkat(a))
+	insaniGroupingPath.GET("/master-unit-kerja", unitKerja.HandleGetUnitKerja(a))
+	insaniGroupingPath.GET("/master-unit-pengangkat", unitKerja.HandleGetUnitPengangkat(a))
+
+	insaniGroupingPath.POST("/sk-pengangkatan-tendik", skPengangkatan.HandleCreateSKPengangkatanTendik(a))
+	insaniGroupingPath.GET("/sk-pengangkatan-tendik", skPengangkatan.HandleGetDetailSKPengangkatanTendik(a))
+	insaniGroupingPath.POST("/sk-pengangkatan-dosen", skPengangkatan.HandleCreateSKPengangkatanDosen(a))
+	insaniGroupingPath.GET("/sk-pengangkatan-dosen", skPengangkatan.HandleGetDetailSKPengangkatanDosen(a))
+	insaniGroupingPath.DELETE("/sk-pengangkatan-dosen", skPengangkatan.HandleDeleteSKPengangkatanDosenByUUID(a))
+	insaniGroupingPath.DELETE("/sk-pengangkatan-tendik", skPengangkatan.HandleDeleteSKPengangkatanTendikByUUID(a))
 
 	// SK list
 	insaniGroupingPath.GET("/sk-pegawai", sk.HandleGetAllSKPegawai(a))
