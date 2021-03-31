@@ -16,7 +16,8 @@ import (
 func TestHandleGetKelompokPegawai(t *testing.T) {
 	e := echo.New()
 
-	req := httptest.NewRequest(http.MethodGet, "/", nil)
+	// req := httptest.NewRequest(http.MethodGet, "/", nil)
+	req := httptest.NewRequest(http.MethodGet, "/?kd_jenis_pegawai=ED", nil)
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
 	db, err := database.Connect()

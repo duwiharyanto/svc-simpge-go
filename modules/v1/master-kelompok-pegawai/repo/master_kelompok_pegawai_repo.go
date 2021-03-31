@@ -7,9 +7,8 @@ import (
 	"svc-insani-go/modules/v1/master-kelompok-pegawai/model"
 )
 
-func GetAllKelompokPegawai(a app.App, IDJenisPegawai string) ([]model.KelompokPegawai, error) {
-	// c.Param("kd_jenis_pegawai")
-	sqlQuery := getKelompokPegawaiQuery(IDJenisPegawai)
+func GetAllKelompokPegawai(a app.App, kdJenisPegawai string) ([]model.KelompokPegawai, error) {
+	sqlQuery := getKelompokPegawaiQuery(kdJenisPegawai)
 	rows, err := a.DB.Query(sqlQuery)
 	if err != nil {
 		return nil, fmt.Errorf("error querying get kelompok pegawai, %s", err.Error())
@@ -19,7 +18,7 @@ func GetAllKelompokPegawai(a app.App, IDJenisPegawai string) ([]model.KelompokPe
 	KelompokPegawai := []model.KelompokPegawai{}
 	for rows.Next() {
 		var s model.KelompokPegawai
-		err := rows.Scan(&s.KdJenisPegawai, &s.KdStatusPegawai, &s.KelompokPegawai, &s.KdKelompokPegawai, &s.UUID)
+		err := rows.Scan(&s.KdStatusPegawai, &s.KdJenisPegawai, &s.KdKelompokPegawai, &s.KelompokPegawai, &s.UUID)
 		if err != nil {
 			return nil, fmt.Errorf("error scan kelompok pegawai row, %s", err.Error())
 		}
