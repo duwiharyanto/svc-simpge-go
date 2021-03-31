@@ -1,6 +1,7 @@
 package repo
 
 import (
+	"database/sql"
 	"fmt"
 	"svc-insani-go/app"
 	"svc-insani-go/modules/v1/master-kelompok-pegawai/model"
@@ -34,7 +35,7 @@ func GetAllKelompokPegawai(a app.App, IDJenisPegawai string) ([]model.KelompokPe
 
 func GetAllKelompokPegawaiByUUID(a app.App, uuid string) ([]model.KelompokPegawai, error) {
 	//c.Param("kd_jenis_pegawai")
-	sqlQuery := getKelompokPegawaiByUUID(uuid)
+	sqlQuery := getAllKelompokPegawaiByUUID(uuid)
 	rows, err := a.DB.Query(sqlQuery)
 	if err != nil {
 		return nil, fmt.Errorf("error querying get kelompok pegawai by uuid, %s", err.Error())
@@ -56,4 +57,24 @@ func GetAllKelompokPegawaiByUUID(a app.App, uuid string) ([]model.KelompokPegawa
 	}
 
 	return KelompokPegawai, nil
+}
+
+func GetKelompokPegawaiByUUID(a app.App, uuid string) (*model.KelompokPegawai, error) {
+	var k model.KelompokPegawai
+	sqlQuery := getKelompokPegawaiByUUID(uuid)
+	err := a.DB.QueryRow(sqlQuery).Scan(
+		&k.ID,
+		&k.KdStatusPegawai,
+		&k.KdJenisPegawai,
+		&k.KdKelompokPegawai,
+		&k.UUID,
+	)
+	if err == sql.ErrNoRows {
+		return nil, nil
+	}
+	if err != nil {
+		return nil, fmt.Errorf("error querying get kelompok pegawai by uuid, %s", err.Error())
+	}
+
+	return &k, nil
 }

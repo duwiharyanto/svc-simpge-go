@@ -1,6 +1,7 @@
 package model
 
 type KelompokPegawai struct {
+	ID                string `json:"-"`
 	KdKelompokPegawai string `json:"kd_kelompok_pegawai"`
 	KdStatusPegawai   string `json:"kd_status_pegawai"`
 	KdJenisPegawai    string `json:"kd_jenis_pegawai"`

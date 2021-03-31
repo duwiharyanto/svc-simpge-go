@@ -15,3 +15,7 @@ func getUnitKerjaQuery(indukKerja string) string {
 func getBagianKerjaQuery(unitKerja string) string {
 	return fmt.Sprintf(`SELECT id, kd_unit3, unit3, COALESCE(keterangan2,''), uuid FROM unit3 WHERE flag_aktif="Y" AND keterangan1 = %q`, unitKerja)
 }
+
+func getIndukKerjaQueryByUUID(uuid string) string {
+	return fmt.Sprintf(`SELECT id, kd_induk_kerja, induk_kerja, uuid FROM induk_kerja WHERE flag_aktif=1 AND uuid = %q`, uuid)
+}
