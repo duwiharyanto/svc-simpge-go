@@ -11,6 +11,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"gorm.io/gorm/schema"
 )
 
 var (
@@ -66,7 +67,11 @@ func Healthz(ctx context.Context, db *sql.DB) error {
 func InitGorm(db *sql.DB) (*gorm.DB, error) {
 	gormDB, err := gorm.Open(mysql.New(mysql.Config{
 		Conn: db,
-	}), &gorm.Config{})
+	}), &gorm.Config{
+		NamingStrategy: schema.NamingStrategy{
+			SingularTable: true,
+		},
+	})
 	if err != nil {
 		return nil, fmt.Errorf("error connection gorm, %w", err)
 	}
