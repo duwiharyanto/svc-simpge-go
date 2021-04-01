@@ -1,11 +1,15 @@
 package model
 
 type PangkatGolonganRuang struct {
-	Id        uint64
-	Pangkat   string
-	Golongan  string
-	FlagAktif int
-	Uuid      string
+	Id         uint64
+	Pangkat    string
+	IdGolongan uint64
+	Golongan   string
+	IdRuang    uint64
+	KdRuang    string
+	FlagAktif  int
+	UserUpdate string
+	Uuid       string
 }
 
 func (PangkatGolonganRuang) TableName() string {
