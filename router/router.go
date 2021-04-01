@@ -20,6 +20,7 @@ import (
 	pegawai "svc-insani-go/modules/v1/pegawai/usecase"
 	skPengangkatan "svc-insani-go/modules/v1/sk-pengangkatan/usecase"
 	sk "svc-insani-go/modules/v1/sk/usecase"
+	skV2 "svc-insani-go/modules/v2/sk/usecase"
 
 	"github.com/labstack/echo"
 )
@@ -54,6 +55,7 @@ func InitRoute(a app.App, e *echo.Echo) {
 
 	insaniGroupingPath.POST("/sk-pengangkatan-tendik", skPengangkatan.HandleCreateSKPengangkatanTendik(a))
 	insaniGroupingPath.GET("/sk-pengangkatan-tendik", skPengangkatan.HandleGetDetailSKPengangkatanTendik(a))
+	insaniGroupingPath.PUT("/sk-pengangkatan-tendik", skV2.HandleUpdateSKPengangkatanTendik(a))
 	insaniGroupingPath.POST("/sk-pengangkatan-dosen", skPengangkatan.HandleCreateSKPengangkatanDosen(a))
 	insaniGroupingPath.GET("/sk-pengangkatan-dosen", skPengangkatan.HandleGetDetailSKPengangkatanDosen(a))
 	insaniGroupingPath.DELETE("/sk-pengangkatan-dosen", skPengangkatan.HandleDeleteSKPengangkatanDosenByUUID(a))

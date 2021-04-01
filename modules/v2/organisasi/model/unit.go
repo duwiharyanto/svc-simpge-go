@@ -1,13 +1,13 @@
 package model
 
 type Unit2 struct {
-	Id          uint64
-	RowId       uint64
-	KdUnit2     string
-	Unit2       string
-	Keterangan1 string
-	FlagAktif   int
-	UserInput   string
-	UserUpdate  string
-	Uuid        string
+	Id          uint64 `form:"-"`
+	RowId       uint64 `form:"-"`
+	KdUnit2     string `form:"-"`
+	Unit2       string `form:"-"`
+	Keterangan1 string `form:"-"`
+	FlagAktif   int    `form:"-"`
+	UserInput   string `form:"-"`
+	UserUpdate  string `form:"-"`
+	Uuid        string `form:"-"`
 }

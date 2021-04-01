@@ -32,6 +32,28 @@ func TestGetAllKelompokSkPengangkatan(t *testing.T) {
 	fmt.Printf("[DEBUG] len kelompok sk pengangkatan: %d\n", len(ksk))
 }
 
+func TestGetKelompokSkPengangkatan(t *testing.T) {
+	conn, err := database.Connect()
+	if err != nil {
+		t.Fatal(err)
+	}
+	db, err := database.InitGorm(conn)
+	if err != nil {
+		t.Fatal(err)
+	}
+	a := app.App{GormDB: db}
+	// uuid := "zzz"
+	uuid := "f9a2a6e4-ec0a-11ea-8c77-7eb0d4a3c7a0"
+	ksk, err := GetKelompokSkPengangkatan(a, context.Background(), uuid)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if ksk == nil {
+		t.Fatal("should not be empty")
+	}
+	fmt.Printf("[DEBUG] kelompok sk pengangkatan: %+v\n", ksk)
+}
+
 func TestUpdateSkPengangkatanTendik(t *testing.T) {
 	conn, err := database.Connect()
 	if err != nil {

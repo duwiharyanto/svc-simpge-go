@@ -3,12 +3,14 @@ package repo
 import (
 	"context"
 	"errors"
+	"fmt"
 	"svc-insani-go/app"
 	"svc-insani-go/modules/v2/sk/model"
 
 	"gorm.io/gorm"
 )
 
+// TODO: add error handling and return it
 func GetAllSkPegawai(a app.App, ctx context.Context) []model.SkPegawai {
 	var ssp []model.SkPegawai
 	a.GormDB.
@@ -18,6 +20,7 @@ func GetAllSkPegawai(a app.App, ctx context.Context) []model.SkPegawai {
 	return ssp
 }
 
+// TODO: add error handling and return it
 func GetSkPegawai(a app.App, ctx context.Context, uuid string) *model.SkPegawai {
 	var skp model.SkPegawai
 	err := a.GormDB.
@@ -31,6 +34,7 @@ func GetSkPegawai(a app.App, ctx context.Context, uuid string) *model.SkPegawai 
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil
 	}
+
 	return &skp
 }
 
@@ -38,7 +42,7 @@ func GetAllJenisIjazah(a app.App, ctx context.Context) ([]model.JenisIjazah, err
 	var jj []model.JenisIjazah
 	err := a.GormDB.
 		WithContext(ctx).
-		// Where(&model.JenisIjazah{FlagAktif: 1}).
+		// Where(&model.JenisIjazah{FlagAktif: 1}). //?
 		Find(&jj).
 		Error
 
@@ -47,4 +51,26 @@ func GetAllJenisIjazah(a app.App, ctx context.Context) ([]model.JenisIjazah, err
 	}
 
 	return jj, nil
+}
+
+func GetJenisIjazah(a app.App, ctx context.Context, uuid string) (*model.JenisIjazah, error) {
+	var j model.JenisIjazah
+	err := a.GormDB.
+		WithContext(ctx).
+		Where(&model.JenisIjazah{
+			FlagAktif: 1,
+			Uuid:      uuid,
+		}).
+		Find(&j).
+		Error
+
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return nil, nil
+	}
+
+	if err != nil {
+		return nil, fmt.Errorf("error get jenis ijazah: %w", err)
+	}
+
+	return &j, nil
 }
