@@ -66,13 +66,15 @@ func GetSkPengangkatanTendik(a app.App, ctx context.Context, uuid string) (*mode
 	err := a.GormDB.
 		WithContext(ctx).
 		Preload("SkPegawai.Pegawai").
-		Joins("KelompokSkPengangkatan").
-		Joins("UnitPengangkat").
-		Joins("UnitKerja").
+		Joins("JabatanPenetap").
+		Joins("PejabatPenetap").
 		Joins("JabatanFungsional").
+		Joins("JenisIjazah").
+		Joins("KelompokSkPengangkatan").
 		Joins("PangkatGolonganRuang").
 		Joins("StatusPengangkatan").
-		Joins("JenisIjazah").
+		Joins("UnitKerja").
+		Joins("UnitPengangkat").
 		Where(&model.SkPengangkatanTendik{Uuid: uuid}).
 		First(&skpt).
 		Error
@@ -87,6 +89,7 @@ func GetSkPengangkatanTendik(a app.App, ctx context.Context, uuid string) (*mode
 
 	return &skpt, nil
 }
+
 func GetAllStatusPengangkatan(a app.App, ctx context.Context) ([]model.StatusPengangkatan, error) {
 	var ss []model.StatusPengangkatan
 	err := a.GormDB.

@@ -6,12 +6,13 @@ import (
 	"svc-insani-go/app"
 	kepegawaianRepo "svc-insani-go/modules/v2/kepegawaian/repo"
 	organisasiRepo "svc-insani-go/modules/v2/organisasi/repo"
+	"svc-insani-go/modules/v2/sk/model"
 	"svc-insani-go/modules/v2/sk/repo"
 
 	"github.com/labstack/echo"
 )
 
-func HandleUpdateSKPengangkatanTendik(a app.App) echo.HandlerFunc {
+func HandleUpdateSkPengangkatanTendik(a app.App) echo.HandlerFunc {
 	h := func(c echo.Context) error {
 		ctx := c.Request().Context()
 		uuid := c.QueryParam("uuid_sk_pengangkatan_tendik")
@@ -33,7 +34,6 @@ func HandleUpdateSKPengangkatanTendik(a app.App) echo.HandlerFunc {
 					"Data SK pengangkatan tendik tidak ditemukan",
 				))
 		}
-		fmt.Printf("[DEBUG] old ksk: %+v\n", sk.KelompokSkPengangkatan)
 
 		skRequest := *sk
 		err = c.Bind(&skRequest)
@@ -53,6 +53,18 @@ func HandleUpdateSKPengangkatanTendik(a app.App) echo.HandlerFunc {
 				return c.JSON(http.StatusBadRequest, map[string]string{"message": "jabatan fungsional tidak ditemukan"})
 			}
 			skRequest.JabatanFungsional = *jabfung
+		}
+
+		uuidJabatanPenetap := c.FormValue("uuid_jabatan_penetap")
+		if uuidJabatanPenetap != sk.JabatanPenetap.Uuid {
+			jabPenetap, err := organisasiRepo.GetJabatanStruktural(a, ctx, uuidJabatanPenetap)
+			if err != nil {
+				return c.JSON(http.StatusInternalServerError, map[string]string{"message": app.ErrInternalServer})
+			}
+			if jabPenetap == nil {
+				return c.JSON(http.StatusBadRequest, map[string]string{"message": "jabatan penetap tidak ditemukan"})
+			}
+			skRequest.JabatanPenetap = *jabPenetap
 		}
 
 		if skRequest.JenisIjazah.Uuid != sk.JenisIjazah.Uuid {
@@ -86,6 +98,18 @@ func HandleUpdateSKPengangkatanTendik(a app.App) echo.HandlerFunc {
 				return c.JSON(http.StatusBadRequest, map[string]string{"message": "pangkat golongan ruang tidak ditemukan"})
 			}
 			skRequest.PangkatGolonganRuang = *pgr
+		}
+
+		uuidPejabatPenetap := c.FormValue("uuid_pejabat_penetap")
+		if uuidPejabatPenetap != sk.PejabatPenetap.Uuid {
+			pejabPenetap, err := organisasiRepo.GetPejabatStrukturalByUUID(a, ctx, uuidPejabatPenetap)
+			if err != nil {
+				return c.JSON(http.StatusInternalServerError, map[string]string{"message": app.ErrInternalServer})
+			}
+			if pejabPenetap == nil {
+				return c.JSON(http.StatusBadRequest, map[string]string{"message": "pejabat penetap tidak ditemukan"})
+			}
+			skRequest.PejabatPenetap = *pejabPenetap
 		}
 
 		if skRequest.StatusPengangkatan.Uuid != sk.StatusPengangkatan.Uuid {
@@ -138,6 +162,34 @@ func HandleUpdateSKPengangkatanTendik(a app.App) echo.HandlerFunc {
 
 		fmt.Printf("\n[DEBUG] sk after req: %+v\n", skRequest)
 		return c.JSON(http.StatusOK, map[string]string{"message": "Berhasil ubah SK pengangkatan tendik"})
+	}
+	return echo.HandlerFunc(h)
+}
+
+func HandleGetSkPengangkatanTendik(a app.App) echo.HandlerFunc {
+	h := func(c echo.Context) error {
+		ctx := c.Request().Context()
+		uuidSkPengangkatanTendik := c.QueryParam("uuid_sk_pengangkatan_tendik")
+		sk, err := repo.GetSkPengangkatanTendik(a, ctx, uuidSkPengangkatanTendik)
+		if err != nil {
+			return c.JSON(
+				http.StatusInternalServerError,
+				echo.NewHTTPError(
+					http.StatusInternalServerError,
+					err,
+				))
+		}
+
+		res := map[string][]*model.SkPengangkatanTendik{
+			"data": []*model.SkPengangkatanTendik{},
+		}
+
+		if sk == nil {
+			return c.JSON(http.StatusOK, res)
+		}
+
+		res["data"] = append(res["data"], sk)
+		return c.JSON(http.StatusOK, res)
 	}
 	return echo.HandlerFunc(h)
 }
