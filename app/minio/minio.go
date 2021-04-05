@@ -129,6 +129,20 @@ func (ff FormFile) Append(bucket, name, contentType string, size int64, file io.
 	}
 }
 
+func (ff FormFile) GetUrl() error {
+	for key := range ff.fileMap {
+		var err error
+		f := ff.fileMap[key]
+		f.url, err = ff.mc.GetDownloadURL(f.bucket, f.path, "")
+		if err != nil {
+			return fmt.Errorf("error get download url: %w", err)
+		}
+		ff.fileMap[key] = f
+	}
+
+	return nil
+}
+
 func (ff FormFile) Upload() error {
 	for _, f := range ff.fileMap {
 		err := ff.mc.Upload(f.bucket, f.path, f.file, f.size, f.contentType)
@@ -156,8 +170,9 @@ func (ff FormFile) GenerateObjectName(name string, dirs ...string) string {
 
 type formFile struct {
 	bucket      string
-	path        string
 	contentType string
+	path        string
+	url         string
 	size        int64
 	file        io.Reader
 }

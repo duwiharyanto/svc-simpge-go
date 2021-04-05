@@ -163,7 +163,10 @@ func HandleUpdateSkPengangkatanTendik(a app.App) echo.HandlerFunc {
 		}
 
 		// fmt.Printf("\n[DEBUG] sk after req: %+v\n", skRequest)
-		return c.JSON(http.StatusOK, map[string]string{"message": "Berhasil ubah SK pengangkatan tendik"})
+		return c.JSON(http.StatusOK, map[string]interface{}{
+			"message": "Berhasil ubah SK pengangkatan tendik",
+			"data":    sk.SkPegawai.Pegawai,
+		})
 	}
 	return echo.HandlerFunc(h)
 }
