@@ -2,6 +2,7 @@ package repo
 
 import (
 	"fmt"
+	"svc-insani-go/helper"
 	"svc-insani-go/modules/v1/sk-pengangkatan/model"
 )
 
@@ -43,16 +44,18 @@ func createSKPengangkatanTendikQuery(skPengangkatanTendik model.SKPengangkatanTe
 }
 
 func getDetailSKPengangkatanTendikQuery(UUIDSKPengangkatanTendik string) string {
-	return fmt.Sprintf(`SELECT
+	q := fmt.Sprintf(`SELECT
 	COALESCE(k.nama, ''), COALESCE(k.nik, ''), COALESCE(k.tempat_lahir, ''), COALESCE(k.tgl_lahir, ''),
 	COALESCE(c.kd_jenis_sk, ''), COALESCE(c.nama_sk, ''), COALESCE(c.uuid, ''),
 	COALESCE(d.kd_kelompok_pegawai, ''), COALESCE(d.kelompok_pegawai, ''), COALESCE(d.uuid, ''),
 	COALESCE(a.nomor_sk, ''),
-	COALESCE(e.kd_unit_kerja, ''), COALESCE(e.nama_unit_kerja, ''), COALESCE(e.uuid, ''),
+	COALESCE(e.kd_unit2, ''), COALESCE(e.unit2, ''), COALESCE(e.uuid, ''),
 	COALESCE(a.tmt, ''),
-	COALESCE(f.kd_unit_kerja, ''), COALESCE(f.nama_unit_kerja, ''), COALESCE(f.uuid, ''),
+	COALESCE(f.kd_unit2, ''), COALESCE(f.unit2, ''), COALESCE(f.uuid, ''),
 	COALESCE(g.kd_fungsional, ''), COALESCE(g.fungsional, ''), COALESCE(g.uuid, ''),
 	COALESCE(h.pangkat, ''), COALESCE(h.golongan, ''), COALESCE(h.uuid, ''),
+	COALESCE(l.nama_jenis_jabatan, ''), COALESCE(l.nama_jenis_unit, ''), COALESCE(l.nama_unit, ''), COALESCE(l.kd_unit, ''), COALESCE(l.uuid, ''),
+	COALESCE(m.nama, ''), COALESCE(m.gelar_depan, ''), COALESCE(m.gelar_belakang, ''), COALESCE(m.uuid, ''),
 	COALESCE(b.gaji_pokok, 0), 
 	COALESCE(b.masa_kerja_diakui_tahun, '0'), COALESCE(b.masa_kerja_diakui_bulan, '0'), 
 	COALESCE(b.masa_kerja_ril_tahun, '0'), COALESCE(b.masa_kerja_ril_bulan, '0'), 
@@ -64,14 +67,17 @@ func getDetailSKPengangkatanTendikQuery(UUIDSKPengangkatanTendik string) string 
 	JOIN sk_pengangkatan_tendik b ON a.id = b.id_sk_pegawai
 	LEFT JOIN jenis_sk c ON a.id_jenis_sk = c.id
 	LEFT JOIN kelompok_pegawai d ON b.id_kelompok_sk_pengangkatan = d.id
-	LEFT JOIN unit_kerja e ON b.id_unit_pengangkat = e.id
-	LEFT JOIN unit_kerja f ON b.id_unit_pegawai = f.id
+	LEFT JOIN unit2 e ON b.id_unit_pengangkat = e.id
+	LEFT JOIN unit2 f ON b.id_unit_pegawai = f.id
 	LEFT JOIN jabatan_fungsional g ON b.id_jabatan_fungsional = g.id
 	LEFT JOIN pangkat_golongan_pegawai h ON b.id_pangkat_golongan_pegawai = h.id
 	LEFT JOIN status_pengangkatan i ON b.id_status_pengangkatan = i.id
 	LEFT JOIN jenis_ijazah j ON b.id_jenis_ijazah = j.id
 	LEFT JOIN pegawai k ON a.id_pegawai = k.id
+	LEFT JOIN jabatan_struktural l ON b.id_strukorg_pejabat_penetap = l.id_struktur_organisasi
+	LEFT JOIN pejabat_struktural m ON b.id_strukorg_pejabat_penetap = m.id_struktur_organisasi
 	WHERE b.flag_aktif = 1 AND b.uuid = %q`, UUIDSKPengangkatanTendik)
+	return helper.FlatQuery(q)
 }
 
 // kurang

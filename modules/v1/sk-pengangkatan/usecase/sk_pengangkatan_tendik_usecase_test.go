@@ -10,7 +10,6 @@ import (
 	"svc-insani-go/app"
 	"svc-insani-go/app/database"
 	"svc-insani-go/app/minio"
-	"svc-insani-go/modules/v1/sk-pengangkatan/model"
 	"testing"
 
 	"github.com/labstack/echo"
@@ -76,7 +75,7 @@ func TestUsecase(t *testing.T) {
 
 	t.Run("get_sk_pengangkatan_tendik_detail", func(t *testing.T) {
 		urlQuery := make(url.Values)
-		urlQuery.Set("uuid_sk_pengangkatan_tendik", "fe1ca162-2ffe-11eb-a014-7eb0d4a3c7a0")
+		urlQuery.Set("uuid_sk_pengangkatan_tendik", "dfef3d4d-2ffe-11eb-a014-7eb0d4a3c7a0")
 
 		req := httptest.NewRequest(
 			http.MethodGet,
@@ -89,18 +88,22 @@ func TestUsecase(t *testing.T) {
 		ctx := e.NewContext(req, res)
 		HandleGetDetailSKPengangkatanTendik(a)(ctx)
 
-		var skPengangkatanTendik map[string][]*model.SKPengangkatanTendikDetail
-		rawJSONResponse := []byte(fmt.Sprintf(`%s`, res.Body.String()))
-		err := json.Unmarshal(rawJSONResponse, &skPengangkatanTendik)
+		// format res body indentation
+		// var buf bytes.Buffer
+		// json.Indent(&buf, res.Body.Bytes(), "", "\t")
+		// fmt.Printf("[DEBUG] rec body: %s\n", buf.String())
+
+		var result map[string][]interface{}
+		err = json.Unmarshal(res.Body.Bytes(), &result)
 		if err != nil {
-			t.Fatalf("err marshaling: %s\n", err.Error())
+			t.Log(err)
+			t.Log(res.Body.String())
+			t.Fail()
 		}
-		b, err := json.MarshalIndent(&skPengangkatanTendik, "", "\t")
-		if err != nil {
-			t.Fatalf("err marshaling: %s\n", err.Error())
+
+		if len(result) == 0 {
+			t.Fatal("should not be empty")
 		}
-		fmt.Printf("code: %d\n", res.Code)
-		fmt.Printf("body:\n%s\n", b)
 	})
 
 }
