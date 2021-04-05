@@ -72,10 +72,11 @@ func TestHandleUpdateSkPengangkatanTendik(t *testing.T) {
 	wbuf := &bytes.Buffer{}
 	wr := multipart.NewWriter(wbuf)
 	err = FillFormDataFieldMap(wr, map[string]string{
-		"uuid_jenis_sk":                 "ebc9e2c0-ee60-11ea-8c77-7eb0d4a3c7a0",
-		"gaji_pokok":                    "1124",
-		"tanggal_ditetapkan":            "333",
-		"nomor_sk":                      "no/sk/1/4",
+		"uuid_jenis_sk":      "ebc9e2c0-ee60-11ea-8c77-7eb0d4a3c7a0",
+		"gaji_pokok":         "1124",
+		"tanggal_ditetapkan": "333",
+		// "nomor_sk":                      "no/sk/1/4",
+		"nomor_sk":                      "",
 		"tentang_sk":                    "tentang sk tendik 1",
 		"tmt":                           "2021-09-08",
 		"uuid_kelompok_sk_pengangkatan": "742024ac-4fea-11eb-bf95-a74048ab8082",
@@ -85,7 +86,7 @@ func TestHandleUpdateSkPengangkatanTendik(t *testing.T) {
 		"uuid_unit_kerja":               "798c8162-1fd3-11eb-a014-7eb0d4a3c7a0",
 		"masa_kerja_diakui_bulan":       "7",
 		"masa_kerja_diakui_tahun":       "1",
-		"masa_kerja_ril_bulan":          "6",
+		"masa_kerja_ril_bulan":          "11",
 		"masa_kerja_ril_tahun":          "2",
 		"masa_kerja_gaji_bulan":         "0",
 		"masa_kerja_gaji_tahun":         "3",
@@ -131,7 +132,7 @@ func TestHandleUpdateSkPengangkatanTendik(t *testing.T) {
 	// format res body indentation
 	var buf bytes.Buffer
 	json.Indent(&buf, rawResBodyJSON, "", "\t")
-	fmt.Printf("[DEBUG] rec body: %s\n", buf.String())
+	// fmt.Printf("[DEBUG] rec body: %s\n", buf.String())
 
 	// var any interface{}
 	// err = json.Unmarshal(rec.Body.Bytes(), &any)

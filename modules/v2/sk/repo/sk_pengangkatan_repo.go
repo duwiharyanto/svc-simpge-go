@@ -65,6 +65,8 @@ func GetSkPengangkatanTendik(a app.App, ctx context.Context, uuid string) (*mode
 	var skpt model.SkPengangkatanTendik
 	err := a.GormDB.
 		WithContext(ctx).
+		Preload("SkPegawai.Pegawai.Unit2").
+		Preload("SkPegawai.Pegawai.JenisPegawai").
 		Preload("SkPegawai.Pegawai").
 		Joins("JabatanPenetap").
 		Joins("PejabatPenetap").
