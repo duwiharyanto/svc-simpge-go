@@ -2,12 +2,14 @@ package minio
 
 import (
 	"crypto/tls"
+	"fmt"
 	"io"
 	"net"
 	"net/http"
 	"net/url"
 	"os"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/minio/minio-go"
@@ -104,4 +106,58 @@ func expirationTime() time.Duration {
 		expSecond = defaultSecond
 	}
 	return time.Duration(expSecond) * time.Second
+}
+
+type FormFile struct {
+	mc      *MinioClient
+	fileMap map[string]formFile
+}
+
+func NewFormFile(minioClient *MinioClient) FormFile {
+	return FormFile{
+		mc:      minioClient,
+		fileMap: make(map[string]formFile),
+	}
+}
+
+func (ff FormFile) Append(bucket, name, contentType string, size int64, file io.Reader) {
+	ff.fileMap[name] = formFile{
+		bucket:      bucket,
+		contentType: contentType,
+		size:        size,
+		file:        file,
+	}
+}
+
+func (ff FormFile) Upload() error {
+	for _, f := range ff.fileMap {
+		err := ff.mc.Upload(f.bucket, f.path, f.file, f.size, f.contentType)
+		if err != nil {
+			return fmt.Errorf("error form file upload: %w", err)
+		}
+	}
+	return nil
+}
+
+func (ff FormFile) GenerateObjectName(name string, dirs ...string) string {
+	f := ff.fileMap[name]
+	f.path = strings.Join(dirs, "/")
+	splitted := strings.Split(f.contentType, "/")
+	var extension string
+	if len(splitted) == 2 {
+		extension = splitted[1]
+	} else {
+		extension = splitted[0]
+	}
+	f.path += fmt.Sprintf("/%d.%s", time.Now().Unix(), extension)
+	ff.fileMap[name] = f
+	return f.path
+}
+
+type formFile struct {
+	bucket      string
+	path        string
+	contentType string
+	size        int64
+	file        io.Reader
 }

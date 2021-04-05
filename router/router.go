@@ -20,6 +20,8 @@ import (
 	pegawai "svc-insani-go/modules/v1/pegawai/usecase"
 	skPengangkatan "svc-insani-go/modules/v1/sk-pengangkatan/usecase"
 	sk "svc-insani-go/modules/v1/sk/usecase"
+	organisasiV2 "svc-insani-go/modules/v2/organisasi/usecase"
+	skV2 "svc-insani-go/modules/v2/sk/usecase"
 
 	"github.com/labstack/echo"
 )
@@ -32,6 +34,9 @@ func InitRoute(a app.App, e *echo.Echo) {
 	insaniGroupingPath.PUT("/pegawai-simpeg/:uuidPegawai", pegawai.HandleUpdateSimpegPegawaiByUUID(a))
 
 	// Data Master
+	insaniGroupingPath.GET("/jabatan-struktural", organisasiV2.HandleGetAllJabatanStruktural(a))
+	insaniGroupingPath.GET("/jenis-ijazah", skV2.HandleGetAllJenisIjazah(a))
+	insaniGroupingPath.GET("/pejabat-struktural", organisasiV2.HandleGetPejabatStruktural(a))
 	insaniGroupingPath.GET("/master-ijazah-pegawai", sk.HandleGetAllJenisIjazah(a))
 	insaniGroupingPath.GET("/master-induk-kerja", indukKerja.HandleGetIndukKerja(a)) // bentrok dengan unit
 	insaniGroupingPath.GET("/master-jabatan-fungsional", jabatanFungsional.HandleGetJabatanFungsional(a))
@@ -54,10 +59,13 @@ func InitRoute(a app.App, e *echo.Echo) {
 
 	insaniGroupingPath.POST("/sk-pengangkatan-tendik", skPengangkatan.HandleCreateSKPengangkatanTendik(a))
 	insaniGroupingPath.GET("/sk-pengangkatan-tendik", skPengangkatan.HandleGetDetailSKPengangkatanTendik(a))
+	insaniGroupingPath.PUT("/sk-pengangkatan-tendik", skV2.HandleUpdateSkPengangkatanTendik(a))
 	insaniGroupingPath.POST("/sk-pengangkatan-dosen", skPengangkatan.HandleCreateSKPengangkatanDosen(a))
 	insaniGroupingPath.GET("/sk-pengangkatan-dosen", skPengangkatan.HandleGetDetailSKPengangkatanDosen(a))
 	insaniGroupingPath.DELETE("/sk-pengangkatan-dosen", skPengangkatan.HandleDeleteSKPengangkatanDosenByUUID(a))
 	insaniGroupingPath.DELETE("/sk-pengangkatan-tendik", skPengangkatan.HandleDeleteSKPengangkatanTendikByUUID(a))
+
+	insaniGroupingPath.GET("/sk-pengangkatan-tendik-v2", skV2.HandleGetSkPengangkatanTendik(a))
 
 	// SK list
 	insaniGroupingPath.GET("/sk-pegawai", sk.HandleGetAllSKPegawai(a))

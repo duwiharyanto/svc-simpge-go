@@ -9,6 +9,7 @@ import (
 	"strings"
 	"svc-insani-go/app"
 	"svc-insani-go/app/database"
+	"svc-insani-go/app/minio"
 	"svc-insani-go/modules/v1/sk-pengangkatan/model"
 	"testing"
 
@@ -25,7 +26,11 @@ func TestUsecase(t *testing.T) {
 		t.Skipf("error db ping: %s\n", err.Error())
 	}
 	loc := app.GetFixedTimeZone()
-	a := app.App{DB: db, TimeLocation: loc}
+	minio, err := minio.Connect()
+	if err != nil {
+		t.Skip("failed connect minio:", err)
+	}
+	a := app.App{DB: db, TimeLocation: loc, MinioClient: minio}
 
 	e := echo.New()
 	t.Run("create_sk_pengangkatan_tendik", func(t *testing.T) {
