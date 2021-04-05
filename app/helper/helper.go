@@ -57,7 +57,10 @@ func GetIndonesianMonth(format, date string) (int, string) {
 }
 
 func GetIndonesianDate(format, date string) (int, string) {
-	dpDate, _ := time.Parse(format, date)
+	dpDate, err := time.Parse(format, date)
+	if err != nil {
+		return 0, ""
+	}
 	dpMonth := dpDate.Month()
 	var IDMonth string
 	if time.January <= dpMonth && dpMonth <= time.December {

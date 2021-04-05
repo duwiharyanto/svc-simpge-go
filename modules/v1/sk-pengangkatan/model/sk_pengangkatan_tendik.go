@@ -4,6 +4,7 @@ import (
 	"mime/multipart"
 	"strings"
 	"svc-insani-go/app/helper"
+	organisasiV2 "svc-insani-go/modules/v2/organisasi/model"
 )
 
 func EmptySKPengangkatanTendiki() SKPengangkatanTendik {
@@ -102,6 +103,9 @@ type SKPengangkatanTendikDetail struct {
 	TMT                 string `json:"tmt"`
 	TMTIDN              string `json:"tmt_idn"`
 
+	// Jabatan Penetap
+	JabatanPenetap organisasiV2.JabatanStruktural `json:"jabatan_penetap" form:"-"`
+
 	// Jenis SK
 	IDJenisSK   string `json:"-" form:"-"`
 	UUIDJenisSK string `json:"uuid_jenis_sk" form:"uuid_jenis_sk"`
@@ -137,6 +141,9 @@ type SKPengangkatanTendikDetail struct {
 	UUIDPangkatGolonganPegawai string `json:"uuid_pangkat_golongan_pegawai" form:"uuid_pangkat_golongan_pegawai"`
 	KDPangkatGolonganPegawai   string `json:"pangkat" form:"-"`
 	PangkatGolonganPegawai     string `json:"golongan" form:"-"`
+
+	// Pejabat Penetap
+	PejabatPenetap organisasiV2.PejabatStruktural `json:"pejabat_penetap" form:"-"`
 
 	GajiPokok            int `json:"gaji_pokok" form:"gaji_pokok"`
 	MasaRilBulan         int `json:"masa_kerja_ril_bulan" form:"masa_kerja_ril_bulan"`
@@ -191,6 +198,7 @@ func (sk *SKPengangkatanTendikDetail) SetTTL() {
 }
 
 func (sk *SKPengangkatanTendikDetail) SetTanggalSK() {
+
 	_, sk.TMTIDN = helper.GetIndonesianDate(dateFormat, sk.TMT)
 	_, sk.TanggalDitetapkanIDN = helper.GetIndonesianDate(dateFormat, sk.TanggalDitetapkan)
 }
