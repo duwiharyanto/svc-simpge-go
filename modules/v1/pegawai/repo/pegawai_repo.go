@@ -506,35 +506,3 @@ func UpdatePendidikanPegawai(a app.App, ctx context.Context, uuidPendidikanDiaku
 
 	return nil
 }
-
-// Without GORM
-
-// func UpdatePegawaiN(a app.App, ctx context.Context, pegawaiUpdate model.PegawaiUpdate) error {
-
-// 	sqlQuery := updatePegawaiQuery(pegawaiUpdate)
-
-// 	tx, err := a.DB.Begin()
-// 	if err != nil {
-// 		return fmt.Errorf("error beginning transaction, %s", err.Error())
-// 	}
-
-// 	stmt, err := tx.Prepare(sqlQuery)
-// 	if err != nil {
-// 		return fmt.Errorf("error preparing query, %s", err.Error())
-// 	}
-// 	defer stmt.Close()
-
-// 	_, err = stmt.Exec()
-
-// 	if err != nil {
-// 		return fmt.Errorf("error executing update query, %s", err.Error())
-// 	}
-
-// 	err = tx.Commit()
-// 	if err != nil {
-// 		tx.Rollback()
-// 		return fmt.Errorf("error commiting transcation, %w", err)
-// 	}
-
-// 	return nil
-// }

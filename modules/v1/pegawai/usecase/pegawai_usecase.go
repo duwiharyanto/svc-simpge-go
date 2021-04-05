@@ -84,11 +84,6 @@ func PrepareGetSimpegPegawaiByUUID(a app.App, uuidPegawai string) (model.Pegawai
 		return model.PegawaiDetail{}, fmt.Errorf("error repo get pegawai pns by uuid, %w", err)
 	}
 
-	// pegawaiPTT, err := repo.GetPegawaiPTT(a, uuidPegawai)
-	// if err != nil {
-	// 	return model.PegawaiDetail{}, fmt.Errorf("error repo get pegawai tidak tetap by uuid, %w", err)
-	// }
-
 	statusPegawaiAktif, err := repo.GetStatusPegawaiAktif(a, uuidPegawai)
 	if err != nil {
 		return model.PegawaiDetail{}, fmt.Errorf("error repo get status aktif pegawai by uuid, %w", err)
