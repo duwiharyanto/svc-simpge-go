@@ -18,10 +18,10 @@ type SkPegawai struct {
 }
 
 type JenisIjazah struct {
-	Id          uint64 `form:"-"`
-	JenisIjazah string `form:"jenis_ijazah"`
-	FlagAktif   int    `form:"-"`
-	UserInput   string `form:"-"`
-	UserUpdate  string `form:"-"`
-	Uuid        string `form:"uuid_jenis_ijazah"`
+	Id          uint64 `form:"-" json:"-"`
+	JenisIjazah string `form:"jenis_ijazah" json:"jenis_ijazah"`
+	FlagAktif   int    `form:"-" json:"-"`
+	UserInput   string `form:"-" json:"-"`
+	UserUpdate  string `form:"-" json:"-"`
+	Uuid        string `form:"uuid_jenis_ijazah" json:"uuid"`
 }

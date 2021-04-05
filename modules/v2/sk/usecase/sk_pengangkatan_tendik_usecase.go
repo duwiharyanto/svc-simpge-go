@@ -42,7 +42,7 @@ func HandleUpdateSkPengangkatanTendik(a app.App) echo.HandlerFunc {
 			return c.JSON(http.StatusInternalServerError, map[string]string{"message": err.Error()})
 		}
 
-		fmt.Printf("\n[DEBUG] old sk: %+v\n", sk)
+		// fmt.Printf("\n[DEBUG] old sk: %+v\n", sk)
 
 		if skRequest.JabatanFungsional.Uuid != sk.JabatanFungsional.Uuid {
 			jabfung, err := kepegawaianRepo.GetJabatanFungsional(a, ctx, skRequest.JabatanFungsional.Uuid)
@@ -150,6 +150,8 @@ func HandleUpdateSkPengangkatanTendik(a app.App) echo.HandlerFunc {
 		skRequest.UserUpdate = c.Request().Header.Get("X-Member")
 		skRequest.SkPegawai.UserUpdate = c.Request().Header.Get("X-Member")
 
+		// c.FormFile("x")
+
 		err = repo.UpdateSkPengangkatanTendik(a, ctx, &skRequest)
 		if err != nil {
 			return c.JSON(
@@ -160,7 +162,7 @@ func HandleUpdateSkPengangkatanTendik(a app.App) echo.HandlerFunc {
 				))
 		}
 
-		fmt.Printf("\n[DEBUG] sk after req: %+v\n", skRequest)
+		// fmt.Printf("\n[DEBUG] sk after req: %+v\n", skRequest)
 		return c.JSON(http.StatusOK, map[string]string{"message": "Berhasil ubah SK pengangkatan tendik"})
 	}
 	return echo.HandlerFunc(h)

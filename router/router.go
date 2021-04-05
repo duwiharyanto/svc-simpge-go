@@ -35,6 +35,7 @@ func InitRoute(a app.App, e *echo.Echo) {
 
 	// Data Master
 	insaniGroupingPath.GET("/jabatan-struktural", organisasiV2.HandleGetAllJabatanStruktural(a))
+	insaniGroupingPath.GET("/jenis-ijazah", skV2.HandleGetAllJenisIjazah(a))
 	insaniGroupingPath.GET("/pejabat-struktural", organisasiV2.HandleGetPejabatStruktural(a))
 	insaniGroupingPath.GET("/master-ijazah-pegawai", sk.HandleGetAllJenisIjazah(a))
 	insaniGroupingPath.GET("/master-induk-kerja", indukKerja.HandleGetIndukKerja(a)) // bentrok dengan unit

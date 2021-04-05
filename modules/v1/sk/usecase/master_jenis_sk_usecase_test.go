@@ -1,9 +1,7 @@
 package usecase
 
 import (
-	"bytes"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"svc-insani-go/app"
@@ -15,20 +13,6 @@ import (
 
 func TestHandleGetAllJenisSK(t *testing.T) {
 	e := echo.New()
-
-	// wbuf := &bytes.Buffer{}
-	// wr := multipart.NewWriter(wbuf)
-	// fwr, err := wr.CreateFormField("nama_lengkap")
-	// if err != nil {
-	// 	t.Fatal("failed create field nama lengkap:", err)
-	// }
-
-	// _, err = io.Copy(fwr, strings.NewReader("harisf"))
-	// if err != nil {
-	// 	t.Fatal("failed copy nama lengkap value:", err)
-	// }
-
-	// wr.Close()
 
 	// req := httptest.NewRequest(http.MethodPost, "/", bytes.NewReader((wbuf.Bytes())))
 	req := httptest.NewRequest(http.MethodGet, "/", nil)
@@ -53,9 +37,9 @@ func TestHandleGetAllJenisSK(t *testing.T) {
 	// 	t.Fatal("result should be same with wanted")
 	// }
 
-	var buf bytes.Buffer
-	json.Indent(&buf, rec.Body.Bytes(), "", "\t")
-	fmt.Printf("[DEBUG] rec body: %s\n", buf.String())
+	// var buf bytes.Buffer
+	// json.Indent(&buf, rec.Body.Bytes(), "", "\t")
+	// fmt.Printf("[DEBUG] rec body: %s\n", buf.String())
 
 	var any interface{}
 	err = json.Unmarshal(rec.Body.Bytes(), &any)
