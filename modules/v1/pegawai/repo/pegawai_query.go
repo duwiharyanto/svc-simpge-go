@@ -154,6 +154,9 @@ func getPegawaiPNSQuery(uuid string) string {
 	SELECT 
 		COALESCE(pp.nip_pns,''),
 		COALESCE(pp.no_kartu_pegawai,''),
+		COALESCE(jptt.kd_jenis_ptt,''),
+		COALESCE(jptt.jenis_ptt,''),
+		COALESCE(pp.instansi_asal,''),
 		COALESCE(pgp.kd_pangkat_gol,''),
 		COALESCE(pgp.pangkat,''),
 		COALESCE(pgp.golongan,''),
@@ -173,6 +176,8 @@ func getPegawaiPNSQuery(uuid string) string {
 		pangkat_golongan_pegawai pgp ON pp.id_pangkat_golongan = pgp.id
 	LEFT JOIN
 		jabatan_fungsional jf ON pp.id_jabatan_fungsional = jf.id
+	LEFT JOIN
+		jenis_pegawai_tidak_tetap jptt ON pp.id_jenis_ptt = jptt.id
 	WHERE 
 		p.uuid = %q AND p.flag_aktif = 1`, uuid)
 
@@ -292,4 +297,8 @@ func getPegawaiFilePendidikanQuery(idList ...string) string {
 		id_personal_pendidikan IN ('%s') AND flag_aktif = 1`, joinedId)
 
 	return helper.FlatQuery(q)
+}
+
+func updatePegawaiQuery(pegwaiUpdate model.PegawaiUpdate) string {
+	return fmt.Sprintf(``)
 }

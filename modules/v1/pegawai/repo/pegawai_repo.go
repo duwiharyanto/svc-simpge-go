@@ -165,6 +165,9 @@ func GetPegawaiPNS(a app.App, uuid string) (*model.PegawaiPNSPTT, error) {
 	err := a.DB.QueryRow(sqlQuery).Scan(
 		&pegawaiPNSPTT.NipPNS,
 		&pegawaiPNSPTT.NoKartuPegawai,
+		&pegawaiPNSPTT.KdJenisPTT,
+		&pegawaiPNSPTT.JenisPTT,
+		&pegawaiPNSPTT.InstansiAsalPtt,
 		&pegawaiPNSPTT.KdPangkatGolongan,
 		&pegawaiPNSPTT.PangkatPNS,
 		&pegawaiPNSPTT.GolonganPNS,
@@ -189,27 +192,27 @@ func GetPegawaiPNS(a app.App, uuid string) (*model.PegawaiPNSPTT, error) {
 	return &pegawaiPNSPTT, nil
 }
 
-func GetPegawaiPTT(a app.App, uuid string) (*model.PegawaiPNSPTT, error) {
-	sqlQuery := getPegawaiPTTQuery(uuid)
-	var pegawaiPNSPTT model.PegawaiPNSPTT
+// func GetPegawaiPTT(a app.App, uuid string) (*model.PegawaiPNSPTT, error) {
+// 	sqlQuery := getPegawaiPTTQuery(uuid)
+// 	var pegawaiPNSPTT model.PegawaiPNSPTT
 
-	err := a.DB.QueryRow(sqlQuery).Scan(
-		&pegawaiPNSPTT.KdJenisPTT,
-		&pegawaiPNSPTT.JenisPTT,
-		&pegawaiPNSPTT.InstansiAsalPtt,
-		&pegawaiPNSPTT.KeteranganPtt,
-	)
+// 	err := a.DB.QueryRow(sqlQuery).Scan(
+// 		&pegawaiPNSPTT.KdJenisPTT,
+// 		&pegawaiPNSPTT.JenisPTT,
+// 		&pegawaiPNSPTT.InstansiAsalPtt,
+// 		&pegawaiPNSPTT.KeteranganPtt,
+// 	)
 
-	if err == sql.ErrNoRows {
-		return nil, nil
-	}
+// 	if err == sql.ErrNoRows {
+// 		return nil, nil
+// 	}
 
-	if err != nil {
-		return nil, fmt.Errorf("error querying and scanning pegawai tidak tetap, %s", err.Error())
-	}
+// 	if err != nil {
+// 		return nil, fmt.Errorf("error querying and scanning pegawai tidak tetap, %s", err.Error())
+// 	}
 
-	return &pegawaiPNSPTT, nil
-}
+// 	return &pegawaiPNSPTT, nil
+// }
 
 func GetStatusPegawaiAktif(a app.App, uuid string) (*model.StatusAktif, error) {
 	sqlQuery := getStatusPegawaiAktifQuery(uuid)
@@ -440,35 +443,98 @@ func GetPegawaiByUUIDx(a app.App, ctx context.Context, uuid string) (*model.Pega
 	return &pegawaiAll, nil
 }
 
-func UpdatePegawaix(a app.App, ctx context.Context, PegawaiUpdate *model.PegawaiUpdate) error {
-	var PegawaiOld model.PegawaiUpdate
+func GetOldPegawai(a app.App, ctx context.Context, uuidPegawai string) (model.PegawaiUpdate, error) {
 
-	tx := a.GormDB.WithContext(ctx)
-	res := tx.First(&PegawaiOld, PegawaiUpdate.Uuid)
+	var pegawaiOld model.PegawaiUpdate
+
+	db := a.GormDB.WithContext(ctx)
+	res := db.Joins("PegawaiPNS").
+		Joins("PegawaiFungsional").
+		Find(&pegawaiOld, "pegawai.uuid = ?", uuidPegawai)
+	if res.Error != nil {
+		return model.PegawaiUpdate{}, res.Error
+	}
+
+	return pegawaiOld, nil
+}
+
+func UpdatePegawaix(a app.App, ctx context.Context, pegawaiUpdate model.PegawaiUpdate) error {
+	db := a.GormDB.WithContext(ctx)
+
+	res := db.Save(&pegawaiUpdate)
 	if res.Error != nil {
 		return res.Error
 	}
 
-	tx = a.GormDB.WithContext(ctx)
-	res = tx.Model(&PegawaiOld).Updates(PegawaiUpdate)
+	res = db.Save(&pegawaiUpdate.PegawaiPNS)
 	if res.Error != nil {
 		return res.Error
 	}
 
-	var PegawaiFungsionalOld model.PegawaiFungsionalUpdate
-
-	tx = a.GormDB.WithContext(ctx)
-	res = tx.Where("id_pegawai = ?", PegawaiUpdate.Id).
-		First(&PegawaiFungsionalOld)
+	res = db.Save(&pegawaiUpdate.PegawaiFungsional)
 	if res.Error != nil {
 		return res.Error
 	}
 
-	tx = a.GormDB.WithContext(ctx)
-	res = tx.Model(&PegawaiFungsionalOld).Updates(PegawaiUpdate.PegawaiFungsional)
 	if res.Error != nil {
 		return res.Error
 	}
 
 	return nil
 }
+
+func UpdatePendidikanPegawai(a app.App, ctx context.Context, uuidPendidikanDiakui string, uuidPendidikanTerakhir string) error {
+	db := a.GormDB.WithContext(ctx)
+
+	var pegawaiPendidikanUpdate model.PegawaiPendidikanUpdate
+
+	// Flag Ijazah Diakui
+	res := db.Model(&pegawaiPendidikanUpdate).
+		Where("uuid = ?", uuidPendidikanDiakui).
+		Update("flag_ijazah_diakui", "1")
+	if res.Error != nil {
+		return res.Error
+	}
+
+	// Flag Ijazah Terakhir
+	res = db.Model(&pegawaiPendidikanUpdate).
+		Where("uuid = ?", uuidPendidikanTerakhir).
+		Update("flag_ijazah_terakhir", "1")
+	if res.Error != nil {
+		return res.Error
+	}
+
+	return nil
+}
+
+// Without GORM
+
+// func UpdatePegawaiN(a app.App, ctx context.Context, pegawaiUpdate model.PegawaiUpdate) error {
+
+// 	sqlQuery := updatePegawaiQuery(pegawaiUpdate)
+
+// 	tx, err := a.DB.Begin()
+// 	if err != nil {
+// 		return fmt.Errorf("error beginning transaction, %s", err.Error())
+// 	}
+
+// 	stmt, err := tx.Prepare(sqlQuery)
+// 	if err != nil {
+// 		return fmt.Errorf("error preparing query, %s", err.Error())
+// 	}
+// 	defer stmt.Close()
+
+// 	_, err = stmt.Exec()
+
+// 	if err != nil {
+// 		return fmt.Errorf("error executing update query, %s", err.Error())
+// 	}
+
+// 	err = tx.Commit()
+// 	if err != nil {
+// 		tx.Rollback()
+// 		return fmt.Errorf("error commiting transcation, %w", err)
+// 	}
+
+// 	return nil
+// }

@@ -84,10 +84,10 @@ func PrepareGetSimpegPegawaiByUUID(a app.App, uuidPegawai string) (model.Pegawai
 		return model.PegawaiDetail{}, fmt.Errorf("error repo get pegawai pns by uuid, %w", err)
 	}
 
-	pegawaiPTT, err := repo.GetPegawaiPTT(a, uuidPegawai)
-	if err != nil {
-		return model.PegawaiDetail{}, fmt.Errorf("error repo get pegawai tidak tetap by uuid, %w", err)
-	}
+	// pegawaiPTT, err := repo.GetPegawaiPTT(a, uuidPegawai)
+	// if err != nil {
+	// 	return model.PegawaiDetail{}, fmt.Errorf("error repo get pegawai tidak tetap by uuid, %w", err)
+	// }
 
 	statusPegawaiAktif, err := repo.GetStatusPegawaiAktif(a, uuidPegawai)
 	if err != nil {
@@ -105,31 +105,7 @@ func PrepareGetSimpegPegawaiByUUID(a app.App, uuidPegawai string) (model.Pegawai
 	pegawaiDetail.PegawaiPribadi = pegawaiPribadi
 	pegawaiDetail.JenjangPendidikan = pegawaiPendidikan
 
-	dataPNSPTT := model.PegawaiPNSPTT{
-		NipPNS:                pegawaiPNS.NipPNS,
-		NoKartuPegawai:        pegawaiPNS.NoKartuPegawai,
-		PangkatGolongan:       pegawaiPNS.PangkatGolongan,
-		KdPangkatGolongan:     pegawaiPNS.KdPangkatGolongan,
-		PangkatPNS:            pegawaiPNS.PangkatPNS,
-		GolonganPNS:           pegawaiPNS.GolonganPNS,
-		UuidPangkatGolongan:   pegawaiPNS.UuidPangkatGolongan,
-		TmtPangkatGolongan:    pegawaiPNS.TmtPangkatGolongan,
-		TmtPangkatGolonganIdn: pegawaiPNS.TmtPangkatGolonganIdn,
-		KdJabatanPns:          pegawaiPNS.KdJabatanPns,
-		JabatanPns:            pegawaiPNS.JabatanPns,
-		UuidJabatanPns:        pegawaiPNS.UuidJabatanPns,
-		TmtJabatanPns:         pegawaiPNS.TmtJabatanPns,
-		TmtJabatanPnsIdn:      pegawaiPNS.TmtJabatanPnsIdn,
-		MasaKerjaPnsTahun:     pegawaiPNS.MasaKerjaPnsTahun,
-		MasaKerjaPnsBulan:     pegawaiPNS.MasaKerjaPnsBulan,
-		AngkaKreditPns:        pegawaiPNS.AngkaKreditPns,
-		KeteranganPNS:         pegawaiPNS.KeteranganPNS,
-		KdJenisPTT:            pegawaiPTT.KdJenisPTT,
-		JenisPTT:              pegawaiPTT.JenisPTT,
-		InstansiAsalPtt:       pegawaiPTT.InstansiAsalPtt,
-		KeteranganPtt:         pegawaiPTT.KeteranganPtt,
-	}
-	pegawaiDetail.PegawaiPNSPTT = &dataPNSPTT
+	pegawaiDetail.PegawaiPNSPTT = pegawaiPNS
 
 	return pegawaiDetail, nil
 }
@@ -187,9 +163,19 @@ func HandleUpdatePegawai(a app.App) echo.HandlerFunc {
 			fmt.Printf("[ERROR], %s\n", err.Error())
 			return c.JSON(http.StatusBadRequest, map[string]string{"message": err.Error()})
 		}
-		// fmt.Println("Ini Id Pegawai Usecase : ", pegawaiUpdate.Id)
+
 		// Update Data
 		err = repo.UpdatePegawaix(a, c.Request().Context(), pegawaiUpdate)
+		if err != nil {
+			fmt.Printf("[ERROR], %s\n", err.Error())
+			return c.JSON(http.StatusBadRequest, map[string]string{"message": err.Error()})
+		}
+
+		// Set Flag Pendidikan
+		uuidPendidikanDiakui := c.FormValue("uuid_pendidikan_diakui")
+		uuidPendidikanTerakhir := c.FormValue("uuid_pendidikan_terakhir")
+
+		err = repo.UpdatePendidikanPegawai(a, c.Request().Context(), uuidPendidikanDiakui, uuidPendidikanTerakhir)
 		if err != nil {
 			fmt.Printf("[ERROR], %s\n", err.Error())
 			return c.JSON(http.StatusBadRequest, map[string]string{"message": err.Error()})
@@ -201,7 +187,9 @@ func HandleUpdatePegawai(a app.App) echo.HandlerFunc {
 			fmt.Printf("[ERROR] repo get kepegawaian yayasan uuid, %s\n", err.Error())
 			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
 		}
-		return c.JSON(http.StatusOK, &pegawaiDetail)
+		// fmt.Printf("[DEBUG] pegawai: %+v\n", pegawaiUpdate)
+		// return c.JSON(http.StatusOK, pegawaiUpdate)
+		return c.JSON(http.StatusOK, pegawaiDetail)
 	}
 
 	return echo.HandlerFunc(h)
