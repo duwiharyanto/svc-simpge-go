@@ -476,10 +476,6 @@ func UpdatePegawaix(a app.App, ctx context.Context, pegawaiUpdate model.PegawaiU
 		return res.Error
 	}
 
-	if res.Error != nil {
-		return res.Error
-	}
-
 	return nil
 }
 

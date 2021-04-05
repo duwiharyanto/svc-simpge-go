@@ -167,7 +167,7 @@ func HandleUpdatePegawai(a app.App) echo.HandlerFunc {
 		}
 
 		// Set Flag Pendidikan
-		uuidPendidikanDiakui := c.FormValue("uuid_pendidikan_diakui")
+		uuidPendidikanDiakui := c.FormValue("uuid_pendidikan_diakui")ds
 		uuidPendidikanTerakhir := c.FormValue("uuid_pendidikan_terakhir")
 
 		err = repo.UpdatePendidikanPegawai(a, c.Request().Context(), uuidPendidikanDiakui, uuidPendidikanTerakhir)
