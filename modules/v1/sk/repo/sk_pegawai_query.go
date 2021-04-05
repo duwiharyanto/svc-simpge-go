@@ -82,7 +82,7 @@ func getAllSkQuery(uuid string) string {
 	UNION
 
 	SELECT 
-		COALESCE(d.nama_unit_kerja, '') AS unit_kerja,
+		COALESCE(d.unit2, '') AS unit_kerja,
 		COALESCE(e.nama_sk,'') AS jenis_sk ,
 		COALESCE(e.kd_jenis_sk,'') AS kd_jenis_sk,
 		COALESCE(e.uuid,'') AS uuid_jenis_sk,
@@ -97,7 +97,7 @@ func getAllSkQuery(uuid string) string {
 	JOIN 
 		sk_pengangkatan_tendik c ON a.id = c.id_sk_pegawai
 	LEFT JOIN 
-		unit_kerja d ON c.id_unit_pegawai = d.id
+		unit2 d ON c.id_unit_pegawai = d.id
 	LEFT JOIN 
 		jenis_sk e ON a.id_jenis_sk = e.id 
 	WHERE 

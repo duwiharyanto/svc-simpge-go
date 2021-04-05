@@ -16,7 +16,7 @@ import (
 	"github.com/labstack/echo"
 )
 
-func TestHandleGetSkPegawai(t *testing.T) {
+func TestHandleGetAllSkPegawai(t *testing.T) {
 	// init server
 	e := echo.New()
 	e.Use(router.SetResponseTimeout)
