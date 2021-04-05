@@ -54,7 +54,10 @@ func HandleCreateSKPengangkatanTendik(a app.App) echo.HandlerFunc {
 			// }
 		}
 		message := fmt.Sprintf("Berhasil tambah data sk pengangkatan pegawai")
-		return c.JSON(http.StatusOK, map[string]string{"message": message})
+		return c.JSON(http.StatusOK, map[string]interface{}{
+			"message": message,
+			"data":    skPegawai.Pegawai,
+		})
 	}
 	return echo.HandlerFunc(h)
 }

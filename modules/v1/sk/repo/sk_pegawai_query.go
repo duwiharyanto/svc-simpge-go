@@ -2,6 +2,7 @@ package repo
 
 import (
 	"fmt"
+	"svc-insani-go/helper"
 )
 
 // sk list
@@ -55,7 +56,7 @@ func getAllSKTendikQuery(uuidTendik string) string {
 }
 
 func getAllSkQuery(uuid string) string {
-	return fmt.Sprintf(`
+	q := fmt.Sprintf(`
 	SELECT 
 		COALESCE(d.nama_unit_kerja, '') AS unit_kerja, 
 		COALESCE(e.nama_sk,'') AS jenis_sk ,
@@ -98,7 +99,7 @@ func getAllSkQuery(uuid string) string {
 	LEFT JOIN 
 		unit_kerja d ON c.id_unit_pegawai = d.id
 	LEFT JOIN 
-		jenis_sk e ON c.id_jenis_sk = e.id 
+		jenis_sk e ON a.id_jenis_sk = e.id 
 	WHERE 
 		b.uuid = %q AND a.flag_aktif=1
 
@@ -127,4 +128,5 @@ func getAllSkQuery(uuid string) string {
 	ORDER BY tgl_update DESC`,
 		uuid, uuid, uuid,
 	)
+	return helper.FlatQuery(q)
 }

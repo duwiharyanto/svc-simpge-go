@@ -50,7 +50,7 @@ func GetMataKuliahByUUID(a app.App, uuid string) (*model.MataKuliah, error) {
 func GetMataKuliahIDByUUID(a app.App, uuidMataKuliah []string) ([]string, error) {
 	// c.Param("kd_jenis_pegawai")
 	sqlQuery := getMataKuliahIDByUUID(uuidMataKuliah)
-	fmt.Printf("[DEBUG] getMataKuliahIDByUUID:\n%s\n", sqlQuery)
+	// fmt.Printf("[DEBUG] getMataKuliahIDByUUID:\n%s\n", sqlQuery)
 	rows, err := a.DB.Query(sqlQuery)
 	if err != nil {
 		return nil, fmt.Errorf("error querying get mata kuliah id by uuid, %s", err.Error())

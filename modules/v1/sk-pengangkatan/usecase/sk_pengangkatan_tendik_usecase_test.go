@@ -38,7 +38,7 @@ func TestUsecase(t *testing.T) {
 		urlQuery.Set("uuid_pegawai", "e37046f9-1437-11eb-a014-7eb0d4a3c7a0") // ?uuid_pegawai=e37046f9-1437-11eb-a014-7eb0d4a3c7a0
 
 		formData := make(url.Values)
-		formData.Set("nomor_sk", "001/HARIS/AHF.I/2020")
+		formData.Set("nomor_sk", "002/HARIS/AHF.I/2021")
 		formData.Set("tmt", "2020-01-03")
 		formData.Set("uuid_kelompok_sk_pengangkatan", "46994cd3-ec0a-11ea-8c77-7eb0d4a3c7a0")
 		formData.Set("uuid_unit_kerja", "05577f32-e996-11e9-8f20-506b8da96a87")

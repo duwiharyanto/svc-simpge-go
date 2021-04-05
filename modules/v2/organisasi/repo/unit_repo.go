@@ -10,13 +10,19 @@ import (
 	"gorm.io/gorm"
 )
 
-func GetAllUnit2(a app.App, ctx context.Context) []model.Unit2 {
+func GetAllUnit2(a app.App, ctx context.Context) ([]model.Unit2, error) {
 	var uu []model.Unit2
-	a.GormDB.
+	err := a.GormDB.
 		WithContext(ctx).
 		// Where(&model.Unit2{FlagAktif: 1}). // untuk sk pengangkatan tampilkan semua unit
-		Find(&uu)
-	return uu
+		Find(&uu).
+		Error
+
+	if err != nil {
+		return nil, fmt.Errorf("error get all unit2: %w", err)
+	}
+
+	return uu, nil
 }
 
 func GetUnit2(a app.App, ctx context.Context, uuid string) (*model.Unit2, error) {

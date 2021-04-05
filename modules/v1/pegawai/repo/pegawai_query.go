@@ -66,7 +66,28 @@ func countPegawaiQuery(req *model.PegawaiRequest) string {
 }
 
 func getPegawaiByUUID(uuid string) string {
-	return fmt.Sprintf(`SELECT id, nik, nama, COALESCE(gelar_depan,''), COALESCE(gelar_belakang,''), COALESCE(kd_kelompok_pegawai,''), COALESCE(kd_unit2,''), uuid FROM pegawai WHERE flag_aktif=1 AND uuid = %q`, uuid)
+	q := fmt.Sprintf(`SELECT
+	a.id,
+	a.nik,
+	a.nama,
+	COALESCE(a.gelar_depan,''),
+	COALESCE(a.gelar_belakang,''),
+	COALESCE(b.kd_jenis_pegawai,''),
+	COALESCE(b.nama_jenis_pegawai,''),
+	COALESCE(b.uuid,''),
+	COALESCE(c.kd_kelompok_pegawai,''),
+	COALESCE(c.kelompok_pegawai,''),
+	COALESCE(c.uuid,''),
+	COALESCE(d.kd_unit2,''),
+	COALESCE(d.unit2,''),
+	COALESCE(d.uuid,''),
+	a.uuid FROM
+	pegawai a
+	LEFT JOIN jenis_pegawai b ON a.id_jenis_pegawai = b.id
+	LEFT JOIN kelompok_pegawai c ON a.id_kelompok_pegawai = c.id
+	LEFT JOIN unit2 d ON a.id_unit_kerja2 = d.id
+	WHERE a.flag_aktif=1 AND a.uuid = %q`, uuid)
+	return helper.FlatQuery(q)
 }
 
 func getPegawaiYayasanQuery(uuid string) string {

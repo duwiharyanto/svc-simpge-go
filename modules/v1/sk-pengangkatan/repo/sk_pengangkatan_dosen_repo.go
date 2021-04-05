@@ -85,7 +85,7 @@ func UploadFIleSKDosen(a app.App, bucketName, filePath string, fileSKPengangkata
 
 func PrepareFileUploadPathDosen(a app.App, fileSKPengangkatanDosen *multipart.FileHeader, idSKUtama string) string {
 	if fileSKPengangkatanDosen == nil {
-		fmt.Printf("PRINT DEBUG FILE SK Pengangkatan kosong : \n")
+		// fmt.Printf("PRINT DEBUG FILE SK Pengangkatan kosong : \n")
 		return ""
 	}
 	file, err := fileSKPengangkatanDosen.Open()
