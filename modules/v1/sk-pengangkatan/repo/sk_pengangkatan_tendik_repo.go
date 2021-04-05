@@ -30,7 +30,7 @@ func CreateSKPengangkatanTendik(a app.App, skPegawai skPegawaiModel.SKPegawai) e
 
 	skPegawai.SKPengangkatanTendik.PathSKTendik = PrepareFileUploadPath(a, skPegawai.SKPengangkatanTendik.FileSKTendik, idSKUtama)
 	sqlQuery := createSKPengangkatanTendikQuery(skPegawai.SKPengangkatanTendik, idSKUtama)
-	fmt.Printf("log query createSKPengangkatanQuery %+v \n", sqlQuery)
+	// fmt.Printf("log query createSKPengangkatanQuery %+v \n", sqlQuery)
 	res, err := tx.Exec(sqlQuery)
 	if err != nil {
 		tx.Rollback()

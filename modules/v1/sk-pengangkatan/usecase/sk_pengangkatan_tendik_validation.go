@@ -59,13 +59,15 @@ func ValidateCreateSKPengangkatanTendik(a app.App, c echo.Context) (skPegawai sk
 	if unitPegawai == nil {
 		return skPegawaiModel.SKPegawai{}, fmt.Errorf("unit kerja tidak ditemukan")
 	}
-	jenissk, err := skRepo.GetJenisSKByUUID(a, skPengangkatanTendik.UUIDJenisSK)
+
+	jenissk, err := skRepo.GetJenisSKByCode(a, skPegawaiModel.KdJenisSkPengangkatan)
 	if err != nil {
-		return skPegawaiModel.SKPegawai{}, fmt.Errorf("error from repo get jenis sk by uuid, %w", err)
+		return skPegawaiModel.SKPegawai{}, fmt.Errorf("error from repo get jenis sk by code, %w", err)
 	}
 	if jenissk == nil {
 		return skPegawaiModel.SKPegawai{}, fmt.Errorf("jenis sk tidak ditemukan")
 	}
+
 	jabatanFungsional, err := jabatanFungsionalRepo.GetJabatanFungsionalByUUID(a, skPengangkatanTendik.UUIDJabatanFungsional)
 	if err != nil {
 		return skPegawaiModel.SKPegawai{}, fmt.Errorf("error from repo get jabatan fungsional by uuid, %w", err)
@@ -135,6 +137,7 @@ func ValidateCreateSKPengangkatanTendik(a app.App, c echo.Context) (skPegawai sk
 	skPegawai.UserUpdate = c.Request().Header.Get("X-Member")
 	skPegawai.UserInput = c.Request().Header.Get("X-Member")
 	skPegawai.IDPegawai = pegawai.ID
+	skPegawai.Pegawai = pegawai
 	return skPegawai, nil
 
 }

@@ -1,8 +1,13 @@
 package model
 
 import (
+	pegawai "svc-insani-go/modules/v1/pegawai/model"
 	skPengangkatanModel "svc-insani-go/modules/v1/sk-pengangkatan/model"
 	// skPrajabatanModel "svc-decree-go/modules/v1/sk-prajabatan/model"
+)
+
+const (
+	KdJenisSkPengangkatan = "1"
 )
 
 type SKPegawai struct {
@@ -22,6 +27,8 @@ type SKPegawai struct {
 	UserUpdate           string                                   `json:"user_update"`
 	SKPengangkatanDosen  skPengangkatanModel.SKPengangkatanDosen  `json:"sk_pengangkatan_dosen,omitempty"`
 	SKPengangkatanTendik skPengangkatanModel.SKPengangkatanTendik `json:"sk_pengangkatan_tendik,omitempty"`
+	Pegawai              *pegawai.Pegawai                         `json:"-"`
+
 	// SKPengangkatanPegawai skPengangkatanModel.SKPengangkatanPegawai `json:"sk_pengangkatan"`
 	// SKPrajabatan skPrajabatanModel.SKPrajabatan `json:"sk_prajabatan"`
 }

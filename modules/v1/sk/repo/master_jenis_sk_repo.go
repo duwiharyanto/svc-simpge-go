@@ -16,21 +16,21 @@ func GetAllJenisSK(a app.App) ([]model.JenisSK, error) {
 	}
 	defer rows.Close()
 
-	JenisSK := []model.JenisSK{}
+	jj := []model.JenisSK{}
 	for rows.Next() {
 		var s model.JenisSK
 		err := rows.Scan(&s.KdJenisSK, &s.JeniSKPengangkatan, &s.UUID)
 		if err != nil {
 			return nil, fmt.Errorf("error scan jenis sk pegawai row, %s", err.Error())
 		}
-		JenisSK = append(JenisSK, s)
+		jj = append(jj, s)
 	}
 
 	if err := rows.Err(); err != nil {
 		return nil, fmt.Errorf("error status golongan pegawai rows, %s", err.Error())
 	}
 
-	return JenisSK, nil
+	return jj, nil
 }
 
 func GetJenisSKByUUID(a app.App, uuid string) (*model.JenisSK, error) {
@@ -44,5 +44,20 @@ func GetJenisSKByUUID(a app.App, uuid string) (*model.JenisSK, error) {
 	if err != nil {
 		return nil, fmt.Errorf("error querying get jenis sk by uuid %s", err.Error())
 	}
+	return &jenisSK, nil
+}
+
+func GetJenisSKByCode(a app.App, code string) (*model.JenisSK, error) {
+	var jenisSK model.JenisSK
+	sqlQuery := getJenisSKByCode(code)
+	err := a.DB.QueryRow(sqlQuery).Scan(&jenisSK.ID, &jenisSK.KdJenisSK, &jenisSK.JeniSKPengangkatan, &jenisSK.UUID)
+	if err == sql.ErrNoRows {
+		return nil, nil
+	}
+
+	if err != nil {
+		return nil, fmt.Errorf("error querying get jenis sk by code %s", err.Error())
+	}
+
 	return &jenisSK, nil
 }

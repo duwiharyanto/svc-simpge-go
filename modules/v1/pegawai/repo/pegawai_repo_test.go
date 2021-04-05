@@ -38,3 +38,19 @@ func TestGetPegawaiFilePendidikan(t *testing.T) {
 
 	t.Logf("berkas:\n%s\n", j)
 }
+
+func TestGetPegawaiByUUID(t *testing.T) {
+	db, err := database.Connect()
+	if err != nil {
+		t.Fatal("failed connect to db:", err)
+	}
+	a := app.App{DB: db}
+	uuid := "e5762619-1437-11eb-a014-7eb0d4a3c7a0"
+	pegawai, err := GetPegawaiByUUID(a, uuid)
+	if err != nil {
+		t.Fatal("failed get pegawai:", err)
+	}
+	j, _ := json.MarshalIndent(pegawai, "", "\t")
+
+	t.Logf("pegawai:\n%s\n", j)
+}

@@ -18,7 +18,10 @@ func TestGetAllUnit2(t *testing.T) {
 		t.Fatal(err)
 	}
 	a := app.App{GormDB: db}
-	uu := GetAllUnit2(a, context.Background())
+	uu, err := GetAllUnit2(a, context.Background())
+	if err != nil {
+		t.Fatal(err)
+	}
 	if len(uu) == 0 {
 		t.Fatal("should not be empty")
 	}

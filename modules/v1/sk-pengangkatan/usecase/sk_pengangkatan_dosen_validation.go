@@ -48,14 +48,14 @@ func ValidateCreateSKPengangkatanDosen(a app.App, c echo.Context) (skPegawai skP
 
 	}
 
-	jenissk, err := skRepo.GetJenisSKByUUID(a, skPengangkatanDosen.UUIDJenisSKPengangkatan)
+	jenissk, err := skRepo.GetJenisSKByCode(a, skPegawaiModel.KdJenisSkPengangkatan)
 	if err != nil {
-		return skPegawaiModel.SKPegawai{}, fmt.Errorf("error from repo get jenis sk pegawai by uuid, %w", err)
+		return skPegawaiModel.SKPegawai{}, fmt.Errorf("error from repo get jenis sk pegawai by code, %w", err)
 	}
-
 	if jenissk == nil {
 		return skPegawaiModel.SKPegawai{}, fmt.Errorf("jenis sk pengangkatan tidak ditemukan")
 	}
+
 	jabatanFungsional, err := jabatanFungsionalRepo.GetJabatanFungsionalByUUID(a, skPengangkatanDosen.UUIDJabatanFungsionalLama)
 	if err != nil {
 		return skPegawaiModel.SKPegawai{}, fmt.Errorf("error from repo get jabatan fungsional pegawai by uuid, %w", err)
@@ -63,6 +63,7 @@ func ValidateCreateSKPengangkatanDosen(a app.App, c echo.Context) (skPegawai skP
 	if jabatanFungsional == nil {
 		return skPegawaiModel.SKPegawai{}, fmt.Errorf("jabatan fungsional pegawai tidak ditemukan")
 	}
+
 	pangkatGolonganPegawai, err := pangkatGolonganPegawaiRepo.GetPangkatGolonganPegawaiByUUID(a, skPengangkatanDosen.UUIDPangkatGolonganPegawaiLama)
 	if err != nil {
 		return skPegawaiModel.SKPegawai{}, fmt.Errorf("error from repo get pangkat golongan lama pegawai by uuid, %w", err)
@@ -124,12 +125,13 @@ func ValidateCreateSKPengangkatanDosen(a app.App, c echo.Context) (skPegawai skP
 		return skPegawaiModel.SKPegawai{}, fmt.Errorf("pegawai penetap tidak ditemukan")
 	}
 
-	fmt.Printf("\n\n[DEBUG] uuid mata kuliah str : %s\n", skPengangkatanDosen.UUIDMataKuliahStr)
+	// fmt.Printf("\n\n[DEBUG] uuid mata kuliah str : %s\n", skPengangkatanDosen.UUIDMataKuliahStr)
 	err = json.Unmarshal([]byte(skPengangkatanDosen.UUIDMataKuliahStr), &skPengangkatanDosen.UUIDMataKuliah)
 	if err != nil {
 		fmt.Printf("\n\n[WARNING] error unmarshaling uuid mata kuliah str: %s\n", err.Error())
 	}
-	fmt.Printf("\n\n[DEBUG] log uuid mata kuliah ID : %+v\n", skPengangkatanDosen.UUIDMataKuliah)
+
+	// fmt.Printf("\n\n[DEBUG] log uuid mata kuliah ID : %+v\n", skPengangkatanDosen.UUIDMataKuliah)
 	idMataKuliah, err := skRepo.GetMataKuliahIDByUUID(a, skPengangkatanDosen.UUIDMataKuliah)
 	if err != nil {
 		return skPegawaiModel.SKPegawai{}, fmt.Errorf("error from repo makul %w", err)
@@ -166,6 +168,7 @@ func ValidateCreateSKPengangkatanDosen(a app.App, c echo.Context) (skPegawai skP
 	skPegawai.UserUpdate = c.Request().Header.Get("X-Member")
 	skPegawai.UserInput = c.Request().Header.Get("X-Member")
 	skPegawai.IDPegawai = pegawai.ID
+	skPegawai.Pegawai = pegawai
 	//fmt.Printf("log data : %+v \n", skPegawai.SKPengangkatanPegawai)
 	return skPegawai, nil
 

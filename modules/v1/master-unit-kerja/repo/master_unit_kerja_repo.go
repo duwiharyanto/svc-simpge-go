@@ -35,7 +35,7 @@ func GetAllUnitKerja(a app.App) ([]model.UnitKerja, error) {
 
 func GetUnitKerjaByUUID(a app.App, uuid string) (*model.UnitKerja, error) {
 	sqlQuery := getUnitKerjaByUUID(uuid)
-	fmt.Printf("\n\n[DEBUG] query unit kerja : \n%s\n", sqlQuery)
+	// fmt.Printf("\n\n[DEBUG] query unit kerja : \n%s\n", sqlQuery)
 	var unitKerja model.UnitKerja
 	err := a.DB.QueryRow(sqlQuery).Scan(&unitKerja.ID, &unitKerja.KdUnitKerja, &unitKerja.NamaUnitKerja, &unitKerja.UUID)
 	if err == sql.ErrNoRows {
