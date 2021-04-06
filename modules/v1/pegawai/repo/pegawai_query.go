@@ -151,7 +151,9 @@ func getUnitKerjaPegawaiQuery(uuid string) string {
 		COALESCE(lk.lokasi_desc,''),
 		COALESCE(lk.lokasi_desc,''),
 		COALESCE(pf.nomor_sk_pertama,''),
-		COALESCE(pf.tmt_sk_pertama,'')
+		COALESCE(pf.tmt_sk_pertama,''),
+		COALESCE(u22.kd_unit2,''),
+		COALESCE(u22.kd_pddikti,'')
 	FROM
 		pegawai p
 	LEFT JOIN
@@ -164,6 +166,8 @@ func getUnitKerjaPegawaiQuery(uuid string) string {
 		unit3 u3 ON p.id_unit_kerja3 = u3.id 
 	LEFT JOIN
 		lokasi_kerja lk ON p.lokasi_kerja = lk.lokasi_kerja 
+	LEFT JOIN
+		unit2 u22 ON pf.id_homebase_uii = u2.id 
 	WHERE 
 		p.uuid = %q AND p.flag_aktif = 1`, uuid)
 
@@ -175,6 +179,9 @@ func getPegawaiPNSQuery(uuid string) string {
 	SELECT 
 		COALESCE(pp.nip_pns,''),
 		COALESCE(pp.no_kartu_pegawai,''),
+		COALESCE(jptt.kd_jenis_ptt,''),
+		COALESCE(jptt.jenis_ptt,''),
+		COALESCE(pp.instansi_asal,''),
 		COALESCE(pgp.kd_pangkat_gol,''),
 		COALESCE(pgp.pangkat,''),
 		COALESCE(pgp.golongan,''),
@@ -191,9 +198,11 @@ func getPegawaiPNSQuery(uuid string) string {
 	LEFT JOIN
 		pegawai_pns pp ON p.id = pp.id_pegawai 
 	LEFT JOIN
-		pangkat_golongan_pegawai pgp ON pp.id_pangkat_golongan 
+		pangkat_golongan_pegawai pgp ON pp.id_pangkat_golongan = pgp.id
 	LEFT JOIN
 		jabatan_fungsional jf ON pp.id_jabatan_fungsional = jf.id
+	LEFT JOIN
+		jenis_pegawai_tidak_tetap jptt ON pp.id_jenis_ptt = jptt.id
 	WHERE 
 		p.uuid = %q AND p.flag_aktif = 1`, uuid)
 
@@ -313,4 +322,8 @@ func getPegawaiFilePendidikanQuery(idList ...string) string {
 		id_personal_pendidikan IN ('%s') AND flag_aktif = 1`, joinedId)
 
 	return helper.FlatQuery(q)
+}
+
+func updatePegawaiQuery(pegwaiUpdate model.PegawaiUpdate) string {
+	return fmt.Sprintf(``)
 }

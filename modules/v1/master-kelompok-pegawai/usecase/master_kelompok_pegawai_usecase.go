@@ -28,3 +28,15 @@ func HandleGetKelompokPegawai(a app.App) echo.HandlerFunc {
 	}
 	return echo.HandlerFunc(h)
 }
+
+func HandleKelompokPegawaiByUUID(a app.App) echo.HandlerFunc {
+	h := func(c echo.Context) error {
+		uuid := c.QueryParam("uuid")
+		pp, err := repo.GetKelompokPegawaiByUUID(a, c.Request().Context(), uuid)
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
+		}
+		return c.JSON(http.StatusOK, pp)
+	}
+	return echo.HandlerFunc(h)
+}

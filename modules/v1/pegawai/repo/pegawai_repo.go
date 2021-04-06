@@ -1,6 +1,7 @@
 package repo
 
 import (
+	"context"
 	"database/sql"
 	"fmt"
 	"sort"
@@ -141,6 +142,8 @@ func GetKepegawaianYayasan(a app.App, uuid string) (*model.PegawaiYayasan, error
 		return nil, fmt.Errorf("error querying and scanning kepegawaian yayasan, %s", err.Error())
 	}
 
+	pegawaiYayasan.SetTanggalIDN()
+
 	return &pegawaiYayasan, nil
 }
 
@@ -159,6 +162,8 @@ func GetUnitKerjaPegawai(a app.App, uuid string) (*model.UnitKerjaPegawai, error
 		&unitKerjaPegawai.LokasiDesc,
 		&unitKerjaPegawai.NoSkPertama,
 		&unitKerjaPegawai.TmtSkPertama,
+		&unitKerjaPegawai.KdHomebasePddikti,
+		&unitKerjaPegawai.KdHomebaseUii,
 	)
 
 	if err == sql.ErrNoRows {
@@ -168,6 +173,8 @@ func GetUnitKerjaPegawai(a app.App, uuid string) (*model.UnitKerjaPegawai, error
 	if err != nil {
 		return nil, fmt.Errorf("error querying and scanning unit kerja pegawai, %s", err.Error())
 	}
+
+	unitKerjaPegawai.SetTanggalIDN()
 
 	return &unitKerjaPegawai, nil
 }
@@ -179,6 +186,9 @@ func GetPegawaiPNS(a app.App, uuid string) (*model.PegawaiPNSPTT, error) {
 	err := a.DB.QueryRow(sqlQuery).Scan(
 		&pegawaiPNSPTT.NipPNS,
 		&pegawaiPNSPTT.NoKartuPegawai,
+		&pegawaiPNSPTT.KdJenisPTT,
+		&pegawaiPNSPTT.JenisPTT,
+		&pegawaiPNSPTT.InstansiAsalPtt,
 		&pegawaiPNSPTT.KdPangkatGolongan,
 		&pegawaiPNSPTT.PangkatPNS,
 		&pegawaiPNSPTT.GolonganPNS,
@@ -200,28 +210,7 @@ func GetPegawaiPNS(a app.App, uuid string) (*model.PegawaiPNSPTT, error) {
 		return nil, fmt.Errorf("error querying and scanning pegawai pns, %s", err.Error())
 	}
 
-	return &pegawaiPNSPTT, nil
-}
-
-func GetPegawaiPTT(a app.App, uuid string) (*model.PegawaiPNSPTT, error) {
-	sqlQuery := getPegawaiPTTQuery(uuid)
-	var pegawaiPNSPTT model.PegawaiPNSPTT
-
-	err := a.DB.QueryRow(sqlQuery).Scan(
-		&pegawaiPNSPTT.KdJenisPTT,
-		&pegawaiPNSPTT.JenisPTT,
-		&pegawaiPNSPTT.InstansiAsalPtt,
-		&pegawaiPNSPTT.KeteranganPtt,
-	)
-
-	if err == sql.ErrNoRows {
-		return nil, nil
-	}
-
-	if err != nil {
-		return nil, fmt.Errorf("error querying and scanning pegawai tidak tetap, %s", err.Error())
-	}
-
+	pegawaiPNSPTT.SetTanggalIDN()
 	return &pegawaiPNSPTT, nil
 }
 
@@ -417,4 +406,99 @@ func setBerkasPendukungWithURL(a app.App, list model.BerkasPendukungList) {
 			list[i].URLFile = ""
 		}
 	}
+}
+
+func GetAllPegawaix(a app.App, ctx context.Context, limit int, offset int) (*model.PegawaiResponseTest, error) {
+
+	var pegawaiAll []model.Pegawai2
+	var count int64
+
+	tx := a.GormDB.WithContext(ctx)
+	results := model.PegawaiResponseTest{}
+	res := tx.Limit(limit).
+		Offset(offset).
+		Find(&pegawaiAll).Count(&count)
+	if res.Error != nil {
+		return nil, res.Error
+	}
+
+	countConv := int(count)
+
+	results.Data = pegawaiAll
+	results.Count = countConv
+
+	return &results, nil
+}
+
+func GetPegawaiByUUIDx(a app.App, ctx context.Context, uuid string) (*model.Pegawai, error) {
+
+	var pegawaiAll model.Pegawai
+	tx := a.GormDB.WithContext(ctx)
+
+	res := tx.First(&pegawaiAll, "uuid = ?", uuid)
+	if res.Error != nil {
+		return nil, res.Error
+	}
+
+	return &pegawaiAll, nil
+}
+
+func GetOldPegawai(a app.App, ctx context.Context, uuidPegawai string) (model.PegawaiUpdate, error) {
+
+	var pegawaiOld model.PegawaiUpdate
+
+	db := a.GormDB.WithContext(ctx)
+	res := db.Joins("PegawaiPNS").
+		Joins("PegawaiFungsional").
+		Find(&pegawaiOld, "pegawai.uuid = ?", uuidPegawai)
+	if res.Error != nil {
+		return model.PegawaiUpdate{}, res.Error
+	}
+
+	return pegawaiOld, nil
+}
+
+func UpdatePegawaix(a app.App, ctx context.Context, pegawaiUpdate model.PegawaiUpdate) error {
+	db := a.GormDB.WithContext(ctx)
+
+	res := db.Save(&pegawaiUpdate)
+	if res.Error != nil {
+		return res.Error
+	}
+
+	res = db.Save(&pegawaiUpdate.PegawaiPNS)
+	if res.Error != nil {
+		return res.Error
+	}
+
+	res = db.Save(&pegawaiUpdate.PegawaiFungsional)
+	if res.Error != nil {
+		return res.Error
+	}
+
+	return nil
+}
+
+func UpdatePendidikanPegawai(a app.App, ctx context.Context, uuidPendidikanDiakui string, uuidPendidikanTerakhir string) error {
+	db := a.GormDB.WithContext(ctx)
+
+	var pegawaiPendidikanUpdate model.PegawaiPendidikanUpdate
+
+	// Flag Ijazah Diakui
+	res := db.Model(&pegawaiPendidikanUpdate).
+		Where("uuid = ?", uuidPendidikanDiakui).
+		Update("flag_ijazah_diakui", "1")
+	if res.Error != nil {
+		return res.Error
+	}
+
+	// Flag Ijazah Terakhir
+	res = db.Model(&pegawaiPendidikanUpdate).
+		Where("uuid = ?", uuidPendidikanTerakhir).
+		Update("flag_ijazah_terakhir", "1")
+	if res.Error != nil {
+		return res.Error
+	}
+
+	return nil
 }

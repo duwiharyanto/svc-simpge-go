@@ -1,6 +1,7 @@
 package repo
 
 import (
+	"context"
 	"database/sql"
 	"fmt"
 	"svc-insani-go/app"
@@ -100,7 +101,62 @@ func GetBagianKerja(a app.App, UnitKerja string) ([]model.IndukKerja, error) {
 	return pp, nil
 }
 
-func GetIndukKerjaByUUID(a app.App, uuid string) (*model.IndukKerja, error) {
+func GetIndukKerjaByUUID(a app.App, ctx context.Context, uuid string) (*model.Unit1, error) {
+	var indukKerja model.Unit1
+
+	tx := a.GormDB.WithContext(ctx)
+	res := tx.First(&indukKerja, "uuid = ?", uuid)
+	if res.Error != nil {
+		return nil, fmt.Errorf("error querying induk kerja by uuid %s", res.Error)
+	}
+	return &indukKerja, nil
+}
+
+func GetUnitKerjaByUUID(a app.App, ctx context.Context, uuid string) (*model.Unit2, error) {
+	var unitKerja model.Unit2
+
+	tx := a.GormDB.WithContext(ctx)
+	res := tx.First(&unitKerja, "uuid = ?", uuid)
+	if res.Error != nil {
+		return nil, fmt.Errorf("error querying unit kerja by uuid %s", res.Error)
+	}
+	return &unitKerja, nil
+}
+
+func GetBagianKerjaByUUID(a app.App, ctx context.Context, uuid string) (*model.Unit3, error) {
+	var bagianKerja model.Unit3
+
+	tx := a.GormDB.WithContext(ctx)
+	res := tx.First(&bagianKerja, "uuid = ?", uuid)
+	if res.Error != nil {
+		return nil, fmt.Errorf("error querying bagian kerja by uuid %s", res.Error)
+	}
+	return &bagianKerja, nil
+}
+
+func GetHomebase(a app.App, ctx context.Context) ([]model.Homebase, error) {
+	var homebases []model.Homebase
+
+	tx := a.GormDB.WithContext(ctx)
+	res := tx.Where("flag_aktif = ? AND kd_pddikti IS NOT NULL", "1").
+		Find(&homebases)
+	if res.Error != nil {
+		return nil, fmt.Errorf("error querying homebase %s", res.Error)
+	}
+	return homebases, nil
+}
+
+func GetHomebaseByUUID(a app.App, ctx context.Context, uuid string) (*model.Homebase, error) {
+	var homebase model.Homebase
+
+	tx := a.GormDB.WithContext(ctx)
+	res := tx.First(&homebase, "uuid = ?", uuid)
+	if res.Error != nil {
+		return nil, fmt.Errorf("error querying homebase %s", res.Error)
+	}
+	return &homebase, nil
+}
+func GetIndukKerjaByUUIDx(a app.App, uuid string) (*model.IndukKerja, error) {
 	sqlQuery := getIndukKerjaQueryByUUID(uuid)
 	//fmt.Printf("log query induk kerja : %s\n", sqlQuery)
 	var indukKerja model.IndukKerja

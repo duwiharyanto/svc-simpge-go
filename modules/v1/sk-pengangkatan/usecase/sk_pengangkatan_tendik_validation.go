@@ -23,6 +23,9 @@ const ErrEchoEmptyRequestBody = "Request body can't be empty"
 
 func ValidateCreateSKPengangkatanTendik(a app.App, c echo.Context) (skPegawai skPegawaiModel.SKPegawai, err error) {
 	uuidPegawai := c.QueryParam("uuid_pegawai")
+
+	ctx := c.Request().Context()
+
 	if uuidPegawai == "" {
 		return skPegawaiModel.SKPegawai{}, fmt.Errorf("uuid pegawai tidak boleh kosong")
 	}
@@ -44,7 +47,7 @@ func ValidateCreateSKPengangkatanTendik(a app.App, c echo.Context) (skPegawai sk
 		return skPegawaiModel.SKPegawai{}, fmt.Errorf("pegawai tidak ditemukan")
 	}
 
-	kelompokSKPengangkatan, err := kelompokSKPengangkatanRepo.GetKelompokPegawaiByUUID(a, skPengangkatanTendik.UUIDKelompokSKPengangkatan)
+	kelompokSKPengangkatan, err := kelompokSKPengangkatanRepo.GetKelompokPegawaiByUUID(a, ctx, skPengangkatanTendik.UUIDKelompokSKPengangkatan)
 	if err != nil {
 		return skPegawaiModel.SKPegawai{}, fmt.Errorf("error from repo get kelompok sk pengangkatan by uuid, %w", err)
 	}
@@ -60,7 +63,7 @@ func ValidateCreateSKPengangkatanTendik(a app.App, c echo.Context) (skPegawai sk
 		return skPegawaiModel.SKPegawai{}, fmt.Errorf("unit kerja tidak ditemukan")
 	}
 
-	jabatanFungsional, err := jabatanFungsionalRepo.GetJabatanFungsionalByUUID(a, skPengangkatanTendik.UUIDJabatanFungsional)
+	jabatanFungsional, err := jabatanFungsionalRepo.GetJabatanFungsionalByUUID(a, ctx, skPengangkatanTendik.UUIDJabatanFungsional)
 	if err != nil {
 		return skPegawaiModel.SKPegawai{}, fmt.Errorf("error from repo get jabatan fungsional by uuid, %w", err)
 	}

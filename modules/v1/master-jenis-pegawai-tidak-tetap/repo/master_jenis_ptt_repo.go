@@ -1,6 +1,7 @@
 package repo
 
 import (
+	"context"
 	"fmt"
 	"svc-insani-go/app"
 	"svc-insani-go/modules/v1/master-jenis-pegawai-tidak-tetap/model"
@@ -34,4 +35,15 @@ func GetJenisPTT(a app.App) ([]model.JenisPTT, error) {
 	}
 
 	return pp, nil
+}
+
+func GetJenisPTTByUUID(a app.App, ctx context.Context, uuid string) (*model.JenisPTT, error) {
+	var jenisPTT model.JenisPTT
+
+	tx := a.GormDB.WithContext(ctx)
+	res := tx.First(&jenisPTT, "uuid = ?", uuid)
+	if res.Error != nil {
+		return nil, fmt.Errorf("error querying jenis pegawai tidak tetap by uuid %s", res.Error)
+	}
+	return &jenisPTT, nil
 }

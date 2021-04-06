@@ -200,7 +200,7 @@ func TestHandleUpdateSkPengangkatanTendik(t *testing.T) {
 		"uuid_jenis_sk":                 "ebc9e2c0-ee60-11ea-8c77-7eb0d4a3c7a0",
 		"gaji_pokok":                    "999999",
 		"tanggal_ditetapkan":            "2021-01-09",
-		"nomor_sk":                      "no/sk-haris/9/5",
+		"nomor_sk":                      "no/sk-ega/9/5",
 		"tentang_sk":                    "tentang sk tendik 9",
 		"tmt":                           "2021-09-09",
 		"uuid_kelompok_sk_pengangkatan": "742024ac-4fea-11eb-bf95-a74048ab8082",
@@ -208,12 +208,12 @@ func TestHandleUpdateSkPengangkatanTendik(t *testing.T) {
 		"uuid_jabatan_penetap":          "6bd8793c-9461-11eb-b06a-000c2977b907",
 		"uuid_unit_pengangkat":          "798c80c4-1fd3-11eb-a014-7eb0d4a3c7a0",
 		"uuid_unit_kerja":               "798c8162-1fd3-11eb-a014-7eb0d4a3c7a0",
-		"masa_kerja_diakui_bulan":       "9",
-		"masa_kerja_diakui_tahun":       "9",
-		"masa_kerja_ril_bulan":          "9",
-		"masa_kerja_ril_tahun":          "9",
-		"masa_kerja_gaji_bulan":         "9",
-		"masa_kerja_gaji_tahun":         "9",
+		"masa_kerja_diakui_bulan":       "10",
+		"masa_kerja_diakui_tahun":       "10",
+		"masa_kerja_ril_bulan":          "10",
+		"masa_kerja_ril_tahun":          "10",
+		"masa_kerja_gaji_bulan":         "10",
+		"masa_kerja_gaji_tahun":         "10",
 		"uuid_pangkat_golongan_pegawai": "c6101e45-09e3-11eb-8c77-7eb0d4a3c7a0",
 		"uuid_pejabat_penetap":          "0e6047fd-9463-11eb-b06a-000c2977b907",
 		"uuid_status_pengangkatan":      "47dd67dc-0479-11eb-8c77-7eb0d4a3c7a0",
@@ -244,7 +244,7 @@ func TestHandleUpdateSkPengangkatanTendik(t *testing.T) {
 
 	// create request
 	// uuid := "6215c058-1e3d-11eb-a014-7eb0d4a3c7a0"
-	uuid := "ac34398c-5453-493c-b1bd-b6bb426dd4ae"
+	uuid := "dfef3d4d-2ffe-11eb-a014-7eb0d4a3c7a0"
 	// q := make(url.Values)
 	// q.Set("uuid_sk_pengangkatan_tendik", uuid)
 	// baseURL := server.URL + "/public/api/v1/sk-pengangkatan-tendik?" + q.Encode()
@@ -252,7 +252,7 @@ func TestHandleUpdateSkPengangkatanTendik(t *testing.T) {
 	// fmt.Printf("[DEBUG] base url: %s\n", baseURL)
 	req, err := http.NewRequest(http.MethodPut, baseURL, bytes.NewReader((wbuf.Bytes())))
 	req.Header.Set("Content-Type", wr.FormDataContentType())
-	req.Header.Set("X-Member", "admin 6")
+	req.Header.Set("X-Member", "admin 7")
 
 	// send http request
 	client := http.DefaultClient

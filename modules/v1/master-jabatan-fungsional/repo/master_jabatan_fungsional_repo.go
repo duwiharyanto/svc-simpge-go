@@ -1,6 +1,7 @@
 package repo
 
 import (
+	"context"
 	"database/sql"
 	"fmt"
 	"svc-insani-go/app"
@@ -31,7 +32,7 @@ func GetAllJabatanFungsional(a app.App, kdJenisPegawai string) ([]model.JabatanF
 
 	return jabatanFungsional, nil
 }
-func GetJabatanFungsionalByUUID(a app.App, uuid string) (*model.JabatanFungsional, error) {
+func GetJabatanFungsionalByUUIDx(a app.App, uuid string) (*model.JabatanFungsional, error) {
 	sqlQuery := getJabatanFungsionalByUUID(uuid)
 	//fmt.Printf("[DEBUG] jabatan fungsional pegawai by uuid:\n%s\n", sqlQuery)
 	var jabatanFungsional model.JabatanFungsional
@@ -41,6 +42,17 @@ func GetJabatanFungsionalByUUID(a app.App, uuid string) (*model.JabatanFungsiona
 	}
 	if err != nil {
 		return nil, fmt.Errorf("error querying jabatan fungsional sk by uuid %s", err.Error())
+	}
+	return &jabatanFungsional, nil
+}
+
+func GetJabatanFungsionalByUUID(a app.App, ctx context.Context, uuid string) (*model.JabatanFungsional, error) {
+	var jabatanFungsional model.JabatanFungsional
+
+	tx := a.GormDB.WithContext(ctx)
+	res := tx.First(&jabatanFungsional, "uuid = ?", uuid)
+	if res.Error != nil {
+		return nil, fmt.Errorf("error querying jabatan fungsional sk by uuid %s", res.Error)
 	}
 	return &jabatanFungsional, nil
 }

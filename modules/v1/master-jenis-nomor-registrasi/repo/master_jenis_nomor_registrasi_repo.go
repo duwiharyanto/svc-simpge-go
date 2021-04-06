@@ -1,6 +1,7 @@
 package repo
 
 import (
+	"context"
 	"fmt"
 	"svc-insani-go/app"
 	"svc-insani-go/modules/v1/master-jenis-nomor-registrasi/model"
@@ -34,4 +35,15 @@ func GetJenisNomorRegistrasi(a app.App) ([]model.JenisNomorRegistrasi, error) {
 	}
 
 	return pp, nil
+}
+
+func GetJenisNoRegisByUUID(a app.App, ctx context.Context, uuid string) (*model.JenisNomorRegistrasi, error) {
+	var jenisNoRegis model.JenisNomorRegistrasi
+
+	tx := a.GormDB.WithContext(ctx)
+	res := tx.First(&jenisNoRegis, "uuid = ?", uuid)
+	if res.Error != nil {
+		return nil, fmt.Errorf("error querying jenis nomor registrasi by uuid %s", res.Error)
+	}
+	return &jenisNoRegis, nil
 }

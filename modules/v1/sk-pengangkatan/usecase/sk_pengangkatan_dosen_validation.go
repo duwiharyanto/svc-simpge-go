@@ -22,7 +22,7 @@ import (
 
 func ValidateCreateSKPengangkatanDosen(a app.App, c echo.Context) (skPegawai skPegawaiModel.SKPegawai, err error) {
 	uuidPegawai := c.QueryParam("uuid_pegawai")
-
+	ctx := c.Request().Context()
 	skPengangkatanDosen := &model.SKPengangkatanDosen{}
 	err = c.Bind(skPengangkatanDosen)
 	if err != nil {
@@ -56,7 +56,7 @@ func ValidateCreateSKPengangkatanDosen(a app.App, c echo.Context) (skPegawai skP
 		return skPegawaiModel.SKPegawai{}, fmt.Errorf("jenis sk pengangkatan tidak ditemukan")
 	}
 
-	jabatanFungsional, err := jabatanFungsionalRepo.GetJabatanFungsionalByUUID(a, skPengangkatanDosen.UUIDJabatanFungsionalLama)
+	jabatanFungsional, err := jabatanFungsionalRepo.GetJabatanFungsionalByUUID(a, ctx, skPengangkatanDosen.UUIDJabatanFungsionalLama)
 	if err != nil {
 		return skPegawaiModel.SKPegawai{}, fmt.Errorf("error from repo get jabatan fungsional pegawai by uuid, %w", err)
 	}
@@ -72,7 +72,7 @@ func ValidateCreateSKPengangkatanDosen(a app.App, c echo.Context) (skPegawai skP
 		return skPegawaiModel.SKPegawai{}, fmt.Errorf("pangkat golongan lama pegawai tidak ditemukan")
 	}
 
-	indukKerja, err := indukKerjaRepo.GetIndukKerjaByUUID(a, skPengangkatanDosen.UUIDIndukKerjaBaru)
+	indukKerja, err := indukKerjaRepo.GetIndukKerjaByUUID(a, ctx, skPengangkatanDosen.UUIDIndukKerjaBaru)
 	if err != nil {
 		return skPegawaiModel.SKPegawai{}, fmt.Errorf("error from repo induk kerja by uuid, %w", err)
 	}
@@ -95,7 +95,7 @@ func ValidateCreateSKPengangkatanDosen(a app.App, c echo.Context) (skPegawai skP
 		return skPegawaiModel.SKPegawai{}, fmt.Errorf("unit kerja tidak ditemukan")
 	}
 
-	jabatanFungsionalBaru, err := jabatanFungsionalRepo.GetJabatanFungsionalByUUID(a, skPengangkatanDosen.UUIDJabatanFungsionalBaru)
+	jabatanFungsionalBaru, err := jabatanFungsionalRepo.GetJabatanFungsionalByUUID(a, ctx, skPengangkatanDosen.UUIDJabatanFungsionalBaru)
 	if err != nil {
 		return skPegawaiModel.SKPegawai{}, fmt.Errorf("error from repo get jabatan fungsional baru by uuid, %w", err)
 	}

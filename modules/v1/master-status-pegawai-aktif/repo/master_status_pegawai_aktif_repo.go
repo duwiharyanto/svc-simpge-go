@@ -1,6 +1,7 @@
 package repo
 
 import (
+	"context"
 	"fmt"
 	"svc-insani-go/app"
 	"svc-insani-go/modules/v1/master-status-pegawai-aktif/model"
@@ -34,4 +35,15 @@ func GetStatusPegawaiAktif(a app.App, FlagStatus string) ([]model.StatusPegawaiA
 	}
 
 	return pp, nil
+}
+
+func GetStatusPegawaiAktifByUUID(a app.App, ctx context.Context, uuid string) (*model.StatusPegawaiAktif, error) {
+	var StatusPegawaiAktif model.StatusPegawaiAktif
+
+	tx := a.GormDB.WithContext(ctx)
+	res := tx.First(&StatusPegawaiAktif, "uuid = ?", uuid)
+	if res.Error != nil {
+		return nil, fmt.Errorf("error querying status pegawai aktif by uuid %s", res.Error)
+	}
+	return &StatusPegawaiAktif, nil
 }

@@ -18,6 +18,7 @@ import (
 	statusPegawai "svc-insani-go/modules/v1/master-status-pegawai/usecase"
 	unitKerja "svc-insani-go/modules/v1/master-unit-kerja/usecase"
 	pegawai "svc-insani-go/modules/v1/pegawai/usecase"
+	personal "svc-insani-go/modules/v1/personal/usecase"
 	skPengangkatan "svc-insani-go/modules/v1/sk-pengangkatan/usecase"
 	sk "svc-insani-go/modules/v1/sk/usecase"
 	organisasiV2 "svc-insani-go/modules/v2/organisasi/usecase"
@@ -32,6 +33,23 @@ func InitRoute(a app.App, e *echo.Echo) {
 	insaniGroupingPath.GET("/pegawai", pegawai.HandleGetPegawai(a))
 	insaniGroupingPath.GET("/pegawai-simpeg/:uuidPegawai/detail", pegawai.HandleGetSimpegPegawaiByUUID(a))
 	insaniGroupingPath.PUT("/pegawai-simpeg/:uuidPegawai", pegawai.HandleUpdateSimpegPegawaiByUUID(a))
+	// insaniGroupingPath.POST("/pegawai-simpeg/:uuidPegawai", pegawai.HandleUpdateSimpegPegawaiByUUID(a))
+	// 	FE
+	// data
+	// uuid_personal
+	// nik_pegawai
+	// (nik_ktp)
+	// data-data UI SIMPEG
+	// kirim ke POST /pegawai-simpeg
+	// BE
+	// terima request dari POST /pegawai-simpeg
+	// persiapan tambah pegawai baru
+	// ambil data pribadi berdasarkan uuid_personal dari personal_data_pribadi
+	// buat id pegawai
+	// simpan
+	// data pribadi + data pegawai simpeg ke tabel pegawai
+	// data pns jika dia pns ke tabel pegawai_pns
+	// dll sesuai data ketika update pegawai
 
 	// Data Master
 	insaniGroupingPath.GET("/jabatan-struktural", organisasiV2.HandleGetAllJabatanStruktural(a))
@@ -56,6 +74,10 @@ func InitRoute(a app.App, e *echo.Echo) {
 	insaniGroupingPath.GET("/master-pegawai-penetap", sk.HandleGetPegawaiPenetap(a)) // still error
 	insaniGroupingPath.GET("/master-status-pegawai", statusPegawai.HandleGetAllStatusPegawai(a))
 	insaniGroupingPath.GET("/master-status-pegawai-aktif", statusPegawaiAktif.HandleGetStatusPegawaiAktif(a))
+	insaniGroupingPath.GET("/master-induk-kerja", indukKerja.HandleGetIndukKerja(a))
+	insaniGroupingPath.GET("/master-homebase", indukKerja.HandleHomebase(a))
+
+	insaniGroupingPath.GET("/pegawai/personal", personal.HandleSearchPersonal(a))
 	insaniGroupingPath.GET("/master-status-pengangkatan", sk.HandleGetAllStatusPengangkat(a))
 	insaniGroupingPath.GET("/master-unit-kerja", unitKerja.HandleGetUnitKerja(a))
 	insaniGroupingPath.GET("/master-unit-pengangkat", unitKerja.HandleGetUnitPengangkat(a))
@@ -78,8 +100,13 @@ func InitRoute(a app.App, e *echo.Echo) {
 	insaniGroupingPath.GET("/sk-kgb/:uuidSk/detail", sk.HandleGetSkKenaikanGajiDummy(a))
 	insaniGroupingPath.PUT("/sk-kgb/:uuidSk", sk.HandleUpdateSkKenaikanGaji(a))
 
+	// Testing Gorm
+	insaniGroupingPath.GET("/pegawai2", pegawai.HandleGetPegawaix(a))
+	insaniGroupingPath.GET("/pegawai2/:uuidPersonal", pegawai.HandleGetPegawaiByUUIDx(a))
+
 	// Testing
-	insaniGroupingPath.GET("/pegawai-simpeg2/:uuidPegawai/detail", pegawai.HandleGetSimpegPegawaiByUUIDDummy(a))
+	insaniGroupingPath.PUT("/pegawai/:uuidPegawai", pegawai.HandleUpdatePegawai(a))
+
 }
 
 func healthCheck(db *sql.DB) echo.HandlerFunc {
