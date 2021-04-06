@@ -47,6 +47,20 @@ func GetKelompokSkPengangkatan(a app.App, ctx context.Context, uuid string) (*mo
 	return &k, nil
 }
 
+func CreateSkPengangkatanTendik(a app.App, ctx context.Context, skpt *model.SkPengangkatanTendik) error {
+	tx := a.GormDB.Session(&gorm.Session{
+		Context:              ctx,
+		FullSaveAssociations: true,
+	})
+
+	result := tx.Create(&skpt)
+	if result.Error != nil {
+		return fmt.Errorf("error creating sk pengangkatan tendik: %w", result.Error)
+	}
+
+	return nil
+}
+
 func UpdateSkPengangkatanTendik(a app.App, ctx context.Context, skpt *model.SkPengangkatanTendik) error {
 	tx := a.GormDB.Session(&gorm.Session{
 		Context:              ctx,

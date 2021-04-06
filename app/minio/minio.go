@@ -134,7 +134,6 @@ func (ff FormFile) Append(bucket, name, path, contentType string, size int64, fi
 		size:        size,
 		file:        file,
 	}
-	fmt.Printf("[DEBUG] file map after append: %+v\n", ff.fileMap)
 }
 
 func (ff FormFile) GetUrl(name string) string {
@@ -154,7 +153,6 @@ func (ff FormFile) GenerateUrl() error {
 			return fmt.Errorf("error get download url: %w", err)
 		}
 		ff.fileMap[key] = f
-		fmt.Printf("[DEBUG] file map after gen url: %+v\n", ff.fileMap)
 	}
 
 	return nil
@@ -162,7 +160,6 @@ func (ff FormFile) GenerateUrl() error {
 
 func (ff FormFile) Upload() error {
 	for _, f := range ff.fileMap {
-		fmt.Printf("[DEBUG] f in upload: %+v\n", f)
 		err := ff.mc.Upload(f.bucket, f.path, f.file, f.size, f.contentType)
 		if err != nil {
 			return fmt.Errorf("error form file upload: %w", err)
@@ -173,7 +170,6 @@ func (ff FormFile) Upload() error {
 
 func (ff FormFile) GenerateObjectName(name string, dirs ...string) string {
 	f := ff.fileMap[name]
-	fmt.Printf("[DEBUG] f before generate obj name: %+v\n", f)
 	f.path = strings.Join(dirs, "/")
 	splitted := strings.Split(f.contentType, "/")
 	var extension string
@@ -184,7 +180,6 @@ func (ff FormFile) GenerateObjectName(name string, dirs ...string) string {
 	}
 	f.path += fmt.Sprintf("/%d.%s", time.Now().Unix(), extension)
 	ff.fileMap[name] = f
-	fmt.Printf("[DEBUG] file map after generate obj name: %+v\n", ff.fileMap)
 	return f.path
 }
 

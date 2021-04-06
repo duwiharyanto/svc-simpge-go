@@ -52,12 +52,28 @@ func ValidateCreateSKPengangkatanTendik(a app.App, c echo.Context) (skPegawai sk
 		return skPegawaiModel.SKPegawai{}, fmt.Errorf("kelompok sk pengangkatan tidak ditemukan")
 	}
 
-	unitPegawai, err := unitKerjaRepo.GetUnitKerjaByUUID(a, skPengangkatanTendik.UUIDUnitPegawai)
+	unitPegawai, err := unitKerjaRepo.GetUnit2ByUUID(a, skPengangkatanTendik.UUIDUnitPegawai)
 	if err != nil {
 		return skPegawaiModel.SKPegawai{}, fmt.Errorf("error from repo get unit kerja by uuid, %w", err)
 	}
 	if unitPegawai == nil {
 		return skPegawaiModel.SKPegawai{}, fmt.Errorf("unit kerja tidak ditemukan")
+	}
+
+	jabatanFungsional, err := jabatanFungsionalRepo.GetJabatanFungsionalByUUID(a, skPengangkatanTendik.UUIDJabatanFungsional)
+	if err != nil {
+		return skPegawaiModel.SKPegawai{}, fmt.Errorf("error from repo get jabatan fungsional by uuid, %w", err)
+	}
+	if jabatanFungsional == nil {
+		return skPegawaiModel.SKPegawai{}, fmt.Errorf("jabatan fungsional tidak ditemukan")
+	}
+
+	jenisIjazah, err := skRepo.GetJenisIjazahByUUID(a, skPengangkatanTendik.UUIDJenisIjazah)
+	if err != nil {
+		return skPegawaiModel.SKPegawai{}, fmt.Errorf("error from repo get jenis ijazah by uuid %w", err)
+	}
+	if jenisIjazah == nil {
+		return skPegawaiModel.SKPegawai{}, fmt.Errorf("jenis ijazah tidak ditemukan")
 	}
 
 	jenissk, err := skRepo.GetJenisSKByCode(a, skPegawaiModel.KdJenisSkPengangkatan)
@@ -68,20 +84,6 @@ func ValidateCreateSKPengangkatanTendik(a app.App, c echo.Context) (skPegawai sk
 		return skPegawaiModel.SKPegawai{}, fmt.Errorf("jenis sk tidak ditemukan")
 	}
 
-	jabatanFungsional, err := jabatanFungsionalRepo.GetJabatanFungsionalByUUID(a, skPengangkatanTendik.UUIDJabatanFungsional)
-	if err != nil {
-		return skPegawaiModel.SKPegawai{}, fmt.Errorf("error from repo get jabatan fungsional by uuid, %w", err)
-	}
-	if jabatanFungsional == nil {
-		return skPegawaiModel.SKPegawai{}, fmt.Errorf("jabatan fungsional tidak ditemukan")
-	}
-	statusPengangkatan, err := statusPengangkatanRepo.GetStatusPengangkatanByUUID(a, skPengangkatanTendik.UUIDStatusPengangkatan)
-	if err != nil {
-		return skPegawaiModel.SKPegawai{}, fmt.Errorf("error from repo get status pengangkatan, %w", err)
-	}
-	if statusPengangkatan == nil {
-		return skPegawaiModel.SKPegawai{}, fmt.Errorf("status pengangkatan tidak ditemukan")
-	}
 	pangkatGolonganPegawai, err := pangkatPegawaiRepo.GetPangkatGolonganPegawaiByUUID(a, skPengangkatanTendik.UUIDPangkatGolonganPegawai)
 	if err != nil {
 		return skPegawaiModel.SKPegawai{}, fmt.Errorf("error from repo get pangkat golongan pegawai, %w", err)
@@ -90,7 +92,15 @@ func ValidateCreateSKPengangkatanTendik(a app.App, c echo.Context) (skPegawai sk
 		return skPegawaiModel.SKPegawai{}, fmt.Errorf("pangkat golongan pegawai tidak ditemukan")
 	}
 
-	unitPengangkat, err := unitKerjaRepo.GetUnitPengangkatByUUID(a, skPengangkatanTendik.UUIDUnitPengangkat)
+	statusPengangkatan, err := statusPengangkatanRepo.GetStatusPengangkatanByUUID(a, skPengangkatanTendik.UUIDStatusPengangkatan)
+	if err != nil {
+		return skPegawaiModel.SKPegawai{}, fmt.Errorf("error from repo get status pengangkatan, %w", err)
+	}
+	if statusPengangkatan == nil {
+		return skPegawaiModel.SKPegawai{}, fmt.Errorf("status pengangkatan tidak ditemukan")
+	}
+
+	unitPengangkat, err := unitKerjaRepo.GetUnit2ByUUID(a, skPengangkatanTendik.UUIDUnitPengangkat)
 	if err != nil {
 		return skPegawaiModel.SKPegawai{}, fmt.Errorf("error from unit pengangkat pegawai, %w", err)
 	}
@@ -107,14 +117,6 @@ func ValidateCreateSKPengangkatanTendik(a app.App, c echo.Context) (skPegawai sk
 	// if pegawaiPenetap == nil {
 	// 	return skPegawaiModel.SKPegawai{}, fmt.Errorf("pegawai penetap tidak ditemukan")
 	// }
-
-	jenisIjazah, err := skRepo.GetJenisIjazahByUUID(a, skPengangkatanTendik.UUIDJenisIjazah)
-	if err != nil {
-		return skPegawaiModel.SKPegawai{}, fmt.Errorf("error from repo get jenis ijazah by uuid %w", err)
-	}
-	if jenisIjazah == nil {
-		return skPegawaiModel.SKPegawai{}, fmt.Errorf("jenis ijazah tidak ditemukan")
-	}
 
 	skPengangkatanTendik.UserUpdate = c.Request().Header.Get("X-Member")
 	skPengangkatanTendik.UserInput = c.Request().Header.Get("X-Member")
