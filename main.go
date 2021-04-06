@@ -25,7 +25,7 @@ func main() {
 		lg.Println("Can't connect to db:", err.Error())
 	}
 
-	gormDB, err := database.InitGorm(db)
+	gormDB, err := database.InitGorm(db, true)
 	if err != nil {
 		lg.Println("Can't connect to gorm db:", err.Error())
 	}
@@ -44,13 +44,13 @@ func main() {
 		DB:              db,
 		GormDB:          gormDB,
 		HttpClient:      &http.Client{},
-		MinioBucketName: os.Getenv("MINIO_BUCKET_PERSONAL"),
+		MinioBucketName: os.Getenv("MINIO_BUCKETNAME"),
 		MinioClient:     minioClient,
 		Name:            "Personal Service",
 		TimeLocation:    timeLocation,
 	}
 	if a.MinioBucketName == "" {
-		a.MinioBucketName = "personal"
+		a.MinioBucketName = "insani"
 	}
 
 	e := echo.New()

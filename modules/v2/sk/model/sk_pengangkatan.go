@@ -7,7 +7,6 @@ import (
 
 type KelompokSkPengangkatan struct {
 	Id         uint64 `form:"-" json:"-"`
-	IdKafka    uint64 `form:"-" json:"-"`
 	KelompokSk string `form:"-" json:"kelompok_sk_pengangkatan"`
 	FlagAktif  int    `form:"-" json:"-"`
 	UserInput  string `form:"-" json:"-"`
@@ -35,6 +34,7 @@ type SkPengangkatanTendik struct {
 	MasaKerjaDiakuiTahun int    `form:"masa_kerja_diakui_tahun" json:"masa_kerja_diakui_tahun"`
 	TanggalDitetapkan    string `form:"tanggal_ditetapkan" json:"tanggal_ditetapkan"`
 	PathSk               string `form:"-" json:"-"`
+	UrlFileSk            string `form:"-" json:"url_sk_pengangkatan" gorm:"-"`
 	FlagAktif            int    `form:"-" json:"-"`
 	UserUpdate           string `form:"-" json:"-"`
 	Uuid                 string `form:"-" json:"-" query:"uuid_sk_pengangkatan_tendik"`

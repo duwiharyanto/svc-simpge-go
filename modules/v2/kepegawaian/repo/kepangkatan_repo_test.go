@@ -13,7 +13,7 @@ func TestGetAllPangkatGolonganRuang(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	db, err := database.InitGorm(conn)
+	db, err := database.InitGorm(conn, true)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -33,7 +33,7 @@ func TestGetAllJabatanFungsional(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	db, err := database.InitGorm(conn)
+	db, err := database.InitGorm(conn, true)
 	if err != nil {
 		t.Fatal(err)
 	}

@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"database/sql"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
@@ -9,6 +10,8 @@ import (
 	"svc-insani-go/modules/v1/sk-pegawai/model"
 	skPengangkatanModel "svc-insani-go/modules/v1/sk-pengangkatan/model"
 	"svc-insani-go/modules/v1/sk-pengangkatan/repo"
+
+	"bytes"
 
 	"github.com/labstack/echo"
 )
@@ -80,7 +83,19 @@ func HandleGetDetailSKPengangkatanTendik(a app.App) echo.HandlerFunc {
 		}
 
 		res["data"] = append(res["data"], sk)
-		return c.JSON(http.StatusOK, res)
+
+		// fmt.Printf("[DEBUG] sk url: %s\n", sk.URLSKTendik)
+
+		var buf bytes.Buffer
+		enc := json.NewEncoder(&buf)
+		enc.SetEscapeHTML(false)
+		err = enc.Encode(res)
+		if err != nil {
+			fmt.Printf("[ERROR] encode result: %s\n", err.Error())
+			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
+		}
+		return c.JSONBlob(http.StatusOK, buf.Bytes())
+		// return c.JSON(http.StatusOK, res)
 	}
 	return echo.HandlerFunc(h)
 }

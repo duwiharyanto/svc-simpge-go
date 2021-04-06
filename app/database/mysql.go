@@ -66,23 +66,31 @@ func Healthz(ctx context.Context, db *sql.DB) error {
 	return nil
 }
 
-func InitGorm(db *sql.DB) (*gorm.DB, error) {
-	newLogger := logger.New(
-		log.New(os.Stdout, "\r\n", log.LstdFlags), // io writer
-		logger.Config{
-			SlowThreshold: time.Second, // Slow SQL threshold
-			LogLevel:      logger.Info, // Log level
-			Colorful:      false,       // Disable color
-		},
-	)
-	gormDB, err := gorm.Open(mysql.New(mysql.Config{
-		Conn: db,
-	}), &gorm.Config{
+func InitGorm(db *sql.DB, withLog bool) (*gorm.DB, error) {
+	cfg := &gorm.Config{
 		NamingStrategy: schema.NamingStrategy{
 			SingularTable: true,
 		},
-		Logger: newLogger,
-	})
+		// Logger: newLogger,
+	}
+
+	if withLog {
+		cfg.Logger = logger.New(
+			log.New(os.Stdout, "\r\n", log.LstdFlags), // io writer
+			logger.Config{
+				SlowThreshold: time.Second, // Slow SQL threshold
+				LogLevel:      logger.Info, // Log level
+				Colorful:      false,       // Disable color
+			},
+		)
+	}
+
+	gormDB, err := gorm.Open(mysql.New(
+		mysql.Config{
+			Conn: db,
+		}),
+		cfg,
+	)
 	if err != nil {
 		return nil, fmt.Errorf("error connection gorm, %w", err)
 	}
