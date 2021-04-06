@@ -400,7 +400,7 @@ func HandleUpdateSkPengangkatanTendik(a app.App) echo.HandlerFunc {
 				http.StatusInternalServerError,
 				echo.NewHTTPError(
 					http.StatusInternalServerError,
-					err,
+					"error update sk pengangkatan tendik: "+err.Error(),
 				))
 		}
 
@@ -465,4 +465,48 @@ func HandleGetSkPengangkatanTendik(a app.App) echo.HandlerFunc {
 	}
 	return echo.HandlerFunc(h)
 
+}
+
+func HandleDeleteSKPengangkatanTendik(a app.App) echo.HandlerFunc {
+	h := func(c echo.Context) error {
+		uuid := c.QueryParam("uuid_sk_pengangkatan_tendik")
+		if uuid == "" {
+			return c.JSON(http.StatusBadRequest, map[string]string{"message": "uuid sk pengangkatan tendik wajib diisi"})
+		}
+
+		ctx := c.Request().Context()
+		skpt, err := repo.GetSkPengangkatanTendik(a, ctx, uuid)
+		if err != nil {
+			return c.JSON(
+				http.StatusInternalServerError,
+				echo.NewHTTPError(
+					http.StatusInternalServerError,
+					"error get sk pengangkatan tendik by uuid: "+uuid,
+				))
+		}
+
+		if skpt == nil {
+			return c.JSON(http.StatusBadRequest, map[string]string{"message": "sk pengangkatan tendik tidak ditemukan"})
+		}
+
+		skpt.SkPegawai.FlagAktif = 0
+		skpt.SkPegawai.UserUpdate = c.Request().Header.Get("X-Member")
+		skpt.FlagAktif = 0
+		skpt.UserUpdate = c.Request().Header.Get("X-Member")
+
+		err = repo.UpdateSkPengangkatanTendik(a, ctx, skpt)
+		if err != nil {
+			return c.JSON(
+				http.StatusInternalServerError,
+				echo.NewHTTPError(
+					http.StatusInternalServerError,
+					"error delete sk pengangkatan tendik: "+err.Error(),
+				))
+		}
+		return c.JSON(http.StatusOK, map[string]interface{}{
+			"message": "Berhasil hapus sk pengangkatan tendik",
+			"data":    skpt.SkPegawai.Pegawai,
+		})
+	}
+	return echo.HandlerFunc(h)
 }

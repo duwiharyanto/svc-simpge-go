@@ -91,7 +91,10 @@ func GetSkPengangkatanTendik(a app.App, ctx context.Context, uuid string) (*mode
 		Joins("StatusPengangkatan").
 		Joins("UnitKerja").
 		Joins("UnitPengangkat").
-		Where(&model.SkPengangkatanTendik{Uuid: uuid}).
+		Where(&model.SkPengangkatanTendik{
+			Uuid:      uuid,
+			FlagAktif: 1,
+		}).
 		First(&skpt).
 		Error
 
