@@ -85,10 +85,16 @@ func (mc MinioClient) GetDownloadURL(bucketName, objectName, downloadName string
 
 	presignedURL, err := mc.PresignedGetObject(bucketName, objectName, expirationTime(), reqParams)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("error get presigned get object: %w", err)
 	}
 
+	// b, err := presignedURL.MarshalBinary()
+	// if err != nil {
+	// 	return "", fmt.Errorf("error marshaling url: %w", err)
+	// }
+
 	return presignedURL.String(), nil
+	// return string(b), nil
 }
 
 func (mc MinioClient) Get(bucketName, objectName string) (*minio.Object, error) {
@@ -120,16 +126,26 @@ func NewFormFile(minioClient *MinioClient) FormFile {
 	}
 }
 
-func (ff FormFile) Append(bucket, name, contentType string, size int64, file io.Reader) {
+func (ff FormFile) Append(bucket, name, path, contentType string, size int64, file io.Reader) {
 	ff.fileMap[name] = formFile{
 		bucket:      bucket,
 		contentType: contentType,
+		path:        path,
 		size:        size,
 		file:        file,
 	}
+	fmt.Printf("[DEBUG] file map after append: %+v\n", ff.fileMap)
 }
 
-func (ff FormFile) GetUrl() error {
+func (ff FormFile) GetUrl(name string) string {
+	f, exist := ff.fileMap[name]
+	if !exist {
+		return ""
+	}
+	return f.url
+}
+
+func (ff FormFile) GenerateUrl() error {
 	for key := range ff.fileMap {
 		var err error
 		f := ff.fileMap[key]
@@ -138,6 +154,7 @@ func (ff FormFile) GetUrl() error {
 			return fmt.Errorf("error get download url: %w", err)
 		}
 		ff.fileMap[key] = f
+		fmt.Printf("[DEBUG] file map after gen url: %+v\n", ff.fileMap)
 	}
 
 	return nil
@@ -145,6 +162,7 @@ func (ff FormFile) GetUrl() error {
 
 func (ff FormFile) Upload() error {
 	for _, f := range ff.fileMap {
+		fmt.Printf("[DEBUG] f in upload: %+v\n", f)
 		err := ff.mc.Upload(f.bucket, f.path, f.file, f.size, f.contentType)
 		if err != nil {
 			return fmt.Errorf("error form file upload: %w", err)
@@ -155,6 +173,7 @@ func (ff FormFile) Upload() error {
 
 func (ff FormFile) GenerateObjectName(name string, dirs ...string) string {
 	f := ff.fileMap[name]
+	fmt.Printf("[DEBUG] f before generate obj name: %+v\n", f)
 	f.path = strings.Join(dirs, "/")
 	splitted := strings.Split(f.contentType, "/")
 	var extension string
@@ -165,6 +184,7 @@ func (ff FormFile) GenerateObjectName(name string, dirs ...string) string {
 	}
 	f.path += fmt.Sprintf("/%d.%s", time.Now().Unix(), extension)
 	ff.fileMap[name] = f
+	fmt.Printf("[DEBUG] file map after generate obj name: %+v\n", ff.fileMap)
 	return f.path
 }
 

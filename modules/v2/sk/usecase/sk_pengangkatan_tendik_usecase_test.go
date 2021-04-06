@@ -13,6 +13,7 @@ import (
 	"strings"
 	"svc-insani-go/app"
 	"svc-insani-go/app/database"
+	"svc-insani-go/app/minio"
 	"svc-insani-go/modules/v2/sk/model"
 
 	"svc-insani-go/router"
@@ -59,11 +60,18 @@ func TestHandleUpdateSkPengangkatanTendik(t *testing.T) {
 	if err != nil {
 		t.Skip("failed connect db:", err)
 	}
-	gormDb, err := database.InitGorm(db)
+
+	gormDb, err := database.InitGorm(db, true)
 	if err != nil {
 		t.Fatal(err)
 	}
-	a := app.App{DB: db, GormDB: gormDb}
+
+	mc, err := minio.Connect()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	a := app.App{DB: db, GormDB: gormDb, MinioClient: mc, MinioBucketName: "insani"}
 	router.InitRoute(a, e)
 	server := httptest.NewServer(e)
 	defer server.Close()
@@ -73,10 +81,10 @@ func TestHandleUpdateSkPengangkatanTendik(t *testing.T) {
 	wr := multipart.NewWriter(wbuf)
 	err = FillFormDataFieldMap(wr, map[string]string{
 		"uuid_jenis_sk":      "ebc9e2c0-ee60-11ea-8c77-7eb0d4a3c7a0",
-		"gaji_pokok":         "1124",
+		"gaji_pokok":         "2",
 		"tanggal_ditetapkan": "333",
-		// "nomor_sk":                      "no/sk/1/4",
-		"nomor_sk":                      "",
+		"nomor_sk":           "no/sk-haris/1/5",
+		// "nomor_sk":                      "",
 		"tentang_sk":                    "tentang sk tendik 1",
 		"tmt":                           "2021-09-08",
 		"uuid_kelompok_sk_pengangkatan": "742024ac-4fea-11eb-bf95-a74048ab8082",
@@ -101,6 +109,21 @@ func TestHandleUpdateSkPengangkatanTendik(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+
+	// add file to form
+	// file, err := os.Open("./test.pdf")
+	// if err != nil {
+	// 	t.Fatal(err)
+	// }
+
+	// part, err := wr.CreateFormFile("file_sk", "./test.pdf")
+	// if err != nil {
+	// 	t.Fatal(err)
+	// }
+
+	// io.Copy(part, file)
+	// file.Close()
+
 	wr.Close()
 
 	// create request
@@ -132,7 +155,7 @@ func TestHandleUpdateSkPengangkatanTendik(t *testing.T) {
 	// format res body indentation
 	var buf bytes.Buffer
 	json.Indent(&buf, rawResBodyJSON, "", "\t")
-	// fmt.Printf("[DEBUG] rec body: %s\n", buf.String())
+	fmt.Printf("[DEBUG] rec body: %s\n", buf.String())
 
 	// var any interface{}
 	// err = json.Unmarshal(rec.Body.Bytes(), &any)
@@ -170,11 +193,18 @@ func TestHandleGetSkPengangkatanTendik(t *testing.T) {
 	if err != nil {
 		t.Skip("failed connect db:", err)
 	}
-	gormDb, err := database.InitGorm(db)
+
+	gormDb, err := database.InitGorm(db, false)
 	if err != nil {
 		t.Fatal(err)
 	}
-	a := app.App{DB: db, GormDB: gormDb}
+
+	mc, err := minio.Connect()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	a := app.App{DB: db, GormDB: gormDb, MinioBucketName: "insani", MinioClient: mc}
 	router.InitRoute(a, e)
 	server := httptest.NewServer(e)
 	defer server.Close()

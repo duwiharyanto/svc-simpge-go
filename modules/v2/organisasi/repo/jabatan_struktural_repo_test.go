@@ -13,7 +13,7 @@ func TestGetAllJabatanStruktural(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	db, err := database.InitGorm(conn)
+	db, err := database.InitGorm(conn, true)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -36,7 +36,7 @@ func TestGetPejabatStruktural(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	db, err := database.InitGorm(conn)
+	db, err := database.InitGorm(conn, true)
 	if err != nil {
 		t.Fatal(err)
 	}

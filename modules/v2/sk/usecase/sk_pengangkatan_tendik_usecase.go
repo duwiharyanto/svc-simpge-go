@@ -1,9 +1,12 @@
 package usecase
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"svc-insani-go/app"
+	"svc-insani-go/app/minio"
 	kepegawaianRepo "svc-insani-go/modules/v2/kepegawaian/repo"
 	organisasiRepo "svc-insani-go/modules/v2/organisasi/repo"
 	"svc-insani-go/modules/v2/sk/model"
@@ -150,7 +153,36 @@ func HandleUpdateSkPengangkatanTendik(a app.App) echo.HandlerFunc {
 		skRequest.UserUpdate = c.Request().Header.Get("X-Member")
 		skRequest.SkPegawai.UserUpdate = c.Request().Header.Get("X-Member")
 
-		// c.FormFile("x")
+		fileSk, _ := c.FormFile("file_sk")
+
+		// TODO: validasi file sk
+
+		if fileSk != nil {
+			f, err := fileSk.Open()
+			if err != nil {
+				f.Close()
+				return c.JSON(
+					http.StatusInternalServerError,
+					echo.NewHTTPError(
+						http.StatusInternalServerError,
+						"error open form file sk: "+err.Error(),
+					))
+			}
+
+			formFile := minio.NewFormFile(&a.MinioClient)
+			formFile.Append(a.MinioBucketName, "file_sk", "", fileSk.Header.Get("Content-Type"), fileSk.Size, f)
+			f.Close()
+			skRequest.PathSk = formFile.GenerateObjectName("file_sk", "sk", "pengangkatan", skRequest.SkPegawai.Pegawai.Uuid)
+			err = formFile.Upload()
+			if err != nil {
+				return c.JSON(
+					http.StatusInternalServerError,
+					echo.NewHTTPError(
+						http.StatusInternalServerError,
+						"error upload form file sk pengangkatan tendik: "+err.Error(),
+					))
+			}
+		}
 
 		err = repo.UpdateSkPengangkatanTendik(a, ctx, &skRequest)
 		if err != nil {
@@ -181,8 +213,18 @@ func HandleGetSkPengangkatanTendik(a app.App) echo.HandlerFunc {
 				http.StatusInternalServerError,
 				echo.NewHTTPError(
 					http.StatusInternalServerError,
-					err,
+					"error get sk pengangkatan tendik: "+err.Error(),
 				))
+		}
+
+		if sk.PathSk != "" {
+			formFile := minio.NewFormFile(&a.MinioClient)
+			formFile.Append(a.MinioBucketName, "file_sk", sk.PathSk, "", 0, nil)
+			err = formFile.GenerateUrl()
+			if err != nil {
+				c.Logger().Debug("error generate url file sk:", err.Error())
+			}
+			sk.UrlFileSk = fmt.Sprintf(`%s`, formFile.GetUrl("file_sk"))
 		}
 
 		res := map[string][]*model.SkPengangkatanTendik{
@@ -194,7 +236,23 @@ func HandleGetSkPengangkatanTendik(a app.App) echo.HandlerFunc {
 		}
 
 		res["data"] = append(res["data"], sk)
-		return c.JSON(http.StatusOK, res)
+
+		var buf bytes.Buffer
+		enc := json.NewEncoder(&buf)
+		enc.SetEscapeHTML(false) // agar url file tidak diescape
+		err = enc.Encode(res)
+		if err != nil {
+			return c.JSON(
+				http.StatusInternalServerError,
+				echo.NewHTTPError(
+					http.StatusInternalServerError,
+					"error encoding result: "+err.Error(),
+				))
+		}
+
+		// return c.JSON(http.StatusOK, res)
+		return c.JSONBlob(http.StatusOK, buf.Bytes())
 	}
 	return echo.HandlerFunc(h)
+
 }

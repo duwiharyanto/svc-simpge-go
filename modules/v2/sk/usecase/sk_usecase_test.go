@@ -22,7 +22,7 @@ func TestHandleGetAllJenisIjazah(t *testing.T) {
 	if err != nil {
 		t.Skip("failed connect db:", err)
 	}
-	gormDb, err := database.InitGorm(db)
+	gormDb, err := database.InitGorm(db, true)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -84,7 +84,7 @@ func TestHandleGetAllKelompokSkPengangkatan(t *testing.T) {
 	if err != nil {
 		t.Skip("failed connect db:", err)
 	}
-	gormDb, err := database.InitGorm(db)
+	gormDb, err := database.InitGorm(db, true)
 	if err != nil {
 		t.Fatal(err)
 	}

@@ -13,7 +13,7 @@ func TestGetAllSkPegawai(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	db, err := database.InitGorm(conn)
+	db, err := database.InitGorm(conn, true)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -32,7 +32,7 @@ func TestGetSkPegawaiByUUID(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	db, err := database.InitGorm(conn)
+	db, err := database.InitGorm(conn, true)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -50,7 +50,7 @@ func TestGetAllJenisIjazah(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	db, err := database.InitGorm(conn)
+	db, err := database.InitGorm(conn, true)
 	if err != nil {
 		t.Fatal(err)
 	}

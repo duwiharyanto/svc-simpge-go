@@ -1,6 +1,7 @@
 package usecase
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -29,7 +30,7 @@ func TestUsecase(t *testing.T) {
 	if err != nil {
 		t.Skip("failed connect minio:", err)
 	}
-	a := app.App{DB: db, TimeLocation: loc, MinioClient: minio}
+	a := app.App{DB: db, TimeLocation: loc, MinioClient: minio, MinioBucketName: "insani"}
 
 	e := echo.New()
 	t.Run("create_sk_pengangkatan_tendik", func(t *testing.T) {
@@ -89,9 +90,9 @@ func TestUsecase(t *testing.T) {
 		HandleGetDetailSKPengangkatanTendik(a)(ctx)
 
 		// format res body indentation
-		// var buf bytes.Buffer
-		// json.Indent(&buf, res.Body.Bytes(), "", "\t")
-		// fmt.Printf("[DEBUG] rec body: %s\n", buf.String())
+		var buf bytes.Buffer
+		json.Indent(&buf, res.Body.Bytes(), "", "\t")
+		fmt.Printf("[DEBUG] rec body: %s\n", buf.String())
 
 		var result map[string][]interface{}
 		err = json.Unmarshal(res.Body.Bytes(), &result)
