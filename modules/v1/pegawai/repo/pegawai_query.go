@@ -130,7 +130,9 @@ func getUnitKerjaPegawaiQuery(uuid string) string {
 		COALESCE(lk.lokasi_desc,''),
 		COALESCE(lk.lokasi_desc,''),
 		COALESCE(pf.nomor_sk_pertama,''),
-		COALESCE(pf.tmt_sk_pertama,'')
+		COALESCE(pf.tmt_sk_pertama,''),
+		COALESCE(u22.kd_unit2,''),
+		COALESCE(u22.kd_pddikti,'')
 	FROM
 		pegawai p
 	LEFT JOIN
@@ -143,6 +145,8 @@ func getUnitKerjaPegawaiQuery(uuid string) string {
 		unit3 u3 ON p.id_unit_kerja3 = u3.id 
 	LEFT JOIN
 		lokasi_kerja lk ON p.lokasi_kerja = lk.lokasi_kerja 
+	LEFT JOIN
+		unit2 u22 ON pf.id_homebase_uii = u2.id 
 	WHERE 
 		p.uuid = %q AND p.flag_aktif = 1`, uuid)
 

@@ -127,6 +127,8 @@ func GetKepegawaianYayasan(a app.App, uuid string) (*model.PegawaiYayasan, error
 		return nil, fmt.Errorf("error querying and scanning kepegawaian yayasan, %s", err.Error())
 	}
 
+	pegawaiYayasan.SetTanggalIDN()
+
 	return &pegawaiYayasan, nil
 }
 
@@ -145,6 +147,8 @@ func GetUnitKerjaPegawai(a app.App, uuid string) (*model.UnitKerjaPegawai, error
 		&unitKerjaPegawai.LokasiDesc,
 		&unitKerjaPegawai.NoSkPertama,
 		&unitKerjaPegawai.TmtSkPertama,
+		&unitKerjaPegawai.KdHomebasePddikti,
+		&unitKerjaPegawai.KdHomebaseUii,
 	)
 
 	if err == sql.ErrNoRows {
@@ -154,6 +158,8 @@ func GetUnitKerjaPegawai(a app.App, uuid string) (*model.UnitKerjaPegawai, error
 	if err != nil {
 		return nil, fmt.Errorf("error querying and scanning unit kerja pegawai, %s", err.Error())
 	}
+
+	unitKerjaPegawai.SetTanggalIDN()
 
 	return &unitKerjaPegawai, nil
 }
@@ -189,30 +195,9 @@ func GetPegawaiPNS(a app.App, uuid string) (*model.PegawaiPNSPTT, error) {
 		return nil, fmt.Errorf("error querying and scanning pegawai pns, %s", err.Error())
 	}
 
+	pegawaiPNSPTT.SetTanggalIDN()
 	return &pegawaiPNSPTT, nil
 }
-
-// func GetPegawaiPTT(a app.App, uuid string) (*model.PegawaiPNSPTT, error) {
-// 	sqlQuery := getPegawaiPTTQuery(uuid)
-// 	var pegawaiPNSPTT model.PegawaiPNSPTT
-
-// 	err := a.DB.QueryRow(sqlQuery).Scan(
-// 		&pegawaiPNSPTT.KdJenisPTT,
-// 		&pegawaiPNSPTT.JenisPTT,
-// 		&pegawaiPNSPTT.InstansiAsalPtt,
-// 		&pegawaiPNSPTT.KeteranganPtt,
-// 	)
-
-// 	if err == sql.ErrNoRows {
-// 		return nil, nil
-// 	}
-
-// 	if err != nil {
-// 		return nil, fmt.Errorf("error querying and scanning pegawai tidak tetap, %s", err.Error())
-// 	}
-
-// 	return &pegawaiPNSPTT, nil
-// }
 
 func GetStatusPegawaiAktif(a app.App, uuid string) (*model.StatusAktif, error) {
 	sqlQuery := getStatusPegawaiAktifQuery(uuid)

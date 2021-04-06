@@ -18,6 +18,7 @@ import (
 	statusPegawai "svc-insani-go/modules/v1/master-status-pegawai/usecase"
 	unitKerja "svc-insani-go/modules/v1/master-unit-kerja/usecase"
 	pegawai "svc-insani-go/modules/v1/pegawai/usecase"
+	personal "svc-insani-go/modules/v1/personal/usecase"
 	sk "svc-insani-go/modules/v1/sk/usecase"
 
 	"github.com/labstack/echo"
@@ -59,6 +60,9 @@ func InitRoute(a app.App, e *echo.Echo) {
 	insaniGroupingPath.GET("/master-jenis-pegawai-tidak-tetap", jenisPTT.HandleGetJenisPTT(a))
 	insaniGroupingPath.GET("/master-status-pegawai-aktif", statusPegawaiAktif.HandleGetStatusPegawaiAktif(a))
 	insaniGroupingPath.GET("/master-induk-kerja", indukKerja.HandleGetIndukKerja(a))
+	insaniGroupingPath.GET("/master-homebase", indukKerja.HandleHomebase(a))
+
+	insaniGroupingPath.GET("/pegawai/personal", personal.HandleSearchPersonal(a))
 
 	// SK
 	insaniGroupingPath.GET("/sk-kgb/:uuidSk/detail", sk.HandleGetSkKenaikanGajiDummy(a))

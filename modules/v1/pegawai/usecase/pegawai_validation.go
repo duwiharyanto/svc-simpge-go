@@ -60,9 +60,6 @@ func ValidateUpdatePegawaiByUUID(a app.App, c echo.Context) (model.PegawaiUpdate
 		fmt.Printf("[ERROR] binding requestpegawai , %s\n", err.Error())
 	}
 
-	// fmt.Println("Keterangan Old : ", pegawaiOld.PegawaiPNS.InstansiAsal)
-	// fmt.Println("Keterangan New : ", pegawaiReq.PegawaiPNS.InstansiAsal)
-
 	pegawaiOld.Uuid = uuidPegawai
 	pegawaiOld.Id, _ = conv.Int(pegawai.ID)
 
@@ -167,6 +164,24 @@ func ValidateUpdatePegawaiByUUID(a app.App, c echo.Context) (model.PegawaiUpdate
 		pegawaiOld.LokasiKerja = lokasiKerja.LokasiKerja
 	}
 
+	// Pengecekan Homebase Pddikti
+	if pegawaiOld.PegawaiFungsional.UuidHomebasePddikti != "" {
+		homebasePddikti, err := indukKerjaRepo.GetUnitKerjaByUUID(a, c.Request().Context(), pegawaiOld.PegawaiFungsional.UuidHomebasePddikti)
+		if err != nil {
+			return model.PegawaiUpdate{}, fmt.Errorf("error from repo unit kerja by uuid, %w", err)
+		}
+		pegawaiOld.PegawaiFungsional.IdHomebasePddikti, _ = conv.Int(homebasePddikti.ID)
+	}
+
+	// Pengecekan Homebase UII
+	if pegawaiOld.PegawaiFungsional.UuidHomebaseUii != "" {
+		homebaseUUuidHomebaseUii, err := indukKerjaRepo.GetUnitKerjaByUUID(a, c.Request().Context(), pegawaiOld.PegawaiFungsional.UuidHomebaseUii)
+		if err != nil {
+			return model.PegawaiUpdate{}, fmt.Errorf("error from repo unit kerja by uuid, %w", err)
+		}
+		pegawaiOld.PegawaiFungsional.IdHomebaseUii, _ = conv.Int(homebaseUUuidHomebaseUii.ID)
+	}
+
 	// Pengecekan Pangkat Golongan Ruang PNS
 	if pegawaiOld.PegawaiPNS.UuidPangkatGolongan != "" {
 		pangkatPNS, err := pangkatPegawaiRepo.GetPangkatPegawaiByUUID(a, pegawaiOld.PegawaiPNS.UuidPangkatGolongan)
@@ -207,10 +222,10 @@ func ValidateUpdatePegawaiByUUID(a app.App, c echo.Context) (model.PegawaiUpdate
 		pegawaiOld.PegawaiFungsional.KdStatusPegawaiAktif = statusPegawaiAktif.KdStatusAktif
 	}
 
-	// Pengecekan Nilai2 not nill
+	// Binding nilai request ke struct
 
-	// pegawaiOld.PegawaiFungsional.TmtPangkatGolongan = pegawaiReq.PegawaiFungsional.TmtPangkatGolongan
-	// pegawaiOld.PegawaiFungsional.TmtJabatan = pegawaiReq.PegawaiFungsional.TmtJabatan
+	pegawaiOld.PegawaiFungsional.TmtPangkatGolongan = pegawaiReq.PegawaiFungsional.TmtPangkatGolongan
+	pegawaiOld.PegawaiFungsional.TmtJabatan = pegawaiReq.PegawaiFungsional.TmtJabatan
 	pegawaiOld.PegawaiFungsional.MasaKerjaBawaanTahun = pegawaiReq.PegawaiFungsional.MasaKerjaBawaanTahun
 	pegawaiOld.PegawaiFungsional.MasaKerjaBawaanBulan = pegawaiReq.PegawaiFungsional.MasaKerjaBawaanBulan
 	pegawaiOld.PegawaiFungsional.MasaKerjaGajiTahun = pegawaiReq.PegawaiFungsional.MasaKerjaGajiTahun
@@ -221,12 +236,12 @@ func ValidateUpdatePegawaiByUUID(a app.App, c echo.Context) (model.PegawaiUpdate
 	pegawaiOld.PegawaiFungsional.NomorSertifikasi = pegawaiReq.PegawaiFungsional.NomorSertifikasi
 	pegawaiOld.PegawaiFungsional.NomorRegistrasi = pegawaiReq.PegawaiFungsional.NomorRegistrasi
 	pegawaiOld.PegawaiFungsional.NomorSkPertama = pegawaiReq.PegawaiFungsional.NomorSkPertama
-	// pegawaiOld.PegawaiFungsional.TmtSkPertama = pegawaiReq.PegawaiFungsional.TmtSkPertama
+	pegawaiOld.PegawaiFungsional.TmtSkPertama = pegawaiReq.PegawaiFungsional.TmtSkPertama
 	pegawaiOld.PegawaiPNS.InstansiAsal = pegawaiReq.PegawaiPNS.InstansiAsal
 	pegawaiOld.PegawaiPNS.NipPns = pegawaiReq.PegawaiPNS.NipPns
 	pegawaiOld.PegawaiPNS.NoKartuPegawai = pegawaiReq.PegawaiPNS.NoKartuPegawai
-	// pegawaiOld.PegawaiPNS.TmtPangkatGolongan = pegawaiReq.PegawaiPNS.TmtPangkatGolongan
-	// pegawaiOld.PegawaiPNS.TmtJabatan = pegawaiReq.PegawaiPNS.TmtJabatan
+	pegawaiOld.PegawaiPNS.TmtPangkatGolongan = pegawaiReq.PegawaiPNS.TmtPangkatGolongan
+	pegawaiOld.PegawaiPNS.TmtJabatan = pegawaiReq.PegawaiPNS.TmtJabatan
 	pegawaiOld.PegawaiPNS.MasaKerjaTahun = pegawaiReq.PegawaiPNS.MasaKerjaTahun
 	pegawaiOld.PegawaiPNS.MasaKerjaBulan = pegawaiReq.PegawaiPNS.MasaKerjaBulan
 	pegawaiOld.PegawaiPNS.AngkaKredit = pegawaiReq.PegawaiPNS.AngkaKredit

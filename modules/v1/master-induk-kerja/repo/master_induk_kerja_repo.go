@@ -132,3 +132,26 @@ func GetBagianKerjaByUUID(a app.App, ctx context.Context, uuid string) (*model.U
 	}
 	return &bagianKerja, nil
 }
+
+func GetHomebase(a app.App, ctx context.Context) ([]model.Homebase, error) {
+	var homebases []model.Homebase
+
+	tx := a.GormDB.WithContext(ctx)
+	res := tx.Where("flag_aktif = ? AND kd_pddikti IS NOT NULL", "1").
+		Find(&homebases)
+	if res.Error != nil {
+		return nil, fmt.Errorf("error querying homebase %s", res.Error)
+	}
+	return homebases, nil
+}
+
+func GetHomebaseByUUID(a app.App, ctx context.Context, uuid string) (*model.Homebase, error) {
+	var homebase model.Homebase
+
+	tx := a.GormDB.WithContext(ctx)
+	res := tx.First(&homebase, "uuid = ?", uuid)
+	if res.Error != nil {
+		return nil, fmt.Errorf("error querying homebase %s", res.Error)
+	}
+	return &homebase, nil
+}

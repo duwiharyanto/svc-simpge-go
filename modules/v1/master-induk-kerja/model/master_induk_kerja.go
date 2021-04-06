@@ -44,3 +44,21 @@ type Unit3 struct {
 	UserUpdate  string `json:"-"`
 	UUID        string `json:"uuid"`
 }
+
+type Homebase struct {
+	ID          string `json:"-" gorm:"primaryKey"`
+	KdUnit2     string `json:"kd_homebase_uii" json:"column:kd_unit2"`
+	Unit2       string `json:"unit2"`
+	Keterangan1 string `json:"keterangan1"`
+	Keterangan2 string `json:"keterangan2"`
+	KdPddikti   string `json:"kd_pddikti"`
+	UUID        string `json:"uuid"`
+}
+
+func (*Homebase) TableName() string {
+	return "unit2"
+}
+
+type HomebaseResponse struct {
+	Data []Homebase `json:"data"`
+}
