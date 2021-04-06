@@ -2,6 +2,7 @@ package repo
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
 	"svc-insani-go/app"
 	"svc-insani-go/modules/v1/master-induk-kerja/model"
@@ -154,4 +155,18 @@ func GetHomebaseByUUID(a app.App, ctx context.Context, uuid string) (*model.Home
 		return nil, fmt.Errorf("error querying homebase %s", res.Error)
 	}
 	return &homebase, nil
+}
+func GetIndukKerjaByUUIDx(a app.App, uuid string) (*model.IndukKerja, error) {
+	sqlQuery := getIndukKerjaQueryByUUID(uuid)
+	//fmt.Printf("log query induk kerja : %s\n", sqlQuery)
+	var indukKerja model.IndukKerja
+	err := a.DB.QueryRow(sqlQuery).Scan(&indukKerja.ID, &indukKerja.KdIndukKerja, &indukKerja.IndukKerja, &indukKerja.UUID)
+	if err == sql.ErrNoRows {
+		return nil, nil
+	}
+	if err != nil {
+		return nil, fmt.Errorf("error querying get jenis induk kerja pegawai by uuid %s", err.Error())
+	}
+	//fmt.Printf("log query induk kerja datanya ada tidak : %+v\n", indukKerja)
+	return &indukKerja, nil
 }

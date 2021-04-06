@@ -76,7 +76,22 @@ func CountPegawai(a app.App, req *model.PegawaiRequest) (int, error) {
 func GetPegawaiByUUID(a app.App, uuid string) (*model.Pegawai, error) {
 	sqlQuery := getPegawaiByUUID(uuid)
 	var pegawai model.Pegawai
-	err := a.DB.QueryRow(sqlQuery).Scan(&pegawai.ID, &pegawai.NIK, &pegawai.Nama, &pegawai.GelarDepan, &pegawai.GelarBelakang, &pegawai.UnitKerja.KdUnitKerja, &pegawai.KelompokPegawai.KdKelompokPegawai, &pegawai.UUID)
+	err := a.DB.QueryRow(sqlQuery).Scan(&pegawai.ID,
+		&pegawai.NIK,
+		&pegawai.Nama,
+		&pegawai.GelarDepan,
+		&pegawai.GelarBelakang,
+		&pegawai.JenisPegawai.KDJenisPegawai,
+		&pegawai.JenisPegawai.JenisPegawai,
+		&pegawai.JenisPegawai.UUID,
+		&pegawai.KelompokPegawai.KdKelompokPegawai,
+		&pegawai.KelompokPegawai.KelompokPegawai,
+		&pegawai.KelompokPegawai.UUID,
+		&pegawai.UnitKerja.KdUnitKerja,
+		&pegawai.UnitKerja.NamaUnitKerja,
+		&pegawai.UnitKerja.UUID,
+		&pegawai.UUID,
+	)
 	if err == sql.ErrNoRows {
 		return nil, nil
 	}

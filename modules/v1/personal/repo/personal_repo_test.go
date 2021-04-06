@@ -15,7 +15,7 @@ func TestSearchPersonal(t *testing.T) {
 	}
 	a := app.App{DB: db}
 
-	gormDB, err := database.InitGorm(a.DB)
+	gormDB, err := database.InitGorm(a.DB, true)
 	if err != nil {
 		t.Fatal("failed connect to gorm db:", err)
 	}

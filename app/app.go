@@ -29,3 +29,7 @@ func GetFixedTimeZone() *time.Location {
 	nTimeOffset, _ := strconv.Atoi(timeOffset)
 	return time.FixedZone("", nTimeOffset*60*60)
 }
+
+const (
+	ErrInternalServer = "Layanan sedang bermasalah"
+)

@@ -64,14 +64,14 @@ func TestGetPegawaiFilePendidikan(t *testing.T) {
 
 // }
 
-func TestPegawaiOld(t *testing.T) {
+func TestGetPegawaiByUUID(t *testing.T) {
 	db, err := database.Connect()
 	if err != nil {
 		t.Fatal("failed connect to db:", err)
 	}
 	a := app.App{DB: db}
 
-	gormDB, err := database.InitGorm(a.DB)
+	gormDB, err := database.InitGorm(a.DB, true)
 	if err != nil {
 		t.Fatal("failed connect to gorm db:", err)
 	}
@@ -102,7 +102,7 @@ func TestUpdatePendidikanPegawai(t *testing.T) {
 	}
 	a := app.App{DB: db}
 
-	gormDB, err := database.InitGorm(a.DB)
+	gormDB, err := database.InitGorm(a.DB, true)
 	if err != nil {
 		t.Fatal("failed connect to gorm db:", err)
 	}
@@ -147,4 +147,14 @@ func TestUpdatePendidikanPegawai(t *testing.T) {
 // 	// 81929613986368762599
 // 	// 18446744073709551615
 
+// }
+// func TestPegawaiOld(t *testing.T) {
+// 	uuid := "e5762619-1437-11eb-a014-7eb0d4a3c7a0"
+// 	pegawai, err := GetPegawaiByUUID(a, uuid)
+// 	if err != nil {
+// 		t.Fatal("failed get pegawai:", err)
+// 	}
+// 	j, _ := json.MarshalIndent(pegawai, "", "\t")
+
+// 	t.Logf("pegawai:\n%s\n", j)
 // }
