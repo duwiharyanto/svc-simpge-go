@@ -6,10 +6,12 @@ import (
 
 type SkPegawai struct {
 	Id         uint64 `form:"-" json:"-"`
+	IdJenisSk  uint64 `form:"-" json:"-"`
 	NomorSk    string `form:"nomor_sk" json:"nomor_sk"`
 	TentangSk  string `form:"tentang_sk" json:"tentang_sk"`
 	Tmt        string `form:"tmt" json:"tmt"`
 	FlagAktif  int    `form:"-" json:"-"`
+	UserInput  string `form:"-" json:"-"`
 	UserUpdate string `form:"-" json:"-"`
 	Uuid       string `form:"-" json:"-"`
 

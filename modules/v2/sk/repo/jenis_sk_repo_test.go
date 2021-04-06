@@ -26,3 +26,23 @@ func TestGetAllJenisSk(t *testing.T) {
 		fmt.Printf("[DEBUG] jenis sk: %+v\n", js)
 	}
 }
+
+func TestGetJenisSk(t *testing.T) {
+	conn, err := database.Connect()
+	if err != nil {
+		t.Fatal(err)
+	}
+	db, err := database.InitGorm(conn, true)
+	if err != nil {
+		t.Fatal(err)
+	}
+	a := app.App{GormDB: db}
+	js, err := GetJenisSk(a, context.Background(), "1")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if js == nil {
+		t.Fatal("should not be empty")
+	}
+	fmt.Printf("[DEBUG] jenis sk: %+v\n", js)
+}

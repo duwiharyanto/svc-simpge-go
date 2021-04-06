@@ -36,6 +36,7 @@ type SkPengangkatanTendik struct {
 	PathSk               string `form:"-" json:"-"`
 	UrlFileSk            string `form:"-" json:"url_sk_pengangkatan" gorm:"-"`
 	FlagAktif            int    `form:"-" json:"-"`
+	UserInput            string `form:"-" json:"-"`
 	UserUpdate           string `form:"-" json:"-"`
 	Uuid                 string `form:"-" json:"-" query:"uuid_sk_pengangkatan_tendik"`
 
