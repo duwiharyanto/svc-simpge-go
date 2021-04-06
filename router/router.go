@@ -89,7 +89,8 @@ func InitRoute(a app.App, e *echo.Echo) {
 	insaniGroupingPath.POST("/sk-pengangkatan-dosen", skPengangkatan.HandleCreateSKPengangkatanDosen(a))
 	insaniGroupingPath.GET("/sk-pengangkatan-dosen", skPengangkatan.HandleGetDetailSKPengangkatanDosen(a))
 	insaniGroupingPath.DELETE("/sk-pengangkatan-dosen", skPengangkatan.HandleDeleteSKPengangkatanDosenByUUID(a))
-	insaniGroupingPath.DELETE("/sk-pengangkatan-tendik", skPengangkatan.HandleDeleteSKPengangkatanTendikByUUID(a))
+	insaniGroupingPath.DELETE("/sk-pengangkatan-tendik", skV2.HandleDeleteSKPengangkatanTendik(a))
+	// insaniGroupingPath.DELETE("/sk-pengangkatan-tendik", skPengangkatan.HandleDeleteSKPengangkatanTendikByUUID(a))
 
 	insaniGroupingPath.GET("/sk-pengangkatan-tendik-v2", skV2.HandleGetSkPengangkatanTendik(a))
 
