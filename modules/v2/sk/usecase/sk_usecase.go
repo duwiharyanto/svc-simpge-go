@@ -62,3 +62,36 @@ func HandleGetAllKelompokSkPengangkatan(a app.App) echo.HandlerFunc {
 	}
 	return echo.HandlerFunc(h)
 }
+
+func HandleGetAllMataKuliah(a app.App) echo.HandlerFunc {
+	h := func(c echo.Context) error {
+		// dummy
+		mk := []byte(`{
+			"data": [
+					{
+							"kd_matakuliah": "2113001",
+							"nama_matakuliah": "Akuntansi Pengantar",
+							"nama_matakuliah_en": "Introduction to Accounting",
+							"nama_singkat_matakuliah": "Akuntansi Pengantar",
+							"uuid": "5833a3de-213b-11ea-889a-506b8da96a87"
+					},
+					{
+							"kd_matakuliah": "STF101",
+							"nama_matakuliah": "Pengantar Informatika",
+							"nama_matakuliah_en": "Introduction to Informatics",
+							"nama_singkat_matakuliah": "PINF",
+							"uuid": "4576b120-5b78-11eb-831c-7eb0d4a3c7a0"
+					},
+					{
+							"kd_matakuliah": "41012009",
+							"nama_matakuliah": "Hukum Agraria",
+							"nama_matakuliah_en": "Agrarian Law",
+							"nama_singkat_matakuliah": "Hk. Agraria",
+							"uuid": "9542e427-2139-11ea-889a-506b8da96a87"
+					}
+			]
+	}`)
+		return c.JSONBlob(http.StatusOK, mk)
+	}
+	return echo.HandlerFunc(h)
+}
