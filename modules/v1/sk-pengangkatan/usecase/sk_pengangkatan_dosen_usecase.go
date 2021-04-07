@@ -61,7 +61,7 @@ func HandleCreateSKPengangkatanDosen(a app.App) echo.HandlerFunc {
 
 func HandleGetDetailSKPengangkatanDosen(a app.App) echo.HandlerFunc {
 	h := func(c echo.Context) error {
-		UUIDSKPengangkatanDosen := c.QueryParam("uuid_sk_pengangkatan_Dosen")
+		UUIDSKPengangkatanDosen := c.QueryParam("uuid_sk_pengangkatan_dosen")
 		SKPengangkatanDosen, err := repo.GetDetailSKPengangkatanDosen(a, UUIDSKPengangkatanDosen)
 		if err != nil {
 			fmt.Printf("[ERROR] %s\n", err.Error())

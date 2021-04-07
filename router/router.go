@@ -55,6 +55,7 @@ func InitRoute(a app.App, e *echo.Echo) {
 	insaniGroupingPath.GET("/jabatan-struktural", organisasiV2.HandleGetAllJabatanStruktural(a))
 	insaniGroupingPath.GET("/jenis-ijazah", skV2.HandleGetAllJenisIjazah(a))
 	insaniGroupingPath.GET("/kelompok-sk-pengangkatan", skV2.HandleGetAllKelompokSkPengangkatan(a))
+	insaniGroupingPath.GET("/mata-kuliah", skV2.HandleGetAllMataKuliah(a))
 	insaniGroupingPath.GET("/pejabat-struktural", organisasiV2.HandleGetPejabatStruktural(a))
 	insaniGroupingPath.GET("/unit2", organisasiV2.HandleGetAllUnit2(a))
 
@@ -86,10 +87,15 @@ func InitRoute(a app.App, e *echo.Echo) {
 	insaniGroupingPath.POST("/sk-pengangkatan-tendik", skV2.HandleCreateSkPengangkatanTendik(a))
 	insaniGroupingPath.GET("/sk-pengangkatan-tendik", skPengangkatan.HandleGetDetailSKPengangkatanTendik(a))
 	insaniGroupingPath.PUT("/sk-pengangkatan-tendik", skV2.HandleUpdateSkPengangkatanTendik(a))
-	insaniGroupingPath.POST("/sk-pengangkatan-dosen", skPengangkatan.HandleCreateSKPengangkatanDosen(a))
-	insaniGroupingPath.GET("/sk-pengangkatan-dosen", skPengangkatan.HandleGetDetailSKPengangkatanDosen(a))
-	insaniGroupingPath.DELETE("/sk-pengangkatan-dosen", skPengangkatan.HandleDeleteSKPengangkatanDosenByUUID(a))
 	insaniGroupingPath.DELETE("/sk-pengangkatan-tendik", skV2.HandleDeleteSKPengangkatanTendik(a))
+
+	insaniGroupingPath.POST("/sk-pengangkatan-dosen", skV2.HandleCreateSkPengangkatanDosen(a))
+	// insaniGroupingPath.POST("/sk-pengangkatan-dosen", skPengangkatan.HandleCreateSKPengangkatanDosen(a))
+	insaniGroupingPath.PUT("/sk-pengangkatan-dosen", skV2.HandleUpdateSkPengangkatanDosen(a))
+	// insaniGroupingPath.GET("/sk-pengangkatan-dosen", skPengangkatan.HandleGetDetailSKPengangkatanDosen(a))
+	insaniGroupingPath.GET("/sk-pengangkatan-dosen", skV2.HandleGetSkPengangkatanDosen(a))
+	insaniGroupingPath.DELETE("/sk-pengangkatan-dosen", skV2.HandleDeleteSkPengangkatanDosen(a))
+	// insaniGroupingPath.DELETE("/sk-pengangkatan-dosen", skPengangkatan.HandleDeleteSKPengangkatanDosenByUUID(a))
 	// insaniGroupingPath.DELETE("/sk-pengangkatan-tendik", skPengangkatan.HandleDeleteSKPengangkatanTendikByUUID(a))
 
 	insaniGroupingPath.GET("/sk-pengangkatan-tendik-v2", skV2.HandleGetSkPengangkatanTendik(a))

@@ -76,8 +76,8 @@ func TestUsecase(t *testing.T) {
 
 	t.Run("get_sk_pengangkatan_tendik_detail", func(t *testing.T) {
 		urlQuery := make(url.Values)
-		urlQuery.Set("uuid_sk_pengangkatan_tendik", "cfba6500-7974-4a3c-ad4c-268999c5ff5d") // local
-		// urlQuery.Set("uuid_sk_pengangkatan_tendik", "dfef3d4d-2ffe-11eb-a014-7eb0d4a3c7a0")
+		// urlQuery.Set("uuid_sk_pengangkatan_tendik", "cfba6500-7974-4a3c-ad4c-268999c5ff5d") // local
+		urlQuery.Set("uuid_sk_pengangkatan_tendik", "894765e8-9093-4b32-86ee-93958cc70d78")
 
 		req := httptest.NewRequest(
 			http.MethodGet,
