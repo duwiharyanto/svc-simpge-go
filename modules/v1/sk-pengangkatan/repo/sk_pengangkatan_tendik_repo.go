@@ -160,9 +160,19 @@ func GetDetailSKPengangkatanTendik(a app.App, UUIDSKPengangkatanTendik string) (
 	sk.SetTanggalSK()
 
 	if sk.PathSKTendik != "" {
-		sk.URLSKTendik, err = a.MinioClient.GetDownloadURL(a.MinioBucketName, sk.PathSKTendik, "")
+		var extension string
+		splitted := strings.Split(sk.PathSKTendik, ".")
+		if len(splitted) == 2 {
+			extension = splitted[1]
+		}
+		name := strings.ReplaceAll(sk.NomorSK, "/", "_")
+		downloadName := fmt.Sprintf("%s.%s", name, extension)
+		sk.URLSKTendik, err = a.MinioClient.GetDownloadURL(a.MinioBucketName, sk.PathSKTendik, downloadName)
 		if err != nil {
 			fmt.Printf("error getting file url, %s", err.Error())
+		}
+		if sk.URLSKTendik != "" {
+			sk.NamaFileSKTendik = downloadName
 		}
 	}
 

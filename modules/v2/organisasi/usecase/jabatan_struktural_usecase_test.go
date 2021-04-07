@@ -1,6 +1,7 @@
 package usecase_test
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -53,9 +54,9 @@ func TestHandleGetAllJabatanStruktural(t *testing.T) {
 	}
 
 	// format res body indentation
-	// var buf bytes.Buffer
-	// json.Indent(&buf, rawResBodyJSON, "", "\t")
-	// fmt.Printf("[DEBUG] rec body: %s\n", buf.String())
+	var buf bytes.Buffer
+	json.Indent(&buf, rawResBodyJSON, "", "\t")
+	fmt.Printf("[DEBUG] rec body: %s\n", buf.String())
 
 	var result map[string][]interface{}
 	err = json.Unmarshal(rawResBodyJSON, &result)
@@ -91,8 +92,8 @@ func TestHandleGetPejabatStruktural(t *testing.T) {
 	defer server.Close()
 
 	// create request
-	// uuidJabatanStruktural := "6c1d68ef-9461-11eb-b06a-000c2977b907"
-	uuidJabatanStruktural := "6bf12830-9461-11eb-b06a-000c2977b907"
+	uuidJabatanStruktural := "353ea3c2-96de-11eb-86fa-0f2381201b27" // local
+	// uuidJabatanStruktural := "6bf12830-9461-11eb-b06a-000c2977b907"
 	baseURL := server.URL + "/public/api/v1/pejabat-struktural?uuid_jabatan_struktural=" + uuidJabatanStruktural
 	// fmt.Printf("[DEBUG] base url: %s\n", baseURL)
 	req, err := http.NewRequest(http.MethodGet, baseURL, nil)
@@ -112,9 +113,9 @@ func TestHandleGetPejabatStruktural(t *testing.T) {
 	}
 
 	// format res body indentation
-	// var buf bytes.Buffer
-	// json.Indent(&buf, rawResBodyJSON, "", "\t")
-	// fmt.Printf("[DEBUG] rec body: %s\n", buf.String())
+	var buf bytes.Buffer
+	json.Indent(&buf, rawResBodyJSON, "", "\t")
+	fmt.Printf("[DEBUG] rec body: %s\n", buf.String())
 
 	var result map[string][]interface{}
 	err = json.Unmarshal(rawResBodyJSON, &result)

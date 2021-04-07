@@ -43,7 +43,7 @@ func TestGetUrlFormFile(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	url := ff.GetUrl("test1")
+	url, _ := ff.GetUrl("test1")
 	if url == "" {
 		t.Fatal("should not be empty")
 	}
