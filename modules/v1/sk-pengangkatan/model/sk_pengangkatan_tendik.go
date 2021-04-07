@@ -168,7 +168,8 @@ type SKPengangkatanTendikDetail struct {
 	TanggalDitetapkan    string                `json:"tanggal_ditetapkan" form:"tanggal_ditetapkan"`
 	TanggalDitetapkanIDN string                `json:"tanggal_ditetapkan_idn" form:"-"`
 	PathSKTendik         string                `json:"-"`
-	URLSKTendik          string                `json:"url_sk_pengangkatan" form:"url_sk_pengangkatan"`
+	URLSKTendik          string                `json:"url_sk_pengangkatan" form:"-"`
+	NamaFileSKTendik     string                `json:"nama_file_sk_pengangkatan" form:"-"`
 	FileSKTendik         *multipart.FileHeader `json:"-" form:"-"`
 
 	IDPegawaiPenetap    string `json:"-" form:"-"`

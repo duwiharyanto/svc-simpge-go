@@ -35,7 +35,10 @@ func TestHandleGetAllSkPegawai(t *testing.T) {
 	defer server.Close()
 
 	// create request
-	baseURL := server.URL + "/public/api/v1/sk-pegawai?kd_jenis_pegawai=AD&uuid_pegawai=e37046f9-1437-11eb-a014-7eb0d4a3c7a0"
+	uuidPegawai := "d8c26983-1437-11eb-a014-7eb0d4a3c7a0" // local
+	// uuidPegawai := "e37046f9-1437-11eb-a014-7eb0d4a3c7a0"
+
+	baseURL := server.URL + "/public/api/v1/sk-pegawai?kd_jenis_pegawai=AD&uuid_pegawai=" + uuidPegawai
 	// fmt.Printf("[DEBUG] base url: %s\n", baseURL)
 	req, err := http.NewRequest(http.MethodGet, baseURL, nil)
 

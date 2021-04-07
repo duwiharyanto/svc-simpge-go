@@ -429,12 +429,12 @@ func HandleGetSkPengangkatanTendik(a app.App) echo.HandlerFunc {
 
 		if sk.PathSk != "" {
 			formFile := minio.NewFormFile(&a.MinioClient)
-			formFile.Append(a.MinioBucketName, "file_sk", sk.PathSk, "", 0, nil)
+			formFile.Append(a.MinioBucketName, sk.SkPegawai.NomorSk, sk.PathSk, "", 0, nil)
 			err = formFile.GenerateUrl()
 			if err != nil {
 				c.Logger().Debug("error generate url file sk:", err.Error())
 			}
-			sk.UrlFileSk = fmt.Sprintf(`%s`, formFile.GetUrl("file_sk"))
+			sk.UrlFileSk, sk.NamaFileSk = formFile.GetUrl(sk.SkPegawai.NomorSk)
 		}
 
 		res := map[string][]*model.SkPengangkatanTendik{

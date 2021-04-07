@@ -136,19 +136,26 @@ func (ff FormFile) Append(bucket, name, path, contentType string, size int64, fi
 	}
 }
 
-func (ff FormFile) GetUrl(name string) string {
+func (ff FormFile) GetUrl(name string) (string, string) {
 	f, exist := ff.fileMap[name]
 	if !exist {
-		return ""
+		return "", ""
 	}
-	return f.url
+	return f.url, f.downloadName
 }
 
 func (ff FormFile) GenerateUrl() error {
 	for key := range ff.fileMap {
 		var err error
 		f := ff.fileMap[key]
-		f.url, err = ff.mc.GetDownloadURL(f.bucket, f.path, "")
+		var extension string
+		splitted := strings.Split(f.path, ".")
+		if len(splitted) == 2 {
+			extension = splitted[1]
+		}
+		name := strings.ReplaceAll(key, "/", "_")
+		f.downloadName = fmt.Sprintf("%s.%s", name, extension)
+		f.url, err = ff.mc.GetDownloadURL(f.bucket, f.path, f.downloadName)
 		if err != nil {
 			return fmt.Errorf("error get download url: %w", err)
 		}
@@ -184,10 +191,11 @@ func (ff FormFile) GenerateObjectName(name string, dirs ...string) string {
 }
 
 type formFile struct {
-	bucket      string
-	contentType string
-	path        string
-	url         string
-	size        int64
-	file        io.Reader
+	bucket       string
+	contentType  string
+	downloadName string
+	path         string
+	url          string
+	size         int64
+	file         io.Reader
 }
