@@ -36,6 +36,34 @@ func HandleGetAllJenisIjazah(a app.App) echo.HandlerFunc {
 	return echo.HandlerFunc(h)
 }
 
+func HandleGetAllJenisSk(a app.App) echo.HandlerFunc {
+	h := func(c echo.Context) error {
+		ctx := c.Request().Context()
+		jj, err := repo.GetAllJenisSk(a, ctx)
+		if err != nil {
+			return c.JSON(
+				http.StatusInternalServerError,
+				echo.NewHTTPError(
+					http.StatusInternalServerError,
+					err,
+				))
+		}
+
+		res := map[string][]model.JenisSk{
+			"data": []model.JenisSk{},
+		}
+
+		if jj == nil {
+			return c.JSON(http.StatusOK, res)
+		}
+
+		res["data"] = jj
+		return c.JSON(http.StatusOK, res)
+	}
+
+	return echo.HandlerFunc(h)
+}
+
 func HandleGetAllKelompokSkPengangkatan(a app.App) echo.HandlerFunc {
 	h := func(c echo.Context) error {
 		ctx := c.Request().Context()

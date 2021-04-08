@@ -314,8 +314,8 @@ func TestHandleGetSkPengangkatanTendik(t *testing.T) {
 	defer server.Close()
 
 	// create request
-	uuidSkPengangkatanTendik := "cfba6500-7974-4a3c-ad4c-268999c5ff5d" // local
-	// uuidSkPengangkatanTendik := "dfef3d4d-2ffe-11eb-a014-7eb0d4a3c7a0"
+	// uuidSkPengangkatanTendik := "cfba6500-7974-4a3c-ad4c-268999c5ff5d" // local
+	uuidSkPengangkatanTendik := "dfef3d4d-2ffe-11eb-a014-7eb0d4a3c7a0"
 	baseURL := server.URL + "/public/api/v1/sk-pengangkatan-tendik-v2?uuid_sk_pengangkatan_tendik=" + uuidSkPengangkatanTendik
 	// fmt.Printf("[DEBUG] base url: %s\n", baseURL)
 	req, err := http.NewRequest(http.MethodGet, baseURL, nil)

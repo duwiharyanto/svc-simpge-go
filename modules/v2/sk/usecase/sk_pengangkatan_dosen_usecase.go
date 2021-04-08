@@ -9,7 +9,7 @@ import (
 	"github.com/labstack/echo"
 )
 
-// still TODO
+// still dummy
 func HandleCreateSkPengangkatanDosen(a app.App) echo.HandlerFunc {
 	h := func(c echo.Context) error {
 		res := []byte(fmt.Sprintf(dummyUpdateSkPengangkatanDosen, "tambah"))
@@ -350,67 +350,119 @@ func HandleDeleteSkPengangkatanDosen(a app.App) echo.HandlerFunc {
 }
 
 const dummyGetSkPengangkatanDosen = `{
-        "data": [
-                {
-                        "bantuan_komunikasi": 1000000,
-                        "gaji_pokok": 1000000,
-                        "instansi_kerja": "National University of Singapore",
-                        "jangka_waktu_evaluasi": "Setiap 2 tahun dari pengangkatan atau sekurang-kurangnya sesuai masa kontrak",
-                        "mata_kuliah": [
-                                {
-                                        "kd_matakuliah": "2113001",
-                                        "nama_matakuliah": "Akuntansi Pengantar",
-                                        "nama_matakuliah_en": "Introduction to Accounting",
-                                        "nama_singkat_matakuliah": "Akuntansi Pengantar",
-                                        "uuid": "5833a3de-213b-11ea-889a-506b8da96a87"
-                                },
-                                {
-                                        "kd_matakuliah": "STF101",
-                                        "nama_matakuliah": "Pengantar Informatika",
-                                        "nama_matakuliah_en": "Introduction to Informatics",
-                                        "nama_singkat_matakuliah": "PINF",
-                                        "uuid": "4576b120-5b78-11eb-831c-7eb0d4a3c7a0"
-                                },
-                                {
-                                        "kd_matakuliah": "41012009",
-                                        "nama_matakuliah": "Hukum Agraria",
-                                        "nama_matakuliah_en": "Agrarian Law",
-                                        "nama_singkat_matakuliah": "Hk. Agraria",
-                                        "uuid": "9542e427-2139-11ea-889a-506b8da96a87"
-                                }
-                        ],
-                        "masa_kerja_diakui_tahun_baru": 1,
-                        "masa_kerja_diakui_bulan_lama": 1,
-                        "masa_kerja_gaji_bulan": 1,
-                        "masa_kerja_gaji_tahun": 1,
-                        "masa_kerja_riil_bulan": 1,
-                        "masa_kerja_riil_tahun": 1,
-                        "nomor_sk": "sk-dosen-1",
-                        "nama_file_sk_pengangkatan": "sk-dosen-1.pdf",
-                        "sks_mengajar": 2400000,
-                        "tgl_berakhir": "2020-09-08",
-                        "tgl_berakhir_idn": "8 September 2020",
-                        "tgl_ditetapkan": "2020-09-08",
-                        "tgl_ditetapkan_idn": "8 September 2020",
-                        "tmt": "2020-09-08",
-                        "tmt_idn": "8 September 2020",
-                        "tunjangan_beras": 1000000,
-                        "tunjangan_khusus": 1000000,
-                        "tunjangan_tahunan": "Akomodasi, asuransi (BPJS Kesehatan), visa dan tiket pesawat tidak berlaku untuk mobilitas daring (dapat berubah tergantung pada situasi pandemi covid 19)",
-                        "uuid_ijazah_pendidikan": "",
-                        "uuid_induk_kerja": "fb92fe85-1fd2-11eb-a014-7eb0d4a3c7a0",
-                        "uuid_jabatan_fungsional": "aeb51c35-2fc6-11eb-a014-7eb0d4a3c7a0",
-                        "uuid_jabatan_fungsional_lama": "aeb51169-2fc6-11eb-a014-7eb0d4a3c7a0",
-                        "uuid_jabatan_penetap": "6bd8793c-9461-11eb-b06a-000c2977b907",
-                        "uuid_kelompok_kelompok_sk_pengangkatan": "7420763c-4fea-11eb-bf95-a74048ab8082",
-                        "uuid_pangkat_gol": "c613d238-09e3-11eb-8c77-7eb0d4a3c7a0",
-                        "uuid_pangkat_gol_lama": "c6101e45-09e3-11eb-8c77-7eb0d4a3c7a0",
-                        "uuid_pejabat_penetap": "0e6047fd-9463-11eb-b06a-000c2977b907",
-                        "uuid_unit_kerja": "798c80c4-1fd3-11eb-a014-7eb0d4a3c7a0",
-                        "uuid_sk_pengangkatan_dosen": "5833a3de-213b-11ea-889a-506b8da96a87",
-                        "url_sk_pengangkatan": "s3-dev.minio.io/insani/sk-pengangkatan/sk-dosen-1.pdf"
-                }
-        ]
+	"data": [
+			{
+					"nama_pegawai": "Abdul Kadir Aboe",
+					"nik_pegawai": "091002120",
+					"ttl": "Tegal, 24 November 1979",
+					"bantuan_komunikasi": 1000000,
+					"gaji_pokok": 1000000,
+					"induk_kerja": {
+							"kd_unit": "000",
+							"unit": "Pengurus Yayasan Badan Wakaf",
+							"keterangan": "",
+							"uuid": "7f994497-1fd7-11eb-a014-7eb0d4a3c7a0"
+					},
+					"instansi_kerja": "National University of Singapore",
+					"jabatan_fungsional": {
+							"kd_jabatan_fungsional": "06",
+							"jabatan_fungsional": "Asisten Ahli",
+							"uuid": "aeb51169-2fc6-11eb-a014-7eb0d4a3c7a0"
+					},
+					"jabatan_fungsional_lama": {
+							"kd_jabatan_fungsional": "12",
+							"jabatan_fungsional": "Lektor",
+							"uuid": "aeb51718-2fc6-11eb-a014-7eb0d4a3c7a0"
+					},
+					"jabatan_penetap": {
+							"jenis_jabatan": "Rektor",
+							"jenis_unit": "Universitas",
+							"unit": "Universitas Islam Indonesia",
+							"kd_unit": "100",
+							"uuid": "82dbe329-9461-11eb-b06a-000c2977b907"
+					},
+					"jangka_waktu_evaluasi": "Setiap 2 tahun dari pengangkatan atau sekurang-kurangnya sesuai masa kontrak",
+					"jenis_ijazah": {
+							"kd_jenis_ijazah": "6",
+							"jenis_ijazah": "S2 ",
+							"uuid": "74d325b7-ee86-11ea-8c77-7eb0d4a3c7a0"
+					},
+					"jenis_sk": {
+							"kd_jenis_sk": "1",
+							"jenis_sk": "Pengangkatan",
+							"uuid": "ebc9e2c0-ee60-11ea-8c77-7eb0d4a3c7a0"
+					},
+					"kelompok_sk_pengangkatan": {
+							"kelompok_sk_pengangkatan": "Dosen Tidak Tetap Profesi",
+							"uuid_kelompok_sk_pengangkatan": "74201d68-4fea-11eb-bf95-a74048ab8082"
+					},
+					"mata_kuliah": [
+							{
+									"kd_matakuliah": "2113001",
+									"nama_matakuliah": "Akuntansi Pengantar",
+									"nama_matakuliah_en": "Introduction to Accounting",
+									"nama_singkat_matakuliah": "Akuntansi Pengantar",
+									"uuid": "5833a3de-213b-11ea-889a-506b8da96a87"
+							},
+							{
+									"kd_matakuliah": "STF101",
+									"nama_matakuliah": "Pengantar Informatika",
+									"nama_matakuliah_en": "Introduction to Informatics",
+									"nama_singkat_matakuliah": "PINF",
+									"uuid": "4576b120-5b78-11eb-831c-7eb0d4a3c7a0"
+							},
+							{
+									"kd_matakuliah": "41012009",
+									"nama_matakuliah": "Hukum Agraria",
+									"nama_matakuliah_en": "Agrarian Law",
+									"nama_singkat_matakuliah": "Hk. Agraria",
+									"uuid": "9542e427-2139-11ea-889a-506b8da96a87"
+							}
+					],
+					"masa_kerja_diakui_tahun_baru": 1,
+					"masa_kerja_diakui_bulan_lama": 1,
+					"masa_kerja_gaji_bulan": 1,
+					"masa_kerja_gaji_tahun": 1,
+					"masa_kerja_riil_bulan": 1,
+					"masa_kerja_riil_tahun": 1,
+					"nomor_sk": "sk-dosen-1",
+					"nama_file_sk_pengangkatan": "sk-dosen-1.pdf",
+					"pangkat_gol": {
+							"pangkat": "Pengatur muda",
+							"golongan": "II/A",
+							"uuid": "5e40d320-ee83-11ea-8c77-7eb0d4a3c7a0"
+					},
+					"pangkat_gol_lama": {
+							"pangkat": "Juru tingkat 1",
+							"golongan": "I/D",
+							"uuid": "c6157b5b-09e3-11eb-8c77-7eb0d4a3c7a0"
+					},
+					"pejabat_penetap": {
+							"nama": "Kariyam",
+							"gelar_depan": "",
+							"gelar_belakang": "S.Si., M.Si.",
+							"uuid": "0e67eb57-9463-11eb-b06a-000c2977b907"
+					},
+					"sks_mengajar": 2400000,
+					"tgl_berakhir": "2020-09-08",
+					"tgl_berakhir_idn": "8 September 2020",
+					"tgl_ditetapkan": "2020-09-08",
+					"tgl_ditetapkan_idn": "8 September 2020",
+					"tmt": "2020-09-08",
+					"tmt_idn": "8 September 2020",
+					"tunjangan_beras": 1000000,
+					"tunjangan_khusus": 1000000,
+					"tunjangan_tahunan": "Akomodasi, asuransi (BPJS Kesehatan), visa dan tiket pesawat tidak berlaku untuk mobilitas daring (dapat berubah tergantung pada situasi pandemi covid 19)",
+					"unit_kerja": {
+							"kd_unit": "000",
+							"unit": "Pengurus Yayasan Badan Wakaf",
+							"kd_induk_unit": "000",
+							"uuid": "798c791e-1fd3-11eb-a014-7eb0d4a3c7a0"
+					},
+					"uuid_sk_pengangkatan_dosen": "2252388283",
+					"url_sk_pengangkatan": "s3-dev.minio.io/insani/sk-pengangkatan/sk-dosen-1.pdf"
+			}
+	]
 }`
 
 const dummyUpdateSkPengangkatanDosen = `{

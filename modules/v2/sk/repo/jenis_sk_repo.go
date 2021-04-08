@@ -10,13 +10,19 @@ import (
 	"gorm.io/gorm"
 )
 
-func GetAllJenisSk(a app.App, ctx context.Context) []model.JenisSk {
+func GetAllJenisSk(a app.App, ctx context.Context) ([]model.JenisSk, error) {
 	var jjs []model.JenisSk
-	a.GormDB.
+	err := a.GormDB.
 		WithContext(ctx).
 		Where(&model.JenisSk{FlagAktif: 1}).
-		Find(&jjs)
-	return jjs
+		Find(&jjs).
+		Error
+
+	if err != nil {
+		return nil, fmt.Errorf("error get all jenis sk: %w", err)
+	}
+
+	return jjs, nil
 }
 
 func GetJenisSk(a app.App, ctx context.Context, code string) (*model.JenisSk, error) {

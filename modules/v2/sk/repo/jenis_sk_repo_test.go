@@ -18,7 +18,10 @@ func TestGetAllJenisSk(t *testing.T) {
 		t.Fatal(err)
 	}
 	a := app.App{GormDB: db}
-	jjs := GetAllJenisSk(a, context.Background())
+	jjs, err := GetAllJenisSk(a, context.Background())
+	if err != nil {
+		t.Fatal(err)
+	}
 	if len(jjs) == 0 {
 		t.Fatal("should not be empty")
 	}
