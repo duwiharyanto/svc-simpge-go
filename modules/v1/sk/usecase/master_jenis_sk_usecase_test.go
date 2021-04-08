@@ -1,7 +1,9 @@
 package usecase
 
 import (
+	"bytes"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"svc-insani-go/app"
@@ -37,9 +39,9 @@ func TestHandleGetAllJenisSK(t *testing.T) {
 	// 	t.Fatal("result should be same with wanted")
 	// }
 
-	// var buf bytes.Buffer
-	// json.Indent(&buf, rec.Body.Bytes(), "", "\t")
-	// fmt.Printf("[DEBUG] rec body: %s\n", buf.String())
+	var buf bytes.Buffer
+	json.Indent(&buf, rec.Body.Bytes(), "", "\t")
+	fmt.Printf("[DEBUG] rec body: %s\n", buf.String())
 
 	var any interface{}
 	err = json.Unmarshal(rec.Body.Bytes(), &any)

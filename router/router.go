@@ -54,6 +54,7 @@ func InitRoute(a app.App, e *echo.Echo) {
 	// Data Master
 	insaniGroupingPath.GET("/jabatan-struktural", organisasiV2.HandleGetAllJabatanStruktural(a))
 	insaniGroupingPath.GET("/jenis-ijazah", skV2.HandleGetAllJenisIjazah(a))
+	insaniGroupingPath.GET("/jenis-sk", skV2.HandleGetAllJenisSk(a))
 	insaniGroupingPath.GET("/kelompok-sk-pengangkatan", skV2.HandleGetAllKelompokSkPengangkatan(a))
 	insaniGroupingPath.GET("/mata-kuliah", skV2.HandleGetAllMataKuliah(a))
 	insaniGroupingPath.GET("/pejabat-struktural", organisasiV2.HandleGetPejabatStruktural(a))

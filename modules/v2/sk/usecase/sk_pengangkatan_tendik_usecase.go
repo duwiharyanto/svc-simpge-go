@@ -427,7 +427,7 @@ func HandleGetSkPengangkatanTendik(a app.App) echo.HandlerFunc {
 				))
 		}
 
-		if sk.PathSk != "" {
+		if sk != nil && sk.PathSk != "" {
 			formFile := minio.NewFormFile(&a.MinioClient)
 			formFile.Append(a.MinioBucketName, sk.SkPegawai.NomorSk, sk.PathSk, "", 0, nil)
 			err = formFile.GenerateUrl()
