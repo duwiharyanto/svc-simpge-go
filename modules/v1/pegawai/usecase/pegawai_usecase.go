@@ -1,11 +1,14 @@
 package usecase
 
 import (
+	"context"
 	"fmt"
 	"strconv"
 
 	"net/http"
 	"svc-insani-go/app"
+	pegawaiOraHttp "svc-insani-go/modules/v1/pegawai-oracle/http"
+	pegawaiOraModel "svc-insani-go/modules/v1/pegawai-oracle/model"
 	"svc-insani-go/modules/v1/pegawai/model"
 	"svc-insani-go/modules/v1/pegawai/repo"
 
@@ -184,8 +187,22 @@ func HandleUpdatePegawai(a app.App) echo.HandlerFunc {
 		}
 		// fmt.Printf("[DEBUG] pegawai: %+v\n", pegawaiUpdate)
 		// return c.JSON(http.StatusOK, pegawaiUpdate)
+
 		return c.JSON(http.StatusOK, pegawaiDetail)
 	}
 
 	return echo.HandlerFunc(h)
+}
+
+func prepareSinkronSimpeg(ctx context.Context, pegawaiInsani model.PegawaiDetail) error {
+
+	pegawaiOra := pegawaiOraModel.KepegawaianYayasanSimpeg{}
+
+	err := pegawaiOraHttp.UpdateKepegawaianYayasan(ctx, &http.Client{}, pegawaiOra)
+	if err != nil {
+		return fmt.Errorf("[ERROR] repo get kepegawaian yayasan uuid, %s\n", err.Error())
+		// return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
+	}
+
+	return nil
 }
