@@ -78,6 +78,8 @@ spec:
               value: "36000"
             - name: RESPONSE_TIMEOUT_MS
               value: "13000"
+            - name: SLACK_WEBHOOK_URL
+              value: "https://hooks.slack.com/services/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"
 
 ---
 apiVersion: v1

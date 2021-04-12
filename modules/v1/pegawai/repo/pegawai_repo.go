@@ -117,6 +117,7 @@ func GetKepegawaianYayasan(a app.App, uuid string) (*model.PegawaiYayasan, error
 		&pegawaiYayasan.KdPangkat,
 		&pegawaiYayasan.Pangkat,
 		&pegawaiYayasan.Golongan,
+		&pegawaiYayasan.KdRuang,
 		&pegawaiYayasan.TmtPangkatGolongan,
 		&pegawaiYayasan.KdJabatanFungsional,
 		&pegawaiYayasan.JabatanFungsional,
@@ -485,19 +486,23 @@ func UpdatePendidikanPegawai(a app.App, ctx context.Context, uuidPendidikanDiaku
 	var pegawaiPendidikanUpdate model.PegawaiPendidikanUpdate
 
 	// Flag Ijazah Diakui
-	res := db.Model(&pegawaiPendidikanUpdate).
-		Where("uuid = ?", uuidPendidikanDiakui).
-		Update("flag_ijazah_diakui", "1")
-	if res.Error != nil {
-		return res.Error
+	if uuidPendidikanDiakui != "" {
+		res := db.Model(&pegawaiPendidikanUpdate).
+			Where("uuid = ?", uuidPendidikanDiakui).
+			Update("flag_ijazah_diakui", "1")
+		if res.Error != nil {
+			return res.Error
+		}
 	}
 
 	// Flag Ijazah Terakhir
-	res = db.Model(&pegawaiPendidikanUpdate).
-		Where("uuid = ?", uuidPendidikanTerakhir).
-		Update("flag_ijazah_terakhir", "1")
-	if res.Error != nil {
-		return res.Error
+	if uuidPendidikanTerakhir != "" {
+		res := db.Model(&pegawaiPendidikanUpdate).
+			Where("uuid = ?", uuidPendidikanTerakhir).
+			Update("flag_ijazah_terakhir", "1")
+		if res.Error != nil {
+			return res.Error
+		}
 	}
 
 	return nil

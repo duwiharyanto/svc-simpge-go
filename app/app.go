@@ -141,7 +141,7 @@ const (
 				"type": "section",
 				"text": {
 					"type": "mrkdwn",
-					"text": "Prod | svc-personal-go | 500 | %s"
+					"text": "Prod | svc-insani-go | 500 | %s"
 				}
 			}
 		]
@@ -162,7 +162,7 @@ func sendErrorToSlack(ctx context.Context, client *http.Client, err error) error
 				"type": "section",
 				"text": map[string]interface{}{
 					"type": "mrkdwn",
-					"text": fmt.Sprintf("Prod | svc-personal-go | 500\n```%s```", msg),
+					"text": fmt.Sprintf("Prod | svc-insani-go | 500\n```%s```", msg),
 				},
 			},
 		},

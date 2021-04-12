@@ -53,15 +53,24 @@ func main() {
 		a.MinioBucketName = "insani"
 	}
 
+	appCtx := context.Background()
+
 	e := echo.New()
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
 		AllowOrigins: []string{"*"},
 		AllowMethods: []string{echo.GET, echo.POST, echo.PUT, echo.DELETE},
 	}))
-	e.Use(router.SetResponseTimeout)
+	// e.Use(router.SetResponseTimeout(appCtx))
+	// e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
+	// 	Skipper: router.SkipMasterEndpoint,
+	// 	Format:  `${status} ${method} ${uri} ${time_rfc3339_nano} ${header:X-Member} ${latency} ${latency_human} ${bytes_in} ${bytes_out} ${error}` + "\n",
+	// }))
 
+	// pengaturan := pengaturanModel.InitPengaturan()
+
+	slackErrChan := app.NewSlackLogger(appCtx, a.HttpClient)
 	// Memanggil fungsi yang mengelola routing
-	router.InitRoute(a, e)
+	router.InitRoute(a, appCtx, e, slackErrChan)
 
 	e.HTTPErrorHandler = func(err error, c echo.Context) {
 		if err == nil {

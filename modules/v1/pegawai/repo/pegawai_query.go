@@ -102,6 +102,7 @@ func getPegawaiYayasanQuery(uuid string) string {
 		COALESCE(pgp.kd_pangkat_gol,''),
 		COALESCE(pgp.pangkat,''),
 		COALESCE(pgp.golongan,''),
+		COALESCE(p.kd_ruang,''),
 		COALESCE(pf.tmt_pangkat_golongan,''),
 		COALESCE(jf.kd_fungsional,''),
 		COALESCE(jf.fungsional,''),

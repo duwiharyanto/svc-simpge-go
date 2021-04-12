@@ -29,7 +29,8 @@ func TestHandleGetAllJenisIjazah(t *testing.T) {
 		t.Fatal(err)
 	}
 	a := app.App{DB: db, GormDB: gormDb}
-	router.InitRoute(a, e)
+	fmt.Print(a)
+	// router.InitRoute(a, e)
 	server := httptest.NewServer(e)
 	defer server.Close()
 
@@ -91,7 +92,8 @@ func TestHandleGetAllJenisSk(t *testing.T) {
 		t.Fatal(err)
 	}
 	a := app.App{DB: db, GormDB: gormDb}
-	router.InitRoute(a, e)
+	fmt.Print(a)
+	// router.InitRoute(a, e)
 	server := httptest.NewServer(e)
 	defer server.Close()
 
@@ -150,7 +152,8 @@ func TestHandleGetAllKelompokSkPengangkatan(t *testing.T) {
 		t.Fatal(err)
 	}
 	a := app.App{DB: db, GormDB: gormDb}
-	router.InitRoute(a, e)
+	fmt.Print(a)
+	// router.InitRoute(a, e)
 	server := httptest.NewServer(e)
 	defer server.Close()
 
@@ -209,7 +212,8 @@ func TestHandleGetAllMataKuliah(t *testing.T) {
 		t.Fatal(err)
 	}
 	a := app.App{DB: db, GormDB: gormDb}
-	router.InitRoute(a, e)
+	fmt.Print(a)
+	// router.InitRoute(a, e)
 	server := httptest.NewServer(e)
 	defer server.Close()
 
