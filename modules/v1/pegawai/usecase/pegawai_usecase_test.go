@@ -1,0 +1,177 @@
+package usecase_test
+
+import (
+	"bytes"
+	"context"
+	"encoding/json"
+	"fmt"
+	"io"
+	"io/ioutil"
+	"mime/multipart"
+	"net/http"
+	"net/http/httptest"
+	"strings"
+	"svc-insani-go/app"
+	"svc-insani-go/app/database"
+	"svc-insani-go/app/minio"
+	"svc-insani-go/router"
+	"testing"
+
+	"github.com/labstack/echo"
+	"github.com/labstack/echo/middleware"
+)
+
+func FillFormDataFieldMap(w *multipart.Writer, m map[string]string) error {
+	for k, v := range m {
+		formField, err := w.CreateFormField(k)
+		if err != nil {
+			return fmt.Errorf("failed create field %s: %w", k, err)
+		}
+		_, err = io.Copy(formField, strings.NewReader(v))
+		if err != nil {
+			return fmt.Errorf("failed copy %s value: %w", k, err)
+		}
+	}
+
+	return nil
+}
+
+func FillFormDataField(w *multipart.Writer, formField io.Writer, key, value string) (io.Writer, error) {
+	formField, err := w.CreateFormField(key)
+	if err != nil {
+		return nil, fmt.Errorf("failed create field %s: %w", key, err)
+	}
+
+	_, err = io.Copy(formField, strings.NewReader(value))
+	if err != nil {
+		return nil, fmt.Errorf("failed copy %s value: %w", key, err)
+	}
+
+	return formField, nil
+}
+
+func TestHandleUpdateSimpeg(t *testing.T) {
+	e := echo.New()
+	e.Use(router.SetResponseTimeout)
+
+	db, err := database.Connect()
+	if err != nil {
+		t.Skip("failed connect db:", err)
+	}
+
+	gormDb, err := database.InitGorm(db, true)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	mc, err := minio.Connect()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	a := app.App{DB: db, GormDB: gormDb, MinioClient: mc, MinioBucketName: "insani"}
+
+	appCtx := context.Background()
+
+	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+		AllowOrigins: []string{"*"},
+		AllowMethods: []string{echo.GET, echo.POST, echo.PUT, echo.DELETE},
+	}))
+	slackErrChan := app.NewSlackLogger(appCtx, a.HttpClient)
+
+	router.InitRoute(a, appCtx, e, slackErrChan)
+
+	server := httptest.NewServer(e)
+	defer server.Close()
+
+	// init form data
+	wbuf := &bytes.Buffer{}
+	wr := multipart.NewWriter(wbuf)
+	err = FillFormDataFieldMap(wr, map[string]string{
+		//"uuid_jenis_pegawai":,
+		//"uuid_status_egawai":,
+		//"uuid_kelompok_pegawai":,
+		//"uuid_golongan":,
+		//"uuid_ruang":,
+		//"uuid_induk_kerja":,
+		//"uuid_unit_kerja":,
+		//"uuid_bagian_kerja":7f9952ef-1fd7-11eb-a014-7eb0d4a3c7a0,
+		//"uuid_lokasi_unit_kerja":,
+		//"uuid_pangkat_golongan":,
+		//"uuid_jabatan_fungsional":,
+		//"tmt_pangkat_golongan":2020-01-10,
+		//"tmt_jabatan":2020-01-10,
+		"masa_kerja_bawaan_tahun": "13",
+		"masa_kerja_bawaan_bulan": "5",
+		//"masa_kerja_gaji_tahun":,
+		//"masa_kerja_gaji_bulan":,
+		//"masa_kerja_total_tahun":,
+		//"masa_kerja_total_bulan":,
+		//"angka_kredit":221,
+		//"nomor_sertifikasi":,
+		"uuid_jenis_nomor_registrasi": "2c10a574-7594-11eb-9f3c-7eb0d4a3c7a0",
+		//"nomor_registrasi":,
+		//"nomor_sk_pertama":,
+		"tmt_sk_pertama": "2020-01-10",
+		//"uuid_status_pegawai_aktif":,
+		//"nip_pns":,
+		//"no_kartu_pegawai":,
+		//"uuid_pangkat_gol_ruang_pns":,
+		"tmt_pangkat_gol_ruang_pns": "2020-01-10",
+		//"uuid_jabatan_pns":,
+		"tmt_jabatan_pns": "2020-01-10",
+		//"masa_kerja_pns_tahun":,
+		//"masa_kerja_pns_bulan":,
+		//"angka_kredit_pns":,
+		//"uuid_jenis_ptt":,
+		"instansi_asal_ptt": "Instansi Asal Test",
+		"keterangan_pns":    "Ini Keterangan Test",
+		//"uuid_tingkat_pdd_diakui":"e63bfcea-eb1d-44b7-8df1-4e84afea1714",
+		"uuid_tingkat_pdd_terakhir": "e63bfcea-eb1d-44b7-8df1-4e84afea1714",
+	})
+
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	wr.Close()
+
+	// create request
+
+	uuidPegawai := "e5762619-1437-11eb-a014-7eb0d4a3c7a0"
+	baseURL := server.URL + "/public/api/v1/pegawai/" + uuidPegawai
+	// fmt.Printf("[DEBUG] base url: %s\n", baseURL)
+	req, err := http.NewRequest(http.MethodPut, baseURL, bytes.NewReader((wbuf.Bytes())))
+	req.Header.Set("Content-Type", wr.FormDataContentType())
+	req.Header.Set("X-Member", "admin 4")
+
+	// send http request
+	client := http.DefaultClient
+	res, err := client.Do(req)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	// read response body
+	rawResBodyJSON, err := ioutil.ReadAll(res.Body)
+	res.Body.Close()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	// format res body indentation
+	var buf bytes.Buffer
+	json.Indent(&buf, rawResBodyJSON, "", "\t")
+	fmt.Printf("[DEBUG] rec body: %s\n", buf.String())
+
+	var resBody map[string]interface{}
+	err = json.Unmarshal(rawResBodyJSON, &resBody)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	// if msg, exist := resBody["message"]; !exist || !strings.Contains(strings.ToLower(msg.(string)), "berhasil") {
+	// 	fmt.Printf("[DEBUG] name: %+v\n", resBody)
+	// 	t.Fatal("should return success message")
+	// }
+}

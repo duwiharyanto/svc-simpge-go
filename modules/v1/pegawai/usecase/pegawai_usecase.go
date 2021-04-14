@@ -3,7 +3,9 @@ package usecase
 import (
 	"context"
 	"fmt"
+	"os"
 	"strconv"
+	"time"
 
 	"net/http"
 	"svc-insani-go/app"
@@ -56,7 +58,7 @@ func HandleGetSimpegPegawaiByUUID(a app.App) echo.HandlerFunc {
 
 		pegawaiDetail, err := PrepareGetSimpegPegawaiByUUID(a, uuidPegawai)
 		if err != nil {
-			fmt.Printf("[ERROR] repo get kepegawaian yayasan uuid, %s\n", err.Error())
+			fmt.Printf("[ERROR] repo get kepegawaian, %s\n", err.Error())
 			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
 		}
 		return c.JSON(http.StatusOK, pegawaiDetail)
@@ -152,7 +154,7 @@ func HandleGetPegawaiByUUIDx(a app.App) echo.HandlerFunc {
 	return echo.HandlerFunc(h)
 }
 
-func HandleUpdatePegawai(a app.App) echo.HandlerFunc {
+func HandleUpdatePegawai(a app.App, ctx context.Context, errChan chan error) echo.HandlerFunc {
 	h := func(c echo.Context) error {
 
 		// Validasi Data
@@ -173,20 +175,49 @@ func HandleUpdatePegawai(a app.App) echo.HandlerFunc {
 		uuidPendidikanDiakui := c.FormValue("uuid_tingkat_pdd_diakui")
 		uuidPendidikanTerakhir := c.FormValue("uuid_tingkat_pdd_terakhir")
 
-		err = repo.UpdatePendidikanPegawai(a, c.Request().Context(), uuidPendidikanDiakui, uuidPendidikanTerakhir)
-		if err != nil {
-			fmt.Printf("[ERROR], %s\n", err.Error())
-			return c.JSON(http.StatusBadRequest, map[string]string{"message": err.Error()})
+		if uuidPendidikanDiakui != "" && uuidPendidikanTerakhir != "" {
+			err = repo.UpdatePendidikanPegawai(a, c.Request().Context(), uuidPendidikanDiakui, uuidPendidikanTerakhir)
+			if err != nil {
+				fmt.Printf("[ERROR], %s\n", err.Error())
+				return c.JSON(http.StatusBadRequest, map[string]string{"message": err.Error()})
+			}
 		}
 
 		// Menampilkan response
 		pegawaiDetail, err := PrepareGetSimpegPegawaiByUUID(a, pegawaiUpdate.Uuid)
 		if err != nil {
-			fmt.Printf("[ERROR] repo get kepegawaian yayasan uuid, %s\n", err.Error())
+			fmt.Printf("[ERROR] repo get kepegawaian, %s\n", err.Error())
 			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
 		}
-		// fmt.Printf("[DEBUG] pegawai: %+v\n", pegawaiUpdate)
-		// return c.JSON(http.StatusOK, pegawaiUpdate)
+
+		go func(
+			a app.App,
+			ctx context.Context,
+			errChan chan error,
+		) {
+			fmt.Println("DEBUG : Go routin")
+			dur, err := time.ParseDuration(os.Getenv("RESPONSE_TIMEOUT_MS" + "ms"))
+			if err != nil {
+				dur = time.Second * 40
+			}
+			ctx, cancel := context.WithTimeout(ctx, dur)
+			// ctx, cancel := context.WithTimeout(context.Background(), dur) // kalau ke cancel pake yang ini
+			defer cancel()
+			fmt.Println("DEBUG : Go routin before prepare sipeg")
+			pegawaiDetail, err := PrepareGetSimpegPegawaiByUUID(a, pegawaiUpdate.Uuid)
+			if err != nil {
+				errChan <- err
+				return
+			}
+
+			fmt.Println("DEBUG : Go routin before sinkron simpeg")
+
+			err = prepareSinkronSimpeg(ctx, pegawaiDetail)
+			if err != nil {
+				errChan <- err
+				return
+			}
+		}(a, ctx, errChan)
 
 		return c.JSON(http.StatusOK, pegawaiDetail)
 	}
@@ -198,9 +229,88 @@ func prepareSinkronSimpeg(ctx context.Context, pegawaiInsani model.PegawaiDetail
 
 	pegawaiOra := pegawaiOraModel.KepegawaianYayasanSimpeg{}
 
+	// Sinkron Kepegawaian Yayaysan - Status
+
+	pegawaiOra.KdJenisPegawai = pegawaiInsani.PegawaiYayasan.KDJenisPegawai
+	pegawaiOra.KdStatusPegawai = pegawaiInsani.PegawaiYayasan.StatusPegawai
+	pegawaiOra.KdKelompokPegawai = pegawaiInsani.PegawaiYayasan.KdKelompokPegawai
+
+	// Sinkron Kepegawaian Yayaysan - Pangkat / Jabatan
+
+	pegawaiOra.PangkatYayasan.KdGolongan = pegawaiInsani.PegawaiYayasan.Golongan
+	pegawaiOra.PangkatYayasan.KdRuang = pegawaiInsani.PegawaiYayasan.KdRuang
+	pegawaiOra.PangkatYayasan.TmtPangkat = pegawaiInsani.PegawaiYayasan.TmtPangkatGolongan
+	pegawaiOra.KdFungsional = pegawaiInsani.PegawaiYayasan.KdJabatanFungsional
+	pegawaiOra.TmtFungsional = pegawaiInsani.PegawaiYayasan.TmtJabatan
+	pegawaiOra.MasaKerjaGajiTahun, _ = strconv.Atoi(pegawaiInsani.PegawaiYayasan.MasaKerjaBawaanTahun)
+	pegawaiOra.MasaKerjaGajiBulan, _ = strconv.Atoi(pegawaiInsani.PegawaiYayasan.MasaKerjaBawaanBulan)
+	pegawaiOra.AngkaKreditFungsional, _ = strconv.ParseFloat(pegawaiInsani.PegawaiYayasan.AngkaKredit, 64)
+
+	// Sinkron Unit Kerja
+
+	pegawaiOra.Unit1.KdUnit1 = pegawaiInsani.UnitKerjaPegawai.KdIndukKerja
+	pegawaiOra.Unit2.KdUnit2 = pegawaiInsani.UnitKerjaPegawai.KdUnitKerja
+	pegawaiOra.Unit3.KdUnit3 = pegawaiInsani.UnitKerjaPegawai.KdBagianKerja
+	pegawaiOra.NoSkPertama = pegawaiInsani.UnitKerjaPegawai.NoSkPertama
+	pegawaiOra.TglSkPertama = pegawaiInsani.UnitKerjaPegawai.TmtSkPertama
+	pegawaiOra.KdHomebasePddikti = pegawaiInsani.UnitKerjaPegawai.KdHomebasePddikti
+	pegawaiOra.KdHomebaseUii = pegawaiInsani.UnitKerjaPegawai.KdHomebaseUii
+
+	// Sinkron Kepegawaian Negara / PTT
+
+	pegawaiOra.Instansi = pegawaiInsani.PegawaiPNSPTT.InstansiAsalPtt
+	pegawaiOra.NipKopertis = pegawaiInsani.PegawaiPNSPTT.NipPNS
+	pegawaiOra.NoKarpeg = pegawaiInsani.PegawaiPNSPTT.NoKartuPegawai
+	pegawaiOra.PangkatKopertis.KdGolongan = pegawaiInsani.PegawaiPNSPTT.KdPangkatGolongan
+	pegawaiOra.PangkatKopertis.KdRuang = pegawaiInsani.PegawaiPNSPTT.KdPangkatGolongan
+	pegawaiOra.PangkatKopertis.TmtPangkat = pegawaiInsani.PegawaiPNSPTT.TmtPangkatGolongan
+	pegawaiOra.KdFungsional = pegawaiInsani.PegawaiPNSPTT.KdJabatanPns
+	pegawaiOra.TmtFungsional = pegawaiInsani.PegawaiPNSPTT.TmtPangkatGolongan
+	pegawaiOra.MasaKerjaKopertisTahun, _ = strconv.Atoi(pegawaiInsani.PegawaiPNSPTT.MasaKerjaPnsTahun)
+	pegawaiOra.MasaKerjaKopertisBulan, _ = strconv.Atoi(pegawaiInsani.PegawaiPNSPTT.MasaKerjaPnsBulan)
+	pegawaiOra.AngkaKreditKopertis, _ = strconv.ParseFloat(pegawaiInsani.PegawaiPNSPTT.AngkaKreditPns, 64)
+	pegawaiOra.Keterangan = pegawaiInsani.PegawaiPNSPTT.KeteranganPNS
+
+	// Sinkron Status Aktif
+
+	if pegawaiInsani.StatusAktif.FlagAktifPegawai == "1" {
+		if pegawaiInsani.PegawaiYayasan.KDJenisPegawai == "ED" {
+			pegawaiOra.FlagMengajar = "Y"
+			if pegawaiInsani.StatusAktif.KdStatusAktifPegawai == "IBL" {
+				pegawaiOra.FlagSekolah = "Y"
+				pegawaiOra.FlagPensiun = "N"
+			}
+			if pegawaiInsani.StatusAktif.KdStatusAktifPegawai != "IBL" {
+				pegawaiOra.FlagSekolah = "N"
+				pegawaiOra.FlagPensiun = "Y"
+			}
+
+		}
+	}
+
+	if pegawaiInsani.StatusAktif.FlagAktifPegawai == "0" {
+		if pegawaiInsani.PegawaiYayasan.KDJenisPegawai == "ED" {
+			pegawaiOra.FlagMengajar = "N"
+			if pegawaiInsani.StatusAktif.KdStatusAktifPegawai == "PEN" {
+				pegawaiOra.FlagSekolah = "N"
+				pegawaiOra.FlagPensiun = "Y"
+			}
+			if pegawaiInsani.StatusAktif.KdStatusAktifPegawai != "PEN" {
+				pegawaiOra.FlagSekolah = "N"
+				pegawaiOra.FlagPensiun = "N"
+			}
+			if pegawaiInsani.StatusAktif.KdStatusAktifPegawai != "MNG" {
+				pegawaiOra.KdStatusHidup = "N"
+			}
+			pegawaiOra.KdStatusHidup = "Y"
+		}
+	}
+
+	fmt.Println("DEBUG : Update Kepegawaian Yayasan")
+
 	err := pegawaiOraHttp.UpdateKepegawaianYayasan(ctx, &http.Client{}, pegawaiOra)
 	if err != nil {
-		return fmt.Errorf("[ERROR] repo get kepegawaian yayasan uuid, %s\n", err.Error())
+		return fmt.Errorf("[ERROR] repo get kepegawaian yayasan update, %s\n", err.Error())
 		// return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
 	}
 

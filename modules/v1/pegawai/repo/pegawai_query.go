@@ -102,6 +102,7 @@ func getPegawaiYayasanQuery(uuid string) string {
 		COALESCE(pgp.kd_pangkat_gol,''),
 		COALESCE(pgp.pangkat,''),
 		COALESCE(pgp.golongan,''),
+		COALESCE(p.kd_ruang,''),
 		COALESCE(pf.tmt_pangkat_golongan,''),
 		COALESCE(jf.kd_fungsional,''),
 		COALESCE(jf.fungsional,''),
@@ -249,12 +250,12 @@ func getStatusPegawaiAktifQuery(uuid string) string {
 func getPegawaiPribadiQuery(uuid string) string {
 	q := fmt.Sprintf(`
 	SELECT 
-		p.nama,
-		p.nik,
-		jp.nama_jenis_pegawai,
-		kp.kelompok_pegawai,
-		u2.unit2,
-		p.uuid 
+		COALESCE(p.nama,''),
+		COALESCE(p.nik,''),
+		COALESCE(jp.nama_jenis_pegawai,''),
+		COALESCE(kp.kelompok_pegawai,''),
+		COALESCE(u2.unit2,''),
+		COALESCE(p.uuid,'') 
 	FROM 
 		pegawai p
 	LEFT JOIN 
@@ -312,10 +313,10 @@ func getPegawaiFilePendidikanQuery(idList ...string) string {
 	joinedId := strings.Join(idList, "', '")
 	q := fmt.Sprintf(`
 	SELECT
-		kd_jenis_file,
-		jenis_file,
-		path_file_pendidikan,
-		id_personal_pendidikan
+		COALESCE(kd_jenis_file,''),
+		COALESCE(jenis_file,''),
+		COALESCE(path_file_pendidikan,''),
+		COALESCE(id_personal_pendidikan,'')
 	FROM 
 		pegawai_file_pendidikan
 	WHERE

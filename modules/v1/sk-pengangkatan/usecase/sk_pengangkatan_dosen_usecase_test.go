@@ -37,7 +37,8 @@ func TestHandleGetSkPengangkatanDosen(t *testing.T) {
 	}
 
 	a := app.App{DB: db, GormDB: gormDb, MinioBucketName: "insani", MinioClient: mc}
-	router.InitRoute(a, e)
+	// router.InitRoute(a, e)
+	fmt.Print(a)
 	server := httptest.NewServer(e)
 	defer server.Close()
 

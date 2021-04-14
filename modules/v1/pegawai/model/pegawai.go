@@ -112,6 +112,7 @@ type PegawaiYayasan struct {
 	KdPangkat             string `json:"kd_pangkat_golongan"`
 	Pangkat               string `json:"pangkat"`
 	Golongan              string `json:"golongan"`
+	KdRuang               string `json:"kd_ruang"`
 	TmtPangkatGolongan    string `json:"tmt_pangkat_gol_ruang_pegawai"`
 	TmtPangkatGolonganIdn string `json:"tmt_pangkat_gol_ruang_pegawai_idn"`
 	KdJabatanFungsional   string `json:"kd_jabatan_fungsional"`
@@ -146,13 +147,12 @@ type UnitKerjaPegawai struct {
 	LokasiDesc        string `json:"lokasi_kerja"`
 	NoSkPertama       string `json:"nomor_sk_pertama_unit_kerja"`
 	TmtSkPertama      string `json:"tmt_sk_pertama_unit_kerja"`
-	TmtSkPertamaIdn   string `json:"tmt_sk_pertama_unit_kerja"_idn`
+	TmtSkPertamaIdn   string `json:"tmt_sk_pertama_unit_kerja_idn"`
 	KdHomebasePddikti string `json:"kd_homebase_pddikti"`
 	KdHomebaseUii     string `json:"kd_homebase_uii"`
 }
 
 type PegawaiPNSPTT struct {
-	FlagPns               string `json:"flag_pns"`
 	NipPNS                string `json:"nip_pns"`
 	NoKartuPegawai        string `json:"no_kartu_pegawai"`
 	PangkatGolongan       string `json:"pangkat_gol_ruang_pns"`
@@ -174,7 +174,6 @@ type PegawaiPNSPTT struct {
 	KdJenisPTT            string `json:"kd_jenis_ptt"`
 	JenisPTT              string `json:"jenis_ptt"`
 	InstansiAsalPtt       string `json:"instansi_asal_ptt"`
-	KeteranganPtt         string `json:"keterangan_ptt"`
 }
 
 type StatusAktif struct {

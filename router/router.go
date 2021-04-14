@@ -1,6 +1,7 @@
 package router
 
 import (
+	"context"
 	"database/sql"
 	"fmt"
 	"net/http"
@@ -27,7 +28,7 @@ import (
 	"github.com/labstack/echo"
 )
 
-func InitRoute(a app.App, e *echo.Echo) {
+func InitRoute(a app.App, appCtx context.Context, e *echo.Echo, slackErrChan chan error) {
 	insaniGroupingPath := e.Group("/public/api/v1")
 	// Route di bawah akan dikelola oleh handler
 	insaniGroupingPath.GET("/pegawai", pegawai.HandleGetPegawai(a))
@@ -112,8 +113,8 @@ func InitRoute(a app.App, e *echo.Echo) {
 	insaniGroupingPath.GET("/pegawai2", pegawai.HandleGetPegawaix(a))
 	insaniGroupingPath.GET("/pegawai2/:uuidPersonal", pegawai.HandleGetPegawaiByUUIDx(a))
 
-	// Testing
-	insaniGroupingPath.PUT("/pegawai/:uuidPegawai", pegawai.HandleUpdatePegawai(a))
+	// Update Simpeg
+	insaniGroupingPath.PUT("/pegawai/:uuidPegawai", pegawai.HandleUpdatePegawai(a, appCtx, slackErrChan))
 
 }
 

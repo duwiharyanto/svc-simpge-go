@@ -40,7 +40,8 @@ func TestHandleCreateSkPengangkatanDosen(t *testing.T) {
 	}
 
 	a := app.App{DB: db, GormDB: gormDb, MinioClient: mc, MinioBucketName: "insani"}
-	router.InitRoute(a, e)
+	fmt.Print(a)
+	// router.InitRoute(a, e)
 	server := httptest.NewServer(e)
 	defer server.Close()
 
@@ -156,7 +157,8 @@ func TestHandleUpdateSkPengangkatanDosen(t *testing.T) {
 	}
 
 	a := app.App{DB: db, GormDB: gormDb, MinioClient: mc, MinioBucketName: "insani"}
-	router.InitRoute(a, e)
+	fmt.Print(a)
+	// router.InitRoute(a, e)
 	server := httptest.NewServer(e)
 	defer server.Close()
 
@@ -277,7 +279,8 @@ func TestHandleGetSkPengangkatanDosen(t *testing.T) {
 	}
 
 	a := app.App{DB: db, GormDB: gormDb, MinioBucketName: "insani", MinioClient: mc}
-	router.InitRoute(a, e)
+	fmt.Print(a)
+	// router.InitRoute(a, e)
 	server := httptest.NewServer(e)
 	defer server.Close()
 
@@ -340,7 +343,8 @@ func TestHandleDeleteSkPengangkatanDosen(t *testing.T) {
 	}
 
 	a := app.App{DB: db, GormDB: gormDb}
-	router.InitRoute(a, e)
+	fmt.Print(a)
+	// router.InitRoute(a, e)
 	server := httptest.NewServer(e)
 	defer server.Close()
 

@@ -30,7 +30,8 @@ func TestHandleGetAllUnit2(t *testing.T) {
 		t.Fatal(err)
 	}
 	a := app.App{DB: db, GormDB: gormDb}
-	router.InitRoute(a, e)
+	fmt.Print(a)
+	// router.InitRoute(a, e)
 	server := httptest.NewServer(e)
 	defer server.Close()
 

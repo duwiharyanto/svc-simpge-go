@@ -73,7 +73,8 @@ func TestHandleCreateSkPengangkatanTendik(t *testing.T) {
 	}
 
 	a := app.App{DB: db, GormDB: gormDb, MinioClient: mc, MinioBucketName: "insani"}
-	router.InitRoute(a, e)
+
+	fmt.Print(a) // router.InitRoute(a, e)
 	server := httptest.NewServer(e)
 	defer server.Close()
 
@@ -189,7 +190,8 @@ func TestHandleUpdateSkPengangkatanTendik(t *testing.T) {
 	}
 
 	a := app.App{DB: db, GormDB: gormDb, MinioClient: mc, MinioBucketName: "insani"}
-	router.InitRoute(a, e)
+	fmt.Print(a)
+	// router.InitRoute(a, e)
 	server := httptest.NewServer(e)
 	defer server.Close()
 
@@ -309,7 +311,8 @@ func TestHandleGetSkPengangkatanTendik(t *testing.T) {
 	}
 
 	a := app.App{DB: db, GormDB: gormDb, MinioBucketName: "insani", MinioClient: mc}
-	router.InitRoute(a, e)
+	fmt.Print(a)
+	// router.InitRoute(a, e)
 	server := httptest.NewServer(e)
 	defer server.Close()
 
@@ -372,7 +375,8 @@ func TestHandleDeleteSkPengangkatanTendik(t *testing.T) {
 	}
 
 	a := app.App{DB: db, GormDB: gormDb}
-	router.InitRoute(a, e)
+	fmt.Print(a)
+	// router.InitRoute(a, e)
 	server := httptest.NewServer(e)
 	defer server.Close()
 
