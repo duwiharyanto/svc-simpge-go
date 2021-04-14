@@ -108,12 +108,12 @@ func PrepareGetSimpegPegawaiByUUID(a app.App, uuidPegawai string) (model.Pegawai
 	return pegawaiDetail, nil
 }
 
-func HandleUpdateSimpegPegawaiByUUID(a app.App) echo.HandlerFunc {
-	h := func(c echo.Context) error {
-		return c.JSON(http.StatusOK, map[string]string{"message": "Perubahan pegawai berhasil disimpan"})
-	}
-	return echo.HandlerFunc(h)
-}
+// func HandleUpdateSimpegPegawaiByUUID(a app.App) echo.HandlerFunc {
+// 	h := func(c echo.Context) error {
+// 		return c.JSON(http.StatusOK, map[string]string{"message": "Perubahan pegawai berhasil disimpan"})
+// 	}
+// 	return echo.HandlerFunc(h)
+// }
 
 // Get All Pegawai With GORM
 func HandleGetPegawaix(a app.App) echo.HandlerFunc {
@@ -163,7 +163,7 @@ func HandleUpdatePegawai(a app.App, ctx context.Context, errChan chan error) ech
 		}
 
 		// Update Data
-		err = repo.UpdatePegawaix(a, c.Request().Context(), pegawaiUpdate)
+		err = repo.UpdatePegawai(a, c.Request().Context(), pegawaiUpdate)
 		if err != nil {
 			fmt.Printf("[ERROR], %s\n", err.Error())
 			return c.JSON(http.StatusBadRequest, map[string]string{"message": err.Error()})
@@ -172,12 +172,12 @@ func HandleUpdatePegawai(a app.App, ctx context.Context, errChan chan error) ech
 		// Set Flag Pendidikan
 		uuidPendidikanDiakui := c.FormValue("uuid_tingkat_pdd_diakui")
 		uuidPendidikanTerakhir := c.FormValue("uuid_tingkat_pdd_terakhir")
-		idPegawai := pegawaiUpdate.Id
+		idPersonalPegawai := pegawaiUpdate.IdPersonalDataPribadi
 
-		fmt.Println("Ini Id Pegawai : ", idPegawai)
+		fmt.Println("Ini Id Pegawai : ", idPersonalPegawai)
 
 		if uuidPendidikanDiakui != "" && uuidPendidikanTerakhir != "" {
-			err = repo.UpdatePendidikanPegawai(a, c.Request().Context(), uuidPendidikanDiakui, uuidPendidikanTerakhir, idPegawai)
+			err = repo.UpdatePendidikanPegawai(a, c.Request().Context(), uuidPendidikanDiakui, uuidPendidikanTerakhir, idPersonalPegawai)
 			if err != nil {
 				fmt.Printf("[ERROR], %s\n", err.Error())
 				return c.JSON(http.StatusBadRequest, map[string]string{"message": err.Error()})
@@ -262,8 +262,8 @@ func prepareSinkronSimpeg(ctx context.Context, pegawaiInsani model.PegawaiDetail
 	pegawaiOra.Instansi = pegawaiInsani.PegawaiPNSPTT.InstansiAsalPtt
 	pegawaiOra.NipKopertis = pegawaiInsani.PegawaiPNSPTT.NipPNS
 	pegawaiOra.NoKarpeg = pegawaiInsani.PegawaiPNSPTT.NoKartuPegawai
-	pegawaiOra.PangkatKopertis.KdGolongan = pegawaiInsani.PegawaiPNSPTT.KdPangkatGolongan
-	pegawaiOra.PangkatKopertis.KdRuang = pegawaiInsani.PegawaiPNSPTT.KdPangkatGolongan
+	pegawaiOra.PangkatKopertis.KdGolongan = pegawaiInsani.PegawaiPNSPTT.KdPangkatGolonganPns
+	pegawaiOra.PangkatKopertis.KdRuang = pegawaiInsani.PegawaiPNSPTT.KdPangkatGolonganPns
 	pegawaiOra.PangkatKopertis.TmtPangkat = pegawaiInsani.PegawaiPNSPTT.TmtPangkatGolongan
 	pegawaiOra.KdFungsional = pegawaiInsani.PegawaiPNSPTT.KdJabatanPns
 	pegawaiOra.TmtFungsional = pegawaiInsani.PegawaiPNSPTT.TmtPangkatGolongan
