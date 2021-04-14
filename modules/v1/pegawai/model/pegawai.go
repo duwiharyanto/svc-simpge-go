@@ -143,30 +143,31 @@ func (*PegawaiYayasan) TableName() string {
 }
 
 type UnitKerjaPegawai struct {
-	UuidIndukKerja    string `json:"uuid_induk_kerja"`
-	KdIndukKerja      string `json:"kd_induk_kerja"`
-	IndukKerja        string `json:"induk_kerja"`
-	UuidUnitKerja     string `json:"uuid_unit_kerja"`
-	KdUnitKerja       string `json:"kd_unit_kerja"`
-	UnitKerja         string `json:"unit_kerja"`
-	UuidBagianKerja   string `json:"uuid_bagian_kerja"`
-	KdBagianKerja     string `json:"kd_bagian_kerja"`
-	BagianKerja       string `json:"bagian_kerja"`
-	UuidLokasiKerja   string `json:"uuid_lokasi_kerja"`
-	LokasiKerja       string `json:"kd_lokasi_kerja"`
-	LokasiDesc        string `json:"lokasi_kerja"`
-	NoSkPertama       string `json:"nomor_sk_pertama_unit_kerja"`
-	TmtSkPertama      string `json:"tmt_sk_pertama_unit_kerja"`
-	TmtSkPertamaIdn   string `json:"tmt_sk_pertama_unit_kerja_idn"`
-	KdHomebasePddikti string `json:"kd_homebase_pddikti"`
-	KdHomebaseUii     string `json:"kd_homebase_uii"`
+	UuidIndukKerja      string `json:"uuid_induk_kerja"`
+	KdIndukKerja        string `json:"kd_induk_kerja"`
+	IndukKerja          string `json:"induk_kerja"`
+	UuidUnitKerja       string `json:"uuid_unit_kerja"`
+	KdUnitKerja         string `json:"kd_unit_kerja"`
+	UnitKerja           string `json:"unit_kerja"`
+	UuidBagianKerja     string `json:"uuid_bagian_kerja"`
+	KdBagianKerja       string `json:"kd_bagian_kerja"`
+	BagianKerja         string `json:"bagian_kerja"`
+	UuidLokasiKerja     string `json:"uuid_lokasi_kerja"`
+	LokasiKerja         string `json:"kd_lokasi_kerja"`
+	LokasiDesc          string `json:"lokasi_kerja"`
+	NoSkPertama         string `json:"nomor_sk_pertama_unit_kerja"`
+	TmtSkPertama        string `json:"tmt_sk_pertama_unit_kerja"`
+	TmtSkPertamaIdn     string `json:"tmt_sk_pertama_unit_kerja_idn"`
+	KdHomebasePddikti   string `json:"kd_homebase_pddikti"`
+	UuidHomebasePddikti string `json:"uuid_homebase_pddikti"`
+	KdHomebaseUii       string `json:"kd_homebase_uii"`
+	UuidHomebaseUii     string `json:"uuid_homebase_uii"`
 }
 
 type PegawaiPNSPTT struct {
 	NipPNS                string `json:"nip_pns"`
 	NoKartuPegawai        string `json:"no_kartu_pegawai"`
 	UuidPangkatGolongan   string `json:"uuid_pangkat_gol_ruang_pns"`
-	PangkatGolongan       string `json:"pangkat_gol_ruang_pns"`
 	KdPangkatGolonganPns  string `json:"kd_pangkat_golongan"`
 	PangkatPNS            string `json:"pangkat_pns"`
 	GolonganPNS           string `json:"golongan_pns"`
@@ -318,7 +319,7 @@ type PegawaiUpdate struct {
 	KdUnit3                 string                  `form:"kd_unit3"`
 	IdUnitKerjaLokasi       int                     `form:"id_unit_kerja_lokasi"`
 	LokasiKerja             string                  `form:"lokasi_kerja"`
-	UuidUnitKerjaLokasi     string                  `form:"uuid_unit_kerja" gorm:"-"`
+	UuidLokasiKerja         string                  `form:"uuid_lokasi_kerja" gorm:"-"`
 	FlagPensiun             string                  `form:"flag_pensiun" gorm:"->"`
 	TglPensiun              string                  `form:"tgl_pensiun" gorm:"<-:create" gorm:"->"`
 	FlagMeninggal           string                  `form:"flag_meninggal" gorm:"->"`

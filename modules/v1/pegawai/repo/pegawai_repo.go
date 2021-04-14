@@ -173,7 +173,9 @@ func GetUnitKerjaPegawai(a app.App, uuid string) (*model.UnitKerjaPegawai, error
 		&unitKerjaPegawai.LokasiDesc,
 		&unitKerjaPegawai.NoSkPertama,
 		&unitKerjaPegawai.TmtSkPertama,
+		&unitKerjaPegawai.UuidHomebasePddikti,
 		&unitKerjaPegawai.KdHomebasePddikti,
+		&unitKerjaPegawai.UuidHomebaseUii,
 		&unitKerjaPegawai.KdHomebaseUii,
 	)
 
@@ -236,6 +238,7 @@ func GetStatusPegawaiAktif(a app.App, uuid string) (*model.StatusAktif, error) {
 		&statusAktif.FlagAktifPegawai,
 		&statusAktif.KdStatusAktifPegawai,
 		&statusAktif.StatusAktifPegawai,
+		&statusAktif.UuidStatusAktifPegawai,
 	)
 
 	if err == sql.ErrNoRows {
