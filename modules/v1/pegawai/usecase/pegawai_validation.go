@@ -100,8 +100,8 @@ func ValidateUpdatePegawaiByUUID(a app.App, c echo.Context) (model.PegawaiUpdate
 		if err != nil {
 			return model.PegawaiUpdate{}, fmt.Errorf("error from repo pangkat golongan pegawai by uuid, %w", err)
 		}
-		pegawaiOld.IdGolongan, _ = conv.Int(pangkatPegawai.ID)
-		pegawaiOld.KdGolongan = pangkatPegawai.KdPangkat
+		pegawaiOld.PegawaiFungsional.IdPangkatGolongan, _ = conv.Int(pangkatPegawai.ID)
+		pegawaiOld.PegawaiFungsional.KdPangkatGolongan = pangkatPegawai.KdPangkat
 	}
 
 	// Pengecekan Jabatan Fungsional Yayasan
@@ -155,8 +155,8 @@ func ValidateUpdatePegawaiByUUID(a app.App, c echo.Context) (model.PegawaiUpdate
 	}
 
 	// Pengecekan Lokasi Kerja
-	if pegawaiReq.UuidUnitKerjaLokasi != "" {
-		lokasiKerja, err := lokasiKerjaRepo.GetLokasiKerjaByUUID(a, c.Request().Context(), pegawaiReq.UuidUnitKerjaLokasi)
+	if pegawaiReq.UuidLokasiKerja != "" {
+		lokasiKerja, err := lokasiKerjaRepo.GetLokasiKerjaByUUID(a, c.Request().Context(), pegawaiReq.UuidLokasiKerja)
 		if err != nil {
 			return model.PegawaiUpdate{}, fmt.Errorf("error from repo lokasi kerja by uuid, %w", err)
 		}
@@ -184,7 +184,7 @@ func ValidateUpdatePegawaiByUUID(a app.App, c echo.Context) (model.PegawaiUpdate
 
 	// Pengecekan Pangkat Golongan Ruang PNS
 	if pegawaiReq.PegawaiPNS.UuidPangkatGolongan != "" {
-		pangkatPNS, err := pangkatPegawaiRepo.GetPangkatPegawaiByUUID(a, pegawaiReq.PegawaiPNS.UuidPangkatGolongan)
+		pangkatPNS, err := pangkatPegawaiRepo.GetPangkatGolonganPegawaiByUUID(a, pegawaiReq.PegawaiPNS.UuidPangkatGolongan)
 		if err != nil {
 			return model.PegawaiUpdate{}, fmt.Errorf("error from repo pangkat golongan pegawai by uuid, %w", err)
 		}
