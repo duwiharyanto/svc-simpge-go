@@ -96,7 +96,7 @@ func ValidateUpdatePegawaiByUUID(a app.App, c echo.Context) (model.PegawaiUpdate
 
 	// Pengecekan Pangkat Golongan Pegawai
 	if pegawaiReq.UuidGolongan != "" {
-		pangkatPegawai, err := pangkatPegawaiRepo.GetPangkatPegawaiByUUID(a, pegawaiReq.UuidGolongan)
+		pangkatPegawai, err := pangkatPegawaiRepo.GetPangkatGolonganPegawaiByUUID(a, pegawaiReq.UuidGolongan)
 		if err != nil {
 			return model.PegawaiUpdate{}, fmt.Errorf("error from repo pangkat golongan pegawai by uuid, %w", err)
 		}
