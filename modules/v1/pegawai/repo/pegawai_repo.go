@@ -480,7 +480,7 @@ func UpdatePegawaix(a app.App, ctx context.Context, pegawaiUpdate model.PegawaiU
 	return nil
 }
 
-func UpdatePendidikanPegawai(a app.App, ctx context.Context, uuidPendidikanDiakui string, uuidPendidikanTerakhir string) error {
+func UpdatePendidikanPegawai(a app.App, ctx context.Context, uuidPendidikanDiakui string, uuidPendidikanTerakhir string, idPegawai int) error {
 	db := a.GormDB.WithContext(ctx)
 
 	var pegawaiPendidikanUpdate model.PegawaiPendidikanUpdate
@@ -493,6 +493,14 @@ func UpdatePendidikanPegawai(a app.App, ctx context.Context, uuidPendidikanDiaku
 		if res.Error != nil {
 			return res.Error
 		}
+
+		// Flag Ijazah ke Nul
+		// res = db.Model(&pegawaiPendidikanUpdate).
+		// 	Where("uuid != ? AND id_personal_data_pribadi = ?", uuidPendidikanDiakui, idPegawai).
+		// 	Update("flag_ijazah_diakui", "0")
+		// if res.Error != nil {
+		// 	return res.Error
+		// }
 	}
 
 	// Flag Ijazah Terakhir
@@ -503,6 +511,14 @@ func UpdatePendidikanPegawai(a app.App, ctx context.Context, uuidPendidikanDiaku
 		if res.Error != nil {
 			return res.Error
 		}
+
+		// Flag Ijazah ke Nul
+		// res = db.Model(&pegawaiPendidikanUpdate).
+		// 	Where("uuid != ? AND id_personal_data_pribadi = ?", uuidPendidikanTerakhir, idPegawai).
+		// 	Update("flag_ijazah_diakui", "0")
+		// if res.Error != nil {
+		// 	return res.Error
+		// }
 	}
 
 	return nil
