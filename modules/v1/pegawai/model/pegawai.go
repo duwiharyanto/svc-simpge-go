@@ -104,17 +104,22 @@ type PegawaiDetail struct {
 type PegawaiYayasan struct {
 	ID                    string `json:"-" gorm:"primaryKey;not null"`
 	KDJenisPegawai        string `json:"kd_jenis_pegawai"`
+	UuidJenisPegawai      string `json:"uuid_jenis_pegawai"`
 	JenisPegawai          string `json:"jenis_pegawai"`
+	UuidKelompokPegawai   string `json:"uuid_kelompok_pegawai"`
 	KdKelompokPegawai     string `json:"kd_kelompok_pegawai"`
 	KelompokPegawai       string `json:"kelompok_pegawai"`
+	UuidStatusPegawai     string `json:"uuid_status_pegawai"`
 	KDStatusPegawai       string `json:"kd_status_pegawai"`
 	StatusPegawai         string `json:"status_pegawai"`
+	UuidPangkatGolongan   string `json:"uuid_pangkat_golongan"`
 	KdPangkat             string `json:"kd_pangkat_golongan"`
 	Pangkat               string `json:"pangkat"`
 	Golongan              string `json:"golongan"`
 	KdRuang               string `json:"kd_ruang"`
 	TmtPangkatGolongan    string `json:"tmt_pangkat_gol_ruang_pegawai"`
 	TmtPangkatGolonganIdn string `json:"tmt_pangkat_gol_ruang_pegawai_idn"`
+	UuidJabatanFungsional string `json:"uuid_jabatan_fungsional"`
 	KdJabatanFungsional   string `json:"kd_jabatan_fungsional"`
 	JabatanFungsional     string `json:"jabatan_fungsional"`
 	TmtJabatan            string `json:"tmt_jabatan"`
@@ -127,6 +132,7 @@ type PegawaiYayasan struct {
 	MasaKerjaTotalBulan   string `json:"masa_kerja_total_bulan"`
 	AngkaKredit           string `json:"angka_kredit"`
 	NoSertifikasi         string `json:"nomor_sertifikasi_pegawai"`
+	UuidJenisRegis        string `json:"uuid_jenis_regis"`
 	KdJenisRegis          string `json:"kd_jenis_regis"`
 	JenisNomorRegis       string `json:"jenis_no_regis"`
 	NomorRegis            string `json:"no_regis"`
@@ -137,12 +143,16 @@ func (*PegawaiYayasan) TableName() string {
 }
 
 type UnitKerjaPegawai struct {
+	UuidIndukKerja    string `json:"uuid_induk_kerja"`
 	KdIndukKerja      string `json:"kd_induk_kerja"`
 	IndukKerja        string `json:"induk_kerja"`
+	UuidUnitKerja     string `json:"uuid_unit_kerja"`
 	KdUnitKerja       string `json:"kd_unit_kerja"`
 	UnitKerja         string `json:"unit_kerja"`
+	UuidBagianKerja   string `json:"uuid_bagian_kerja"`
 	KdBagianKerja     string `json:"kd_bagian_kerja"`
 	BagianKerja       string `json:"bagian_kerja"`
+	UuidLokasiKerja   string `json:"uuid_lokasi_kerja"`
 	LokasiKerja       string `json:"kd_lokasi_kerja"`
 	LokasiDesc        string `json:"lokasi_kerja"`
 	NoSkPertama       string `json:"nomor_sk_pertama_unit_kerja"`
@@ -155,11 +165,11 @@ type UnitKerjaPegawai struct {
 type PegawaiPNSPTT struct {
 	NipPNS                string `json:"nip_pns"`
 	NoKartuPegawai        string `json:"no_kartu_pegawai"`
+	UuidPangkatGolongan   string `json:"uuid_pangkat_gol_ruang_pns"`
 	PangkatGolongan       string `json:"pangkat_gol_ruang_pns"`
-	KdPangkatGolongan     string `json:"kd_pangkat_golongan"`
+	KdPangkatGolonganPns  string `json:"kd_pangkat_golongan"`
 	PangkatPNS            string `json:"pangkat_pns"`
 	GolonganPNS           string `json:"golongan_pns"`
-	UuidPangkatGolongan   string `json:"uuid_pangkat_gol_ruang_pns"`
 	TmtPangkatGolongan    string `json:"tmt_pangkat_gol_ruang_pns"`
 	TmtPangkatGolonganIdn string `json:"tmt_pangkat_gol_ruang_pns_idn"`
 	KdJabatanPns          string `json:"kd_jabatan_pns"`
@@ -171,6 +181,7 @@ type PegawaiPNSPTT struct {
 	MasaKerjaPnsBulan     string `json:"masa_kerja_pns_bulan"`
 	AngkaKreditPns        string `json:"angka_kredit_pns"`
 	KeteranganPNS         string `json:"keterangan_pns"`
+	UuidJenisPTT          string `json:"uuid_jenis_ptt"`
 	KdJenisPTT            string `json:"kd_jenis_ptt"`
 	JenisPTT              string `json:"jenis_ptt"`
 	InstansiAsalPtt       string `json:"instansi_asal_ptt"`

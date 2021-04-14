@@ -33,7 +33,8 @@ func InitRoute(a app.App, appCtx context.Context, e *echo.Echo, slackErrChan cha
 	// Route di bawah akan dikelola oleh handler
 	insaniGroupingPath.GET("/pegawai", pegawai.HandleGetPegawai(a))
 	insaniGroupingPath.GET("/pegawai-simpeg/:uuidPegawai/detail", pegawai.HandleGetSimpegPegawaiByUUID(a))
-	insaniGroupingPath.PUT("/pegawai-simpeg/:uuidPegawai", pegawai.HandleUpdateSimpegPegawaiByUUID(a))
+	// insaniGroupingPath.PUT("/pegawai-simpeg/:uuidPegawai", pegawai.HandleUpdateSimpegPegawaiByUUID(a))
+	insaniGroupingPath.PUT("/pegawai-simpeg/:uuidPegawai", pegawai.HandleUpdatePegawai(a, appCtx, slackErrChan))
 	// insaniGroupingPath.POST("/pegawai-simpeg/:uuidPegawai", pegawai.HandleUpdateSimpegPegawaiByUUID(a))
 	// 	FE
 	// data
@@ -114,7 +115,7 @@ func InitRoute(a app.App, appCtx context.Context, e *echo.Echo, slackErrChan cha
 	insaniGroupingPath.GET("/pegawai2/:uuidPersonal", pegawai.HandleGetPegawaiByUUIDx(a))
 
 	// Update Simpeg
-	insaniGroupingPath.PUT("/pegawai/:uuidPegawai", pegawai.HandleUpdatePegawai(a, appCtx, slackErrChan))
+	// insaniGroupingPath.PUT("/pegawai/:uuidPegawai", pegawai.HandleUpdatePegawai(a, appCtx, slackErrChan))
 
 }
 

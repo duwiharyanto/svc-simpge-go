@@ -93,17 +93,22 @@ func getPegawaiByUUID(uuid string) string {
 func getPegawaiYayasanQuery(uuid string) string {
 	q := fmt.Sprintf(`
 	SELECT
+		COALESCE(jp.uuid,''),
 		COALESCE(jp.kd_jenis_pegawai,''),
 		COALESCE(jp.nama_jenis_pegawai,''),
+		COALESCE(sp.uuid,''),
 		COALESCE(sp.kd_status_pegawai,''),
 		COALESCE(sp.status_pegawai,''),
+		COALESCE(kp.uuid,''),
 		COALESCE(kp.kd_kelompok_pegawai,''),
 		COALESCE(kp.kelompok_pegawai,''),
+		COALESCE(pgp.uuid,''),
 		COALESCE(pgp.kd_pangkat_gol,''),
 		COALESCE(pgp.pangkat,''),
 		COALESCE(pgp.golongan,''),
 		COALESCE(p.kd_ruang,''),
 		COALESCE(pf.tmt_pangkat_golongan,''),
+		COALESCE(jf.uuid,''),
 		COALESCE(jf.kd_fungsional,''),
 		COALESCE(jf.fungsional,''),
 		COALESCE(pf.tmt_jabatan,''),
@@ -115,6 +120,7 @@ func getPegawaiYayasanQuery(uuid string) string {
 		COALESCE(pf.masa_kerja_total_bulan,''),
 		COALESCE(pf.angka_kredit,''),
 		COALESCE(pf.nomor_sertifikasi,''),
+		COALESCE(jnr.uuid,''),
 		COALESCE(jnr.kd_jenis_regis,''),
 		COALESCE(jnr.jenis_no_regis,''),
 		COALESCE(pf.nomor_registrasi,'')
@@ -143,12 +149,16 @@ func getPegawaiYayasanQuery(uuid string) string {
 func getUnitKerjaPegawaiQuery(uuid string) string {
 	q := fmt.Sprintf(`
 	SELECT 
+		COALESCE(u1.uuid,''),
 		COALESCE(u1.kd_unit1,''),
 		COALESCE(u1.unit1,''),
+		COALESCE(u2.uuid,''),
 		COALESCE(u2.kd_unit2,''),
 		COALESCE(u2.unit2,''),
+		COALESCE(u3.uuid,''),
 		COALESCE(u3.kd_unit3,''),
 		COALESCE(u3.unit3,''),
+		COALESCE(lk.uuid,''),
 		COALESCE(lk.lokasi_desc,''),
 		COALESCE(lk.lokasi_desc,''),
 		COALESCE(pf.nomor_sk_pertama,''),
@@ -180,13 +190,16 @@ func getPegawaiPNSQuery(uuid string) string {
 	SELECT 
 		COALESCE(pp.nip_pns,''),
 		COALESCE(pp.no_kartu_pegawai,''),
+		COALESCE(jptt.uuid,''),
 		COALESCE(jptt.kd_jenis_ptt,''),
 		COALESCE(jptt.jenis_ptt,''),
 		COALESCE(pp.instansi_asal,''),
+		COALESCE(pgp.uuid,''),
 		COALESCE(pgp.kd_pangkat_gol,''),
 		COALESCE(pgp.pangkat,''),
 		COALESCE(pgp.golongan,''),
 		COALESCE(pp.tmt_pangkat_golongan,''),
+		COALESCE(jf.uuid,''),
 		COALESCE(jf.kd_fungsional,''),
 		COALESCE(jf.fungsional,''),
 		COALESCE(pp.tmt_jabatan,''),
@@ -205,25 +218,6 @@ func getPegawaiPNSQuery(uuid string) string {
 	LEFT JOIN
 		jenis_pegawai_tidak_tetap jptt ON pp.id_jenis_ptt = jptt.id
 	WHERE 
-		p.uuid = %q AND p.flag_aktif = 1`, uuid)
-
-	return helper.FlatQuery(q)
-}
-
-func getPegawaiPTTQuery(uuid string) string {
-	q := fmt.Sprintf(`
-	SELECT
-		COALESCE(jptt.kd_jenis_ptt,''),
-		COALESCE(jptt.jenis_ptt,''),
-		COALESCE(ptt.instansi_asal,''),
-		COALESCE(ptt.keterangan,'')
-	FROM
-		pegawai p
-	LEFT JOIN
-		pegawai_tidak_tetap ptt ON p.id = ptt.id_pegawai
-	LEFT JOIN
-		jenis_pegawai_tidak_tetap jptt ON ptt.id_jenis_ptt = jptt.id
-	WHERE
 		p.uuid = %q AND p.flag_aktif = 1`, uuid)
 
 	return helper.FlatQuery(q)

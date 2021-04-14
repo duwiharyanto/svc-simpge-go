@@ -108,16 +108,21 @@ func GetKepegawaianYayasan(a app.App, uuid string) (*model.PegawaiYayasan, error
 	var pegawaiYayasan model.PegawaiYayasan
 
 	err := a.DB.QueryRow(sqlQuery).Scan(
+		&pegawaiYayasan.UuidJenisPegawai,
 		&pegawaiYayasan.KDJenisPegawai,
 		&pegawaiYayasan.JenisPegawai,
+		&pegawaiYayasan.UuidStatusPegawai,
 		&pegawaiYayasan.KDStatusPegawai,
 		&pegawaiYayasan.StatusPegawai,
+		&pegawaiYayasan.UuidKelompokPegawai,
 		&pegawaiYayasan.KdKelompokPegawai,
 		&pegawaiYayasan.KelompokPegawai,
+		&pegawaiYayasan.UuidPangkatGolongan,
 		&pegawaiYayasan.KdPangkat,
 		&pegawaiYayasan.Pangkat,
 		&pegawaiYayasan.Golongan,
 		&pegawaiYayasan.KdRuang,
+		&pegawaiYayasan.UuidJabatanFungsional,
 		&pegawaiYayasan.TmtPangkatGolongan,
 		&pegawaiYayasan.KdJabatanFungsional,
 		&pegawaiYayasan.JabatanFungsional,
@@ -130,6 +135,7 @@ func GetKepegawaianYayasan(a app.App, uuid string) (*model.PegawaiYayasan, error
 		&pegawaiYayasan.MasaKerjaTotalBulan,
 		&pegawaiYayasan.AngkaKredit,
 		&pegawaiYayasan.NoSertifikasi,
+		&pegawaiYayasan.UuidJenisRegis,
 		&pegawaiYayasan.KdJenisRegis,
 		&pegawaiYayasan.JenisNomorRegis,
 		&pegawaiYayasan.NomorRegis,
@@ -153,12 +159,16 @@ func GetUnitKerjaPegawai(a app.App, uuid string) (*model.UnitKerjaPegawai, error
 	var unitKerjaPegawai model.UnitKerjaPegawai
 
 	err := a.DB.QueryRow(sqlQuery).Scan(
+		&unitKerjaPegawai.UuidIndukKerja,
 		&unitKerjaPegawai.KdIndukKerja,
 		&unitKerjaPegawai.IndukKerja,
+		&unitKerjaPegawai.UuidUnitKerja,
 		&unitKerjaPegawai.KdUnitKerja,
 		&unitKerjaPegawai.UnitKerja,
+		&unitKerjaPegawai.UuidBagianKerja,
 		&unitKerjaPegawai.KdBagianKerja,
 		&unitKerjaPegawai.BagianKerja,
+		&unitKerjaPegawai.UuidLokasiKerja,
 		&unitKerjaPegawai.LokasiKerja,
 		&unitKerjaPegawai.LokasiDesc,
 		&unitKerjaPegawai.NoSkPertama,
@@ -187,13 +197,16 @@ func GetPegawaiPNS(a app.App, uuid string) (*model.PegawaiPNSPTT, error) {
 	err := a.DB.QueryRow(sqlQuery).Scan(
 		&pegawaiPNSPTT.NipPNS,
 		&pegawaiPNSPTT.NoKartuPegawai,
+		&pegawaiPNSPTT.UuidJenisPTT,
 		&pegawaiPNSPTT.KdJenisPTT,
 		&pegawaiPNSPTT.JenisPTT,
 		&pegawaiPNSPTT.InstansiAsalPtt,
-		&pegawaiPNSPTT.KdPangkatGolongan,
+		&pegawaiPNSPTT.UuidPangkatGolongan,
+		&pegawaiPNSPTT.KdPangkatGolonganPns,
 		&pegawaiPNSPTT.PangkatPNS,
 		&pegawaiPNSPTT.GolonganPNS,
 		&pegawaiPNSPTT.TmtPangkatGolongan,
+		&pegawaiPNSPTT.UuidJabatanPns,
 		&pegawaiPNSPTT.KdJabatanPns,
 		&pegawaiPNSPTT.JabatanPns,
 		&pegawaiPNSPTT.TmtJabatanPns,
@@ -459,7 +472,7 @@ func GetOldPegawai(a app.App, ctx context.Context, uuidPegawai string) (model.Pe
 	return pegawaiOld, nil
 }
 
-func UpdatePegawaix(a app.App, ctx context.Context, pegawaiUpdate model.PegawaiUpdate) error {
+func UpdatePegawai(a app.App, ctx context.Context, pegawaiUpdate model.PegawaiUpdate) error {
 	db := a.GormDB.WithContext(ctx)
 
 	res := db.Save(&pegawaiUpdate)
@@ -480,7 +493,7 @@ func UpdatePegawaix(a app.App, ctx context.Context, pegawaiUpdate model.PegawaiU
 	return nil
 }
 
-func UpdatePendidikanPegawai(a app.App, ctx context.Context, uuidPendidikanDiakui string, uuidPendidikanTerakhir string, idPegawai int) error {
+func UpdatePendidikanPegawai(a app.App, ctx context.Context, uuidPendidikanDiakui string, uuidPendidikanTerakhir string, idPersonalPegawai string) error {
 	db := a.GormDB.WithContext(ctx)
 
 	var pegawaiPendidikanUpdate model.PegawaiPendidikanUpdate
@@ -495,12 +508,12 @@ func UpdatePendidikanPegawai(a app.App, ctx context.Context, uuidPendidikanDiaku
 		}
 
 		// Flag Ijazah ke Nul
-		// res = db.Model(&pegawaiPendidikanUpdate).
-		// 	Where("uuid != ? AND id_personal_data_pribadi = ?", uuidPendidikanDiakui, idPegawai).
-		// 	Update("flag_ijazah_diakui", "0")
-		// if res.Error != nil {
-		// 	return res.Error
-		// }
+		res = db.Model(&pegawaiPendidikanUpdate).
+			Where("id_personal_data_pribadi = ? AND uuid != ?", idPersonalPegawai, uuidPendidikanDiakui).
+			Update("flag_ijazah_diakui", "0")
+		if res.Error != nil {
+			return res.Error
+		}
 	}
 
 	// Flag Ijazah Terakhir
@@ -513,12 +526,12 @@ func UpdatePendidikanPegawai(a app.App, ctx context.Context, uuidPendidikanDiaku
 		}
 
 		// Flag Ijazah ke Nul
-		// res = db.Model(&pegawaiPendidikanUpdate).
-		// 	Where("uuid != ? AND id_personal_data_pribadi = ?", uuidPendidikanTerakhir, idPegawai).
-		// 	Update("flag_ijazah_diakui", "0")
-		// if res.Error != nil {
-		// 	return res.Error
-		// }
+		res = db.Model(&pegawaiPendidikanUpdate).
+			Where("id_personal_data_pribadi = ? AND uuid != ?", idPersonalPegawai, uuidPendidikanTerakhir).
+			Update("flag_ijazah_diakui", "0")
+		if res.Error != nil {
+			return res.Error
+		}
 	}
 
 	return nil
