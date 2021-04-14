@@ -147,13 +147,12 @@ type UnitKerjaPegawai struct {
 	LokasiDesc        string `json:"lokasi_kerja"`
 	NoSkPertama       string `json:"nomor_sk_pertama_unit_kerja"`
 	TmtSkPertama      string `json:"tmt_sk_pertama_unit_kerja"`
-	TmtSkPertamaIdn   string `json:"tmt_sk_pertama_unit_kerja"_idn`
+	TmtSkPertamaIdn   string `json:"tmt_sk_pertama_unit_kerja_idn"`
 	KdHomebasePddikti string `json:"kd_homebase_pddikti"`
 	KdHomebaseUii     string `json:"kd_homebase_uii"`
 }
 
 type PegawaiPNSPTT struct {
-	FlagPns               string `json:"flag_pns"`
 	NipPNS                string `json:"nip_pns"`
 	NoKartuPegawai        string `json:"no_kartu_pegawai"`
 	PangkatGolongan       string `json:"pangkat_gol_ruang_pns"`

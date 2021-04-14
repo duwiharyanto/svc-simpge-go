@@ -58,7 +58,7 @@ func HandleGetSimpegPegawaiByUUID(a app.App) echo.HandlerFunc {
 
 		pegawaiDetail, err := PrepareGetSimpegPegawaiByUUID(a, uuidPegawai)
 		if err != nil {
-			fmt.Printf("[ERROR] repo get kepegawaian yayasan uuid, %s\n", err.Error())
+			fmt.Printf("[ERROR] repo get kepegawaian, %s\n", err.Error())
 			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
 		}
 		return c.JSON(http.StatusOK, pegawaiDetail)
@@ -186,7 +186,7 @@ func HandleUpdatePegawai(a app.App, ctx context.Context, errChan chan error) ech
 		// Menampilkan response
 		pegawaiDetail, err := PrepareGetSimpegPegawaiByUUID(a, pegawaiUpdate.Uuid)
 		if err != nil {
-			fmt.Printf("[ERROR] repo get kepegawaian yayasan uuid, %s\n", err.Error())
+			fmt.Printf("[ERROR] repo get kepegawaian, %s\n", err.Error())
 			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
 		}
 
@@ -310,7 +310,7 @@ func prepareSinkronSimpeg(ctx context.Context, pegawaiInsani model.PegawaiDetail
 
 	err := pegawaiOraHttp.UpdateKepegawaianYayasan(ctx, &http.Client{}, pegawaiOra)
 	if err != nil {
-		return fmt.Errorf("[ERROR] repo get kepegawaian yayasan uuid, %s\n", err.Error())
+		return fmt.Errorf("[ERROR] repo get kepegawaian yayasan update, %s\n", err.Error())
 		// return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
 	}
 
