@@ -63,6 +63,8 @@ func ValidateUpdatePegawaiByUUID(a app.App, c echo.Context) (model.PegawaiUpdate
 	pegawaiReq.Uuid = uuidPegawai
 	pegawaiReq.Id, _ = conv.Int(pegawai.ID)
 
+	fmt.Println("Id Pegawai : ", pegawaiReq.Id)
+
 	//Pengecekan Jenis Pegawai
 	if pegawaiReq.UuidJenisPegawai != "" {
 

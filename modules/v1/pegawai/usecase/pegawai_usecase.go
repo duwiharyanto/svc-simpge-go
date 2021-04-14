@@ -3,9 +3,7 @@ package usecase
 import (
 	"context"
 	"fmt"
-	"os"
 	"strconv"
-	"time"
 
 	"net/http"
 	"svc-insani-go/app"
@@ -174,9 +172,12 @@ func HandleUpdatePegawai(a app.App, ctx context.Context, errChan chan error) ech
 		// Set Flag Pendidikan
 		uuidPendidikanDiakui := c.FormValue("uuid_tingkat_pdd_diakui")
 		uuidPendidikanTerakhir := c.FormValue("uuid_tingkat_pdd_terakhir")
+		idPegawai := pegawaiUpdate.Id
+
+		fmt.Println("Ini Id Pegawai : ", idPegawai)
 
 		if uuidPendidikanDiakui != "" && uuidPendidikanTerakhir != "" {
-			err = repo.UpdatePendidikanPegawai(a, c.Request().Context(), uuidPendidikanDiakui, uuidPendidikanTerakhir)
+			err = repo.UpdatePendidikanPegawai(a, c.Request().Context(), uuidPendidikanDiakui, uuidPendidikanTerakhir, idPegawai)
 			if err != nil {
 				fmt.Printf("[ERROR], %s\n", err.Error())
 				return c.JSON(http.StatusBadRequest, map[string]string{"message": err.Error()})
@@ -190,34 +191,34 @@ func HandleUpdatePegawai(a app.App, ctx context.Context, errChan chan error) ech
 			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
 		}
 
-		go func(
-			a app.App,
-			ctx context.Context,
-			errChan chan error,
-		) {
-			fmt.Println("DEBUG : Go routin")
-			dur, err := time.ParseDuration(os.Getenv("RESPONSE_TIMEOUT_MS" + "ms"))
-			if err != nil {
-				dur = time.Second * 40
-			}
-			ctx, cancel := context.WithTimeout(ctx, dur)
-			// ctx, cancel := context.WithTimeout(context.Background(), dur) // kalau ke cancel pake yang ini
-			defer cancel()
-			fmt.Println("DEBUG : Go routin before prepare sipeg")
-			pegawaiDetail, err := PrepareGetSimpegPegawaiByUUID(a, pegawaiUpdate.Uuid)
-			if err != nil {
-				errChan <- err
-				return
-			}
+		// go func(
+		// 	a app.App,
+		// 	ctx context.Context,
+		// 	errChan chan error,
+		// ) {
+		// 	fmt.Println("DEBUG : Go routin")
+		// 	dur, err := time.ParseDuration(os.Getenv("RESPONSE_TIMEOUT_MS" + "ms"))
+		// 	if err != nil {
+		// 		dur = time.Second * 40
+		// 	}
+		// 	ctx, cancel := context.WithTimeout(ctx, dur)
+		// 	// ctx, cancel := context.WithTimeout(context.Background(), dur) // kalau ke cancel pake yang ini
+		// 	defer cancel()
+		// 	fmt.Println("DEBUG : Go routin before prepare sipeg")
+		// 	pegawaiDetail, err := PrepareGetSimpegPegawaiByUUID(a, pegawaiUpdate.Uuid)
+		// 	if err != nil {
+		// 		errChan <- err
+		// 		return
+		// 	}
 
-			fmt.Println("DEBUG : Go routin before sinkron simpeg")
+		// 	fmt.Println("DEBUG : Go routin before sinkron simpeg")
 
-			err = prepareSinkronSimpeg(ctx, pegawaiDetail)
-			if err != nil {
-				errChan <- err
-				return
-			}
-		}(a, ctx, errChan)
+		// 	err = prepareSinkronSimpeg(ctx, pegawaiDetail)
+		// 	if err != nil {
+		// 		errChan <- err
+		// 		return
+		// 	}
+		// }(a, ctx, errChan)
 
 		return c.JSON(http.StatusOK, pegawaiDetail)
 	}
