@@ -231,46 +231,131 @@ func prepareSinkronSimpeg(ctx context.Context, pegawaiInsani model.PegawaiDetail
 	pegawaiOra := pegawaiOraModel.KepegawaianYayasanSimpeg{}
 
 	// Sinkron Kepegawaian Yayaysan - Status
+	if pegawaiInsani.PegawaiYayasan.KDJenisPegawai != "" {
+		pegawaiOra.KdJenisPegawai = pegawaiInsani.PegawaiYayasan.KDJenisPegawai
+	}
 
-	pegawaiOra.KdJenisPegawai = pegawaiInsani.PegawaiYayasan.KDJenisPegawai
-	pegawaiOra.KdStatusPegawai = pegawaiInsani.PegawaiYayasan.StatusPegawai
-	pegawaiOra.KdKelompokPegawai = pegawaiInsani.PegawaiYayasan.KdKelompokPegawai
+	if pegawaiInsani.PegawaiYayasan.StatusPegawai != "" {
+		pegawaiOra.KdStatusPegawai = pegawaiInsani.PegawaiYayasan.StatusPegawai
+	}
+
+	if pegawaiInsani.PegawaiYayasan.KdKelompokPegawai != "" {
+		pegawaiOra.KdKelompokPegawai = pegawaiInsani.PegawaiYayasan.KdKelompokPegawai
+	}
 
 	// Sinkron Kepegawaian Yayaysan - Pangkat / Jabatan
 
-	pegawaiOra.PangkatYayasan.KdGolongan = pegawaiInsani.PegawaiYayasan.Golongan
-	pegawaiOra.PangkatYayasan.KdRuang = pegawaiInsani.PegawaiYayasan.KdRuang
-	pegawaiOra.PangkatYayasan.TmtPangkat = pegawaiInsani.PegawaiYayasan.TmtPangkatGolongan
-	pegawaiOra.KdFungsional = pegawaiInsani.PegawaiYayasan.KdJabatanFungsional
-	pegawaiOra.TmtFungsional = pegawaiInsani.PegawaiYayasan.TmtJabatan
-	pegawaiOra.MasaKerjaGajiTahun, _ = strconv.Atoi(pegawaiInsani.PegawaiYayasan.MasaKerjaBawaanTahun)
-	pegawaiOra.MasaKerjaGajiBulan, _ = strconv.Atoi(pegawaiInsani.PegawaiYayasan.MasaKerjaBawaanBulan)
-	pegawaiOra.AngkaKreditFungsional, _ = strconv.ParseFloat(pegawaiInsani.PegawaiYayasan.AngkaKredit, 64)
+	if pegawaiInsani.PegawaiYayasan.Golongan != "" {
+		pegawaiOra.PangkatYayasan.KdGolongan = pegawaiInsani.PegawaiYayasan.Golongan
+	}
+
+	if pegawaiInsani.PegawaiYayasan.KdRuang != "" {
+		pegawaiOra.PangkatYayasan.KdRuang = pegawaiInsani.PegawaiYayasan.KdRuang
+	}
+
+	if pegawaiInsani.PegawaiYayasan.TmtPangkatGolongan != "" {
+		pegawaiOra.PangkatYayasan.TmtPangkat = pegawaiInsani.PegawaiYayasan.TmtPangkatGolongan
+	}
+
+	if pegawaiInsani.PegawaiYayasan.KdJabatanFungsional != "" {
+		pegawaiOra.KdFungsional = pegawaiInsani.PegawaiYayasan.KdJabatanFungsional
+	}
+
+	if pegawaiInsani.PegawaiYayasan.TmtJabatan != "" {
+		pegawaiOra.TmtFungsional = pegawaiInsani.PegawaiYayasan.TmtJabatan
+	}
+
+	if pegawaiInsani.PegawaiYayasan.MasaKerjaBawaanTahun != "" {
+		pegawaiOra.MasaKerjaGajiTahun, _ = strconv.Atoi(pegawaiInsani.PegawaiYayasan.MasaKerjaBawaanTahun)
+	}
+
+	if pegawaiInsani.PegawaiYayasan.MasaKerjaBawaanBulan != "" {
+		pegawaiOra.MasaKerjaGajiBulan, _ = strconv.Atoi(pegawaiInsani.PegawaiYayasan.MasaKerjaBawaanBulan)
+	}
+
+	if pegawaiInsani.PegawaiYayasan.AngkaKredit != "" {
+		pegawaiOra.AngkaKreditFungsional, _ = strconv.ParseFloat(pegawaiInsani.PegawaiYayasan.AngkaKredit, 64)
+	}
 
 	// Sinkron Unit Kerja
 
-	pegawaiOra.Unit1.KdUnit1 = pegawaiInsani.UnitKerjaPegawai.KdIndukKerja
-	pegawaiOra.Unit2.KdUnit2 = pegawaiInsani.UnitKerjaPegawai.KdUnitKerja
-	pegawaiOra.Unit3.KdUnit3 = pegawaiInsani.UnitKerjaPegawai.KdBagianKerja
-	pegawaiOra.NoSkPertama = pegawaiInsani.UnitKerjaPegawai.NoSkPertama
-	pegawaiOra.TglSkPertama = pegawaiInsani.UnitKerjaPegawai.TmtSkPertama
-	pegawaiOra.KdHomebasePddikti = pegawaiInsani.UnitKerjaPegawai.KdHomebasePddikti
-	pegawaiOra.KdHomebaseUii = pegawaiInsani.UnitKerjaPegawai.KdHomebaseUii
+	if pegawaiInsani.UnitKerjaPegawai.KdIndukKerja != "" {
+		pegawaiOra.Unit1.KdUnit1 = pegawaiInsani.UnitKerjaPegawai.KdIndukKerja
+	}
+
+	if pegawaiInsani.UnitKerjaPegawai.KdUnitKerja != "" {
+		pegawaiOra.Unit2.KdUnit2 = pegawaiInsani.UnitKerjaPegawai.KdUnitKerja
+	}
+
+	if pegawaiInsani.UnitKerjaPegawai.KdBagianKerja != "" {
+		pegawaiOra.Unit3.KdUnit3 = pegawaiInsani.UnitKerjaPegawai.KdBagianKerja
+	}
+
+	if pegawaiInsani.UnitKerjaPegawai.NoSkPertama != "" {
+		pegawaiOra.NoSkPertama = pegawaiInsani.UnitKerjaPegawai.NoSkPertama
+	}
+
+	if pegawaiInsani.UnitKerjaPegawai.TmtSkPertama != "" {
+		pegawaiOra.TglSkPertama = pegawaiInsani.UnitKerjaPegawai.TmtSkPertama
+	}
+
+	if pegawaiInsani.UnitKerjaPegawai.KdHomebasePddikti != "" {
+		pegawaiOra.KdHomebasePddikti = pegawaiInsani.UnitKerjaPegawai.KdHomebasePddikti
+	}
+
+	if pegawaiInsani.UnitKerjaPegawai.KdHomebaseUii != "" {
+		pegawaiOra.KdHomebaseUii = pegawaiInsani.UnitKerjaPegawai.KdHomebaseUii
+	}
 
 	// Sinkron Kepegawaian Negara / PTT
 
-	pegawaiOra.Instansi = pegawaiInsani.PegawaiPNSPTT.InstansiAsalPtt
-	pegawaiOra.NipKopertis = pegawaiInsani.PegawaiPNSPTT.NipPNS
-	pegawaiOra.NoKarpeg = pegawaiInsani.PegawaiPNSPTT.NoKartuPegawai
-	pegawaiOra.PangkatKopertis.KdGolongan = pegawaiInsani.PegawaiPNSPTT.KdPangkatGolonganPns
-	pegawaiOra.PangkatKopertis.KdRuang = pegawaiInsani.PegawaiPNSPTT.KdPangkatGolonganPns
-	pegawaiOra.PangkatKopertis.TmtPangkat = pegawaiInsani.PegawaiPNSPTT.TmtPangkatGolongan
-	pegawaiOra.KdFungsional = pegawaiInsani.PegawaiPNSPTT.KdJabatanPns
-	pegawaiOra.TmtFungsional = pegawaiInsani.PegawaiPNSPTT.TmtPangkatGolongan
-	pegawaiOra.MasaKerjaKopertisTahun, _ = strconv.Atoi(pegawaiInsani.PegawaiPNSPTT.MasaKerjaPnsTahun)
-	pegawaiOra.MasaKerjaKopertisBulan, _ = strconv.Atoi(pegawaiInsani.PegawaiPNSPTT.MasaKerjaPnsBulan)
-	pegawaiOra.AngkaKreditKopertis, _ = strconv.ParseFloat(pegawaiInsani.PegawaiPNSPTT.AngkaKreditPns, 64)
-	pegawaiOra.Keterangan = pegawaiInsani.PegawaiPNSPTT.KeteranganPNS
+	if pegawaiInsani.PegawaiPNSPTT.InstansiAsalPtt != "" {
+		pegawaiOra.Instansi = pegawaiInsani.PegawaiPNSPTT.InstansiAsalPtt
+	}
+
+	if pegawaiInsani.PegawaiPNSPTT.NipPNS != "" {
+		pegawaiOra.NipKopertis = pegawaiInsani.PegawaiPNSPTT.NipPNS
+	}
+
+	if pegawaiInsani.PegawaiPNSPTT.NoKartuPegawai != "" {
+		pegawaiOra.NoKarpeg = pegawaiInsani.PegawaiPNSPTT.NoKartuPegawai
+	}
+
+	if pegawaiInsani.PegawaiPNSPTT.KdPangkatGolonganPns != "" {
+		pegawaiOra.PangkatKopertis.KdGolongan = pegawaiInsani.PegawaiPNSPTT.KdPangkatGolonganPns
+	}
+
+	if pegawaiInsani.PegawaiPNSPTT.KdPangkatGolonganPns != "" {
+		pegawaiOra.PangkatKopertis.KdRuang = pegawaiInsani.PegawaiPNSPTT.KdPangkatGolonganPns
+	}
+
+	if pegawaiInsani.PegawaiPNSPTT.TmtPangkatGolongan != "" {
+		pegawaiOra.PangkatKopertis.TmtPangkat = pegawaiInsani.PegawaiPNSPTT.TmtPangkatGolongan
+	}
+
+	if pegawaiInsani.PegawaiPNSPTT.KdJabatanPns != "" {
+		pegawaiOra.KdFungsional = pegawaiInsani.PegawaiPNSPTT.KdJabatanPns
+	}
+
+	if pegawaiInsani.PegawaiPNSPTT.TmtPangkatGolongan != "" {
+		pegawaiOra.TmtFungsional = pegawaiInsani.PegawaiPNSPTT.TmtPangkatGolongan
+	}
+
+	if pegawaiInsani.PegawaiPNSPTT.MasaKerjaPnsTahun != "" {
+		pegawaiOra.MasaKerjaKopertisTahun, _ = strconv.Atoi(pegawaiInsani.PegawaiPNSPTT.MasaKerjaPnsTahun)
+	}
+
+	if pegawaiInsani.PegawaiPNSPTT.MasaKerjaPnsBulan != "" {
+		pegawaiOra.MasaKerjaKopertisBulan, _ = strconv.Atoi(pegawaiInsani.PegawaiPNSPTT.MasaKerjaPnsBulan)
+	}
+
+	if pegawaiInsani.PegawaiPNSPTT.AngkaKreditPns != "" {
+		pegawaiOra.AngkaKreditKopertis, _ = strconv.ParseFloat(pegawaiInsani.PegawaiPNSPTT.AngkaKreditPns, 64)
+	}
+
+	if pegawaiInsani.PegawaiPNSPTT.KeteranganPNS != "" {
+		pegawaiOra.Keterangan = pegawaiInsani.PegawaiPNSPTT.KeteranganPNS
+	}
 
 	// Sinkron Status Aktif
 
