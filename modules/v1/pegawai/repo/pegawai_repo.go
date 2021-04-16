@@ -531,7 +531,7 @@ func UpdatePendidikanPegawai(a app.App, ctx context.Context, uuidPendidikanDiaku
 		// Flag Ijazah ke Nul
 		res = db.Model(&pegawaiPendidikanUpdate).
 			Where("id_personal_data_pribadi = ? AND uuid != ?", idPersonalPegawai, uuidPendidikanTerakhir).
-			Update("flag_ijazah_diakui", "0")
+			Update("flag_ijazah_terakhir", "0")
 		if res.Error != nil {
 			return res.Error
 		}
