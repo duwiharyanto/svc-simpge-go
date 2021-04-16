@@ -338,46 +338,46 @@ func (*PegawaiUpdate) TableName() string {
 }
 
 type PegawaiFungsionalUpdate struct {
-	Id                       int    `form:"-"`
-	IdKafka                  int    `form:"-"`
-	IdPegawai                int    `form:"-"`
-	UuidPangkatGolongan      string `form:"uuid_pangkat_golongan" gorm:"-"`
-	IdPangkatGolongan        int    `form:"id_pangkat_golongan"`
-	KdPangkatGolongan        string `form:"kd_pangkat_golongan"`
-	UuidJabatanFungsional    string `form:"uuid_jabatan_fungsional" gorm:"-"`
-	IdJabatanFungsional      int    `form:"id_jabatan_fungsional"`
-	KdJabatanFungsional      string `form:"kd_jabatan_fungsional"`
-	TmtPangkatGolongan       string `form:"tmt_pangkat_golongan"`
-	TmtPangkatGolonganIDN    string `form:"tmt_pangkat_golongan_idn" gorm:"-"`
-	TmtJabatan               string `form:"tmt_jabatan"`
-	TmtJabatanIDN            string `form:"tmt_jabatan_idn" gorm:"-"`
-	MasaKerjaBawaanTahun     string `form:"masa_kerja_bawaan_tahun"`
-	MasaKerjaBawaanBulan     string `form:"masa_kerja_bawaan_bulan"`
-	MasaKerjaGajiTahun       string `form:"masa_kerja_gaji_tahun"`
-	MasaKerjaGajiBulan       string `form:"masa_kerja_gaji_bulan"`
-	MasaKerjaTotalTahun      string `form:"masa_kerja_total_tahun"`
-	MasaKerjaTotalBulan      string `form:"masa_kerja_total_bulan"`
-	AngkaKredit              string `form:"angka_kredit"`
-	NomorSertifikasi         string `form:"nomor_sertifikasi"`
-	UuidJenisNomorRegistrasi string `form:"uuid_jenis_nomor_registrasi" gorm:"-"`
-	IdJenisNomorRegistrasi   int    `form:"id_jenis_nomor_registrasi"`
-	KdJenisNomorRegistrasi   string `form:"kd_jenis_nomor_registrasi"`
-	NomorRegistrasi          string `form:"nomor_registrasi"`
-	NomorSkPertama           string `form:"nomor_sk_pertama"`
-	TmtSkPertama             string `form:"tmt_sk_pertama"`
-	TmtSkPertamaIDN          string `form:"tmt_sk_pertama_idn" gorm:"-"`
-	UuidStatusPegawaiAktif   string `form:"uuid_status_pegawai_aktif" gorm:"-"`
-	IdStatusPegawaiAktif     int    `form:"id_status_pegawai_aktif"`
-	KdStatusPegawaiAktif     string `form:"kd_status_pegawai_aktif"`
-	UuidHomebasePddikti      string `form:"uuid_homebase_pddikti" gorm:"-"` //Perubahan
-	IdHomebasePddikti        int    `form:"id_homebase_pddikti"`            //Perubahan
-	UuidHomebaseUii          string `form:"uuid_homebase_uii" gorm:"-"`     //Perubahan
-	IdHomebaseUii            int    `form:"id_homebase_uii"`                //Perubahan
-	TglInput                 string `form:"-" gorm:"-"`
-	UserInput                string `form:"-" gorm:"-"`
-	TglUpdate                string `form:"-" gorm:"-"`
-	UserUpdate               string `form:"-"`
-	FlagAktif                int    `form:"-" gorm:"-"`
+	Id                       int     `form:"-"`
+	IdKafka                  int     `form:"-"`
+	IdPegawai                int     `form:"-"`
+	UuidPangkatGolongan      string  `form:"uuid_pangkat_golongan" gorm:"-"`
+	IdPangkatGolongan        int     `form:"id_pangkat_golongan"`
+	KdPangkatGolongan        string  `form:"kd_pangkat_golongan"`
+	UuidJabatanFungsional    string  `form:"uuid_jabatan_fungsional" gorm:"-"`
+	IdJabatanFungsional      int     `form:"id_jabatan_fungsional"`
+	KdJabatanFungsional      string  `form:"kd_jabatan_fungsional"`
+	TmtPangkatGolongan       *string `form:"tmt_pangkat_golongan"`
+	TmtPangkatGolonganIDN    string  `form:"tmt_pangkat_golongan_idn" gorm:"-"`
+	TmtJabatan               *string `form:"tmt_jabatan"`
+	TmtJabatanIDN            string  `form:"tmt_jabatan_idn" gorm:"-"`
+	MasaKerjaBawaanTahun     string  `form:"masa_kerja_bawaan_tahun"`
+	MasaKerjaBawaanBulan     string  `form:"masa_kerja_bawaan_bulan"`
+	MasaKerjaGajiTahun       string  `form:"masa_kerja_gaji_tahun"`
+	MasaKerjaGajiBulan       string  `form:"masa_kerja_gaji_bulan"`
+	MasaKerjaTotalTahun      string  `form:"masa_kerja_total_tahun"`
+	MasaKerjaTotalBulan      string  `form:"masa_kerja_total_bulan"`
+	AngkaKredit              string  `form:"angka_kredit"`
+	NomorSertifikasi         string  `form:"nomor_sertifikasi"`
+	UuidJenisNomorRegistrasi string  `form:"uuid_jenis_nomor_registrasi" gorm:"-"`
+	IdJenisNomorRegistrasi   int     `form:"id_jenis_nomor_registrasi"`
+	KdJenisNomorRegistrasi   string  `form:"kd_jenis_nomor_registrasi"`
+	NomorRegistrasi          string  `form:"nomor_registrasi"`
+	NomorSkPertama           string  `form:"nomor_sk_pertama"`
+	TmtSkPertama             *string `form:"tmt_sk_pertama"`
+	TmtSkPertamaIDN          string  `form:"tmt_sk_pertama_idn" gorm:"-"`
+	UuidStatusPegawaiAktif   string  `form:"uuid_status_pegawai_aktif" gorm:"-"`
+	IdStatusPegawaiAktif     int     `form:"id_status_pegawai_aktif"`
+	KdStatusPegawaiAktif     string  `form:"kd_status_pegawai_aktif"`
+	UuidHomebasePddikti      string  `form:"uuid_homebase_pddikti" gorm:"-"` //Perubahan
+	IdHomebasePddikti        int     `form:"id_homebase_pddikti"`            //Perubahan
+	UuidHomebaseUii          string  `form:"uuid_homebase_uii" gorm:"-"`     //Perubahan
+	IdHomebaseUii            int     `form:"id_homebase_uii"`                //Perubahan
+	TglInput                 string  `form:"-" gorm:"-"`
+	UserInput                string  `form:"-" gorm:"-"`
+	TglUpdate                string  `form:"-" gorm:"-"`
+	UserUpdate               string  `form:"-"`
+	FlagAktif                int     `form:"-" gorm:"-"`
 	// Uuid                     string `form:"-"`
 }
 
@@ -386,34 +386,34 @@ func (*PegawaiFungsionalUpdate) TableName() string {
 }
 
 type PegawaiPNSUpdate struct {
-	Id                    int    `form:"-" gorm:"primaryKey"`
-	IdPegawai             int    `form:"-"`
-	NipPns                string `form:"nip_pns"`
-	NoKartuPegawai        string `form:"no_kartu_pegawai"`
-	UuidJenisPtt          string `form:"uuid_jenis_ptt" gorm:"-"`
-	IdJenisPtt            int    `form:"id_jenis_ptt"`
-	KdJenisPtt            string `form:"kd_jenis_ptt"`
-	InstansiAsal          string `form:"instansi_asal_ptt" gorm:"column:instansi_asal"`
-	UuidPangkatGolongan   string `form:"uuid_pangkat_gol_ruang_pns" gorm:"-"` //Perubahan
-	IdPangkatGolongan     int    `form:"id_pangkat_golongan"`
-	KdPangkatGolongan     string `form:"kd_pangkat_golongan"`
-	TmtPangkatGolongan    string `form:"tmt_pangkat_gol_ruang_pns" gorm:"column:tmt_pangkat_golongan"` //Perubahan
-	TmtPangkatGolonganIDN string `form:"tmt_pangkat_gol_ruang_pns_idn" gorm:"-"`                       //Perubahan
-	UuidJabatanFungsional string `form:"uuid_jabatan_pns" gorm:"-"`                                    //Perubahan
-	IdJabatanFungsional   int    `form:"id_jabatan_fungsional"`
-	KdJabatanFungsional   string `form:"kd_jabatan_fungsional"`
-	TmtJabatan            string `form:"tmt_jabatan_pns" gorm:"tmt_jabatan"`                  //Perubahan
-	TmtJabatanIDN         string `form:"tmt_jabatan_pns_idn" gorm:"-"`                        //Perubahan
-	MasaKerjaTahun        string `form:"masa_kerja_pns_tahun" gorm:"column:masa_kerja_tahun"` //Perubahan
-	MasaKerjaBulan        string `form:"masa_kerja_pns_bulan" gorm:"column:masa_kerja_bulan"` //Perubahan
-	AngkaKredit           string `form:"angka_kredit_pns" gorm:"column:angka_kredit"`         //Perubahan
-	Keterangan            string `form:"keterangan_pns" gorm:"column:keterangan"`             //Perubahan
-	TglInput              string `form:"-" gorm:"-"`
-	UserInput             string `form:"-" gorm:"-"`
-	TglUpdate             string `form:"-" gorm:"-"`
-	UserUpdate            string `form:"-"`
-	FlagAktif             int    `form:"-" gorm:"-"`
-	Uuid                  string `form:"-"`
+	Id                    int     `form:"-" gorm:"primaryKey"`
+	IdPegawai             int     `form:"-"`
+	NipPns                string  `form:"nip_pns"`
+	NoKartuPegawai        string  `form:"no_kartu_pegawai"`
+	UuidJenisPtt          string  `form:"uuid_jenis_ptt" gorm:"-"`
+	IdJenisPtt            int     `form:"id_jenis_ptt"`
+	KdJenisPtt            string  `form:"kd_jenis_ptt"`
+	InstansiAsal          string  `form:"instansi_asal_ptt" gorm:"column:instansi_asal"`
+	UuidPangkatGolongan   string  `form:"uuid_pangkat_gol_ruang_pns" gorm:"-"` //Perubahan
+	IdPangkatGolongan     int     `form:"id_pangkat_golongan"`
+	KdPangkatGolongan     string  `form:"kd_pangkat_golongan"`
+	TmtPangkatGolongan    *string `form:"tmt_pangkat_gol_ruang_pns" gorm:"column:tmt_pangkat_golongan"` //Perubahan
+	TmtPangkatGolonganIDN string  `form:"tmt_pangkat_gol_ruang_pns_idn" gorm:"-"`                       //Perubahan
+	UuidJabatanFungsional string  `form:"uuid_jabatan_pns" gorm:"-"`                                    //Perubahan
+	IdJabatanFungsional   int     `form:"id_jabatan_fungsional"`
+	KdJabatanFungsional   string  `form:"kd_jabatan_fungsional"`
+	TmtJabatan            *string `form:"tmt_jabatan_pns" gorm:"tmt_jabatan"`                  //Perubahan
+	TmtJabatanIDN         string  `form:"tmt_jabatan_pns_idn" gorm:"-"`                        //Perubahan
+	MasaKerjaTahun        string  `form:"masa_kerja_pns_tahun" gorm:"column:masa_kerja_tahun"` //Perubahan
+	MasaKerjaBulan        string  `form:"masa_kerja_pns_bulan" gorm:"column:masa_kerja_bulan"` //Perubahan
+	AngkaKredit           string  `form:"angka_kredit_pns" gorm:"column:angka_kredit"`         //Perubahan
+	Keterangan            string  `form:"keterangan_pns" gorm:"column:keterangan"`             //Perubahan
+	TglInput              string  `form:"-" gorm:"-"`
+	UserInput             string  `form:"-" gorm:"-"`
+	TglUpdate             string  `form:"-" gorm:"-"`
+	UserUpdate            string  `form:"-"`
+	FlagAktif             int     `form:"-" gorm:"-"`
+	Uuid                  string  `form:"-"`
 }
 
 func (*PegawaiPNSUpdate) TableName() string {

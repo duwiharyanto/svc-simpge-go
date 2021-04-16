@@ -105,12 +105,15 @@ func TestKepegawaianYayasan(t *testing.T) {
 		// pegawai.PegawaiStatus.PangkatYayasan.KdGolongan = "IV"
 		// pegawai.PegawaiStatus.PangkatYayasan.KdRuang = "b"
 		// pegawai.PegawaiStatus.PangkatYayasan.TmtPangkat = "2020-01-02 00:00:01"
+		tmtFungsional := "2021-02-03 00:00:00"
 		pegawaiStatus := &model.PegawaiStatus{
 			FlagMengajar: "N",
 			FlagSekolah:  "Y",
 			JabatanFungsional: &model.JabatanFungsional{
-				KdFungsional:  "06",
-				TmtFungsional: "2021-02-03 00:00:00",
+				KdFungsional: "06",
+				// TmtFungsional: "2021-02-03 00:00:00",
+
+				TmtFungsional: tmtFungsional,
 			},
 			JabatanFungsionalKopertis: &model.JabatanFungsional{
 				KdFungsional:  "",

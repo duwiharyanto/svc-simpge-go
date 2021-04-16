@@ -224,10 +224,10 @@ func ValidateUpdatePegawaiByUUID(a app.App, c echo.Context) (model.PegawaiUpdate
 
 	// Binding nilai request ke struct
 
-	if pegawaiReq.PegawaiFungsional.TmtPangkatGolongan != "" {
+	if pegawaiReq.PegawaiFungsional.TmtPangkatGolongan != nil {
 		pegawaiOld.PegawaiFungsional.TmtPangkatGolongan = pegawaiReq.PegawaiFungsional.TmtPangkatGolongan
 	}
-	if pegawaiReq.PegawaiFungsional.TmtJabatan != "" {
+	if pegawaiReq.PegawaiFungsional.TmtJabatan != nil {
 		pegawaiOld.PegawaiFungsional.TmtJabatan = pegawaiReq.PegawaiFungsional.TmtJabatan
 	}
 	if pegawaiReq.PegawaiFungsional.MasaKerjaBawaanTahun != "" {
@@ -260,7 +260,7 @@ func ValidateUpdatePegawaiByUUID(a app.App, c echo.Context) (model.PegawaiUpdate
 	if pegawaiReq.PegawaiFungsional.NomorSkPertama != "" {
 		pegawaiOld.PegawaiFungsional.NomorSkPertama = pegawaiReq.PegawaiFungsional.NomorSkPertama
 	}
-	if pegawaiReq.PegawaiFungsional.TmtSkPertama != "" {
+	if pegawaiReq.PegawaiFungsional.TmtSkPertama != nil {
 		pegawaiOld.PegawaiFungsional.TmtSkPertama = pegawaiReq.PegawaiFungsional.TmtSkPertama
 	}
 	if pegawaiReq.PegawaiPNS.InstansiAsal != "" {
@@ -272,10 +272,10 @@ func ValidateUpdatePegawaiByUUID(a app.App, c echo.Context) (model.PegawaiUpdate
 	if pegawaiReq.PegawaiPNS.NoKartuPegawai != "" {
 		pegawaiOld.PegawaiPNS.NoKartuPegawai = pegawaiReq.PegawaiPNS.NoKartuPegawai
 	}
-	if pegawaiReq.PegawaiPNS.TmtPangkatGolongan != "" {
+	if pegawaiReq.PegawaiPNS.TmtPangkatGolongan != nil {
 		pegawaiOld.PegawaiPNS.TmtPangkatGolongan = pegawaiReq.PegawaiPNS.TmtPangkatGolongan
 	}
-	if pegawaiReq.PegawaiPNS.TmtJabatan != "" {
+	if pegawaiReq.PegawaiPNS.TmtJabatan != nil {
 		pegawaiOld.PegawaiPNS.TmtJabatan = pegawaiReq.PegawaiPNS.TmtJabatan
 	}
 	if pegawaiReq.PegawaiPNS.MasaKerjaTahun != "" {
