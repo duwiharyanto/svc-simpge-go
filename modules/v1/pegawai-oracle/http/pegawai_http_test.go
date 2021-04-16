@@ -165,7 +165,7 @@ func TestKepegawaianYayasan(t *testing.T) {
 			Instansi:   "UGM",
 			Keterangan: "tes",
 		}
-		err = UpdateKepegawaianYayasan(ctx, client, *pegawai)
+		err = UpdateKepegawaianYayasan(ctx, client, pegawai)
 		if err != nil {
 			t.Fatalf("error update pegawai status: %s", err.Error())
 		}

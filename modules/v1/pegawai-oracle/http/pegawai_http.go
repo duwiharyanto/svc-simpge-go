@@ -14,6 +14,8 @@ import (
 )
 
 var pegawaiSimpegURL = fmt.Sprintf("%s/public/api/v1/pegawai", os.Getenv("URL_HCM_SIMPEG_SERVICE"))
+
+// var pegawaiSimpegURL = fmt.Sprintf("%s/pegawai", os.Getenv("URL_HCM_SIMPEG_SERVICE"))
 var pegawaiStatusSimpegURL = fmt.Sprintf("%s/public/api/v1/pegawai-status", os.Getenv("URL_HCM_SIMPEG_SERVICE"))
 var kepegawaianYayasanSimpegURL = pegawaiSimpegURL + "/%s/kepegawaian-yayasan"
 
@@ -99,9 +101,16 @@ func GetKepegawaianYayasan(ctx context.Context, client *http.Client, nip string)
 	return &pegawai, nil
 }
 
-func UpdateKepegawaianYayasan(ctx context.Context, client *http.Client, pegawai model.KepegawaianYayasanSimpeg) error {
+func UpdateKepegawaianYayasan(ctx context.Context, client *http.Client, pegawai *model.KepegawaianYayasanSimpeg) error {
 	endpoint := fmt.Sprintf(kepegawaianYayasanSimpegURL, pegawai.NIP)
-	header := map[string]string{"X-Member": pegawai.UserUpdate}
+	// fmt.Printf("DEBUG endpoint : %+v \n", endpoint)
+	// fmt.Printf("DEBUG pegawaisimpegURL : %+v \n", pegawaiSimpegURL)
+	// authToken := os.Getenv("AUTH_TOKEN")
+	header := map[string]string{
+		// "Authorization": authToken,
+		"X-Member": pegawai.UserUpdate,
+	}
+	// fmt.Printf("DEBUG header : %+v \n", header)
 	res, err := app.SendHttpRequest(ctx, client, http.MethodPut, endpoint, contentTypeJSON, header, pegawai)
 	if err != nil {
 		return fmt.Errorf("error send http request: %w", err)
@@ -117,30 +126,6 @@ func UpdateKepegawaianYayasan(ctx context.Context, client *http.Client, pegawai 
 	}
 
 	fmt.Printf("[DEBUG] response from update kepegawaian yayasan simpeg: %s\n", resBody)
-	return nil
-}
-
-func UpdatePegawai(ctx context.Context, client *http.Client, pegawai model.PegawaiSimpeg) error {
-	fmt.Printf("[DEBUG] reqbody: %+v\n", pegawai)
-	endpoint := fmt.Sprintf("%s/%s", pegawaiSimpegURL, pegawai.NIP)
-	header := map[string]string{"X-Member": pegawai.UserUpdate}
-	res, err := app.SendHttpRequest(ctx, client, http.MethodPut, endpoint, contentTypeJSON, header, pegawai)
-	if err != nil {
-		return fmt.Errorf("error send http request: %w", err)
-	}
-
-	resBody, err := ioutil.ReadAll(res.Body)
-	if err != nil {
-		return fmt.Errorf("error read response body: %w", err)
-	}
-
-	if res.StatusCode != http.StatusOK {
-		// return fmt.Errorf("error status not ok: %s", strings.Trim(fmt.Sprintf("%q", resBody), `"`))
-		// return fmt.Errorf("error status not ok: %q", resBody)
-		return fmt.Errorf("error status not ok: %s", resBody)
-	}
-
-	fmt.Printf("[DEBUG] response from update pegawai simpeg: %s\n", resBody)
 	return nil
 }
 

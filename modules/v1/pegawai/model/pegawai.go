@@ -116,6 +116,7 @@ type PegawaiYayasan struct {
 	KdPangkat             string `json:"kd_pangkat_golongan"`
 	Pangkat               string `json:"pangkat"`
 	Golongan              string `json:"golongan"`
+	KdGolongan            string `json:"kd_golongan"`
 	KdRuang               string `json:"kd_ruang"`
 	TmtPangkatGolongan    string `json:"tmt_pangkat_gol_ruang_pegawai"`
 	TmtPangkatGolonganIdn string `json:"tmt_pangkat_gol_ruang_pegawai_idn"`
@@ -171,6 +172,8 @@ type PegawaiPNSPTT struct {
 	KdPangkatGolonganPns  string `json:"kd_pangkat_golongan"`
 	PangkatPNS            string `json:"pangkat_pns"`
 	GolonganPNS           string `json:"golongan_pns"`
+	KdGolonganPNS         string `json:"kd_golongan_pns"`
+	KdRuangPNS            string `json:"kd_ruang_pns"`
 	TmtPangkatGolongan    string `json:"tmt_pangkat_gol_ruang_pns"`
 	TmtPangkatGolonganIdn string `json:"tmt_pangkat_gol_ruang_pns_idn"`
 	KdJabatanPns          string `json:"kd_jabatan_pns"`
@@ -347,7 +350,7 @@ type PegawaiFungsionalUpdate struct {
 	UuidJabatanFungsional    string  `form:"uuid_jabatan_fungsional" gorm:"-"`
 	IdJabatanFungsional      int     `form:"id_jabatan_fungsional"`
 	KdJabatanFungsional      string  `form:"kd_jabatan_fungsional"`
-	TmtPangkatGolongan       *string `form:"tmt_pangkat_golongan"`
+	TmtPangkatGolongan       *string `form:"tmt_pangkat_golongan" gorm:"default:null"`
 	TmtPangkatGolonganIDN    string  `form:"tmt_pangkat_golongan_idn" gorm:"-"`
 	TmtJabatan               *string `form:"tmt_jabatan"`
 	TmtJabatanIDN            string  `form:"tmt_jabatan_idn" gorm:"-"`
@@ -384,6 +387,13 @@ type PegawaiFungsionalUpdate struct {
 func (*PegawaiFungsionalUpdate) TableName() string {
 	return "pegawai_fungsional"
 }
+
+// func (p *PegawaiFungsionalUpdate) BeforeSave(tx *gorm.DB) error {
+// 	if *p.TmtPangkatGolongan == "" {
+// 		p.TmtPangkatGolongan = nil
+// 	}
+// 	return nil
+// }
 
 type PegawaiPNSUpdate struct {
 	Id                    int     `form:"-" gorm:"primaryKey"`

@@ -8,6 +8,8 @@ import (
 	"strings"
 	"svc-insani-go/app"
 	"svc-insani-go/modules/v1/pegawai/model"
+
+	"gorm.io/gorm"
 )
 
 const (
@@ -120,6 +122,7 @@ func GetKepegawaianYayasan(a app.App, uuid string) (*model.PegawaiYayasan, error
 		&pegawaiYayasan.UuidPangkatGolongan,
 		&pegawaiYayasan.KdPangkat,
 		&pegawaiYayasan.Pangkat,
+		&pegawaiYayasan.KdGolongan,
 		&pegawaiYayasan.Golongan,
 		&pegawaiYayasan.KdRuang,
 		&pegawaiYayasan.TmtPangkatGolongan,
@@ -207,6 +210,8 @@ func GetPegawaiPNS(a app.App, uuid string) (*model.PegawaiPNSPTT, error) {
 		&pegawaiPNSPTT.KdPangkatGolonganPns,
 		&pegawaiPNSPTT.PangkatPNS,
 		&pegawaiPNSPTT.GolonganPNS,
+		&pegawaiPNSPTT.KdGolonganPNS,
+		&pegawaiPNSPTT.KdRuangPNS,
 		&pegawaiPNSPTT.TmtPangkatGolongan,
 		&pegawaiPNSPTT.UuidJabatanPns,
 		&pegawaiPNSPTT.KdJabatanPns,
@@ -535,6 +540,20 @@ func UpdatePendidikanPegawai(a app.App, ctx context.Context, uuidPendidikanDiaku
 		if res.Error != nil {
 			return res.Error
 		}
+	}
+
+	return nil
+}
+
+func CreatePegawai(a app.App, ctx context.Context, pegawaiUpdate model.PegawaiUpdate) error {
+	tx := a.GormDB.Session(&gorm.Session{
+		Context:              ctx,
+		FullSaveAssociations: true,
+	})
+
+	result := tx.Create(&pegawaiUpdate)
+	if result.Error != nil {
+		return fmt.Errorf("error creating data simpeg tendik: %w", result.Error)
 	}
 
 	return nil
