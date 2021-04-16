@@ -368,7 +368,7 @@ func prepareSinkronSimpeg(ctx context.Context, pegawaiInsani *model.PegawaiDetai
 	if pegawaiInsani.PegawaiPNSPTT.KdGolonganPNS != "" {
 		pegawaiOra.PegawaiStatus.PangkatKopertis.KdGolongan = pegawaiInsani.PegawaiPNSPTT.KdGolonganPNS
 	}
-	fmt.Printf("DEBUG pegawaiOra.PangkatKopertis.KdGolongan %+v \n: \n ", pegawaiOra.PangkatKopertis.KdGolongan)
+	// fmt.Printf("DEBUG pegawaiOra.PangkatKopertis.KdGolongan %+v \n: \n ", pegawaiOra.PangkatKopertis.KdGolongan)
 
 	if pegawaiInsani.PegawaiPNSPTT.KdPangkatGolonganPns != "" {
 		pegawaiOra.PegawaiStatus.PangkatKopertis.KdRuang = pegawaiInsani.PegawaiPNSPTT.KdPangkatGolonganPns
@@ -386,7 +386,7 @@ func prepareSinkronSimpeg(ctx context.Context, pegawaiInsani *model.PegawaiDetai
 	// fmt.Printf("DEBUG pegawaiOra.KdFungsional %+v \n: \n ", pegawaiOra.JabatanFungsionalKopertis.KdFungsional)
 
 	if pegawaiInsani.PegawaiPNSPTT.TmtPangkatGolongan != "" {
-		pegawaiOra.PegawaiStatus.JabatanFungsionalKopertis.TmtFungsional = pegawaiInsani.PegawaiPNSPTT.TmtPangkatGolongan
+		pegawaiOra.PegawaiStatus.JabatanFungsionalKopertis.TmtFungsional = pegawaiInsani.PegawaiPNSPTT.TmtJabatanPns
 	}
 	// fmt.Printf("DEBUG pegawaiOra.TmtFungsional %+v \n: \n ", pegawaiOra.TmtFungsional)
 
