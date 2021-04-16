@@ -206,8 +206,8 @@ type PegawaiPendidikan struct {
 	Jurusan                 string                `json:"jurusan"`
 	TglKelulusan            string                `json:"tgl_kelulusan"`
 	TglKelulusanIDN         string                `json:"tgl_kelulusan_idn"`
-	FlagIjazahDiakui        string                `form:"flag_ijazah_tertinggi_diakui json:"flag_ijazah_tertinggi_diakui"`
-	FlagIjazahTerakhir      string                `form:"flag_ijazah_terakhir json:"flag_ijazah_terakhir"`
+	FlagIjazahDiakui        string                `form:"flag_ijazah_tertinggi_diakui" json:"flag_ijazah_tertinggi_diakui"`
+	FlagIjazahTerakhir      string                `form:"flag_ijazah_terakhir" json:"flag_ijazah_terakhir"`
 	Akreditasi              string                `json:"akreditasi"`
 	KonsentrasiBidang       string                `json:"konsentrasi_bidang_ilmu"`
 	FlagPerguruanTinggi     int                   `json:"flag_perguruan_tinggi"`
@@ -424,8 +424,8 @@ type PegawaiPendidikanUpdate struct {
 	UuidPendidikan        string `form:"uuid_pendidikan" json:"uuid_pendidikan"`
 	IdPendidikan          string `form:"id_pendidikan" json:"id_pendidikan" gorm:"primaryKey;column:id"`
 	IdPersonalDataPribadi string `form:"id_personal_data_pribadi" json:"-"`
-	FlagIjazahDiakui      string `form:"flag_ijazah_tertinggi_diakui json:"flag_ijazah_tertinggi_diakui"`
-	FlagIjazahTerakhir    string `form:"flag_ijazah_terakhir json:"flag_ijazah_terakhir"`
+	FlagIjazahDiakui      string `form:"flag_ijazah_diakui" json:"flag_ijazah_diakui"`
+	FlagIjazahTerakhir    string `form:"flag_ijazah_terakhir" json:"flag_ijazah_terakhir"`
 	NomorIjazah           string `json:"nomor_ijazah"`
 	UUIDPersonal          string `form:"-" json:"uuid_personal"`
 	UserUpdate            string `form:"-" json:"-"`
