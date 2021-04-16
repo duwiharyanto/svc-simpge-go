@@ -81,7 +81,7 @@ spec:
             - name: SLACK_WEBHOOK_URL
               value: "https://hooks.slack.com/services/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"
             - name: URL_HCM_SIMPEG_SERVICE
-              value: "https://saladin-dev.uii.ac.id/v1/simpeg-ora"
+              value: "http://svc-simpeg-ora-lumen.hcm-stag.svc.cluster.local"
 
 ---
 apiVersion: v1
