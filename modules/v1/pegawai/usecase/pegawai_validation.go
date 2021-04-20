@@ -543,102 +543,56 @@ func ValidateCreatePegawai(a app.App, c echo.Context) (model.PegawaiUpdate, erro
 
 	// Binding nilai request ke struct
 
-	if pegawaiReq.PegawaiFungsional.TmtPangkatGolongan != nil {
-		pegawaiReq.PegawaiFungsional.TmtPangkatGolongan = pegawaiReq.PegawaiFungsional.TmtPangkatGolongan
-	}
-	if pegawaiReq.PegawaiFungsional.TmtJabatan != nil {
-		pegawaiReq.PegawaiFungsional.TmtJabatan = pegawaiReq.PegawaiFungsional.TmtJabatan
-	}
-	if pegawaiReq.PegawaiFungsional.MasaKerjaBawaanTahun != "" {
-		pegawaiReq.PegawaiFungsional.MasaKerjaBawaanTahun = pegawaiReq.PegawaiFungsional.MasaKerjaBawaanTahun
-	}
 	if pegawaiReq.PegawaiFungsional.MasaKerjaBawaanBulan != "" {
 		a, _ := strconv.Atoi(pegawaiReq.PegawaiFungsional.MasaKerjaBawaanBulan)
 		if a > 12 {
 			return model.PegawaiUpdate{}, fmt.Errorf("[ERROR] data bulan tidak valid")
 		}
-		pegawaiReq.PegawaiFungsional.MasaKerjaBawaanBulan = pegawaiReq.PegawaiFungsional.MasaKerjaBawaanBulan
 	}
-	if pegawaiReq.PegawaiFungsional.MasaKerjaGajiTahun != "" {
-		pegawaiReq.PegawaiFungsional.MasaKerjaGajiTahun = pegawaiReq.PegawaiFungsional.MasaKerjaGajiTahun
-	}
+
 	if pegawaiReq.PegawaiFungsional.MasaKerjaGajiBulan != "" {
 		a, _ := strconv.Atoi(pegawaiReq.PegawaiFungsional.MasaKerjaGajiBulan)
 		if a > 12 {
 			return model.PegawaiUpdate{}, fmt.Errorf("[ERROR] data bulan tidak valid")
 		}
-		pegawaiReq.PegawaiFungsional.MasaKerjaGajiBulan = pegawaiReq.PegawaiFungsional.MasaKerjaGajiBulan
 	}
-	if pegawaiReq.PegawaiFungsional.MasaKerjaTotalTahun != "" {
-		pegawaiReq.PegawaiFungsional.MasaKerjaTotalTahun = pegawaiReq.PegawaiFungsional.MasaKerjaTotalTahun
-	}
+
 	if pegawaiReq.PegawaiFungsional.MasaKerjaTotalBulan != "" {
 		a, _ := strconv.Atoi(pegawaiReq.PegawaiFungsional.MasaKerjaTotalBulan)
 		if a > 12 {
 			return model.PegawaiUpdate{}, fmt.Errorf("error data bulan tidak valid")
 		}
-		pegawaiReq.PegawaiFungsional.MasaKerjaTotalBulan = pegawaiReq.PegawaiFungsional.MasaKerjaTotalBulan
-	}
-	if pegawaiReq.PegawaiFungsional.AngkaKredit != "" {
-		pegawaiReq.PegawaiFungsional.AngkaKredit = pegawaiReq.PegawaiFungsional.AngkaKredit
 	}
 	if pegawaiReq.PegawaiFungsional.NomorSertifikasi != "" {
 		if len(pegawaiReq.PegawaiFungsional.NomorSertifikasi) > 20 {
 			return model.PegawaiUpdate{}, fmt.Errorf("error nomor sertifikasi tidak valid")
 		}
-		pegawaiReq.PegawaiFungsional.NomorSertifikasi = pegawaiReq.PegawaiFungsional.NomorSertifikasi
 	}
 	if pegawaiReq.PegawaiFungsional.NomorRegistrasi != "" {
 		if len(pegawaiReq.PegawaiFungsional.NomorRegistrasi) > 10 {
 			return model.PegawaiUpdate{}, fmt.Errorf("error nomor registrasi tidak valid")
 		}
-		pegawaiReq.PegawaiFungsional.NomorRegistrasi = pegawaiReq.PegawaiFungsional.NomorRegistrasi
 	}
 	if pegawaiReq.PegawaiFungsional.NomorSkPertama != "" {
 		if len(pegawaiReq.PegawaiFungsional.NomorSkPertama) > 10 {
 			return model.PegawaiUpdate{}, fmt.Errorf("error nomor registrasi tidak valid")
 		}
-		pegawaiReq.PegawaiFungsional.NomorSkPertama = pegawaiReq.PegawaiFungsional.NomorSkPertama
-	}
-	if pegawaiReq.PegawaiFungsional.TmtSkPertama != nil {
-		pegawaiReq.PegawaiFungsional.TmtSkPertama = pegawaiReq.PegawaiFungsional.TmtSkPertama
-	}
-	if pegawaiReq.PegawaiPNS.InstansiAsal != "" {
-		pegawaiReq.PegawaiPNS.InstansiAsal = pegawaiReq.PegawaiPNS.InstansiAsal
 	}
 	if pegawaiReq.PegawaiPNS.NipPns != "" {
 		if len(pegawaiReq.PegawaiPNS.NipPns) < 18 {
 			return model.PegawaiUpdate{}, fmt.Errorf("error nip pns tidak valid")
 		}
-		pegawaiReq.PegawaiPNS.NipPns = pegawaiReq.PegawaiPNS.NipPns
 	}
 	if pegawaiReq.PegawaiPNS.NoKartuPegawai != "" {
 		if len(pegawaiReq.PegawaiPNS.NoKartuPegawai) > 18 {
 			return model.PegawaiUpdate{}, fmt.Errorf("error nomor kartu pegawai tidak valid")
 		}
-		pegawaiReq.PegawaiPNS.NoKartuPegawai = pegawaiReq.PegawaiPNS.NoKartuPegawai
-	}
-	if pegawaiReq.PegawaiPNS.TmtPangkatGolongan != nil {
-		pegawaiReq.PegawaiPNS.TmtPangkatGolongan = pegawaiReq.PegawaiPNS.TmtPangkatGolongan
-	}
-	if pegawaiReq.PegawaiPNS.TmtJabatan != nil {
-		pegawaiReq.PegawaiPNS.TmtJabatan = pegawaiReq.PegawaiPNS.TmtJabatan
-	}
-	if pegawaiReq.PegawaiPNS.MasaKerjaTahun != "" {
-		pegawaiReq.PegawaiPNS.MasaKerjaTahun = pegawaiReq.PegawaiPNS.MasaKerjaTahun
 	}
 	if pegawaiReq.PegawaiPNS.MasaKerjaBulan != "" {
 		a, _ := strconv.Atoi(pegawaiReq.PegawaiPNS.MasaKerjaBulan)
 		if a > 12 {
 			return model.PegawaiUpdate{}, fmt.Errorf("error data bulan tidak valid")
 		}
-		pegawaiReq.PegawaiPNS.MasaKerjaBulan = pegawaiReq.PegawaiPNS.MasaKerjaBulan
-	}
-	if pegawaiReq.PegawaiPNS.AngkaKredit != "" {
-		pegawaiReq.PegawaiPNS.AngkaKredit = pegawaiReq.PegawaiPNS.AngkaKredit
-	}
-	if pegawaiReq.PegawaiPNS.Keterangan != "" {
-		pegawaiReq.PegawaiPNS.Keterangan = pegawaiReq.PegawaiPNS.Keterangan
 	}
 	pegawaiReq.UserUpdate = user
 	pegawaiReq.PegawaiFungsional.UserUpdate = user
