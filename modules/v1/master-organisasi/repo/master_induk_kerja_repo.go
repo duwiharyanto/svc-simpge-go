@@ -5,7 +5,7 @@ import (
 	"database/sql"
 	"fmt"
 	"svc-insani-go/app"
-	"svc-insani-go/modules/v1/master-induk-kerja/model"
+	"svc-insani-go/modules/v1/master-organisasi/model"
 )
 
 func GetIndukKerja(a app.App) ([]model.IndukKerja, error) {

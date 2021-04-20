@@ -8,8 +8,8 @@ import (
 
 	//jenisskPengangkatanRepo "svc-insani-go/mdoules/v1/master-kelompok_pegawai/repo"
 
-	indukKerjaRepo "svc-insani-go/modules/v1/master-induk-kerja/repo"
 	jabatanFungsionalRepo "svc-insani-go/modules/v1/master-jabatan-fungsional/repo"
+	indukKerjaRepo "svc-insani-go/modules/v1/master-organisasi/repo"
 	pangkatGolonganPegawaiRepo "svc-insani-go/modules/v1/master-pangkat-golongan-pegawai/repo"
 	unitKerjaRepo "svc-insani-go/modules/v1/master-unit-kerja/repo" //cek
 	pegawaiRepo "svc-insani-go/modules/v1/pegawai/repo"

@@ -7,13 +7,13 @@ import (
 	"net/http"
 	"svc-insani-go/app"
 	"svc-insani-go/app/database"
-	indukKerja "svc-insani-go/modules/v1/master-induk-kerja/usecase"
 	jabatanFungsional "svc-insani-go/modules/v1/master-jabatan-fungsional/usecase"
 	jenisNoRegis "svc-insani-go/modules/v1/master-jenis-nomor-registrasi/usecase"
 	jenisPTT "svc-insani-go/modules/v1/master-jenis-pegawai-tidak-tetap/usecase"
 	jenisPegawai "svc-insani-go/modules/v1/master-jenis-pegawai/usecase"
 	kelompokPegawai "svc-insani-go/modules/v1/master-kelompok-pegawai/usecase"
 	lokasiKerja "svc-insani-go/modules/v1/master-lokasi-kerja/usecase"
+	indukKerja "svc-insani-go/modules/v1/master-organisasi/usecase"
 	pangkatPegawai "svc-insani-go/modules/v1/master-pangkat-golongan-pegawai/usecase"
 	statusPegawaiAktif "svc-insani-go/modules/v1/master-status-pegawai-aktif/usecase"
 	statusPegawai "svc-insani-go/modules/v1/master-status-pegawai/usecase"
@@ -64,6 +64,7 @@ func InitRoute(a app.App, appCtx context.Context, e *echo.Echo, slackErrChan cha
 	insaniGroupingPath.GET("/unit-kerja", indukKerja.HandleGetUnitKerja(a))
 	insaniGroupingPath.GET("/bagian-kerja", indukKerja.HandleGetBagianKerja(a))
 	insaniGroupingPath.GET("/master-homebase", indukKerja.HandleHomebase(a))
+	insaniGroupingPath.GET("/master-instansi/search", indukKerja.HandleSearchInstansi(a))
 
 	insaniGroupingPath.GET("/pegawai/personal", personal.HandleSearchPersonal(a))
 	insaniGroupingPath.GET("/master-status-pengangkatan", sk.HandleGetAllStatusPengangkat(a))
