@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"net/http"
 	"svc-insani-go/app"
-	"svc-insani-go/modules/v1/master-induk-kerja/model"
-	"svc-insani-go/modules/v1/master-induk-kerja/repo"
+	"svc-insani-go/modules/v1/master-organisasi/model"
+	"svc-insani-go/modules/v1/master-organisasi/repo"
 
 	"github.com/labstack/echo"
 )
