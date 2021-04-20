@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"mime/multipart"
 	"strings"
+	indukKerja "svc-insani-go/modules/v1/master-induk-kerja/model"
 	jenisPegawai "svc-insani-go/modules/v1/master-jenis-pegawai/model"
 	kelompokPegawai "svc-insani-go/modules/v1/master-kelompok-pegawai/model"
 	statusPegawai "svc-insani-go/modules/v1/master-status-pegawai/model"
@@ -22,10 +23,21 @@ type Pegawai struct {
 	jenisPegawai.JenisPegawai       `json:"jenis_pegawai"`
 	kelompokPegawai.KelompokPegawai `json:"kelompok_pegawai"`
 	statusPegawai.StatusPegawai     `json:"status_pegawai"`
-	UnitKerja                       unitKerja.UnitKerja `json:"unit_kerja" gorm:"foreignKey:KdUnit2"`
-	UserInput                       string              `json:"-"`
-	UserUpdate                      string              `json:"-"`
-	UUID                            string              `json:"uuid"`
+	UnitKerja                       unitKerja.UnitKerja   `json:"unit_kerja" gorm:"foreignKey:KdUnit2"`
+	IndukKerja                      indukKerja.IndukKerja `json:"induk_kerja" gorm:"-"`
+	UserInput                       string                `json:"-"`
+	UserUpdate                      string                `json:"-"`
+	UUID                            string                `json:"uuid"`
+}
+
+type PegawaiRequestParam struct {
+	ID                              string `json:"-"`
+	NIK                             string `json:"nik"`
+	jenisPegawai.JenisPegawai       `json:"jenis_pegawai"`
+	kelompokPegawai.KelompokPegawai `json:"kelompok_pegawai"`
+	indukKerja.IndukKerja           `json:"induk_kerja"`
+	Limit                           int
+	Offset                          int
 }
 
 func (p *Pegawai) SetFlagDosen() {
@@ -59,6 +71,7 @@ type Unit2 struct {
 }
 
 type PegawaiRequest struct {
+	KdJenisPegawai    string `query:"kd_jenis_pegawai"`
 	KdUnitKerja       string `query:"kd_unit_kerja"`
 	KdKelompokPegawai string `query:"kd_kelompok_pegawai"`
 	Limit             int    `query:"limit"`

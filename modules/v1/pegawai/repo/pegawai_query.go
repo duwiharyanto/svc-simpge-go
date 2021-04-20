@@ -8,6 +8,10 @@ import (
 )
 
 func getListAllPegawaiQuery(req *model.PegawaiRequest) string {
+	var kdJenisPegawaiFilterQuery string
+	if req.KdJenisPegawai != "" {
+		kdJenisPegawaiFilterQuery = fmt.Sprintf("AND a.kd_jenis_pegawai = '%s'", req.KdJenisPegawai)
+	}
 	var kdKelompokFilterQuery string
 	if req.KdKelompokPegawai != "" {
 		kdKelompokFilterQuery = fmt.Sprintf("AND a.kd_kelompok_pegawai = '%s'", req.KdKelompokPegawai)
@@ -35,7 +39,8 @@ func getListAllPegawaiQuery(req *model.PegawaiRequest) string {
 	LEFT JOIN kelompok_pegawai c ON a.kd_kelompok_pegawai = c.kd_kelompok_pegawai
 	LEFT JOIN jenis_pegawai d ON a.id_jenis_pegawai = d.id
 	LEFT JOIN status_pegawai e ON a.id_status_pegawai = e.id
-	WHERE a.flag_aktif=1 %s %s %s ORDER BY a.nama %s`,
+	WHERE a.flag_aktif=1 %s %s %s %s ORDER BY a.nama %s`,
+		kdJenisPegawaiFilterQuery,
 		kdKelompokFilterQuery,
 		kdUnitKerjaFilterQuery,
 		namaFilterQuery,
