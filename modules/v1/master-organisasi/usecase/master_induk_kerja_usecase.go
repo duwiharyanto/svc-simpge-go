@@ -31,8 +31,14 @@ func HandleGetUnitKerja(a app.App) echo.HandlerFunc {
 		KdIndukKerja := c.QueryParam("kd_induk_kerja")
 
 		if KdIndukKerja == "" {
-			fmt.Printf("[ERROR] Data induk kerja kosong ,\n")
-			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
+			UnitKerja, err := repo.GetAllUnitKerja(a, c.Request().Context())
+			if err != nil {
+				fmt.Printf("[ERROR] Data induk kerja kosong ,\n")
+				return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
+			}
+			return c.JSON(http.StatusOK, model.UnitKerjaResponse{
+				Data: UnitKerja,
+			})
 		}
 		UnitKerja, err := repo.GetUnitKerja(a, KdIndukKerja)
 		if err != nil {
@@ -53,8 +59,14 @@ func HandleGetBagianKerja(a app.App) echo.HandlerFunc {
 		KdUnitKerja := c.QueryParam("kd_unit_kerja")
 
 		if KdUnitKerja == "" {
-			fmt.Printf("[ERROR] Data unit kerja kosong ,\n")
-			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
+			BagianKerja, err := repo.GetAllBagianKerja(a, c.Request().Context())
+			if err != nil {
+				fmt.Printf("[ERROR] Data unit kerja kosong ,\n")
+				return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
+			}
+			return c.JSON(http.StatusOK, model.BagianKerjaResponse{
+				Data: BagianKerja,
+			})
 		}
 
 		BagianKerja, err := repo.GetBagianKerja(a, KdUnitKerja)

@@ -22,6 +22,7 @@ func SearchPersonal(a app.App, ctx context.Context, nama string, nik_pegawai str
 	if nama == "" && nik_pegawai != "" {
 		res := tx.Where("nik_pegawai LIKE ?", "%"+nik_pegawai+"%").
 			First(&personal)
+
 		if res.Error != nil {
 			return nil, res.Error
 		}
