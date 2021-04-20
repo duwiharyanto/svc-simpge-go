@@ -8,5 +8,5 @@ type Instansi struct {
 }
 
 type InstansiResponse struct {
-	Data Instansi `json:"data"`
+	Data []Instansi `json:"data"`
 }
