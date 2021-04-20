@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"fmt"
+	"strconv"
 	"svc-insani-go/app"
 	"svc-insani-go/modules/v1/pegawai/model"
 	"svc-insani-go/modules/v1/pegawai/repo"
@@ -21,18 +22,55 @@ import (
 	"github.com/labstack/echo"
 )
 
-// func ValidateGetPegawaiByUUID(a app.App, c echo.Context) (*model.Pegawai, error) {
-// 	uuidPegawai := new(model.Pegawai)
-// 	if uuidPegawai.UUIDPegawai != "" {
-// 		Pegawai, err := repo.GetPegawaiByUUID(a, uuidPegawai.UUIDPegawai)
-// 		if err != nil {
-// 			return fmt.Errorf("%w", fmt.Errorf("[ERROR] get jenis presensi by uuid, %w", err))
-// 		}
-// 		if Pegawai == nil {
-// 			return fmt.Errorf("uuid jenis presensi tidak ditemukan")
-// 		}
-// 		uuidPegawai.UUIDPegawai = Pegawai.ID
+// func ValidateGetPegawai(a app.App, c echo.Context) (*model.PegawaiRequestParam, error) {
+// 	nik := c.QueryParam("nik")
+// 	requestParam := &model.PegawaiRequestParam{}
+
+// 	if nik != "" {
+// 		requestParam.NIK = nik
 // 	}
+
+// 	limitParam := c.QueryParam("limit")
+// 	limit, err := strconv.Atoi(limitParam)
+// 	if (limitParam != "" && err != nil) || limit < 0 {
+// 		return nil, fmt.Errorf("limit harus berupa angka minimal 0")
+// 	}
+
+// 	offsetParam := c.QueryParam("offset")
+// 	offset, err := strconv.Atoi(offsetParam)
+// 	if (offsetParam != "" && err != nil) || offset < 0 {
+// 		return nil, fmt.Errorf("offset harus berupa angka minimal 0")
+// 	}
+
+// 	uuidJenisPegawai := c.QueryParam("uuid_jenis_pegawai")
+// 	if uuidJenisPegawai != "" {
+// 		jenisPegawai, err := jenisPegawaiRepo.GetJenisPegawaiByUUID(a, uuidJenisPegawai)
+// 		if err != nil {
+// 			return nil, fmt.Errorf("error from repo jenis pegawai by uuid, %w", err)
+// 		}
+// 		requestParam.JenisPegawai.KDJenisPegawai = jenisPegawai.KDJenisPegawai
+// 	}
+
+// 	uuidKelompokPegawai := c.QueryParam("uuid_kelompok_pegawai")
+// 	if uuidKelompokPegawai != "" {
+// 		kelompokPegawai, err := kelompokPegawaiRepo.GetKelompokPegawaiByUUID(a, c.Request().Context(), uuidKelompokPegawai)
+// 		if err != nil {
+// 			return nil, fmt.Errorf("error from repo kelompok pegawai by uuid, %w", err)
+// 		}
+// 		requestParam.KelompokPegawai.KdKelompokPegawai = kelompokPegawai.KdKelompokPegawai
+// 	}
+
+// 	uuidUnitPegawai := c.QueryParam("uuid_unit_pegawai")
+// 	if uuidUnitPegawai != "" {
+// 		unitPegawai, err := indukKerjaRepo.GetUnitKerjaByUUID(a, c.Request().Context(), uuidUnitPegawai)
+// 		if err != nil {
+// 			return nil, fmt.Errorf("error from repo unit kerja pegawai by uuid, %w", err)
+// 		}
+// 		requestParam.IndukKerja.KdIndukKerja = unitPegawai.KdUnit2
+// 	}
+
+// 	return requestParam, nil
+
 // }
 
 func ValidateUpdatePegawaiByUUID(a app.App, c echo.Context) (model.PegawaiUpdate, error) {
@@ -234,30 +272,51 @@ func ValidateUpdatePegawaiByUUID(a app.App, c echo.Context) (model.PegawaiUpdate
 		pegawaiOld.PegawaiFungsional.MasaKerjaBawaanTahun = pegawaiReq.PegawaiFungsional.MasaKerjaBawaanTahun
 	}
 	if pegawaiReq.PegawaiFungsional.MasaKerjaBawaanBulan != "" {
+		a, _ := strconv.Atoi(pegawaiReq.PegawaiFungsional.MasaKerjaBawaanBulan)
+		if a > 12 {
+			return model.PegawaiUpdate{}, fmt.Errorf("[ERROR] data bulan tidak valid")
+		}
 		pegawaiOld.PegawaiFungsional.MasaKerjaBawaanBulan = pegawaiReq.PegawaiFungsional.MasaKerjaBawaanBulan
 	}
 	if pegawaiReq.PegawaiFungsional.MasaKerjaGajiTahun != "" {
 		pegawaiOld.PegawaiFungsional.MasaKerjaGajiTahun = pegawaiReq.PegawaiFungsional.MasaKerjaGajiTahun
 	}
 	if pegawaiReq.PegawaiFungsional.MasaKerjaGajiBulan != "" {
+		a, _ := strconv.Atoi(pegawaiReq.PegawaiFungsional.MasaKerjaGajiBulan)
+		if a > 12 {
+			return model.PegawaiUpdate{}, fmt.Errorf("[ERROR] data bulan tidak valid")
+		}
 		pegawaiOld.PegawaiFungsional.MasaKerjaGajiBulan = pegawaiReq.PegawaiFungsional.MasaKerjaGajiBulan
 	}
 	if pegawaiReq.PegawaiFungsional.MasaKerjaTotalTahun != "" {
 		pegawaiOld.PegawaiFungsional.MasaKerjaTotalTahun = pegawaiReq.PegawaiFungsional.MasaKerjaTotalTahun
 	}
 	if pegawaiReq.PegawaiFungsional.MasaKerjaTotalBulan != "" {
+		a, _ := strconv.Atoi(pegawaiReq.PegawaiFungsional.MasaKerjaTotalBulan)
+		if a > 12 {
+			return model.PegawaiUpdate{}, fmt.Errorf("error data bulan tidak valid")
+		}
 		pegawaiOld.PegawaiFungsional.MasaKerjaTotalBulan = pegawaiReq.PegawaiFungsional.MasaKerjaTotalBulan
 	}
 	if pegawaiReq.PegawaiFungsional.AngkaKredit != "" {
 		pegawaiOld.PegawaiFungsional.AngkaKredit = pegawaiReq.PegawaiFungsional.AngkaKredit
 	}
 	if pegawaiReq.PegawaiFungsional.NomorSertifikasi != "" {
+		if len(pegawaiReq.PegawaiFungsional.NomorSertifikasi) > 20 {
+			return model.PegawaiUpdate{}, fmt.Errorf("error nomor sertifikasi tidak valid")
+		}
 		pegawaiOld.PegawaiFungsional.NomorSertifikasi = pegawaiReq.PegawaiFungsional.NomorSertifikasi
 	}
 	if pegawaiReq.PegawaiFungsional.NomorRegistrasi != "" {
+		if len(pegawaiReq.PegawaiFungsional.NomorRegistrasi) > 10 {
+			return model.PegawaiUpdate{}, fmt.Errorf("error nomor registrasi tidak valid")
+		}
 		pegawaiOld.PegawaiFungsional.NomorRegistrasi = pegawaiReq.PegawaiFungsional.NomorRegistrasi
 	}
 	if pegawaiReq.PegawaiFungsional.NomorSkPertama != "" {
+		if len(pegawaiReq.PegawaiFungsional.NomorSkPertama) > 10 {
+			return model.PegawaiUpdate{}, fmt.Errorf("error nomor registrasi tidak valid")
+		}
 		pegawaiOld.PegawaiFungsional.NomorSkPertama = pegawaiReq.PegawaiFungsional.NomorSkPertama
 	}
 	if pegawaiReq.PegawaiFungsional.TmtSkPertama != nil {
@@ -267,9 +326,15 @@ func ValidateUpdatePegawaiByUUID(a app.App, c echo.Context) (model.PegawaiUpdate
 		pegawaiOld.PegawaiPNS.InstansiAsal = pegawaiReq.PegawaiPNS.InstansiAsal
 	}
 	if pegawaiReq.PegawaiPNS.NipPns != "" {
+		if len(pegawaiReq.PegawaiPNS.NipPns) < 18 {
+			return model.PegawaiUpdate{}, fmt.Errorf("error nip pns tidak valid")
+		}
 		pegawaiOld.PegawaiPNS.NipPns = pegawaiReq.PegawaiPNS.NipPns
 	}
 	if pegawaiReq.PegawaiPNS.NoKartuPegawai != "" {
+		if len(pegawaiReq.PegawaiPNS.NoKartuPegawai) > 18 {
+			return model.PegawaiUpdate{}, fmt.Errorf("error nomor kartu pegawai tidak valid")
+		}
 		pegawaiOld.PegawaiPNS.NoKartuPegawai = pegawaiReq.PegawaiPNS.NoKartuPegawai
 	}
 	if pegawaiReq.PegawaiPNS.TmtPangkatGolongan != nil {
@@ -282,6 +347,10 @@ func ValidateUpdatePegawaiByUUID(a app.App, c echo.Context) (model.PegawaiUpdate
 		pegawaiOld.PegawaiPNS.MasaKerjaTahun = pegawaiReq.PegawaiPNS.MasaKerjaTahun
 	}
 	if pegawaiReq.PegawaiPNS.MasaKerjaBulan != "" {
+		a, _ := strconv.Atoi(pegawaiReq.PegawaiPNS.MasaKerjaBulan)
+		if a > 12 {
+			return model.PegawaiUpdate{}, fmt.Errorf("error data bulan tidak valid")
+		}
 		pegawaiOld.PegawaiPNS.MasaKerjaBulan = pegawaiReq.PegawaiPNS.MasaKerjaBulan
 	}
 	if pegawaiReq.PegawaiPNS.AngkaKredit != "" {

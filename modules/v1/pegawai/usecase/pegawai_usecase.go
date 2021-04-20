@@ -49,6 +49,18 @@ func HandleGetPegawai(a app.App) echo.HandlerFunc {
 	return echo.HandlerFunc(h)
 }
 
+// func HandleGetPegawaiSearch(a app.App) echo.HandlerFunc {
+// 	h := func(c echo.Context) error {
+// 		requestParam, err := ValidateGetPegawai(a, c)
+// 		if err != nil {
+// 			return c.JSON(http.StatusBadRequest, map[string]string{"message": err.Error()})
+// 		}
+
+// 		return c.JSON(http.StatusOK, nil)
+// 	}
+// 	return echo.HandlerFunc(h)
+// }
+
 func HandleGetSimpegPegawaiByUUID(a app.App) echo.HandlerFunc {
 	h := func(c echo.Context) error {
 		uuidPegawai := c.Param("uuidPegawai")
@@ -65,6 +77,23 @@ func HandleGetSimpegPegawaiByUUID(a app.App) echo.HandlerFunc {
 	}
 	return echo.HandlerFunc(h)
 }
+
+// func HandleSearchPegawaiSimpeg(a app.App) echo.HandlerFunc {
+// 	h := func(c echo.Context) error {
+// 		uuidPegawai := c.Param("uuidPegawai")
+// 		if uuidPegawai == "" {
+// 			return c.JSON(http.StatusBadRequest, map[string]string{"message": "parameter uuid pegawai wajib diisi"})
+// 		}
+
+// 		pegawaiDetail, err := PrepareGetSimpegPegawaiByUUID(a, uuidPegawai)
+// 		if err != nil {
+// 			fmt.Printf("[ERROR] repo get kepegawaian, %s\n", err.Error())
+// 			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
+// 		}
+// 		return c.JSON(http.StatusOK, pegawaiDetail)
+// 	}
+// 	return echo.HandlerFunc(h)
+// }
 
 func PrepareGetSimpegPegawaiByUUID(a app.App, uuidPegawai string) (model.PegawaiDetail, error) {
 	pegawaiDetail := model.PegawaiDetail{}
@@ -176,8 +205,6 @@ func HandleUpdatePegawai(a app.App, ctx context.Context, errChan chan error) ech
 		uuidPendidikanTerakhir := c.FormValue("uuid_tingkat_pdd_terakhir")
 		idPersonalPegawai := pegawaiUpdate.IdPersonalDataPribadi
 
-		fmt.Println("Ini Id Pegawai : ", idPersonalPegawai)
-
 		if uuidPendidikanDiakui != "" && uuidPendidikanTerakhir != "" {
 			err = repo.UpdatePendidikanPegawai(a, c.Request().Context(), uuidPendidikanDiakui, uuidPendidikanTerakhir, idPersonalPegawai)
 			if err != nil {
@@ -213,7 +240,7 @@ func HandleUpdatePegawai(a app.App, ctx context.Context, errChan chan error) ech
 				return
 			}
 
-			fmt.Println("DEBUG : Go routin before sinkron simpeg")
+			// fmt.Println("DEBUG : Go routin before sinkron simpeg")
 			// fmt.Printf("DEBUG Pegawai Detail %+v \n", &pegawaiDetail)
 			err = prepareSinkronSimpeg(ctx, &pegawaiDetail)
 			if err != nil {
@@ -245,9 +272,6 @@ func prepareSinkronSimpeg(ctx context.Context, pegawaiInsani *model.PegawaiDetai
 	pegawaiOra.PegawaiStatus.PangkatYayasan = &pegawaiOraModel.Pangkat{}
 	pegawaiOra.PegawaiStatus.JabatanFungsionalKopertis = &pegawaiOraModel.JabatanFungsional{}
 	pegawaiOra.PegawaiStatus.JabatanFungsional = &pegawaiOraModel.JabatanFungsional{}
-
-	// fmt.Printf("DEBUG pegawai yayasan %+v \n: ", pegawaiInsani.PegawaiYayasan)
-	// fmt.Printf("DEBUG pegawai yayasan %+v \n: ", pegawaiInsani.PegawaiYayasan.KDJenisPegawai)
 
 	// Sinkron NIP Pegawai
 	pegawaiOra.NIP = pegawaiInsani.PegawaiPribadi.NIK
@@ -445,12 +469,11 @@ func prepareSinkronSimpeg(ctx context.Context, pegawaiInsani *model.PegawaiDetai
 		}
 	}
 
-	fmt.Println("DEBUG : Update Kepegawaian Yayasan")
+	// fmt.Println("DEBUG : Update Kepegawaian Yayasan")
 
 	err := pegawaiOraHttp.UpdateKepegawaianYayasan(ctx, &http.Client{}, pegawaiOra)
 	if err != nil {
 		return fmt.Errorf("[ERROR] repo get kepegawaian yayasan update, %s\n", err.Error())
-		// return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
 	}
 
 	return nil
