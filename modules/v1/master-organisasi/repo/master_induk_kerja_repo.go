@@ -134,6 +134,39 @@ func GetBagianKerjaByUUID(a app.App, ctx context.Context, uuid string) (*model.U
 	return &bagianKerja, nil
 }
 
+func GetAllIndukKerja(a app.App, ctx context.Context) ([]model.Unit1, error) {
+	var indukKerja []model.Unit1
+
+	tx := a.GormDB.WithContext(ctx)
+	res := tx.Find(&indukKerja)
+	if res.Error != nil {
+		return nil, fmt.Errorf("error querying all induk kerja %s", res.Error)
+	}
+	return indukKerja, nil
+}
+
+func GetAllUnitKerja(a app.App, ctx context.Context) ([]model.Unit2, error) {
+	var unitKerja []model.Unit2
+
+	tx := a.GormDB.WithContext(ctx)
+	res := tx.Find(&unitKerja)
+	if res.Error != nil {
+		return nil, fmt.Errorf("error querying all unit kerja%s", res.Error)
+	}
+	return unitKerja, nil
+}
+
+func GetAllBagianKerja(a app.App, ctx context.Context) ([]model.Unit3, error) {
+	var bagianKerja []model.Unit3
+
+	tx := a.GormDB.WithContext(ctx)
+	res := tx.Find(&bagianKerja)
+	if res.Error != nil {
+		return nil, fmt.Errorf("error querying all bagian kerja%s", res.Error)
+	}
+	return bagianKerja, nil
+}
+
 func GetHomebase(a app.App, ctx context.Context) ([]model.Homebase, error) {
 	var homebases []model.Homebase
 

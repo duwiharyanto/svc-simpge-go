@@ -349,7 +349,6 @@ type PegawaiUpdate struct {
 	Uuid                    string                  `form:"uuid" gorm:"->"`
 	PegawaiFungsional       PegawaiFungsionalUpdate `gorm:"foreignkey:IdPegawai;references:Id"`
 	PegawaiPNS              PegawaiPNSUpdate        `gorm:"foreignkey:IdPegawai;references:Id"`
-	// PegawaiPendidikan       []PegawaiPendidikan     `gorm:"foreignkey:IdPersonal;references:IdPersonalDataPribadi"`
 }
 
 func (*PegawaiUpdate) TableName() string {
