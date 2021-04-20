@@ -9,16 +9,16 @@ import (
 
 func getListAllPegawaiQuery(req *model.PegawaiRequest) string {
 	var kdJenisPegawaiFilterQuery string
-	if req.KdJenisPegawai != "" {
-		kdJenisPegawaiFilterQuery = fmt.Sprintf("AND a.kd_jenis_pegawai = '%s'", req.KdJenisPegawai)
+	if req.UuidJenisPegawai != "" {
+		kdJenisPegawaiFilterQuery = fmt.Sprintf("AND d.uuid = '%s'", req.UuidJenisPegawai)
 	}
 	var kdKelompokFilterQuery string
-	if req.KdKelompokPegawai != "" {
-		kdKelompokFilterQuery = fmt.Sprintf("AND a.kd_kelompok_pegawai = '%s'", req.KdKelompokPegawai)
+	if req.UuidKelompokPegawai != "" {
+		kdKelompokFilterQuery = fmt.Sprintf("AND c.uuid = '%s'", req.UuidKelompokPegawai)
 	}
 	var kdUnitKerjaFilterQuery string
-	if req.KdUnitKerja != "" {
-		kdUnitKerjaFilterQuery = fmt.Sprintf("AND a.kd_unit2 = '%s'", req.KdUnitKerja)
+	if req.UuidUnitKerja != "" {
+		kdUnitKerjaFilterQuery = fmt.Sprintf("AND b.uuid = '%s'", req.UuidUnitKerja)
 	}
 	var namaFilterQuery string
 	if req.Cari != "" {
@@ -35,8 +35,8 @@ func getListAllPegawaiQuery(req *model.PegawaiRequest) string {
 	COALESCE(e.kd_status_pegawai,''), COALESCE(e.status_pegawai,''), COALESCE(e.uuid,''),
 	a.uuid
 	FROM pegawai a
-	LEFT JOIN unit2 b ON a.kd_unit2 = b.kd_unit2
-	LEFT JOIN kelompok_pegawai c ON a.kd_kelompok_pegawai = c.kd_kelompok_pegawai
+	LEFT JOIN unit2 b ON a.id_unit_kerja2 = b.id
+	LEFT JOIN kelompok_pegawai c ON a.id_kelompok_pegawai = c.id
 	LEFT JOIN jenis_pegawai d ON a.id_jenis_pegawai = d.id
 	LEFT JOIN status_pegawai e ON a.id_status_pegawai = e.id
 	WHERE a.flag_aktif=1 %s %s %s %s ORDER BY a.nama %s`,
@@ -48,14 +48,59 @@ func getListAllPegawaiQuery(req *model.PegawaiRequest) string {
 	)
 }
 
+// func getListAllPegawaiQuery(req *model.PegawaiRequest) string {
+// 	var kdJenisPegawaiFilterQuery string
+// 	if req.KdJenisPegawai != "" {
+// 		kdJenisPegawaiFilterQuery = fmt.Sprintf("AND a.kd_jenis_pegawai = '%s'", req.KdJenisPegawai)
+// 	}
+// 	var kdKelompokFilterQuery string
+// 	if req.KdKelompokPegawai != "" {
+// 		kdKelompokFilterQuery = fmt.Sprintf("AND a.kd_kelompok_pegawai = '%s'", req.KdKelompokPegawai)
+// 	}
+// 	var kdUnitKerjaFilterQuery string
+// 	if req.KdUnitKerja != "" {
+// 		kdUnitKerjaFilterQuery = fmt.Sprintf("AND a.kd_unit2 = '%s'", req.KdUnitKerja)
+// 	}
+// 	var namaFilterQuery string
+// 	if req.Cari != "" {
+// 		namaFilterQuery = fmt.Sprintf("AND a.nama LIKE '%%%s%%'", req.Cari)
+// 	}
+// 	var paginationFilterQuery string
+// 	if req.Limit != 0 {
+// 		paginationFilterQuery = fmt.Sprintf("LIMIT %d,%d", req.Offset, req.Limit)
+// 	}
+// 	return fmt.Sprintf(`SELECT a.nik, a.nama, COALESCE(a.gelar_depan,''), COALESCE(a.gelar_belakang,''),
+// 	COALESCE(a.kd_kelompok_pegawai,''), COALESCE(c.kelompok_pegawai,''), COALESCE(c.uuid,''),
+// 	COALESCE(a.kd_unit2,''), COALESCE(b.unit2,''), COALESCE(b.uuid,''),
+// 	COALESCE(d.kd_jenis_pegawai,''), COALESCE(d.nama_jenis_pegawai,''), COALESCE(d.uuid,''),
+// 	COALESCE(e.kd_status_pegawai,''), COALESCE(e.status_pegawai,''), COALESCE(e.uuid,''),
+// 	a.uuid
+// 	FROM pegawai a
+// 	LEFT JOIN unit2 b ON a.kd_unit2 = b.kd_unit2
+// 	LEFT JOIN kelompok_pegawai c ON a.kd_kelompok_pegawai = c.kd_kelompok_pegawai
+// 	LEFT JOIN jenis_pegawai d ON a.id_jenis_pegawai = d.id
+// 	LEFT JOIN status_pegawai e ON a.id_status_pegawai = e.id
+// 	WHERE a.flag_aktif=1 %s %s %s %s ORDER BY a.nama %s`,
+// 		kdJenisPegawaiFilterQuery,
+// 		kdKelompokFilterQuery,
+// 		kdUnitKerjaFilterQuery,
+// 		namaFilterQuery,
+// 		paginationFilterQuery,
+// 	)
+// }
+
 func countPegawaiQuery(req *model.PegawaiRequest) string {
-	var kdKelompokFilterQuery string
-	if req.KdKelompokPegawai != "" {
-		kdKelompokFilterQuery = fmt.Sprintf("AND a.kd_kelompok_pegawai = '%s'", req.KdKelompokPegawai)
+	var uuidJenisPegawaiFilterQuery string
+	if req.UuidJenisPegawai != "" {
+		uuidJenisPegawaiFilterQuery = fmt.Sprintf("AND d.uuid = '%s'", req.UuidJenisPegawai)
 	}
-	var kdUnitKerjaFilterQuery string
-	if req.KdUnitKerja != "" {
-		kdUnitKerjaFilterQuery = fmt.Sprintf("AND a.kd_unit2 = '%s'", req.KdUnitKerja)
+	var uuidKelompokFilterQuery string
+	if req.UuidKelompokPegawai != "" {
+		uuidKelompokFilterQuery = fmt.Sprintf("AND c.uuid = '%s'", req.UuidKelompokPegawai)
+	}
+	var uuidUnitKerjaFilterQuery string
+	if req.UuidUnitKerja != "" {
+		uuidUnitKerjaFilterQuery = fmt.Sprintf("AND b.uuid = '%s'", req.UuidUnitKerja)
 	}
 	var namaFilterQuery string
 	if req.Cari != "" {
@@ -63,12 +108,38 @@ func countPegawaiQuery(req *model.PegawaiRequest) string {
 	}
 	return fmt.Sprintf(`SELECT COUNT(*)
 	FROM pegawai a
-	WHERE a.flag_aktif = 1 %s %s %s`,
-		kdKelompokFilterQuery,
-		kdUnitKerjaFilterQuery,
+	LEFT JOIN unit2 b ON a.id_unit_kerja2 = b.id
+	LEFT JOIN kelompok_pegawai c ON a.id_kelompok_pegawai = c.id
+	LEFT JOIN jenis_pegawai d ON a.id_jenis_pegawai = d.id
+	WHERE a.flag_aktif = 1 %s %s %s %s`,
+		uuidJenisPegawaiFilterQuery,
+		uuidKelompokFilterQuery,
+		uuidUnitKerjaFilterQuery,
 		namaFilterQuery,
 	)
 }
+
+// func countPegawaiQuery(req *model.PegawaiRequest) string {
+// 	var kdKelompokFilterQuery string
+// 	if req.KdKelompokPegawai != "" {
+// 		kdKelompokFilterQuery = fmt.Sprintf("AND a.kd_kelompok_pegawai = '%s'", req.KdKelompokPegawai)
+// 	}
+// 	var kdUnitKerjaFilterQuery string
+// 	if req.KdUnitKerja != "" {
+// 		kdUnitKerjaFilterQuery = fmt.Sprintf("AND a.kd_unit2 = '%s'", req.KdUnitKerja)
+// 	}
+// 	var namaFilterQuery string
+// 	if req.Cari != "" {
+// 		namaFilterQuery = fmt.Sprintf("AND a.nama LIKE '%%%s%%'", req.Cari)
+// 	}
+// 	return fmt.Sprintf(`SELECT COUNT(*)
+// 	FROM pegawai a
+// 	WHERE a.flag_aktif = 1 %s %s %s`,
+// 		kdKelompokFilterQuery,
+// 		kdUnitKerjaFilterQuery,
+// 		namaFilterQuery,
+// 	)
+// }
 
 func getPegawaiByUUID(uuid string) string {
 	q := fmt.Sprintf(`SELECT
