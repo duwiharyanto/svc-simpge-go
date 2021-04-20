@@ -49,18 +49,6 @@ func HandleGetPegawai(a app.App) echo.HandlerFunc {
 	return echo.HandlerFunc(h)
 }
 
-// func HandleGetPegawaiSearch(a app.App) echo.HandlerFunc {
-// 	h := func(c echo.Context) error {
-// 		requestParam, err := ValidateGetPegawai(a, c)
-// 		if err != nil {
-// 			return c.JSON(http.StatusBadRequest, map[string]string{"message": err.Error()})
-// 		}
-
-// 		return c.JSON(http.StatusOK, nil)
-// 	}
-// 	return echo.HandlerFunc(h)
-// }
-
 func HandleGetSimpegPegawaiByUUID(a app.App) echo.HandlerFunc {
 	h := func(c echo.Context) error {
 		uuidPegawai := c.Param("uuidPegawai")
@@ -77,23 +65,6 @@ func HandleGetSimpegPegawaiByUUID(a app.App) echo.HandlerFunc {
 	}
 	return echo.HandlerFunc(h)
 }
-
-// func HandleSearchPegawaiSimpeg(a app.App) echo.HandlerFunc {
-// 	h := func(c echo.Context) error {
-// 		uuidPegawai := c.Param("uuidPegawai")
-// 		if uuidPegawai == "" {
-// 			return c.JSON(http.StatusBadRequest, map[string]string{"message": "parameter uuid pegawai wajib diisi"})
-// 		}
-
-// 		pegawaiDetail, err := PrepareGetSimpegPegawaiByUUID(a, uuidPegawai)
-// 		if err != nil {
-// 			fmt.Printf("[ERROR] repo get kepegawaian, %s\n", err.Error())
-// 			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
-// 		}
-// 		return c.JSON(http.StatusOK, pegawaiDetail)
-// 	}
-// 	return echo.HandlerFunc(h)
-// }
 
 func PrepareGetSimpegPegawaiByUUID(a app.App, uuidPegawai string) (model.PegawaiDetail, error) {
 	pegawaiDetail := model.PegawaiDetail{}
