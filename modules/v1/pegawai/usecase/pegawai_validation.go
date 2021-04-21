@@ -314,8 +314,8 @@ func ValidateUpdatePegawaiByUUID(a app.App, c echo.Context) (model.PegawaiUpdate
 		pegawaiOld.PegawaiFungsional.NomorRegistrasi = pegawaiReq.PegawaiFungsional.NomorRegistrasi
 	}
 	if pegawaiReq.PegawaiFungsional.NomorSkPertama != "" {
-		if len(pegawaiReq.PegawaiFungsional.NomorSkPertama) > 10 {
-			return model.PegawaiUpdate{}, fmt.Errorf("error nomor registrasi tidak valid")
+		if len(pegawaiReq.PegawaiFungsional.NomorSkPertama) > 30 {
+			return model.PegawaiUpdate{}, fmt.Errorf("error nomor sk pertama tidak valid")
 		}
 		pegawaiOld.PegawaiFungsional.NomorSkPertama = pegawaiReq.PegawaiFungsional.NomorSkPertama
 	}
@@ -575,7 +575,7 @@ func ValidateCreatePegawai(a app.App, c echo.Context) (model.PegawaiUpdate, erro
 	}
 	if pegawaiReq.PegawaiFungsional.NomorSkPertama != "" {
 		if len(pegawaiReq.PegawaiFungsional.NomorSkPertama) > 10 {
-			return model.PegawaiUpdate{}, fmt.Errorf("error nomor registrasi tidak valid")
+			return model.PegawaiUpdate{}, fmt.Errorf("error nomor sk pertama tidak valid")
 		}
 	}
 	if pegawaiReq.PegawaiPNS.NipPns != "" {
