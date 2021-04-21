@@ -176,12 +176,12 @@ func HandleUpdatePegawai(a app.App, ctx context.Context, errChan chan error) ech
 		uuidPendidikanTerakhir := c.FormValue("uuid_tingkat_pdd_terakhir")
 		idPersonalPegawai := pegawaiUpdate.IdPersonalDataPribadi
 
-		if uuidPendidikanDiakui != "" && uuidPendidikanTerakhir != "" {
-			err = repo.UpdatePendidikanPegawai(a, c.Request().Context(), uuidPendidikanDiakui, uuidPendidikanTerakhir, idPersonalPegawai)
-			if err != nil {
-				fmt.Printf("[ERROR], %s\n", err.Error())
-				return c.JSON(http.StatusBadRequest, map[string]string{"message": err.Error()})
-			}
+		fmt.Println("[ERROR] Uuid Pendidikan Diakui : ", uuidPendidikanDiakui)
+		fmt.Println("[ERROR] Uuid Pendidikan Terakhir : ", uuidPendidikanTerakhir)
+		err = repo.UpdatePendidikanPegawai(a, c.Request().Context(), uuidPendidikanDiakui, uuidPendidikanTerakhir, idPersonalPegawai)
+		if err != nil {
+			fmt.Printf("[ERROR], %s\n", err.Error())
+			return c.JSON(http.StatusBadRequest, map[string]string{"message": err.Error()})
 		}
 
 		// Menampilkan response
