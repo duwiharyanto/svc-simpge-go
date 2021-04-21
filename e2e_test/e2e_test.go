@@ -11,7 +11,6 @@ import (
 	"svc-insani-go/app"
 	"svc-insani-go/app/database"
 	"svc-insani-go/app/minio"
-	"svc-insani-go/router"
 	"testing"
 
 	"github.com/labstack/echo"
@@ -60,7 +59,7 @@ func TestServer(t *testing.T) {
 
 	// Persiapan handler service
 	e := echo.New()
-	router.InitRoute(a, e)
+	// router.InitRoute(a, e)
 
 	// Mendaftarkan handler pada service yang akan diuji
 	srv := httptest.NewServer(e)
