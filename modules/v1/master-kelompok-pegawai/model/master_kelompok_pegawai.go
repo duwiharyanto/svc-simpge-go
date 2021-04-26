@@ -6,6 +6,7 @@ type KelompokPegawai struct {
 	KdJenisPegawai    string `json:"kd_jenis_pegawai"`
 	KelompokPegawai   string `json:"kelompok_pegawai"`
 	UUID              string `json:"uuid"`
+	ID                string `json:"-" gorm:"primaryKey"`
 }
 
 type KelompokPegawaiResponse struct {

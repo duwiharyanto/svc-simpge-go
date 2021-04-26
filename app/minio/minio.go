@@ -2,12 +2,14 @@ package minio
 
 import (
 	"crypto/tls"
+	"fmt"
 	"io"
 	"net"
 	"net/http"
 	"net/url"
 	"os"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/minio/minio-go"
@@ -83,10 +85,16 @@ func (mc MinioClient) GetDownloadURL(bucketName, objectName, downloadName string
 
 	presignedURL, err := mc.PresignedGetObject(bucketName, objectName, expirationTime(), reqParams)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("error get presigned get object: %w", err)
 	}
 
+	// b, err := presignedURL.MarshalBinary()
+	// if err != nil {
+	// 	return "", fmt.Errorf("error marshaling url: %w", err)
+	// }
+
 	return presignedURL.String(), nil
+	// return string(b), nil
 }
 
 func (mc MinioClient) Get(bucketName, objectName string) (*minio.Object, error) {
@@ -104,4 +112,90 @@ func expirationTime() time.Duration {
 		expSecond = defaultSecond
 	}
 	return time.Duration(expSecond) * time.Second
+}
+
+type FormFile struct {
+	mc      *MinioClient
+	fileMap map[string]formFile
+}
+
+func NewFormFile(minioClient *MinioClient) FormFile {
+	return FormFile{
+		mc:      minioClient,
+		fileMap: make(map[string]formFile),
+	}
+}
+
+func (ff FormFile) Append(bucket, name, path, contentType string, size int64, file io.Reader) {
+	ff.fileMap[name] = formFile{
+		bucket:      bucket,
+		contentType: contentType,
+		path:        path,
+		size:        size,
+		file:        file,
+	}
+}
+
+func (ff FormFile) GetUrl(name string) (string, string) {
+	f, exist := ff.fileMap[name]
+	if !exist {
+		return "", ""
+	}
+	return f.url, f.downloadName
+}
+
+func (ff FormFile) GenerateUrl() error {
+	for key := range ff.fileMap {
+		var err error
+		f := ff.fileMap[key]
+		var extension string
+		splitted := strings.Split(f.path, ".")
+		if len(splitted) == 2 {
+			extension = splitted[1]
+		}
+		name := strings.ReplaceAll(key, "/", "_")
+		f.downloadName = fmt.Sprintf("%s.%s", name, extension)
+		f.url, err = ff.mc.GetDownloadURL(f.bucket, f.path, f.downloadName)
+		if err != nil {
+			return fmt.Errorf("error get download url: %w", err)
+		}
+		ff.fileMap[key] = f
+	}
+
+	return nil
+}
+
+func (ff FormFile) Upload() error {
+	for _, f := range ff.fileMap {
+		err := ff.mc.Upload(f.bucket, f.path, f.file, f.size, f.contentType)
+		if err != nil {
+			return fmt.Errorf("error form file upload: %w", err)
+		}
+	}
+	return nil
+}
+
+func (ff FormFile) GenerateObjectName(name string, dirs ...string) string {
+	f := ff.fileMap[name]
+	f.path = strings.Join(dirs, "/")
+	splitted := strings.Split(f.contentType, "/")
+	var extension string
+	if len(splitted) == 2 {
+		extension = splitted[1]
+	} else {
+		extension = splitted[0]
+	}
+	f.path += fmt.Sprintf("/%d.%s", time.Now().Unix(), extension)
+	ff.fileMap[name] = f
+	return f.path
+}
+
+type formFile struct {
+	bucket       string
+	contentType  string
+	downloadName string
+	path         string
+	url          string
+	size         int64
+	file         io.Reader
 }

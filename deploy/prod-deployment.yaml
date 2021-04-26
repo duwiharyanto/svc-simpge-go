@@ -40,9 +40,9 @@ spec:
             - name: DBMS
               value: "mysql"
             - name: DB_USER
-              value: "hcmpersonal_app"
+              value: "hcminsani_app"
             - name: DB_PASSWORD
-              value: "ayvSYKtr4TeJp8tcnyQw"
+              value: "Lp8kWCUt89qJ9Kd74QtC"
             - name: DB_HOST
               value: "dbproduction.bsi.io"
             - name: DB_PORT
@@ -64,7 +64,7 @@ spec:
             - name: MINIO_SSL
               value: "false"
             - name: MINIO_BUCKETNAME
-              value: "personal"
+              value: "insani"
             - name: MINIO_LOCATION
               value: "us-east-1"
             - name: MINIO_CONN_TIMEOUT
@@ -73,6 +73,10 @@ spec:
               value: "36000"
             - name: RESPONSE_TIMEOUT_MS
               value: "13000"
+            - name: SLACK_WEBHOOK_URL
+              value: "https://hooks.slack.com/services/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"
+            - name: URL_HCM_SIMPEG_SERVICE
+            value: "http://svc-simpeg-ora-lumen.hcm-production.svc.cluster.local"
 
 
 ---
@@ -90,7 +94,7 @@ metadata:
       apiVersion: ambassador/v1
       kind:  Mapping
       name:  svc-insani-go-mapping
-      prefix: /v1/personal
+      prefix: /v1/insani
       rewrite: /public/api/v1
       service: svc-insani-go.hcm-production
       timeout_ms: 15000
