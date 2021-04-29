@@ -3,6 +3,7 @@ package usecase
 import (
 	"context"
 	"fmt"
+	"log"
 	"os"
 	"strconv"
 	"time"
@@ -13,8 +14,13 @@ import (
 	pegawaiOraModel "svc-insani-go/modules/v1/pegawai-oracle/model"
 	"svc-insani-go/modules/v1/pegawai/model"
 	"svc-insani-go/modules/v1/pegawai/repo"
+	pengaturan "svc-insani-go/modules/v1/pengaturan-insani/usecase"
 
 	"github.com/labstack/echo"
+)
+
+const (
+	pengaturanAtributFlagSinkronSimpeg = "flag_sinkron_simpeg"
 )
 
 func HandleGetPegawai(a app.App) echo.HandlerFunc {
@@ -58,7 +64,7 @@ func HandleGetSimpegPegawaiByUUID(a app.App) echo.HandlerFunc {
 
 		pegawaiDetail, err := PrepareGetSimpegPegawaiByUUID(a, uuidPegawai)
 		if err != nil {
-			fmt.Printf("[ERROR] repo get kepegawaian, %s\n", err.Error())
+			log.Printf("[ERROR] repo get kepegawaian, %s\n", err.Error())
 			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
 		}
 		return c.JSON(http.StatusOK, pegawaiDetail)
@@ -227,6 +233,16 @@ func HandleUpdatePegawai(a app.App, ctx context.Context, errChan chan error) ech
 }
 
 func prepareSinkronSimpeg(ctx context.Context, pegawaiInsani *model.PegawaiDetail) error {
+
+	flagSinkronSimpeg, err := pengaturan.LoadPengaturan(&app.App{}, ctx, nil, pengaturanAtributFlagSinkronSimpeg)
+	if err != nil {
+		return fmt.Errorf("error load pengaturan flag sinkron simpeg: %w", err)
+	}
+
+	if flagSinkronSimpeg != "1" {
+		fmt.Printf("[DEBUG] flag sinkron simpeg 0\n")
+		return nil
+	}
 
 	pegawaiOra := &pegawaiOraModel.KepegawaianYayasanSimpeg{}
 	pegawaiOra.JenisPegawai = &pegawaiOraModel.JenisPegawai{}
@@ -442,7 +458,7 @@ func prepareSinkronSimpeg(ctx context.Context, pegawaiInsani *model.PegawaiDetai
 
 	// fmt.Println("DEBUG : Update Kepegawaian Yayasan")
 
-	err := pegawaiOraHttp.UpdateKepegawaianYayasan(ctx, &http.Client{}, pegawaiOra)
+	err = pegawaiOraHttp.UpdateKepegawaianYayasan(ctx, &http.Client{}, pegawaiOra)
 	if err != nil {
 		return fmt.Errorf("[ERROR] repo get kepegawaian yayasan update, %s\n", err.Error())
 	}

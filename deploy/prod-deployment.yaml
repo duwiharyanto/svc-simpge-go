@@ -40,9 +40,9 @@ spec:
             - name: DBMS
               value: "mysql"
             - name: DB_USER
-              value: "hcmpersonal_app"
+              value: "hcminsani_app"
             - name: DB_PASSWORD
-              value: "ayvSYKtr4TeJp8tcnyQw"
+              value: "Lp8kWCUt89qJ9Kd74QtC"
             - name: DB_HOST
               value: "dbproduction.bsi.io"
             - name: DB_PORT
