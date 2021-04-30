@@ -197,6 +197,16 @@ func HandleUpdatePegawai(a app.App, ctx context.Context, errChan chan error) ech
 			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
 		}
 
+		flagSinkronSimpeg, err := pengaturan.LoadPengaturan(&a, ctx, nil, pengaturanAtributFlagSinkronSimpeg)
+		if err != nil {
+			return fmt.Errorf("error load pengaturan flag sinkron simpeg: %w", err)
+		}
+
+		if flagSinkronSimpeg != "1" {
+			fmt.Printf("[DEBUG] flag sinkron simpeg 0\n")
+			return nil
+		}
+
 		go func(
 			a app.App,
 			ctx context.Context,
@@ -233,16 +243,6 @@ func HandleUpdatePegawai(a app.App, ctx context.Context, errChan chan error) ech
 }
 
 func prepareSinkronSimpeg(ctx context.Context, pegawaiInsani *model.PegawaiDetail) error {
-
-	flagSinkronSimpeg, err := pengaturan.LoadPengaturan(&app.App{}, ctx, nil, pengaturanAtributFlagSinkronSimpeg)
-	if err != nil {
-		return fmt.Errorf("error load pengaturan flag sinkron simpeg: %w", err)
-	}
-
-	if flagSinkronSimpeg != "1" {
-		fmt.Printf("[DEBUG] flag sinkron simpeg 0\n")
-		return nil
-	}
 
 	pegawaiOra := &pegawaiOraModel.KepegawaianYayasanSimpeg{}
 	pegawaiOra.JenisPegawai = &pegawaiOraModel.JenisPegawai{}
@@ -458,7 +458,7 @@ func prepareSinkronSimpeg(ctx context.Context, pegawaiInsani *model.PegawaiDetai
 
 	// fmt.Println("DEBUG : Update Kepegawaian Yayasan")
 
-	err = pegawaiOraHttp.UpdateKepegawaianYayasan(ctx, &http.Client{}, pegawaiOra)
+	err := pegawaiOraHttp.UpdateKepegawaianYayasan(ctx, &http.Client{}, pegawaiOra)
 	if err != nil {
 		return fmt.Errorf("[ERROR] repo get kepegawaian yayasan update, %s\n", err.Error())
 	}
