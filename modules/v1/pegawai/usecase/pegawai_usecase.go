@@ -116,13 +116,6 @@ func PrepareGetSimpegPegawaiByUUID(a app.App, uuidPegawai string) (model.Pegawai
 	return pegawaiDetail, nil
 }
 
-// func HandleUpdateSimpegPegawaiByUUID(a app.App) echo.HandlerFunc {
-// 	h := func(c echo.Context) error {
-// 		return c.JSON(http.StatusOK, map[string]string{"message": "Perubahan pegawai berhasil disimpan"})
-// 	}
-// 	return echo.HandlerFunc(h)
-// }
-
 // Get All Pegawai With GORM
 func HandleGetPegawaix(a app.App) echo.HandlerFunc {
 	h := func(c echo.Context) error {
@@ -182,8 +175,8 @@ func HandleUpdatePegawai(a app.App, ctx context.Context, errChan chan error) ech
 		uuidPendidikanTerakhir := c.FormValue("uuid_tingkat_pdd_terakhir")
 		idPersonalPegawai := pegawaiUpdate.IdPersonalDataPribadi
 
-		fmt.Println("[ERROR] Uuid Pendidikan Diakui : ", uuidPendidikanDiakui)
-		fmt.Println("[ERROR] Uuid Pendidikan Terakhir : ", uuidPendidikanTerakhir)
+		// fmt.Println("[ERROR] Uuid Pendidikan Diakui : ", uuidPendidikanDiakui)
+		// fmt.Println("[ERROR] Uuid Pendidikan Terakhir : ", uuidPendidikanTerakhir)
 		err = repo.UpdatePendidikanPegawai(a, c.Request().Context(), uuidPendidikanDiakui, uuidPendidikanTerakhir, idPersonalPegawai)
 		if err != nil {
 			fmt.Printf("[ERROR], %s\n", err.Error())
