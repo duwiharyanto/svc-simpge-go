@@ -221,7 +221,7 @@ func HandleUpdatePegawai(a app.App, ctx context.Context, errChan chan error) ech
 			}
 
 			// fmt.Println("DEBUG : Go routin before sinkron simpeg")
-			// fmt.Printf("DEBUG Pegawai Detail %+v \n", &pegawaiDetail)
+			// fmt.Printf("DEBUG Pegawai Detail \ %+vn", &pegawaiDetail)
 			err = prepareSinkronSimpeg(ctx, &pegawaiDetail)
 			if err != nil {
 				errChan <- err
@@ -240,7 +240,6 @@ func prepareSinkronSimpeg(ctx context.Context, pegawaiInsani *model.PegawaiDetai
 	pegawaiOra := &pegawaiOraModel.KepegawaianYayasanSimpeg{}
 	pegawaiOra.JenisPegawai = &pegawaiOraModel.JenisPegawai{}
 	pegawaiOra.InstansiAsalPtt = &pegawaiOraModel.InstansiAsalPtt{}
-	pegawaiOra.JenisPegawai = &pegawaiOraModel.JenisPegawai{}
 	pegawaiOra.KelompokPegawai = &pegawaiOraModel.KelompokPegawai{}
 	pegawaiOra.LokasiKerja = &pegawaiOraModel.LokasiKerja{}
 	pegawaiOra.StatusPegawai = &pegawaiOraModel.StatusPegawai{}
@@ -260,159 +259,164 @@ func prepareSinkronSimpeg(ctx context.Context, pegawaiInsani *model.PegawaiDetai
 	if pegawaiInsani.PegawaiYayasan.KDJenisPegawai != "" {
 		pegawaiOra.JenisPegawai.KdJenisPegawai = pegawaiInsani.PegawaiYayasan.KDJenisPegawai
 	}
-	// fmt.Printf("DEBUG Kd Jenis %+v \n: \n ", pegawaiOra.KdJenisPegawai)
+	// fmt.Printf("DEBUG Kd Jenis : %+v \n ", pegawaiOra.KdJenisPegawai)
 
 	if pegawaiInsani.PegawaiYayasan.StatusPegawai != "" {
 		pegawaiOra.StatusPegawai.KdStatusPegawai = pegawaiInsani.PegawaiYayasan.KDStatusPegawai
 	}
 
-	// fmt.Printf("DEBUG fmt %+v \n: \n ", pegawaiOra.KdStatusPegawai)
+	// fmt.Printf("DEBUG fmt : %+v \n ", pegawaiOra.KdStatusPegawai)
 
 	if pegawaiInsani.PegawaiYayasan.KdKelompokPegawai != "" {
 		pegawaiOra.KelompokPegawai.KdKelompokPegawai = pegawaiInsani.PegawaiYayasan.KdKelompokPegawai
 	}
-	// fmt.Printf("DEBUG pegawaiOra.KdKelompokPegawai %+v \n: \n ", pegawaiOra.KdKelompokPegawai)
+	// fmt.Printf("DEBUG pegawaiOra.KdKelompokPegawai : %+v \n ", pegawaiOra.KdKelompokPegawai)
 
 	// Sinkron Kepegawaian Yayaysan - Pangkat / Jabatan
 
 	if pegawaiInsani.PegawaiYayasan.KdGolongan != "" {
 		pegawaiOra.PegawaiStatus.PangkatYayasan.KdGolongan = pegawaiInsani.PegawaiYayasan.KdGolongan
 	}
-	// fmt.Printf("DEBUG pegawaiOra.PangkatYayasan %+v \n: \n ", pegawaiOra.PangkatYayasan.KdGolongan)
+	// fmt.Printf("DEBUG pegawaiOra.PangkatYayasan.Golongan : %+v \n ", pegawaiOra.PangkatYayasan.KdGolongan)
 
 	if pegawaiInsani.PegawaiYayasan.KdRuang != "" {
 		pegawaiOra.PegawaiStatus.PangkatYayasan.KdRuang = pegawaiInsani.PegawaiYayasan.KdRuang
 	}
-	// fmt.Printf("DEBUG pegawaiOra.PangkatYayasan %+v \n: \n ", pegawaiOra.PangkatYayasan.KdRuang)
+	// fmt.Printf("DEBUG pegawaiOra.PangkatYayasan.KdRuang : %+v \n ", pegawaiOra.PangkatYayasan.KdRuang)
 
 	if pegawaiInsani.PegawaiYayasan.TmtPangkatGolongan != "" {
 		pegawaiOra.PegawaiStatus.PangkatYayasan.TmtPangkat = pegawaiInsani.PegawaiYayasan.TmtPangkatGolongan
 	}
-	// fmt.Printf("DEBUG pegawaiOra.PangkatYayasan %+v \n: \n ", pegawaiOra.PangkatYayasan.TmtPangkat)
+	// fmt.Printf("DEBUG pegawaiOra.PangkatYayasan : %+v \n ", pegawaiOra.PangkatYayasan.TmtPangkat)
 
 	if pegawaiInsani.PegawaiYayasan.KdJabatanFungsional != "" {
 		pegawaiOra.PegawaiStatus.JabatanFungsional.KdFungsional = pegawaiInsani.PegawaiYayasan.KdJabatanFungsional
 	}
-	// fmt.Printf("DEBUG pegawaiOra.KdFungsional %+v \n: \n ", pegawaiOra.JabatanFungsional.KdFungsional)
+	// fmt.Printf("DEBUG pegawaiOra.KdFungsional : %+v \n ", pegawaiOra.JabatanFungsional.KdFungsional)
 
 	if pegawaiInsani.PegawaiYayasan.TmtJabatan != "" {
 		pegawaiOra.PegawaiStatus.JabatanFungsional.TmtFungsional = pegawaiInsani.PegawaiYayasan.TmtJabatan
 	}
-	// fmt.Printf("DEBUG pegawaiOra.TmtFungsional %+v \n: \n ", pegawaiOra.TmtFungsional)
+	// fmt.Printf("DEBUG pegawaiOra.TmtFungsional : %+v \n ", pegawaiOra.TmtFungsional)
 
 	if pegawaiInsani.PegawaiYayasan.MasaKerjaGajiTahun != "" {
 		pegawaiOra.PegawaiStatus.MasaKerjaGajiTahun, _ = strconv.Atoi(pegawaiInsani.PegawaiYayasan.MasaKerjaGajiTahun)
 	}
-	// fmt.Printf("DEBUG pegawaiOra.MasaKerjaGajiTahun %+v \n: \n ", pegawaiOra.MasaKerjaGajiTahun)
+	// fmt.Printf("DEBUG pegawaiOra.MasaKerjaGajiTahun : %+v \n ", pegawaiOra.MasaKerjaGajiTahun)
 
 	if pegawaiInsani.PegawaiYayasan.MasaKerjaGajiBulan != "" {
 		pegawaiOra.PegawaiStatus.MasaKerjaGajiBulan, _ = strconv.Atoi(pegawaiInsani.PegawaiYayasan.MasaKerjaGajiBulan)
 	}
-	// fmt.Printf("DEBUG pegawaiOra.MasaKerjaGajiBulan %+v \n: \n ", pegawaiOra.MasaKerjaGajiBulan)
+	// fmt.Printf("DEBUG pegawaiOra.MasaKerjaGajiBulan : %+v \n ", pegawaiOra.MasaKerjaGajiBulan)
 
 	if pegawaiInsani.PegawaiYayasan.AngkaKredit != "" {
 		pegawaiOra.PegawaiStatus.AngkaKreditFungsional, _ = strconv.ParseFloat(pegawaiInsani.PegawaiYayasan.AngkaKredit, 64)
 	}
-	// fmt.Printf("DEBUG pegawaiOra.AngkaKreditFungsional %+v \n: \n ", pegawaiOra.AngkaKreditFungsional)
+	// fmt.Printf("DEBUG pegawaiOra.AngkaKreditFungsional : %+v \n ", pegawaiOra.AngkaKreditFungsional)
 
 	// Sinkron Unit Kerja
 
 	if pegawaiInsani.UnitKerjaPegawai.KdIndukKerja != "" {
 		pegawaiOra.Unit1.KdUnit1 = pegawaiInsani.UnitKerjaPegawai.KdIndukKerja
 	}
-	// fmt.Printf("DEBUG pegawaiOra.Unit1 %+v \n: \n ", pegawaiOra.Unit1.KdUnit1)
+	// fmt.Printf("DEBUG pegawaiOra.Unit1 : %+v \n ", pegawaiOra.Unit1.KdUnit1)
 
 	if pegawaiInsani.UnitKerjaPegawai.KdUnitKerja != "" {
 		pegawaiOra.Unit2.KdUnit2 = pegawaiInsani.UnitKerjaPegawai.KdUnitKerja
 	}
-	// fmt.Printf("DEBUG pegawaiOra.Unit2 %+v \n: \n ", pegawaiOra.Unit2.KdUnit2)
+	// fmt.Printf("DEBUG pegawaiOra.Unit2 : %+v \n ", pegawaiOra.Unit2.KdUnit2)
 
 	if pegawaiInsani.UnitKerjaPegawai.KdBagianKerja != "" {
 		pegawaiOra.Unit3.KdUnit3 = pegawaiInsani.UnitKerjaPegawai.KdBagianKerja
 	}
-	// fmt.Printf("DEBUG pegawaiOra.Unit3 %+v \n: \n ", pegawaiOra.Unit3.KdUnit3)
+	// fmt.Printf("DEBUG pegawaiOra.Unit3 : %+v \n ", pegawaiOra.Unit3.KdUnit3)
+
+	if pegawaiInsani.UnitKerjaPegawai.LokasiKerja != "" {
+		pegawaiOra.LokasiKerja.KdLokasi = pegawaiInsani.UnitKerjaPegawai.LokasiDesc
+	}
+	// fmt.Printf("DEBUG pegawaiOra.LokasiKerja.KdLokasi : %+v \n ", pegawaiOra.LokasiKerja.KdLokasi)
 
 	if pegawaiInsani.UnitKerjaPegawai.NoSkPertama != "" {
 		pegawaiOra.PegawaiStatus.NoSkPertama = pegawaiInsani.UnitKerjaPegawai.NoSkPertama
 	}
-	// fmt.Printf("DEBUG pegawaiOra.NoSkPertama %+v \n: \n ", pegawaiOra.NoSkPertama)
+	// fmt.Printf("DEBUG pegawaiOra.NoSkPertama : %+v \n ", pegawaiOra.NoSkPertama)
 
 	if pegawaiInsani.UnitKerjaPegawai.TmtSkPertama != "" {
 		pegawaiOra.PegawaiStatus.TglSkPertama = pegawaiInsani.UnitKerjaPegawai.TmtSkPertama
 	}
-	// fmt.Printf("DEBUG pegawaiOra.TglSkPertama %+v \n: \n ", pegawaiOra.TglSkPertama)
+	// fmt.Printf("DEBUG pegawaiOra.TglSkPertama : %+v \n ", pegawaiOra.TglSkPertama)
 
 	if pegawaiInsani.UnitKerjaPegawai.KdHomebasePddikti != "" {
 		pegawaiOra.PegawaiStatus.KdHomebasePddikti = pegawaiInsani.UnitKerjaPegawai.KdHomebasePddikti
 	}
-	// fmt.Printf("DEBUG pegawaiOra.KdHomebasePddikti %+v \n: \n ", pegawaiOra.KdHomebasePddikti)
+	// fmt.Printf("DEBUG pegawaiOra.KdHomebasePddikti : %+v \n ", pegawaiOra.KdHomebasePddikti)
 
 	if pegawaiInsani.UnitKerjaPegawai.KdHomebaseUii != "" {
 		pegawaiOra.PegawaiStatus.KdHomebaseUii = pegawaiInsani.UnitKerjaPegawai.KdHomebaseUii
 	}
-	// fmt.Printf("DEBUG pegawaiOra.KdHomebaseUii %+v \n: \n ", pegawaiOra.KdHomebaseUii)
+	// fmt.Printf("DEBUG pegawaiOra.KdHomebaseUii : %+v \n ", pegawaiOra.KdHomebaseUii)
 
 	// Sinkron Kepegawaian Negara / PTT
 
 	if pegawaiInsani.PegawaiPNSPTT.InstansiAsalPtt != "" {
 		pegawaiOra.InstansiAsalPtt.Instansi = pegawaiInsani.PegawaiPNSPTT.InstansiAsalPtt
 	}
-	// fmt.Printf("DEBUG pegawaiOra.Instansi %+v \n: \n ", pegawaiOra.Instansi)
+	// fmt.Printf("DEBUG pegawaiOra.Instansi : %+v \n ", pegawaiOra.Instansi)
 
 	if pegawaiInsani.PegawaiPNSPTT.NipPNS != "" {
 		pegawaiOra.NipKopertis = pegawaiInsani.PegawaiPNSPTT.NipPNS
 	}
-	// fmt.Printf("DEBUG pegawaiOra.NipKopertis %+v \n: \n ", pegawaiOra.NipKopertis)
+	// fmt.Printf("DEBUG pegawaiOra.NipKopertis : %+v \n ", pegawaiOra.NipKopertis)
 
 	if pegawaiInsani.PegawaiPNSPTT.NoKartuPegawai != "" {
 		pegawaiOra.PegawaiStatus.NoKarpeg = pegawaiInsani.PegawaiPNSPTT.NoKartuPegawai
 	}
-	// fmt.Printf("DEBUG pegawaiOra.NoKarpeg %+v \n: \n ", pegawaiOra.NoKarpeg)
+	// fmt.Printf("DEBUG pegawaiOra.NoKarpeg : %+v \n ", pegawaiOra.NoKarpeg)
 
 	if pegawaiInsani.PegawaiPNSPTT.KdGolonganPNS != "" {
 		pegawaiOra.PegawaiStatus.PangkatKopertis.KdGolongan = pegawaiInsani.PegawaiPNSPTT.KdGolonganPNS
 	}
-	// fmt.Printf("DEBUG pegawaiOra.PangkatKopertis.KdGolongan %+v \n: \n ", pegawaiOra.PangkatKopertis.KdGolongan)
+	// fmt.Printf("DEBUG pegawaiOra.PangkatKopertis.KdGolongan : %+v \n ", pegawaiOra.PangkatKopertis.KdGolongan)
 
-	if pegawaiInsani.PegawaiPNSPTT.KdPangkatGolonganPns != "" {
-		pegawaiOra.PegawaiStatus.PangkatKopertis.KdRuang = pegawaiInsani.PegawaiPNSPTT.KdPangkatGolonganPns
+	if pegawaiInsani.PegawaiPNSPTT.KdRuangPNS != "" {
+		pegawaiOra.PegawaiStatus.PangkatKopertis.KdRuang = pegawaiInsani.PegawaiPNSPTT.KdRuangPNS
 	}
-	// fmt.Printf("DEBUG pegawaiOra.PangkatKopertis %+v \n: \n ", pegawaiOra.PangkatKopertis.KdRuang)
+	// fmt.Printf("DEBUG pegawaiOra.PangkatKopertis.KdRuang : %+v \n ", pegawaiOra.PangkatKopertis.KdRuang)
 
 	if pegawaiInsani.PegawaiPNSPTT.TmtPangkatGolongan != "" {
 		pegawaiOra.PegawaiStatus.PangkatKopertis.TmtPangkat = pegawaiInsani.PegawaiPNSPTT.TmtPangkatGolongan
 	}
-	// fmt.Printf("DEBUG pegawaiOra.PangkatKopertis %+v \n: \n ", pegawaiOra.PangkatKopertis.TmtPangkat)
+	// fmt.Printf("DEBUG pegawaiOra.PangkatKopertis : %+v \n ", pegawaiOra.PangkatKopertis.TmtPangkat)
 
 	if pegawaiInsani.PegawaiPNSPTT.KdJabatanPns != "" {
 		pegawaiOra.PegawaiStatus.JabatanFungsionalKopertis.KdFungsional = pegawaiInsani.PegawaiPNSPTT.KdJabatanPns
 	}
-	// fmt.Printf("DEBUG pegawaiOra.KdFungsional %+v \n: \n ", pegawaiOra.JabatanFungsionalKopertis.KdFungsional)
+	// fmt.Printf("DEBUG pegawaiOra.KdFungsional : %+v \n ", pegawaiOra.JabatanFungsionalKopertis.KdFungsional)
 
 	if pegawaiInsani.PegawaiPNSPTT.TmtPangkatGolongan != "" {
 		pegawaiOra.PegawaiStatus.JabatanFungsionalKopertis.TmtFungsional = pegawaiInsani.PegawaiPNSPTT.TmtJabatanPns
 	}
-	// fmt.Printf("DEBUG pegawaiOra.TmtFungsional %+v \n: \n ", pegawaiOra.TmtFungsional)
+	// fmt.Printf("DEBUG pegawaiOra.TmtFungsional : %+v \n ", pegawaiOra.TmtFungsional)
 
 	if pegawaiInsani.PegawaiPNSPTT.MasaKerjaPnsTahun != "" {
 		pegawaiOra.PegawaiStatus.MasaKerjaKopertisTahun, _ = strconv.Atoi(pegawaiInsani.PegawaiPNSPTT.MasaKerjaPnsTahun)
 	}
-	// fmt.Printf("DEBUG pegawaiOra.MasaKerjaKopertisTahun %+v \n: \n ", pegawaiOra.MasaKerjaKopertisTahun)
+	// fmt.Printf("DEBUG pegawaiOra.MasaKerjaKopertisTahun : %+v \n ", pegawaiOra.MasaKerjaKopertisTahun)
 
 	if pegawaiInsani.PegawaiPNSPTT.MasaKerjaPnsBulan != "" {
 		pegawaiOra.PegawaiStatus.MasaKerjaKopertisBulan, _ = strconv.Atoi(pegawaiInsani.PegawaiPNSPTT.MasaKerjaPnsBulan)
 	}
-	// fmt.Printf("DEBUG pegawaiOra.MasaKerjaKopertisBulan %+v \n: \n ", pegawaiOra.MasaKerjaKopertisBulan)
+	// fmt.Printf("DEBUG pegawaiOra.MasaKerjaKopertisBulan : %+v \n ", pegawaiOra.MasaKerjaKopertisBulan)
 
 	if pegawaiInsani.PegawaiPNSPTT.AngkaKreditPns != "" {
 		pegawaiOra.PegawaiStatus.AngkaKreditKopertis, _ = strconv.ParseFloat(pegawaiInsani.PegawaiPNSPTT.AngkaKreditPns, 64)
 	}
-	// fmt.Printf("DEBUG pegawaiOra.AngkaKreditKopertis %+v \n: \n ", pegawaiOra.AngkaKreditKopertis)
+	// fmt.Printf("DEBUG pegawaiOra.AngkaKreditKopertis : %+v \n ", pegawaiOra.AngkaKreditKopertis)
 
 	if pegawaiInsani.PegawaiPNSPTT.KeteranganPNS != "" {
 		pegawaiOra.InstansiAsalPtt.Keterangan = pegawaiInsani.PegawaiPNSPTT.KeteranganPNS
 	}
-	// fmt.Printf("DEBUG pegawaiOra.Keterangan %+v \n: \n ", pegawaiOra.Keterangan)
+	// fmt.Printf("DEBUG pegawaiOra.Keterangan : %+v \n ", pegawaiOra.Keterangan)
 
 	// Sinkron Status Aktif
 
@@ -424,8 +428,8 @@ func prepareSinkronSimpeg(ctx context.Context, pegawaiInsani *model.PegawaiDetai
 				pegawaiOra.FlagPensiun = "N"
 			}
 			if pegawaiInsani.StatusAktif.KdStatusAktifPegawai != "IBL" {
-				pegawaiOra.FlagSekolah = "N"
-				pegawaiOra.FlagPensiun = "Y"
+				pegawaiOra.PegawaiStatus.FlagSekolah = "N"
+				pegawaiOra.FlagPensiun = "N"
 			}
 
 		}
@@ -434,6 +438,7 @@ func prepareSinkronSimpeg(ctx context.Context, pegawaiInsani *model.PegawaiDetai
 	if pegawaiInsani.StatusAktif.FlagAktifPegawai == "0" {
 		if pegawaiInsani.PegawaiYayasan.KDJenisPegawai == "ED" {
 			pegawaiOra.PegawaiStatus.FlagMengajar = "N"
+			pegawaiOra.KdStatusHidup = "Y"
 			if pegawaiInsani.StatusAktif.KdStatusAktifPegawai == "PEN" {
 				pegawaiOra.PegawaiStatus.FlagSekolah = "N"
 				pegawaiOra.FlagPensiun = "Y"
@@ -445,7 +450,6 @@ func prepareSinkronSimpeg(ctx context.Context, pegawaiInsani *model.PegawaiDetai
 			if pegawaiInsani.StatusAktif.KdStatusAktifPegawai != "MNG" {
 				pegawaiOra.KdStatusHidup = "N"
 			}
-			pegawaiOra.KdStatusHidup = "Y"
 		}
 	}
 
@@ -459,32 +463,32 @@ func prepareSinkronSimpeg(ctx context.Context, pegawaiInsani *model.PegawaiDetai
 	return nil
 }
 
-func HandleCreatePegawai(a app.App, ctx context.Context, errChan chan error) echo.HandlerFunc {
-	h := func(c echo.Context) error {
+// func HandleCreatePegawai(a app.App, ctx context.Context, errChan chan error) echo.HandlerFunc {
+// 	h := func(c echo.Context) error {
 
-		// Validasi Data
-		pegawaiCreate, err := ValidateCreatePegawai(a, c)
-		if err != nil {
-			fmt.Printf("[ERROR], %s\n", err.Error())
-			return c.JSON(http.StatusBadRequest, map[string]string{"message": err.Error()})
-		}
+// 		// Validasi Data
+// 		pegawaiCreate, err := ValidateCreatePegawai(a, c)
+// 		if err != nil {
+// 			fmt.Printf("[ERROR], %s\n", err.Error())
+// 			return c.JSON(http.StatusBadRequest, map[string]string{"message": err.Error()})
+// 		}
 
-		// Create Data
-		err = repo.CreatePegawai(a, c.Request().Context(), pegawaiCreate)
-		if err != nil {
-			fmt.Printf("[ERROR], %s\n", err.Error())
-			return c.JSON(http.StatusBadRequest, map[string]string{"message": err.Error()})
-		}
+// 		// Create Data
+// 		err = repo.CreatePegawai(a, c.Request().Context(), pegawaiCreate)
+// 		if err != nil {
+// 			fmt.Printf("[ERROR], %s\n", err.Error())
+// 			return c.JSON(http.StatusBadRequest, map[string]string{"message": err.Error()})
+// 		}
 
-		// Menampilkan response
-		pegawaiDetail, err := PrepareGetSimpegPegawaiByUUID(a, pegawaiCreate.Uuid)
-		if err != nil {
-			fmt.Printf("[ERROR] repo get kepegawaian, %s\n", err.Error())
-			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
-		}
+// 		// Menampilkan response
+// 		pegawaiDetail, err := PrepareGetSimpegPegawaiByUUID(a, pegawaiCreate.Uuid)
+// 		if err != nil {
+// 			fmt.Printf("[ERROR] repo get kepegawaian, %s\n", err.Error())
+// 			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
+// 		}
 
-		return c.JSON(http.StatusOK, pegawaiDetail)
-	}
+// 		return c.JSON(http.StatusOK, pegawaiDetail)
+// 	}
 
-	return echo.HandlerFunc(h)
-}
+// 	return echo.HandlerFunc(h)
+// }

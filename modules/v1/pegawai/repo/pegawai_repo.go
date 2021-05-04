@@ -445,15 +445,13 @@ func setIjazahWithURL(a app.App, pendidikan *model.PegawaiPendidikan) {
 		}
 	}
 
-	fmt.Println("URL Ijazah : ", pendidikan.URLIjazah)
-
 	if pendidikan.PathSKPenyetaraan != "" {
 		pendidikan.URLSKPenyetaraan, err = a.MinioClient.GetDownloadURL(minioBucketNamePersonal, pendidikan.PathSKPenyetaraan, pendidikan.NamaFileSKPenyetaraan)
 		if err != nil {
 			fmt.Printf("error get url sk penyetaraan, %s", err.Error())
 		}
 	}
-	fmt.Println("URL Sk Penyetaraan : ", pendidikan.URLSKPenyetaraan)
+	// fmt.Println("URL Sk Penyetaraan : ", pendidikan.URLSKPenyetaraan)
 
 }
 
