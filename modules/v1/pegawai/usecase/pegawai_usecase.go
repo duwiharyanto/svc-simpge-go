@@ -332,7 +332,7 @@ func prepareSinkronSimpeg(ctx context.Context, pegawaiInsani *model.PegawaiDetai
 	// fmt.Printf("DEBUG pegawaiOra.Unit3 : %+v \n ", pegawaiOra.Unit3.KdUnit3)
 
 	if pegawaiInsani.UnitKerjaPegawai.LokasiKerja != "" {
-		pegawaiOra.LokasiKerja.KdLokasi = pegawaiInsani.UnitKerjaPegawai.LokasiDesc
+		pegawaiOra.LokasiKerja.KdLokasi = pegawaiInsani.UnitKerjaPegawai.LokasiKerja
 	}
 	// fmt.Printf("DEBUG pegawaiOra.LokasiKerja.KdLokasi : %+v \n ", pegawaiOra.LokasiKerja.KdLokasi)
 
