@@ -422,35 +422,29 @@ func prepareSinkronSimpeg(ctx context.Context, pegawaiInsani *model.PegawaiDetai
 	// Sinkron Status Aktif
 
 	if pegawaiInsani.StatusAktif.FlagAktifPegawai == "1" {
+		pegawaiOra.PegawaiStatus.FlagMengajar = "N"
+		pegawaiOra.FlagPensiun = "N"
+		pegawaiOra.KdStatusHidup = "Y"
+		pegawaiOra.PegawaiStatus.FlagSekolah = "N"
 		if pegawaiInsani.PegawaiYayasan.KDJenisPegawai == "ED" {
 			pegawaiOra.PegawaiStatus.FlagMengajar = "Y"
-			pegawaiOra.FlagPensiun = "N"
-			pegawaiOra.KdStatusHidup = "Y"
 			if pegawaiInsani.StatusAktif.KdStatusAktifPegawai == "IBL" {
 				pegawaiOra.PegawaiStatus.FlagSekolah = "Y"
-			}
-			if pegawaiInsani.StatusAktif.KdStatusAktifPegawai != "IBL" {
-				pegawaiOra.PegawaiStatus.FlagSekolah = "N"
 			}
 
 		}
 	}
 
 	if pegawaiInsani.StatusAktif.FlagAktifPegawai == "0" {
+		pegawaiOra.PegawaiStatus.FlagMengajar = "N"
+		pegawaiOra.FlagPensiun = "N"
 		pegawaiOra.KdStatusHidup = "Y"
 		pegawaiOra.PegawaiStatus.FlagSekolah = "N"
 		if pegawaiInsani.StatusAktif.KdStatusAktifPegawai == "PEN" {
 			pegawaiOra.FlagPensiun = "Y"
-			if pegawaiInsani.PegawaiYayasan.KDJenisPegawai == "ED" {
-				pegawaiOra.PegawaiStatus.FlagMengajar = "N"
-			}
 		}
-
-		if pegawaiInsani.StatusAktif.KdStatusAktifPegawai != "PEN" {
-			pegawaiOra.FlagPensiun = "N"
-			if pegawaiInsani.StatusAktif.KdStatusAktifPegawai == "MNG" {
-				pegawaiOra.KdStatusHidup = "N"
-			}
+		if pegawaiInsani.StatusAktif.KdStatusAktifPegawai == "MNG" {
+			pegawaiOra.KdStatusHidup = "N"
 		}
 	}
 
