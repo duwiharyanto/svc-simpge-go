@@ -13,9 +13,9 @@ import (
 	"svc-insani-go/modules/v1/pegawai-oracle/model"
 )
 
-var pegawaiSimpegURL = fmt.Sprintf("%s/public/api/v1/pegawai", os.Getenv("URL_HCM_SIMPEG_SERVICE"))
+// var pegawaiSimpegURL = fmt.Sprintf("%s/public/api/v1/pegawai", os.Getenv("URL_HCM_SIMPEG_SERVICE"))
 
-// var pegawaiSimpegURL = fmt.Sprintf("%s/pegawai", os.Getenv("URL_HCM_SIMPEG_SERVICE"))
+var pegawaiSimpegURL = fmt.Sprintf("%s/pegawai", os.Getenv("URL_HCM_SIMPEG_SERVICE"))
 var pegawaiStatusSimpegURL = fmt.Sprintf("%s/public/api/v1/pegawai-status", os.Getenv("URL_HCM_SIMPEG_SERVICE"))
 var kepegawaianYayasanSimpegURL = pegawaiSimpegURL + "/%s/kepegawaian-yayasan"
 
@@ -105,13 +105,13 @@ func UpdateKepegawaianYayasan(ctx context.Context, client *http.Client, pegawai 
 	endpoint := fmt.Sprintf(kepegawaianYayasanSimpegURL, pegawai.NIP)
 	// fmt.Printf("DEBUG endpoint : %+v \n", endpoint)
 	// fmt.Printf("DEBUG pegawaisimpegURL : %+v \n", pegawaiSimpegURL)
-	// authToken := os.Getenv("AUTH_TOKEN")
+	authToken := os.Getenv("AUTH_TOKEN")
 	header := map[string]string{
-		// "Authorization": authToken,
-		"X-Member": pegawai.UserUpdate,
+		"Authorization": authToken,
+		"X-Member":      pegawai.UserUpdate,
 	}
 	// fmt.Printf("DEBUG header : %+v \n", header)
-	// fmt.Printf("DEBUG pegawai : %+v \n", pegawai)
+	// fmt.Printf("DEBUG pegawai : %+v \n", pegawai.JenisPegawai.KdJenisPegawai)
 	res, err := app.SendHttpRequest(ctx, client, http.MethodPut, endpoint, contentTypeJSON, header, pegawai)
 	if err != nil {
 		return fmt.Errorf("error send http request: %w", err)
