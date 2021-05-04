@@ -22,58 +22,8 @@ import (
 	"github.com/labstack/echo"
 )
 
-// func ValidateGetPegawai(a app.App, c echo.Context) (*model.PegawaiRequestParam, error) {
-// 	nik := c.QueryParam("nik")
-// 	requestParam := &model.PegawaiRequestParam{}
-
-// 	if nik != "" {
-// 		requestParam.NIK = nik
-// 	}
-
-// 	limitParam := c.QueryParam("limit")
-// 	limit, err := strconv.Atoi(limitParam)
-// 	if (limitParam != "" && err != nil) || limit < 0 {
-// 		return nil, fmt.Errorf("limit harus berupa angka minimal 0")
-// 	}
-
-// 	offsetParam := c.QueryParam("offset")
-// 	offset, err := strconv.Atoi(offsetParam)
-// 	if (offsetParam != "" && err != nil) || offset < 0 {
-// 		return nil, fmt.Errorf("offset harus berupa angka minimal 0")
-// 	}
-
-// 	uuidJenisPegawai := c.QueryParam("uuid_jenis_pegawai")
-// 	if uuidJenisPegawai != "" {
-// 		jenisPegawai, err := jenisPegawaiRepo.GetJenisPegawaiByUUID(a, uuidJenisPegawai)
-// 		if err != nil {
-// 			return nil, fmt.Errorf("error from repo jenis pegawai by uuid, %w", err)
-// 		}
-// 		requestParam.JenisPegawai.KDJenisPegawai = jenisPegawai.KDJenisPegawai
-// 	}
-
-// 	uuidKelompokPegawai := c.QueryParam("uuid_kelompok_pegawai")
-// 	if uuidKelompokPegawai != "" {
-// 		kelompokPegawai, err := kelompokPegawaiRepo.GetKelompokPegawaiByUUID(a, c.Request().Context(), uuidKelompokPegawai)
-// 		if err != nil {
-// 			return nil, fmt.Errorf("error from repo kelompok pegawai by uuid, %w", err)
-// 		}
-// 		requestParam.KelompokPegawai.KdKelompokPegawai = kelompokPegawai.KdKelompokPegawai
-// 	}
-
-// 	uuidUnitPegawai := c.QueryParam("uuid_unit_pegawai")
-// 	if uuidUnitPegawai != "" {
-// 		unitPegawai, err := indukKerjaRepo.GetUnitKerjaByUUID(a, c.Request().Context(), uuidUnitPegawai)
-// 		if err != nil {
-// 			return nil, fmt.Errorf("error from repo unit kerja pegawai by uuid, %w", err)
-// 		}
-// 		requestParam.IndukKerja.KdIndukKerja = unitPegawai.KdUnit2
-// 	}
-
-// 	return requestParam, nil
-
-// }
-
 func ValidateUpdatePegawaiByUUID(a app.App, c echo.Context) (model.PegawaiUpdate, error) {
+
 	uuidPegawai := c.Param("uuidPegawai")
 	if uuidPegawai == "" {
 		return model.PegawaiUpdate{}, fmt.Errorf("uuid pegawai tidak boleh kosong")
@@ -326,7 +276,7 @@ func ValidateUpdatePegawaiByUUID(a app.App, c echo.Context) (model.PegawaiUpdate
 		pegawaiOld.PegawaiPNS.InstansiAsal = pegawaiReq.PegawaiPNS.InstansiAsal
 	}
 	if pegawaiReq.PegawaiPNS.NipPns != "" {
-		if len(pegawaiReq.PegawaiPNS.NipPns) < 18 {
+		if len(pegawaiReq.PegawaiPNS.NipPns) > 18 {
 			return model.PegawaiUpdate{}, fmt.Errorf("error nip pns tidak valid")
 		}
 		pegawaiOld.PegawaiPNS.NipPns = pegawaiReq.PegawaiPNS.NipPns

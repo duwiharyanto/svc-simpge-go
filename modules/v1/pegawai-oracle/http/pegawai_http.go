@@ -111,6 +111,7 @@ func UpdateKepegawaianYayasan(ctx context.Context, client *http.Client, pegawai 
 		"X-Member": pegawai.UserUpdate,
 	}
 	// fmt.Printf("DEBUG header : %+v \n", header)
+	// fmt.Printf("DEBUG pegawai : %+v \n", pegawai.JenisPegawai.KdJenisPegawai)
 	res, err := app.SendHttpRequest(ctx, client, http.MethodPut, endpoint, contentTypeJSON, header, pegawai)
 	if err != nil {
 		return fmt.Errorf("error send http request: %w", err)

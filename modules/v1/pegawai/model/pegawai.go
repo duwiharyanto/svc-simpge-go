@@ -550,17 +550,18 @@ func (b *BerkasPendukung) SetDownloadFileName(loc *time.Location) {
 	if b.PathFile == "" {
 		return
 	}
-	// now := time.Now().In(loc)
-	// datetime := now.Format("2006-01-02 150405")
+	now := time.Now().In(loc)
+	datetime := now.Format("2006-01-02 150405")
 	splittedPath := strings.Split(b.PathFile, ".")
 	fileExtension := splittedPath[1]
-	b.NamaFile = fmt.Sprintf("%s.%s", b.JenisFile, fileExtension)
+	b.NamaFile = fmt.Sprintf("%s %s %s.%s", datetime, b.NamaPersonal, b.JenisFile, fileExtension)
 }
 
 func (b *PegawaiPendidikan) SetDownloadFileNamePendidikan(loc *time.Location) {
 	if b.PathIjazah == "" || b.PathSKPenyetaraan == "" {
 		return
 	}
+
 	// now := time.Now().In(loc)
 	// datetime := now.Format("2006-01-02 150405")
 	ijazah := "Ijazah"

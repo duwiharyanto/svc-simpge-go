@@ -362,6 +362,7 @@ func GetPegawaiPendidikan(a app.App, uuid string) ([]model.JenjangPendidikan, er
 		pegawaiPendidikan.SetNamaFileIjazah()
 		pegawaiPendidikan.SetNamaFilePenyetaraan()
 		pegawaiPendidikan.SetDownloadFileNamePendidikan(a.TimeLocation)
+		setIjazahWithURL(a, &pegawaiPendidikan)
 		idPendidikanList = append(idPendidikanList, pegawaiPendidikan.IdPendidikan)
 		m[fmt.Sprint(pegawaiPendidikan.KdJenjang, ".", pegawaiPendidikan.UrutanJenjang)] = append(m[fmt.Sprint(pegawaiPendidikan.KdJenjang, ".", pegawaiPendidikan.UrutanJenjang)], pegawaiPendidikan)
 
@@ -402,19 +403,21 @@ func GetPegawaiPendidikan(a app.App, uuid string) ([]model.JenjangPendidikan, er
 	return jenjangPendidikan, nil
 }
 
-func GetURLFilePendidikan(a app.App, pendidikanList []*model.PegawaiPendidikan) []*model.PegawaiPendidikan {
-	for _, pendidikan := range pendidikanList {
-		if pendidikan.PathIjazah != "" {
-			var err error
-			pendidikan.URLIjazah, err = a.MinioClient.GetDownloadURL(a.MinioBucketName, pendidikan.PathIjazah, "")
-			if err != nil {
-				fmt.Printf("error getting file url, %s", err.Error())
-				pendidikan.URLIjazah = ""
-			}
-		}
-	}
-	return pendidikanList
-}
+// func GetURLFilePendidikan(a app.App, pendidikanList []*model.PegawaiPendidikan) []*model.PegawaiPendidikan {
+// 	for _, pendidikan := range pendidikanList {
+// 		if pendidikan.PathIjazah != "" {
+// 			fmt.Println("Path Ijazah : ", pendidikan.PathIjazah)
+// 			var err error
+// 			minioBucketNamePersonal := "personal"
+// 			pendidikan.URLIjazah, err = a.MinioClient.GetDownloadURL(minioBucketNamePersonal, pendidikan.PathIjazah, pendidikan.NamaFileIjazah)
+// 			if err != nil {
+// 				fmt.Printf("error getting file url, %s", err.Error())
+// 				pendidikan.URLIjazah = ""
+// 			}
+// 		}
+// 	}
+// 	return pendidikanList
+// }
 
 func setBerkasPendukungWithURL(a app.App, list model.BerkasPendukungList) {
 	for i, berkas := range list {
@@ -422,12 +425,34 @@ func setBerkasPendukungWithURL(a app.App, list model.BerkasPendukungList) {
 			continue
 		}
 		var err error
-		list[i].URLFile, err = a.MinioClient.GetDownloadURL(a.MinioBucketName, berkas.PathFile, berkas.NamaFile)
+		minioBucketNamePersonal := "personal"
+		list[i].URLFile, err = a.MinioClient.GetDownloadURL(minioBucketNamePersonal, berkas.PathFile, berkas.NamaFile)
 		if err != nil {
 			fmt.Printf("error get url berkas pendukung, %s", err.Error())
 			list[i].URLFile = ""
 		}
 	}
+}
+
+func setIjazahWithURL(a app.App, pendidikan *model.PegawaiPendidikan) {
+	var err error
+	minioBucketNamePersonal := "personal"
+
+	if pendidikan.PathIjazah != "" {
+		pendidikan.URLIjazah, err = a.MinioClient.GetDownloadURL(minioBucketNamePersonal, pendidikan.PathIjazah, pendidikan.NamaFileIjazah)
+		if err != nil {
+			fmt.Printf("error get url ijazah, %s", err.Error())
+		}
+	}
+
+	if pendidikan.PathSKPenyetaraan != "" {
+		pendidikan.URLSKPenyetaraan, err = a.MinioClient.GetDownloadURL(minioBucketNamePersonal, pendidikan.PathSKPenyetaraan, pendidikan.NamaFileSKPenyetaraan)
+		if err != nil {
+			fmt.Printf("error get url sk penyetaraan, %s", err.Error())
+		}
+	}
+	// fmt.Println("URL Sk Penyetaraan : ", pendidikan.URLSKPenyetaraan)
+
 }
 
 func GetAllPegawaix(a app.App, ctx context.Context, limit int, offset int) (*model.PegawaiResponseTest, error) {
