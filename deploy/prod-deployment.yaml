@@ -64,7 +64,7 @@ spec:
             - name: MINIO_SSL
               value: "false"
             - name: MINIO_BUCKETNAME
-              value: "personal"
+              value: "insani"
             - name: MINIO_LOCATION
               value: "us-east-1"
             - name: MINIO_CONN_TIMEOUT

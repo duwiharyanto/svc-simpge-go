@@ -63,13 +63,13 @@ spec:
             - name: MINIO_ENDPOINT
               value: "s3-staging.uii.ac.id"
             - name: MINIO_ACCESSKEYID
-              value: "5WO99MLGTOMU00G6VWTN"
+              value: "2m8mYMxUUTwTwCqPgy2F"
             - name: MINIO_SECRETACCESSKEY
-              value: "BSGXofy28lByddwwASQj0VBobGnv1+t7ZSfkdyos"
+              value: "6yxf3LPgy4kMNLpKAACe9PzzeS5mJU8cKWA5PwVu"
             - name: MINIO_SSL
               value: "false"
             - name: MINIO_BUCKETNAME
-              value: "personal"
+              value: "insani"
             - name: MINIO_LOCATION
               value: "us-east-1"
             - name: MINIO_CONN_TIMEOUT
