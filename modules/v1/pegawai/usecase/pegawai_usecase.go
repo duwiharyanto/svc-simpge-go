@@ -190,22 +190,26 @@ func HandleUpdatePegawai(a app.App, ctx context.Context, errChan chan error) ech
 			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
 		}
 
-		flagSinkronSimpeg, err := pengaturan.LoadPengaturan(&a, ctx, nil, pengaturanAtributFlagSinkronSimpeg)
-		if err != nil {
-			return fmt.Errorf("error load pengaturan flag sinkron simpeg: %w", err)
-		}
-
-		if flagSinkronSimpeg != "1" {
-			fmt.Printf("[DEBUG] flag sinkron simpeg 0\n")
-			return nil
-		}
-
 		go func(
 			a app.App,
 			ctx context.Context,
 			errChan chan error,
 		) {
 			fmt.Println("DEBUG : Go routin")
+
+			flagSinkronSimpeg, err := pengaturan.LoadPengaturan(&a, ctx, nil, pengaturanAtributFlagSinkronSimpeg)
+			if err != nil {
+				log.Println("error load pengaturan flag sinkron simpeg: %w", err)
+				errChan <- err
+				return
+			}
+
+			if flagSinkronSimpeg != "1" {
+				log.Printf("[DEBUG] flag sinkron simpeg 0\n")
+				errChan <- err
+				return
+			}
+
 			dur, err := time.ParseDuration(os.Getenv("RESPONSE_TIMEOUT_MS" + "ms"))
 			if err != nil {
 				dur = time.Second * 40
