@@ -490,6 +490,19 @@ func GetPegawaiByUUIDx(a app.App, ctx context.Context, uuid string) (*model.Pega
 	return &pegawaiAll, nil
 }
 
+func GetPegawaiByNIK(a app.App, ctx context.Context, nik string) (*model.CreatePegawai, error) {
+
+	var pegawaiAll model.CreatePegawai
+	tx := a.GormDB.WithContext(ctx)
+
+	res := tx.First(&pegawaiAll, "nik = ?", nik)
+	if res.Error != nil {
+		return nil, res.Error
+	}
+
+	return &pegawaiAll, nil
+}
+
 func GetOldPegawai(a app.App, ctx context.Context, uuidPegawai string) (model.PegawaiUpdate, error) {
 
 	var pegawaiOld model.PegawaiUpdate
@@ -570,15 +583,15 @@ func UpdatePendidikanPegawai(a app.App, ctx context.Context, uuidPendidikanDiaku
 	return nil
 }
 
-func CreatePegawai(a app.App, ctx context.Context, pegawaiUpdate model.PegawaiUpdate) error {
+func CreatePegawai(a app.App, ctx context.Context, pegawaiCreate model.PegawaiCreate) error {
 	tx := a.GormDB.Session(&gorm.Session{
 		Context:              ctx,
 		FullSaveAssociations: true,
 	})
 
-	result := tx.Create(&pegawaiUpdate)
+	result := tx.Create(&pegawaiCreate)
 	if result.Error != nil {
-		return fmt.Errorf("error creating data simpeg tendik: %w", result.Error)
+		return fmt.Errorf("error creating data simpeg : %w", result.Error)
 	}
 
 	return nil

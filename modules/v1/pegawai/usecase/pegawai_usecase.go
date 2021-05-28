@@ -462,32 +462,40 @@ func prepareSinkronSimpeg(ctx context.Context, pegawaiInsani *model.PegawaiDetai
 	return nil
 }
 
-// func HandleCreatePegawai(a app.App, ctx context.Context, errChan chan error) echo.HandlerFunc {
-// 	h := func(c echo.Context) error {
+func HandleCreatePegawai(a app.App, ctx context.Context, errChan chan error) echo.HandlerFunc {
+	h := func(c echo.Context) error {
 
-// 		// Validasi Data
-// 		pegawaiCreate, err := ValidateCreatePegawai(a, c)
-// 		if err != nil {
-// 			fmt.Printf("[ERROR], %s\n", err.Error())
-// 			return c.JSON(http.StatusBadRequest, map[string]string{"message": err.Error()})
-// 		}
+		// Validasi Data
+		pegawaiCreate, err := PrepareCreateSimpeg(a, c)
+		if err != nil {
+			fmt.Printf("[ERROR], %s\n", err.Error())
+			return c.JSON(http.StatusBadRequest, map[string]string{"message": err.Error()})
+		}
 
-// 		// Create Data
-// 		err = repo.CreatePegawai(a, c.Request().Context(), pegawaiCreate)
-// 		if err != nil {
-// 			fmt.Printf("[ERROR], %s\n", err.Error())
-// 			return c.JSON(http.StatusBadRequest, map[string]string{"message": err.Error()})
-// 		}
+		// Create Data
+		err = repo.CreatePegawai(a, c.Request().Context(), pegawaiCreate)
+		if err != nil {
+			fmt.Printf("[ERROR], %s\n", err.Error())
+			return c.JSON(http.StatusBadRequest, map[string]string{"message": err.Error()})
+		}
 
-// 		// Menampilkan response
-// 		pegawaiDetail, err := PrepareGetSimpegPegawaiByUUID(a, pegawaiCreate.Uuid)
-// 		if err != nil {
-// 			fmt.Printf("[ERROR] repo get kepegawaian, %s\n", err.Error())
-// 			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
-// 		}
+		// GET UUID
+		pegawai, err := repo.GetPegawaiByNIK(a, c.Request().Context(), pegawaiCreate.Nik)
+		if err != nil {
+			fmt.Printf("[ERROR] repo get kepegawaian, %s\n", err.Error())
+			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
+		}
 
-// 		return c.JSON(http.StatusOK, pegawaiDetail)
-// 	}
+		// Menampilkan response
+		pegawaiDetail, err := PrepareGetSimpegPegawaiByUUID(a, pegawai.UUID)
+		if err != nil {
+			fmt.Printf("[ERROR] repo get kepegawaian, %s\n", err.Error())
+			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
+		}
 
-// 	return echo.HandlerFunc(h)
-// }
+		return c.JSON(http.StatusOK, pegawaiDetail)
+		// return c.JSON(http.StatusOK, pegawaiCreate)
+	}
+
+	return echo.HandlerFunc(h)
+}

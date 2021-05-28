@@ -30,3 +30,18 @@ func SearchPersonal(a app.App, ctx context.Context, nama string, nik_pegawai str
 
 	return &personal, nil
 }
+
+func GetPersonalById(a app.App, ctx context.Context, id string) (*model.PersonalDataPribadiId, error) {
+
+	var personal model.PersonalDataPribadiId
+	tx := a.GormDB.WithContext(ctx)
+
+	res := tx.Where("nik_pegawai = ?", id).
+		First(&personal)
+
+	if res.Error != nil {
+		return nil, res.Error
+	}
+
+	return &personal, nil
+}

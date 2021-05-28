@@ -30,6 +30,17 @@ type Pegawai struct {
 	UUID                            string                `json:"uuid"`
 }
 
+type CreatePegawai struct {
+	ID   string `json:"-" gorm:"primaryKey"`
+	NIK  string `json:"nik" gorm:"type:varchar;not null"`
+	Nama string `json:"nama" gorm:"type:varchar;not null"`
+	UUID string `json:"uuid"`
+}
+
+func (*CreatePegawai) TableName() string {
+	return "pegawai"
+}
+
 type PegawaiRequestParam struct {
 	ID                              string `json:"-"`
 	NIK                             string `json:"nik"`
@@ -287,12 +298,12 @@ type JenjangPendidikan struct {
 }
 
 type PegawaiUpdate struct {
-	Id                      int                     `form:"id" gorm:"primaryKey"`
+	Id                      int                     `form:"id" gorm:"primaryKey;<-false"`
 	IdPersonalDataPribadi   string                  `form:"id_personal_data_pribadi" gorm:"<-:create"`
 	FlagAktif               int                     `form:"flag_aktif" gorm:"->"`
-	Nik                     string                  `form:"nik" gorm:"->"`
+	Nik                     string                  `form:"nik" gorm:"->;<-:create"`
 	NikKtp                  string                  `form:"nik_ktp" gorm:"->"`
-	Nama                    string                  `form:"nama" gorm:"->"`
+	Nama                    string                  `form:"nama" gorm:"->;<-:create"`
 	GelarDepan              string                  `form:"gelar_depan" gorm:"<-:create"`
 	GelarBelakang           string                  `form:"gelar_belakang" gorm:"<-:create"`
 	TempatLahir             string                  `form:"tempat_lahir" gorm:"<-:create"`
@@ -340,13 +351,13 @@ type PegawaiUpdate struct {
 	LokasiKerja             string                  `form:"lokasi_kerja"`
 	UuidLokasiKerja         string                  `form:"uuid_lokasi_kerja" gorm:"-"`
 	FlagPensiun             string                  `form:"flag_pensiun" gorm:"->"`
-	TglPensiun              string                  `form:"tgl_pensiun" gorm:"<-:create" gorm:"->"`
+	TglPensiun              string                  `form:"tgl_pensiun" gorm:"->"`
 	FlagMeninggal           string                  `form:"flag_meninggal" gorm:"->"`
-	TglInput                string                  `form:"tgl_input" gorm:"->" gorm:"->"`
+	TglInput                string                  `form:"tgl_input" gorm:"->"`
 	UserInput               string                  `form:"user_input" gorm:"->"`
 	TglUpdate               string                  `form:"tgl_update" gorm:"->"`
 	UserUpdate              string                  `form:"user_update"`
-	Uuid                    string                  `form:"uuid" gorm:"->"`
+	Uuid                    string                  `form:"uuid" gorm:"->;<-false"`
 	PegawaiFungsional       PegawaiFungsionalUpdate `gorm:"foreignkey:IdPegawai;references:Id"`
 	PegawaiPNS              PegawaiPNSUpdate        `gorm:"foreignkey:IdPegawai;references:Id"`
 }
