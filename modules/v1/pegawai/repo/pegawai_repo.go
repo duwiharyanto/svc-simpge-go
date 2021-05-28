@@ -10,6 +10,7 @@ import (
 	"svc-insani-go/modules/v1/pegawai/model"
 
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 const (
@@ -585,11 +586,30 @@ func UpdatePendidikanPegawai(a app.App, ctx context.Context, uuidPendidikanDiaku
 
 func CreatePegawai(a app.App, ctx context.Context, pegawaiCreate model.PegawaiCreate) error {
 	tx := a.GormDB.Session(&gorm.Session{
-		Context:              ctx,
-		FullSaveAssociations: true,
+		Context: ctx,
+		// FullSaveAssociations: true,
 	})
 
-	result := tx.Create(&pegawaiCreate)
+	result := tx.Omit(clause.Associations).Create(&pegawaiCreate)
+	if result.Error != nil {
+		return fmt.Errorf("error creating data simpeg : %w", result.Error)
+	}
+
+	result = tx.Find(&pegawaiCreate, "nik = ?", pegawaiCreate.Nik)
+	if result.Error != nil {
+		tx.Rollback()
+		return fmt.Errorf("error find data simpeg nik : %w", result.Error)
+	}
+
+	pegawaiCreate.PegawaiFungsional.IdPegawai = pegawaiCreate.Id
+	pegawaiCreate.PegawaiPNS.IdPegawai = pegawaiCreate.Id
+
+	result = tx.Create(&pegawaiCreate.PegawaiFungsional)
+	if result.Error != nil {
+		return fmt.Errorf("error creating data simpeg : %w", result.Error)
+	}
+
+	result = tx.Create(&pegawaiCreate.PegawaiPNS)
 	if result.Error != nil {
 		return fmt.Errorf("error creating data simpeg : %w", result.Error)
 	}

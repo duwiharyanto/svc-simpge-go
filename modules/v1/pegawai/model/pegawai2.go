@@ -1,7 +1,7 @@
 package model
 
 type PegawaiCreate struct {
-	Id                      int                     `form:"id" gorm:"primaryKey;index"`
+	Id                      int                     `form:"id" gorm:"primaryKey"`
 	IdPersonalDataPribadi   string                  `form:"id_personal_data_pribadi" gorm:"<-:create"`
 	FlagAktif               int                     `form:"flag_aktif" gorm:"->"`
 	Nik                     string                  `form:"nik" gorm:"->;<-:create"`
