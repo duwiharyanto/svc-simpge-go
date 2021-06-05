@@ -120,6 +120,10 @@ func GetKepegawaianYayasan(a app.App, uuid string) (*model.PegawaiYayasan, error
 		&pegawaiYayasan.UuidKelompokPegawai,
 		&pegawaiYayasan.KdKelompokPegawai,
 		&pegawaiYayasan.KelompokPegawai,
+		&pegawaiYayasan.UuidIjazahTertinggi,
+		&pegawaiYayasan.KdIjazahTertinggi,
+		&pegawaiYayasan.IjazahTertinggi,
+		&pegawaiYayasan.DetailProfesi,
 		&pegawaiYayasan.UuidPangkatGolongan,
 		&pegawaiYayasan.KdPangkat,
 		&pegawaiYayasan.Pangkat,
@@ -404,22 +408,6 @@ func GetPegawaiPendidikan(a app.App, uuid string) ([]model.JenjangPendidikan, er
 	return jenjangPendidikan, nil
 }
 
-// func GetURLFilePendidikan(a app.App, pendidikanList []*model.PegawaiPendidikan) []*model.PegawaiPendidikan {
-// 	for _, pendidikan := range pendidikanList {
-// 		if pendidikan.PathIjazah != "" {
-// 			fmt.Println("Path Ijazah : ", pendidikan.PathIjazah)
-// 			var err error
-// 			minioBucketNamePersonal := "personal"
-// 			pendidikan.URLIjazah, err = a.MinioClient.GetDownloadURL(minioBucketNamePersonal, pendidikan.PathIjazah, pendidikan.NamaFileIjazah)
-// 			if err != nil {
-// 				fmt.Printf("error getting file url, %s", err.Error())
-// 				pendidikan.URLIjazah = ""
-// 			}
-// 		}
-// 	}
-// 	return pendidikanList
-// }
-
 func setBerkasPendukungWithURL(a app.App, list model.BerkasPendukungList) {
 	for i, berkas := range list {
 		if berkas.PathFile == "" {
@@ -615,4 +603,93 @@ func CreatePegawai(a app.App, ctx context.Context, pegawaiCreate model.PegawaiCr
 	}
 
 	return nil
+}
+
+func GetPegawaiPendidikanPersonal(a app.App, uuid string) ([]model.JenjangPendidikan, error) {
+	sqlQuery := getPegawaiPendidikanPersonalQuery(uuid)
+
+	rows, err := a.DB.Query(sqlQuery)
+	if err != nil {
+		return nil, fmt.Errorf("error querying get pendidikan file, %w", err)
+	}
+	defer rows.Close()
+
+	m := make(map[string][]model.PegawaiPendidikan)
+	idPendidikanList := []string{}
+	for rows.Next() {
+		var pegawaiPendidikan model.PegawaiPendidikan
+		err := rows.Scan(
+			&pegawaiPendidikan.UuidPendidikan,
+			&pegawaiPendidikan.IdPendidikan,
+			&pegawaiPendidikan.KdJenjang,
+			&pegawaiPendidikan.UrutanJenjang,
+			&pegawaiPendidikan.NamaInstitusi,
+			&pegawaiPendidikan.Jurusan,
+			&pegawaiPendidikan.TglKelulusan,
+			&pegawaiPendidikan.FlagIjazahDiakui,
+			&pegawaiPendidikan.FlagIjazahTerakhir,
+			&pegawaiPendidikan.Akreditasi,
+			&pegawaiPendidikan.KonsentrasiBidang,
+			&pegawaiPendidikan.Gelar,
+			&pegawaiPendidikan.NomorInduk,
+			&pegawaiPendidikan.TahunMasuk,
+			&pegawaiPendidikan.JudulTugasAkhir,
+			&pegawaiPendidikan.FlagInstitusiLuarNegeri,
+			&pegawaiPendidikan.NomorIjazah,
+			&pegawaiPendidikan.TglIjazah,
+			&pegawaiPendidikan.PathIjazah,
+			&pegawaiPendidikan.FlagIjazahTerverifikasi,
+			&pegawaiPendidikan.Nilai,
+			&pegawaiPendidikan.JumlahPelajaran,
+			&pegawaiPendidikan.PathSKPenyetaraan,
+			&pegawaiPendidikan.NomorSKPenyetaraan,
+			&pegawaiPendidikan.TglSKPenyetaraan,
+			&pegawaiPendidikan.UUIDPersonal,
+		)
+		if err != nil {
+			return nil, fmt.Errorf("error scanning pendidikan pegawai, %w", err)
+		}
+		pegawaiPendidikan.SetTanggalIDN()
+		pegawaiPendidikan.SetNamaFileIjazah()
+		pegawaiPendidikan.SetNamaFilePenyetaraan()
+		pegawaiPendidikan.SetDownloadFileNamePendidikan(a.TimeLocation)
+		setIjazahWithURL(a, &pegawaiPendidikan)
+		idPendidikanList = append(idPendidikanList, pegawaiPendidikan.IdPendidikan)
+		m[fmt.Sprint(pegawaiPendidikan.KdJenjang, ".", pegawaiPendidikan.UrutanJenjang)] = append(m[fmt.Sprint(pegawaiPendidikan.KdJenjang, ".", pegawaiPendidikan.UrutanJenjang)], pegawaiPendidikan)
+
+	}
+
+	filePegawaiList, err := GetPegawaiFilePendidikan(a, idPendidikanList...)
+	if err != nil {
+		return nil, fmt.Errorf("error get file pendidikan: %w", err)
+	}
+
+	setBerkasPendukungWithURL(a, filePegawaiList)
+
+	filePegawaiMap := filePegawaiList.MapByIdPendidikan()
+
+	jenjangPendidikan := []model.JenjangPendidikan{}
+	for kdJenjangUrut, pendidikanList := range m {
+		for n, pendidikan := range pendidikanList {
+			pendidikanList[n].BerkasPendukungList = filePegawaiMap[pendidikan.IdPendidikan]
+		}
+		splittedKdJenjangUrut := strings.Split(kdJenjangUrut, ".")
+		kdJenjang := splittedKdJenjangUrut[0]
+		urutanJenjang := splittedKdJenjangUrut[1]
+		jenjangPendidikan = append(jenjangPendidikan, model.JenjangPendidikan{
+			JenjangPendidikan: kdJenjang,
+			UrutanJenjang:     urutanJenjang,
+			Data:              pendidikanList,
+		})
+	}
+
+	sort.SliceStable(jenjangPendidikan, func(i, j int) bool {
+		return jenjangPendidikan[i].UrutanJenjang < jenjangPendidikan[j].UrutanJenjang
+	})
+
+	if err != nil {
+		return nil, fmt.Errorf("error querying and scanning data pendidikan pegawai, %s", err.Error())
+	}
+
+	return jenjangPendidikan, nil
 }

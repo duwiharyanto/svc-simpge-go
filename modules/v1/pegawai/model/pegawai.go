@@ -136,6 +136,10 @@ type PegawaiYayasan struct {
 	UuidKelompokPegawai   string `json:"uuid_kelompok_pegawai"`
 	KdKelompokPegawai     string `json:"kd_kelompok_pegawai"`
 	KelompokPegawai       string `json:"kelompok_pegawai"`
+	UuidIjazahTertinggi   string `json:"uuid_ijazah_tertinggi"`
+	KdIjazahTertinggi     string `json:"kd_ijazah_tertinggi"`
+	IjazahTertinggi       string `json:"ijazah_tertinggi"`
+	DetailProfesi         string `json:"detail_profesi"`
 	UuidStatusPegawai     string `json:"uuid_status_pegawai"`
 	KDStatusPegawai       string `json:"kd_status_pegawai"`
 	StatusPegawai         string `json:"status_pegawai"`
@@ -321,6 +325,9 @@ type PegawaiUpdate struct {
 	KdStatusPendidikanMasuk string                  `form:"kd_status_pendidikan_masuk" gorm:"<-:create"`
 	IdPendidikanTerakhir    int                     `form:"id_pendidikan_terakhir" gorm:"<-:create"`
 	KdPendidikanTerakhir    string                  `form:"kd_pendidikan_terakhir" gorm:"<-:create"`
+	UuidIjazahTertinggi     string                  `form:"uuid_ijazah_tertinggi" gorm:"-"`
+	IdIjazahTertinggi       int                     `form:"id_ijazah_tertinggi"` //New
+	KdIjazahTertinggi       string                  `form:"kd_ijazah_tertinggi"`
 	IdJenisPendidikan       int                     `form:"id_jenis_pendidikan" gorm:"<-:create"`
 	kdJenisPendidikan       string                  `form:"kd_jenis_pendidikan" gorm:"<-:create"`
 	UuidJenisPegawai        string                  `form:"uuid_jenis_pegawai" gorm:"-"`
@@ -332,6 +339,7 @@ type PegawaiUpdate struct {
 	UuidKelompokPegawai     string                  `form:"uuid_kelompok_pegawai" gorm:"-"`
 	IdKelompokPegawai       int                     `form:"id_kelompok_pegawai"`
 	KdKelompokPegawai       string                  `form:"kd_kelompok_pegawai"`
+	DetailProfesi           string                  `form:"detail_profesi"`
 	UuidGolongan            string                  `form:"uuid_golongan" gorm:"-"`
 	IdGolongan              int                     `form:"id_golongan"`
 	KdGolongan              string                  `form:"kd_golongan"`

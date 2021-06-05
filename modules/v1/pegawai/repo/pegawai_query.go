@@ -48,47 +48,6 @@ func getListAllPegawaiQuery(req *model.PegawaiRequest) string {
 	)
 }
 
-// func getListAllPegawaiQuery(req *model.PegawaiRequest) string {
-// 	var kdJenisPegawaiFilterQuery string
-// 	if req.KdJenisPegawai != "" {
-// 		kdJenisPegawaiFilterQuery = fmt.Sprintf("AND a.kd_jenis_pegawai = '%s'", req.KdJenisPegawai)
-// 	}
-// 	var kdKelompokFilterQuery string
-// 	if req.KdKelompokPegawai != "" {
-// 		kdKelompokFilterQuery = fmt.Sprintf("AND a.kd_kelompok_pegawai = '%s'", req.KdKelompokPegawai)
-// 	}
-// 	var kdUnitKerjaFilterQuery string
-// 	if req.KdUnitKerja != "" {
-// 		kdUnitKerjaFilterQuery = fmt.Sprintf("AND a.kd_unit2 = '%s'", req.KdUnitKerja)
-// 	}
-// 	var namaFilterQuery string
-// 	if req.Cari != "" {
-// 		namaFilterQuery = fmt.Sprintf("AND a.nama LIKE '%%%s%%'", req.Cari)
-// 	}
-// 	var paginationFilterQuery string
-// 	if req.Limit != 0 {
-// 		paginationFilterQuery = fmt.Sprintf("LIMIT %d,%d", req.Offset, req.Limit)
-// 	}
-// 	return fmt.Sprintf(`SELECT a.nik, a.nama, COALESCE(a.gelar_depan,''), COALESCE(a.gelar_belakang,''),
-// 	COALESCE(a.kd_kelompok_pegawai,''), COALESCE(c.kelompok_pegawai,''), COALESCE(c.uuid,''),
-// 	COALESCE(a.kd_unit2,''), COALESCE(b.unit2,''), COALESCE(b.uuid,''),
-// 	COALESCE(d.kd_jenis_pegawai,''), COALESCE(d.nama_jenis_pegawai,''), COALESCE(d.uuid,''),
-// 	COALESCE(e.kd_status_pegawai,''), COALESCE(e.status_pegawai,''), COALESCE(e.uuid,''),
-// 	a.uuid
-// 	FROM pegawai a
-// 	LEFT JOIN unit2 b ON a.kd_unit2 = b.kd_unit2
-// 	LEFT JOIN kelompok_pegawai c ON a.kd_kelompok_pegawai = c.kd_kelompok_pegawai
-// 	LEFT JOIN jenis_pegawai d ON a.id_jenis_pegawai = d.id
-// 	LEFT JOIN status_pegawai e ON a.id_status_pegawai = e.id
-// 	WHERE a.flag_aktif=1 %s %s %s %s ORDER BY a.nama %s`,
-// 		kdJenisPegawaiFilterQuery,
-// 		kdKelompokFilterQuery,
-// 		kdUnitKerjaFilterQuery,
-// 		namaFilterQuery,
-// 		paginationFilterQuery,
-// 	)
-// }
-
 func countPegawaiQuery(req *model.PegawaiRequest) string {
 	var uuidJenisPegawaiFilterQuery string
 	if req.UuidJenisPegawai != "" {
@@ -118,28 +77,6 @@ func countPegawaiQuery(req *model.PegawaiRequest) string {
 		namaFilterQuery,
 	)
 }
-
-// func countPegawaiQuery(req *model.PegawaiRequest) string {
-// 	var kdKelompokFilterQuery string
-// 	if req.KdKelompokPegawai != "" {
-// 		kdKelompokFilterQuery = fmt.Sprintf("AND a.kd_kelompok_pegawai = '%s'", req.KdKelompokPegawai)
-// 	}
-// 	var kdUnitKerjaFilterQuery string
-// 	if req.KdUnitKerja != "" {
-// 		kdUnitKerjaFilterQuery = fmt.Sprintf("AND a.kd_unit2 = '%s'", req.KdUnitKerja)
-// 	}
-// 	var namaFilterQuery string
-// 	if req.Cari != "" {
-// 		namaFilterQuery = fmt.Sprintf("AND a.nama LIKE '%%%s%%'", req.Cari)
-// 	}
-// 	return fmt.Sprintf(`SELECT COUNT(*)
-// 	FROM pegawai a
-// 	WHERE a.flag_aktif = 1 %s %s %s`,
-// 		kdKelompokFilterQuery,
-// 		kdUnitKerjaFilterQuery,
-// 		namaFilterQuery,
-// 	)
-// }
 
 func getPegawaiByUUID(uuid string) string {
 	q := fmt.Sprintf(`SELECT
@@ -178,6 +115,10 @@ func getPegawaiYayasanQuery(uuid string) string {
 		COALESCE(kp.uuid,''),
 		COALESCE(kp.kd_kelompok_pegawai,''),
 		COALESCE(kp.kelompok_pegawai,''),
+		COALESCE(ji.uuid,''),
+		COALESCE(ji.kd_jenis_ijazah,''),
+		COALESCE(ji.jenis_ijazah,''),
+		COALESCE(p.detail_profesi,''),
 		COALESCE(pgp.uuid,''),
 		COALESCE(pgp.kd_pangkat_gol,''),
 		COALESCE(pgp.pangkat,''),
@@ -217,6 +158,8 @@ func getPegawaiYayasanQuery(uuid string) string {
 		jabatan_fungsional jf ON pf.id_jabatan_fungsional = jf.id 
 	LEFT JOIN 
 		jenis_nomor_registrasi jnr ON pf.id_jenis_nomor_registrasi = jnr.id
+	LEFT JOIN 
+		jenis_ijazah ji ON p.id_ijazah_tertinggi = ji.id
 	WHERE
 		p.uuid = %q AND p.flag_aktif = 1`, uuid)
 
@@ -379,6 +322,45 @@ func getPegawaiPendidikanQuery(uuid string) string {
 		pegawai_pendidikan pp
 	LEFT JOIN
 		pegawai p ON pp.id_personal_data_pribadi = p.id_personal_data_pribadi
+	WHERE
+		p.uuid = %q AND pp.flag_aktif = 1`, uuid)
+
+	return helper.FlatQuery(q)
+}
+
+func getPegawaiPendidikanPersonalQuery(uuid string) string {
+	q := fmt.Sprintf(`
+	SELECT 
+		COALESCE(pp.uuid,''),
+		COALESCE(pp.id,''),
+		COALESCE(pp.kd_jenjang,''),
+		COALESCE(LPAD(pp.urutan_jenjang,2,"0"),''),
+		COALESCE(pp.nama_institusi,''),
+		COALESCE(pp.jurusan,''),
+		COALESCE(pp.tgl_kelulusan,''),
+		COALESCE(pp.flag_ijazah_diakui,''),
+		COALESCE(pp.flag_ijazah_terakhir,''),
+		COALESCE(pp.kd_akreditas,''),
+		COALESCE(pp.konsentrasi_bidang_ilmu,''),
+		COALESCE(pp.gelar,''),
+		COALESCE(pp.nomor_induk,''),
+		COALESCE(pp.tahun_masuk,''),
+		COALESCE(pp.judul_tugas_akhir,''),
+		COALESCE(pp.flag_institusi_luar_negeri,''),
+		COALESCE(pp.nomor_ijazah,''),
+		COALESCE(pp.tgl_ijazah,''),
+		COALESCE(pp.path_ijazah,''),
+		COALESCE(pp.flag_ijazah_terverifikasi,''),
+		COALESCE(pp.nilai,''),
+		COALESCE(pp.jumlah_pelajaran,''),
+		COALESCE(pp.path_sk_penyetaraan,''),
+		COALESCE(pp.nomor_sk_penyetaraan,''),
+		COALESCE(pp.tgl_sk_penyetaraan,''),
+		COALESCE(pp.uuid_personal,'')
+	FROM 
+		pegawai_pendidikan pp
+	LEFT JOIN
+		personal_data_pribadi p ON pp.id_personal_data_pribadi = p.id
 	WHERE
 		p.uuid = %q AND pp.flag_aktif = 1`, uuid)
 

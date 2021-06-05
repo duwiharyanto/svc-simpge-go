@@ -20,7 +20,7 @@ func SearchPersonal(a app.App, ctx context.Context, nama string, nik_pegawai str
 	}
 
 	if nama == "" && nik_pegawai != "" {
-		res := tx.Where("nik_pegawai LIKE ?", "%"+nik_pegawai+"%").
+		res := tx.Where("nik_ktp LIKE ?", "%"+nik_pegawai+"%").
 			First(&personal)
 
 		if res.Error != nil {
@@ -31,12 +31,12 @@ func SearchPersonal(a app.App, ctx context.Context, nama string, nik_pegawai str
 	return &personal, nil
 }
 
-func GetPersonalById(a app.App, ctx context.Context, id string) (*model.PersonalDataPribadiId, error) {
+func GetPersonalByUuid(a app.App, ctx context.Context, uuid string) (*model.PersonalDataPribadiId, error) {
 
 	var personal model.PersonalDataPribadiId
 	tx := a.GormDB.WithContext(ctx)
 
-	res := tx.Where("nik_pegawai = ?", id).
+	res := tx.Where("uuid = ?", uuid).
 		First(&personal)
 
 	if res.Error != nil {

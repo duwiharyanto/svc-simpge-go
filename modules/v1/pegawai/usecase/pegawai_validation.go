@@ -18,6 +18,7 @@ import (
 	statusPegawaiAktifRepo "svc-insani-go/modules/v1/master-status-pegawai-aktif/repo"
 	statusPegawaiRepo "svc-insani-go/modules/v1/master-status-pegawai/repo"
 	personalRepo "svc-insani-go/modules/v1/personal/repo"
+	skRepo "svc-insani-go/modules/v1/sk/repo"
 
 	"github.com/cstockton/go-conv"
 	"github.com/labstack/echo"
@@ -81,6 +82,16 @@ func ValidateUpdatePegawaiByUUID(a app.App, c echo.Context) (model.PegawaiUpdate
 		}
 		pegawaiOld.IdKelompokPegawai, _ = conv.Int(kelompokPegawai.ID)
 		pegawaiOld.KdKelompokPegawai = kelompokPegawai.KdKelompokPegawai
+	}
+
+	// Pengecekan Ijazah Tertinggi
+	if pegawaiReq.UuidIjazahTertinggi != "" {
+		ijazahTertinggi, err := skRepo.GetJenisIjazahByUUID(a, pegawaiReq.UuidIjazahTertinggi)
+		if err != nil {
+			return model.PegawaiUpdate{}, fmt.Errorf("error from repo jenis ijazah by uuid, %w", err)
+		}
+		pegawaiOld.IdIjazahTertinggi, _ = conv.Int(ijazahTertinggi.ID)
+		pegawaiOld.KdIjazahTertinggi = ijazahTertinggi.KdJenisIjazah
 	}
 
 	// Pengecekan Pangkat Golongan Pegawai
@@ -310,6 +321,9 @@ func ValidateUpdatePegawaiByUUID(a app.App, c echo.Context) (model.PegawaiUpdate
 	if pegawaiReq.PegawaiPNS.Keterangan != "" {
 		pegawaiOld.PegawaiPNS.Keterangan = pegawaiReq.PegawaiPNS.Keterangan
 	}
+	if pegawaiReq.DetailProfesi != "" {
+		pegawaiOld.DetailProfesi = pegawaiReq.DetailProfesi
+	}
 	pegawaiOld.UserUpdate = user
 	pegawaiOld.PegawaiFungsional.UserUpdate = user
 
@@ -317,13 +331,19 @@ func ValidateUpdatePegawaiByUUID(a app.App, c echo.Context) (model.PegawaiUpdate
 }
 
 func PrepareCreateSimpeg(a app.App, c echo.Context) (model.PegawaiCreate, error) {
+	uuidPersonal := c.Param("uuidPegawai")
+	if uuidPersonal == "" {
+		return model.PegawaiCreate{}, fmt.Errorf("uuid personal tidak boleh kosong")
+	}
+
+	// fmt.Println("Uuid personal : ", uuidPersonal)
 
 	pegawai, err := ValidateCreatePegawai(a, c)
 	if err != nil {
 		return model.PegawaiCreate{}, fmt.Errorf("error validate create pegawai, %s\n", err.Error())
 	}
 
-	personal, err := personalRepo.GetPersonalById(a, c.Request().Context(), pegawai.Nik)
+	personal, err := personalRepo.GetPersonalByUuid(a, c.Request().Context(), uuidPersonal)
 	if err != nil {
 		return model.PegawaiCreate{}, fmt.Errorf("error search personal")
 	}
@@ -331,7 +351,7 @@ func PrepareCreateSimpeg(a app.App, c echo.Context) (model.PegawaiCreate, error)
 	pegawai.IdPersonalDataPribadi, _ = conv.String(personal.Id)
 	pegawai.Nama = personal.NamaLengkap
 	pegawai.NikKtp = personal.NikKtp
-	pegawai.Nik = personal.NikPegawai
+	// pegawai.Nik = personal.NikPegawai
 	pegawai.TglLahir = personal.TglLahir
 	pegawai.TempatLahir = personal.TempatLahir
 	pegawai.IdAgama, _ = conv.String(personal.IdAgama)
@@ -345,12 +365,6 @@ func PrepareCreateSimpeg(a app.App, c echo.Context) (model.PegawaiCreate, error)
 }
 
 func ValidateCreatePegawai(a app.App, c echo.Context) (model.PegawaiCreate, error) {
-	nikPegawai := c.Param("uuidPegawai")
-	if nikPegawai == "" {
-		return model.PegawaiCreate{}, fmt.Errorf("nik pegawai tidak boleh kosong")
-	}
-
-	// fmt.Println("NIK : ", nikPegawai)
 
 	user := c.Request().Header.Get("X-Member")
 
@@ -363,7 +377,6 @@ func ValidateCreatePegawai(a app.App, c echo.Context) (model.PegawaiCreate, erro
 	}
 
 	fmt.Println("[ERROR] after binding")
-	pegawaiReq.Nik = nikPegawai
 
 	//Pengecekan Jenis Pegawai
 	if pegawaiReq.UuidJenisPegawai != "" {
@@ -397,6 +410,16 @@ func ValidateCreatePegawai(a app.App, c echo.Context) (model.PegawaiCreate, erro
 		}
 		pegawaiReq.IdKelompokPegawai, _ = conv.Int(kelompokPegawai.ID)
 		pegawaiReq.KdKelompokPegawai = kelompokPegawai.KdKelompokPegawai
+	}
+
+	// Pengecekan Ijazah Tertinggi
+	if pegawaiReq.UuidIjazahTertinggi != "" {
+		ijazahTertinggi, err := skRepo.GetJenisIjazahByUUID(a, pegawaiReq.UuidIjazahTertinggi)
+		if err != nil {
+			return model.PegawaiCreate{}, fmt.Errorf("error from repo jenis ijazah by uuid, %w", err)
+		}
+		pegawaiReq.IdIjazahTertinggi, _ = conv.Int(ijazahTertinggi.ID)
+		pegawaiReq.KdIjazahTertinggi = ijazahTertinggi.KdJenisIjazah
 	}
 
 	// Pengecekan Pangkat Golongan Pegawai
@@ -580,6 +603,20 @@ func ValidateCreatePegawai(a app.App, c echo.Context) (model.PegawaiCreate, erro
 			return model.PegawaiCreate{}, fmt.Errorf("error data bulan tidak valid")
 		}
 	}
+
+	if pegawaiReq.DetailProfesi != "" {
+		fmt.Println("Ini Detail Profese : ", pegawaiReq.DetailProfesi)
+		if len(pegawaiReq.DetailProfesi) > 35 {
+			return model.PegawaiCreate{}, fmt.Errorf("error detail terlalu panjang")
+		}
+	}
+
+	if pegawaiReq.Nik != "" {
+		if len(pegawaiReq.Nik) > 9 {
+			return model.PegawaiCreate{}, fmt.Errorf("error NIK terlalu panjang")
+		}
+	}
+
 	pegawaiReq.UserUpdate = user
 	pegawaiReq.PegawaiFungsional.UserUpdate = user
 

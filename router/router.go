@@ -38,6 +38,7 @@ func InitRoute(a app.App, appCtx context.Context, e *echo.Echo, slackErrChan cha
 	insaniGroupingPath.PUT("/pegawai-simpeg/:uuidPegawai", pegawai.HandleUpdatePegawai(a, appCtx, slackErrChan))
 	insaniGroupingPath.POST("/pegawai-simpeg/:uuidPegawai", pegawai.HandleCreatePegawai(a, appCtx, slackErrChan))
 	insaniGroupingPath.GET("/pegawai/personal", personal.HandleSearchPersonal(a))
+	insaniGroupingPath.GET("/pegawai/personal-pendidikan/:uuidPersonal", pegawai.HandleGetPendidikanByUUIDPersonal(a))
 
 	// Data Master
 	insaniGroupingPath.GET("/jabatan-struktural", organisasiV2.HandleGetAllJabatanStruktural(a))
@@ -99,9 +100,6 @@ func InitRoute(a app.App, appCtx context.Context, e *echo.Echo, slackErrChan cha
 	// Pengaturan Personal
 	insaniGroupingPath.GET("/pengaturan", pengaturan.HandleGetPengaturan(&a, nil))
 	insaniGroupingPath.PUT("/pengaturan", pengaturan.HandleUpdatePengaturan(&a, nil))
-
-	// Testing
-	insaniGroupingPath.GET("/testing/:idPersonal", personal.HandleGetPersonalByID(a))
 
 }
 

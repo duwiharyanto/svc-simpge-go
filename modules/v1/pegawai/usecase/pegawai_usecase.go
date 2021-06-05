@@ -486,6 +486,17 @@ func HandleCreatePegawai(a app.App, ctx context.Context, errChan chan error) ech
 			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
 		}
 
+		// Set Flag Pendidikan
+		uuidPendidikanDiakui := c.FormValue("uuid_tingkat_pdd_diakui")
+		uuidPendidikanTerakhir := c.FormValue("uuid_tingkat_pdd_terakhir")
+		idPersonalPegawai := pegawaiCreate.IdPersonalDataPribadi
+
+		err = repo.UpdatePendidikanPegawai(a, c.Request().Context(), uuidPendidikanDiakui, uuidPendidikanTerakhir, idPersonalPegawai)
+		if err != nil {
+			fmt.Printf("[ERROR], %s\n", err.Error())
+			return c.JSON(http.StatusBadRequest, map[string]string{"message": err.Error()})
+		}
+
 		// Menampilkan response
 		pegawaiDetail, err := PrepareGetSimpegPegawaiByUUID(a, pegawai.UUID)
 		if err != nil {
@@ -497,5 +508,22 @@ func HandleCreatePegawai(a app.App, ctx context.Context, errChan chan error) ech
 		// return c.JSON(http.StatusOK, pegawaiCreate)
 	}
 
+	return echo.HandlerFunc(h)
+}
+
+func HandleGetPendidikanByUUIDPersonal(a app.App) echo.HandlerFunc {
+	h := func(c echo.Context) error {
+		uuidPersonal := c.Param("uuidPersonal")
+		if uuidPersonal == "" {
+			return c.JSON(http.StatusBadRequest, map[string]string{"message": "parameter uuid personal wajib diisi"})
+		}
+
+		pendidikanDetail, err := repo.GetPegawaiPendidikanPersonal(a, uuidPersonal)
+		if err != nil {
+			log.Printf("[ERROR] repo get pendidikan, %s\n", err.Error())
+			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
+		}
+		return c.JSON(http.StatusOK, pendidikanDetail)
+	}
 	return echo.HandlerFunc(h)
 }
