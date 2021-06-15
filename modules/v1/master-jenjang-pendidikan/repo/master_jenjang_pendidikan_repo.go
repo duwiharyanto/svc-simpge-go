@@ -7,8 +7,8 @@ import (
 	"svc-insani-go/modules/v1/master-jenjang-pendidikan/model"
 )
 
-func GetJenjangPendidikan(a app.App) ([]model.JenjangPendidikan, error) {
-	sqlQuery := getLokasiKerjaQuery()
+func GetJenjangPendidikan(a app.App, ctx context.Context) ([]model.JenjangPendidikan, error) {
+	sqlQuery := getJenjangPendidikanQuery()
 	rows, err := a.DB.Query(sqlQuery)
 	if err != nil {
 		return nil, fmt.Errorf("error querying get jenjang pendidikan, %w", err)

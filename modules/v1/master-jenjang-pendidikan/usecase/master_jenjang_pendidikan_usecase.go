@@ -10,9 +10,9 @@ import (
 	"github.com/labstack/echo"
 )
 
-func HandleGetLokasiKerja(a app.App) echo.HandlerFunc {
+func HandleGetJenjangPendidikan(a app.App) echo.HandlerFunc {
 	h := func(c echo.Context) error {
-		JenjangPendidikan, err := repo.GetJenjangPendidikan(a)
+		JenjangPendidikan, err := repo.GetJenjangPendidikan(a, c.Request().Context())
 		if err != nil {
 			fmt.Printf("[ERROR] %s\n", err.Error())
 			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
