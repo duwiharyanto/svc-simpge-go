@@ -11,6 +11,7 @@ import (
 	jenisNoRegisRepo "svc-insani-go/modules/v1/master-jenis-nomor-registrasi/repo"
 	jenisPTTRepo "svc-insani-go/modules/v1/master-jenis-pegawai-tidak-tetap/repo"
 	jenisPegawaiRepo "svc-insani-go/modules/v1/master-jenis-pegawai/repo"
+	jenjangPendidikan "svc-insani-go/modules/v1/master-jenjang-pendidikan/repo"
 	kelompokPegawaiRepo "svc-insani-go/modules/v1/master-kelompok-pegawai/repo"
 	lokasiKerjaRepo "svc-insani-go/modules/v1/master-lokasi-kerja/repo"
 	indukKerjaRepo "svc-insani-go/modules/v1/master-organisasi/repo"
@@ -18,7 +19,6 @@ import (
 	statusPegawaiAktifRepo "svc-insani-go/modules/v1/master-status-pegawai-aktif/repo"
 	statusPegawaiRepo "svc-insani-go/modules/v1/master-status-pegawai/repo"
 	personalRepo "svc-insani-go/modules/v1/personal/repo"
-	skRepo "svc-insani-go/modules/v1/sk/repo"
 
 	"github.com/cstockton/go-conv"
 	"github.com/labstack/echo"
@@ -84,14 +84,15 @@ func ValidateUpdatePegawaiByUUID(a app.App, c echo.Context) (model.PegawaiUpdate
 		pegawaiOld.KdKelompokPegawai = kelompokPegawai.KdKelompokPegawai
 	}
 
-	// Pengecekan Ijazah Tertinggi
-	if pegawaiReq.UuidIjazahTertinggi != "" {
-		ijazahTertinggi, err := skRepo.GetJenisIjazahByUUID(a, pegawaiReq.UuidIjazahTertinggi)
+	// Pengecekan Ijazah Pendidikan Masuk
+	fmt.Println("DEBUG : ", pegawaiReq.UuidPendidikanMasuk)
+	if pegawaiReq.UuidPendidikanMasuk != "" {
+		pendidikanMasuk, err := jenjangPendidikan.GetJenjangPendidikanByUUID(a, c.Request().Context(), pegawaiReq.UuidPendidikanMasuk)
 		if err != nil {
 			return model.PegawaiUpdate{}, fmt.Errorf("error from repo jenis ijazah by uuid, %w", err)
 		}
-		pegawaiOld.IdIjazahTertinggi, _ = conv.Int(ijazahTertinggi.ID)
-		pegawaiOld.KdIjazahTertinggi = ijazahTertinggi.KdJenisIjazah
+		pegawaiOld.IdPendidikanMasuk, _ = conv.Int(pendidikanMasuk.ID)
+		pegawaiOld.KdPendidikanMasuk = pendidikanMasuk.KdJenjang
 	}
 
 	// Pengecekan Pangkat Golongan Pegawai
@@ -412,14 +413,15 @@ func ValidateCreatePegawai(a app.App, c echo.Context) (model.PegawaiCreate, erro
 		pegawaiReq.KdKelompokPegawai = kelompokPegawai.KdKelompokPegawai
 	}
 
-	// Pengecekan Ijazah Tertinggi
+	// Pengecekan Pendidikan Masuk
+	fmt.Println("DEBUG : ", pegawaiReq.UuidPendidikanMasuk)
 	if pegawaiReq.UuidPendidikanMasuk != "" {
-		pendidikanMasuk, err := skRepo.GetJenisIjazahByUUID(a, pegawaiReq.UuidPendidikanMasuk)
+		pendidikanMasuk, err := jenjangPendidikan.GetJenjangPendidikanByUUID(a, c.Request().Context(), pegawaiReq.UuidPendidikanMasuk)
 		if err != nil {
 			return model.PegawaiCreate{}, fmt.Errorf("error from repo jenis ijazah by uuid, %w", err)
 		}
 		pegawaiReq.IdPendidikanMasuk, _ = conv.Int(pendidikanMasuk.ID)
-		pegawaiReq.KdPendidikanMasuk = pendidikanMasuk.KdJenisIjazah
+		pegawaiReq.KdPendidikanMasuk = pendidikanMasuk.KdJenjang
 	}
 
 	// Pengecekan Pangkat Golongan Pegawai

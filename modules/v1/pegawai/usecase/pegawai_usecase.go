@@ -209,7 +209,6 @@ func HandleUpdatePegawai(a app.App, ctx context.Context, errChan chan error) ech
 
 			if flagSinkronSimpeg != "1" {
 				log.Printf("[DEBUG] flag sinkron simpeg 0\n")
-				errChan <- err
 				return
 			}
 
@@ -523,7 +522,6 @@ func HandleCreatePegawai(a app.App, ctx context.Context, errChan chan error) ech
 
 			if flagSinkronSimpeg != "1" {
 				log.Printf("[DEBUG] flag sinkron simpeg 0\n")
-				errChan <- err
 				return
 			}
 

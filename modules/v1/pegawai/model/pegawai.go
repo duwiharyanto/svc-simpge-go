@@ -330,15 +330,13 @@ type PegawaiUpdate struct {
 	KdGolonganDarah         string                  `form:"kd_golongan_darah" gorm:"<-:create"`
 	IdStatusPerkawinan      int                     `form:"id_status_perkawinan" gorm:"<-:create"`
 	KdStatusPerkawinan      string                  `form:"kd_status_perkawinan" gorm:"<-:create"`
-	IdPendidikanMasuk       int                     `form:"id_pendidikan_masuk" gorm:"<-:create"`
-	KdPendidikanMasuk       string                  `form:"kd_pendidikan_masuk" gorm:"<-:create"`
+	UuidPendidikanMasuk     string                  `form:"uuid_pendidikan_masuk" gorm:"-"`
+	IdPendidikanMasuk       int                     `form:"id_pendidikan_masuk"`
+	KdPendidikanMasuk       string                  `form:"kd_pendidikan_masuk"`
 	IdStatusPendidikanMasuk int                     `form:"id_status_pendidikan_masuk" gorm:"<-:create"`
 	KdStatusPendidikanMasuk string                  `form:"kd_status_pendidikan_masuk" gorm:"<-:create"`
 	IdPendidikanTerakhir    int                     `form:"id_pendidikan_terakhir" gorm:"<-:create"`
 	KdPendidikanTerakhir    string                  `form:"kd_pendidikan_terakhir" gorm:"<-:create"`
-	UuidIjazahTertinggi     string                  `form:"uuid_ijazah_tertinggi" gorm:"-"`
-	IdIjazahTertinggi       int                     `form:"id_ijazah_tertinggi"` //New
-	KdIjazahTertinggi       string                  `form:"kd_ijazah_tertinggi"`
 	IdJenisPendidikan       int                     `form:"id_jenis_pendidikan" gorm:"<-:create"`
 	kdJenisPendidikan       string                  `form:"kd_jenis_pendidikan" gorm:"<-:create"`
 	UuidJenisPegawai        string                  `form:"uuid_jenis_pegawai" gorm:"-"`
