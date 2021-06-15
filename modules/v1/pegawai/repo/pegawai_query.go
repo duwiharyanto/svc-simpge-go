@@ -115,9 +115,9 @@ func getPegawaiYayasanQuery(uuid string) string {
 		COALESCE(kp.uuid,''),
 		COALESCE(kp.kd_kelompok_pegawai,''),
 		COALESCE(kp.kelompok_pegawai,''),
-		COALESCE(ji.uuid,''),
-		COALESCE(ji.kd_jenis_ijazah,''),
-		COALESCE(ji.jenis_ijazah,''),
+		COALESCE(jp2.uuid,''),
+		COALESCE(jp2.kd_jenjang,''),
+		COALESCE(jp2.jenjang,''),
 		COALESCE(p.detail_profesi,''),
 		COALESCE(pgp.uuid,''),
 		COALESCE(pgp.kd_pangkat_gol,''),
@@ -134,8 +134,6 @@ func getPegawaiYayasanQuery(uuid string) string {
 		COALESCE(pf.masa_kerja_bawaan_bulan,''),
 		COALESCE(pf.masa_kerja_gaji_tahun,''),
 		COALESCE(pf.masa_kerja_gaji_bulan,''),
-		COALESCE(pf.masa_kerja_total_tahun,''),
-		COALESCE(pf.masa_kerja_total_bulan,''),
 		COALESCE(pf.angka_kredit,''),
 		COALESCE(pf.nomor_sertifikasi,''),
 		COALESCE(jnr.uuid,''),
@@ -159,7 +157,7 @@ func getPegawaiYayasanQuery(uuid string) string {
 	LEFT JOIN 
 		jenis_nomor_registrasi jnr ON pf.id_jenis_nomor_registrasi = jnr.id
 	LEFT JOIN 
-		jenis_ijazah ji ON p.id_ijazah_tertinggi = ji.id
+		jenjang_pendidikan jp2 ON p.id_pendidikan_masuk = jp2.id
 	WHERE
 		p.uuid = %q AND p.flag_aktif = 1`, uuid)
 

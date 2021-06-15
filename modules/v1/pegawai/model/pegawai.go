@@ -10,6 +10,8 @@ import (
 	statusPegawai "svc-insani-go/modules/v1/master-status-pegawai/model"
 	unitKerja "svc-insani-go/modules/v1/master-unit-kerja/model"
 	"time"
+
+	"github.com/cstockton/go-conv"
 )
 
 type Pegawai struct {
@@ -120,12 +122,13 @@ type PegawaiPribadi struct {
 }
 
 type PegawaiDetail struct {
-	PegawaiPribadi    *PegawaiPribadi     `json:"pribadi"`
-	JenjangPendidikan []JenjangPendidikan `json:"pendidikan"`
-	PegawaiYayasan    *PegawaiYayasan     `json:"kepegawaian"`
-	UnitKerjaPegawai  *UnitKerjaPegawai   `json:"unit_kerja"`
-	PegawaiPNSPTT     *PegawaiPNSPTT      `json:"negara_ptt"`
-	StatusAktif       *StatusAktif        `json:"status_aktif"`
+	PegawaiPribadi *PegawaiPribadi `json:"pribadi"`
+	// JenjangPendidikan []JenjangPendidikan `json:"pendidikan"`
+	JenjangPendidikan DataPendidikanDetail `json:"pendidikan"`
+	PegawaiYayasan    *PegawaiYayasan      `json:"kepegawaian"`
+	UnitKerjaPegawai  *UnitKerjaPegawai    `json:"unit_kerja"`
+	PegawaiPNSPTT     *PegawaiPNSPTT       `json:"negara_ptt"`
+	StatusAktif       *StatusAktif         `json:"status_aktif"`
 }
 
 type PegawaiYayasan struct {
@@ -136,9 +139,10 @@ type PegawaiYayasan struct {
 	UuidKelompokPegawai   string `json:"uuid_kelompok_pegawai"`
 	KdKelompokPegawai     string `json:"kd_kelompok_pegawai"`
 	KelompokPegawai       string `json:"kelompok_pegawai"`
-	UuidIjazahTertinggi   string `json:"uuid_ijazah_tertinggi"`
-	KdIjazahTertinggi     string `json:"kd_ijazah_tertinggi"`
-	IjazahTertinggi       string `json:"ijazah_tertinggi"`
+	UuidPendidikanMasuk   string `json:"-" form:"uuid_pendidikan_masuk"`
+	IdPendidikanMasuk     int    `json:"-"`
+	KdPendidikanMasuk     string `json:"-"`
+	PendidikanMasuk       string `json:"-"`
 	DetailProfesi         string `json:"detail_profesi"`
 	UuidStatusPegawai     string `json:"uuid_status_pegawai"`
 	KDStatusPegawai       string `json:"kd_status_pegawai"`
@@ -160,7 +164,7 @@ type PegawaiYayasan struct {
 	MasaKerjaBawaanBulan  string `json:"masa_kerja_bawaan_bulan"`
 	MasaKerjaGajiTahun    string `json:"masa_kerja_gaji_tahun"`
 	MasaKerjaGajiBulan    string `json:"masa_kerja_gaji_bulan"`
-	MasaKerjaTotalahun    string `json:"masa_kerja_total_tahun"`
+	MasaKerjaTotalTahun   string `json:"masa_kerja_total_tahun"`
 	MasaKerjaTotalBulan   string `json:"masa_kerja_total_bulan"`
 	AngkaKredit           string `json:"angka_kredit"`
 	NoSertifikasi         string `json:"nomor_sertifikasi_pegawai"`
@@ -295,6 +299,13 @@ type BerkasPendukung struct {
 	UUIDPersonal  string                `json:"-"`
 }
 
+type DataPendidikanDetail struct {
+	UuidPendidikanMasuk string              `json:"uuid_pendidikan_masuk"`
+	KdPendidikanMasuk   string              `json:"kd_pendidikan_masuk"`
+	PendidikanMasuk     string              `json:"pendidikan_masuk"`
+	Data                []JenjangPendidikan `json:"data_pendidikan"`
+}
+
 type JenjangPendidikan struct {
 	JenjangPendidikan string              `json:"jenjang"`
 	UrutanJenjang     string              `json:"-"`
@@ -375,25 +386,25 @@ func (*PegawaiUpdate) TableName() string {
 }
 
 type PegawaiFungsionalUpdate struct {
-	Id                       int     `form:"-"`
-	IdKafka                  int     `form:"-"`
-	IdPegawai                int     `form:"-"`
-	UuidPangkatGolongan      string  `form:"uuid_pangkat_golongan" gorm:"-"`
-	IdPangkatGolongan        int     `form:"id_pangkat_golongan"`
-	KdPangkatGolongan        string  `form:"kd_pangkat_golongan"`
-	UuidJabatanFungsional    string  `form:"uuid_jabatan_fungsional" gorm:"-"`
-	IdJabatanFungsional      int     `form:"id_jabatan_fungsional"`
-	KdJabatanFungsional      string  `form:"kd_jabatan_fungsional"`
-	TmtPangkatGolongan       *string `form:"tmt_pangkat_golongan" gorm:"default:null"`
-	TmtPangkatGolonganIDN    string  `form:"tmt_pangkat_golongan_idn" gorm:"-"`
-	TmtJabatan               *string `form:"tmt_jabatan"`
-	TmtJabatanIDN            string  `form:"tmt_jabatan_idn" gorm:"-"`
-	MasaKerjaBawaanTahun     string  `form:"masa_kerja_bawaan_tahun"`
-	MasaKerjaBawaanBulan     string  `form:"masa_kerja_bawaan_bulan"`
-	MasaKerjaGajiTahun       string  `form:"masa_kerja_gaji_tahun"`
-	MasaKerjaGajiBulan       string  `form:"masa_kerja_gaji_bulan"`
-	MasaKerjaTotalTahun      string  `form:"masa_kerja_total_tahun"`
-	MasaKerjaTotalBulan      string  `form:"masa_kerja_total_bulan"`
+	Id                    int     `form:"-"`
+	IdKafka               int     `form:"-"`
+	IdPegawai             int     `form:"-"`
+	UuidPangkatGolongan   string  `form:"uuid_pangkat_golongan" gorm:"-"`
+	IdPangkatGolongan     int     `form:"id_pangkat_golongan"`
+	KdPangkatGolongan     string  `form:"kd_pangkat_golongan"`
+	UuidJabatanFungsional string  `form:"uuid_jabatan_fungsional" gorm:"-"`
+	IdJabatanFungsional   int     `form:"id_jabatan_fungsional"`
+	KdJabatanFungsional   string  `form:"kd_jabatan_fungsional"`
+	TmtPangkatGolongan    *string `form:"tmt_pangkat_golongan" gorm:"default:null"`
+	TmtPangkatGolonganIDN string  `form:"tmt_pangkat_golongan_idn" gorm:"-"`
+	TmtJabatan            *string `form:"tmt_jabatan"`
+	TmtJabatanIDN         string  `form:"tmt_jabatan_idn" gorm:"-"`
+	MasaKerjaBawaanTahun  string  `form:"masa_kerja_bawaan_tahun"`
+	MasaKerjaBawaanBulan  string  `form:"masa_kerja_bawaan_bulan"`
+	MasaKerjaGajiTahun    string  `form:"masa_kerja_gaji_tahun"`
+	MasaKerjaGajiBulan    string  `form:"masa_kerja_gaji_bulan"`
+	// MasaKerjaTotalTahun      string  `form:"masa_kerja_total_tahun"`
+	// MasaKerjaTotalBulan      string  `form:"masa_kerja_total_bulan"`
 	AngkaKredit              string  `form:"angka_kredit"`
 	NomorSertifikasi         string  `form:"nomor_sertifikasi"`
 	UuidJenisNomorRegistrasi string  `form:"uuid_jenis_nomor_registrasi" gorm:"-"`
@@ -592,4 +603,28 @@ func (b *PegawaiPendidikan) SetDownloadFileNamePendidikan(loc *time.Location) {
 	splittedPathPenyetaraan := strings.Split(b.PathSKPenyetaraan, ".")
 	fileExtensionPenyetaraan := splittedPathPenyetaraan[1]
 	b.NamaFileSKPenyetaraan = fmt.Sprintf("%s.%s", penyetaraan, fileExtensionPenyetaraan)
+}
+
+func (a *PegawaiYayasan) SetMasaKerjaTotal() {
+	var MasaBawaanBulan, _ = conv.Int(a.MasaKerjaBawaanBulan)
+	var MasaBawaanTahun, _ = conv.Int(a.MasaKerjaBawaanTahun)
+	var MasaGajiBulan, _ = conv.Int(a.MasaKerjaGajiBulan)
+	var MasaGajiTahun, _ = conv.Int(a.MasaKerjaGajiTahun)
+	var MasaTotalTahun = 0
+	var MasaTotalBulan = 0
+
+	if a.MasaKerjaBawaanTahun != "" || a.MasaKerjaGajiTahun != "" {
+		MasaTotalTahun = MasaBawaanTahun + MasaGajiTahun
+	}
+
+	if a.MasaKerjaBawaanBulan != "" || a.MasaKerjaGajiBulan != "" {
+		MasaTotalBulan = MasaBawaanBulan + MasaGajiBulan
+		if MasaTotalBulan > 12 {
+			MasaTotalBulan = MasaTotalBulan - 12
+			MasaTotalTahun = MasaTotalTahun + 1
+		}
+	}
+
+	a.MasaKerjaTotalBulan, _ = conv.String(MasaTotalBulan)
+	a.MasaKerjaTotalTahun, _ = conv.String(MasaTotalTahun)
 }

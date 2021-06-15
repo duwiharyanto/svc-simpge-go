@@ -120,9 +120,9 @@ func GetKepegawaianYayasan(a app.App, uuid string) (*model.PegawaiYayasan, error
 		&pegawaiYayasan.UuidKelompokPegawai,
 		&pegawaiYayasan.KdKelompokPegawai,
 		&pegawaiYayasan.KelompokPegawai,
-		&pegawaiYayasan.UuidIjazahTertinggi,
-		&pegawaiYayasan.KdIjazahTertinggi,
-		&pegawaiYayasan.IjazahTertinggi,
+		&pegawaiYayasan.UuidPendidikanMasuk,
+		&pegawaiYayasan.KdPendidikanMasuk,
+		&pegawaiYayasan.PendidikanMasuk,
 		&pegawaiYayasan.DetailProfesi,
 		&pegawaiYayasan.UuidPangkatGolongan,
 		&pegawaiYayasan.KdPangkat,
@@ -139,8 +139,6 @@ func GetKepegawaianYayasan(a app.App, uuid string) (*model.PegawaiYayasan, error
 		&pegawaiYayasan.MasaKerjaBawaanBulan,
 		&pegawaiYayasan.MasaKerjaGajiTahun,
 		&pegawaiYayasan.MasaKerjaGajiBulan,
-		&pegawaiYayasan.MasaKerjaTotalahun,
-		&pegawaiYayasan.MasaKerjaTotalBulan,
 		&pegawaiYayasan.AngkaKredit,
 		&pegawaiYayasan.NoSertifikasi,
 		&pegawaiYayasan.UuidJenisRegis,
@@ -158,6 +156,7 @@ func GetKepegawaianYayasan(a app.App, uuid string) (*model.PegawaiYayasan, error
 	}
 
 	pegawaiYayasan.SetTanggalIDN()
+	pegawaiYayasan.SetMasaKerjaTotal()
 
 	return &pegawaiYayasan, nil
 }

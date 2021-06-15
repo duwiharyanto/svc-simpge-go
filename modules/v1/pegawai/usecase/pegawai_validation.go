@@ -250,16 +250,16 @@ func ValidateUpdatePegawaiByUUID(a app.App, c echo.Context) (model.PegawaiUpdate
 		}
 		pegawaiOld.PegawaiFungsional.MasaKerjaGajiBulan = pegawaiReq.PegawaiFungsional.MasaKerjaGajiBulan
 	}
-	if pegawaiReq.PegawaiFungsional.MasaKerjaTotalTahun != "" {
-		pegawaiOld.PegawaiFungsional.MasaKerjaTotalTahun = pegawaiReq.PegawaiFungsional.MasaKerjaTotalTahun
-	}
-	if pegawaiReq.PegawaiFungsional.MasaKerjaTotalBulan != "" {
-		a, _ := strconv.Atoi(pegawaiReq.PegawaiFungsional.MasaKerjaTotalBulan)
-		if a > 12 {
-			return model.PegawaiUpdate{}, fmt.Errorf("error data bulan tidak valid")
-		}
-		pegawaiOld.PegawaiFungsional.MasaKerjaTotalBulan = pegawaiReq.PegawaiFungsional.MasaKerjaTotalBulan
-	}
+	// if pegawaiReq.PegawaiFungsional.MasaKerjaTotalTahun != "" {
+	// 	pegawaiOld.PegawaiFungsional.MasaKerjaTotalTahun = pegawaiReq.PegawaiFungsional.MasaKerjaTotalTahun
+	// }
+	// if pegawaiReq.PegawaiFungsional.MasaKerjaTotalBulan != "" {
+	// 	a, _ := strconv.Atoi(pegawaiReq.PegawaiFungsional.MasaKerjaTotalBulan)
+	// 	if a > 12 {
+	// 		return model.PegawaiUpdate{}, fmt.Errorf("error data bulan tidak valid")
+	// 	}
+	// 	pegawaiOld.PegawaiFungsional.MasaKerjaTotalBulan = pegawaiReq.PegawaiFungsional.MasaKerjaTotalBulan
+	// }
 	if pegawaiReq.PegawaiFungsional.AngkaKredit != "" {
 		pegawaiOld.PegawaiFungsional.AngkaKredit = pegawaiReq.PegawaiFungsional.AngkaKredit
 	}
@@ -413,13 +413,13 @@ func ValidateCreatePegawai(a app.App, c echo.Context) (model.PegawaiCreate, erro
 	}
 
 	// Pengecekan Ijazah Tertinggi
-	if pegawaiReq.UuidIjazahTertinggi != "" {
-		ijazahTertinggi, err := skRepo.GetJenisIjazahByUUID(a, pegawaiReq.UuidIjazahTertinggi)
+	if pegawaiReq.UuidPendidikanMasuk != "" {
+		pendidikanMasuk, err := skRepo.GetJenisIjazahByUUID(a, pegawaiReq.UuidPendidikanMasuk)
 		if err != nil {
 			return model.PegawaiCreate{}, fmt.Errorf("error from repo jenis ijazah by uuid, %w", err)
 		}
-		pegawaiReq.IdIjazahTertinggi, _ = conv.Int(ijazahTertinggi.ID)
-		pegawaiReq.KdIjazahTertinggi = ijazahTertinggi.KdJenisIjazah
+		pegawaiReq.IdPendidikanMasuk, _ = conv.Int(pendidikanMasuk.ID)
+		pegawaiReq.KdPendidikanMasuk = pendidikanMasuk.KdJenisIjazah
 	}
 
 	// Pengecekan Pangkat Golongan Pegawai
@@ -566,12 +566,12 @@ func ValidateCreatePegawai(a app.App, c echo.Context) (model.PegawaiCreate, erro
 		}
 	}
 
-	if pegawaiReq.PegawaiFungsional.MasaKerjaTotalBulan != "" {
-		a, _ := strconv.Atoi(pegawaiReq.PegawaiFungsional.MasaKerjaTotalBulan)
-		if a > 12 {
-			return model.PegawaiCreate{}, fmt.Errorf("error data bulan tidak valid")
-		}
-	}
+	// if pegawaiReq.PegawaiFungsional.MasaKerjaTotalBulan != "" {
+	// 	a, _ := strconv.Atoi(pegawaiReq.PegawaiFungsional.MasaKerjaTotalBulan)
+	// 	if a > 12 {
+	// 		return model.PegawaiCreate{}, fmt.Errorf("error data bulan tidak valid")
+	// 	}
+	// }
 	if pegawaiReq.PegawaiFungsional.NomorSertifikasi != "" {
 		if len(pegawaiReq.PegawaiFungsional.NomorSertifikasi) > 20 {
 			return model.PegawaiCreate{}, fmt.Errorf("error nomor sertifikasi tidak valid")

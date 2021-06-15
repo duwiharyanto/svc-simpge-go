@@ -18,15 +18,13 @@ type PegawaiCreate struct {
 	KdGolonganDarah         string                  `form:"kd_golongan_darah" gorm:"<-:create"`
 	IdStatusPerkawinan      int                     `form:"id_status_perkawinan" gorm:"<-:create"`
 	KdStatusPerkawinan      string                  `form:"kd_status_perkawinan" gorm:"<-:create"`
+	UuidPendidikanMasuk     string                  `form:"uuid_pendidikan_masuk" gorm:"-"`
 	IdPendidikanMasuk       int                     `form:"id_pendidikan_masuk" gorm:"<-:create"`
 	KdPendidikanMasuk       string                  `form:"kd_pendidikan_masuk" gorm:"<-:create"`
 	IdStatusPendidikanMasuk int                     `form:"id_status_pendidikan_masuk" gorm:"<-:create"`
 	KdStatusPendidikanMasuk string                  `form:"kd_status_pendidikan_masuk" gorm:"<-:create"`
 	IdPendidikanTerakhir    int                     `form:"id_pendidikan_terakhir" gorm:"<-:create"`
 	KdPendidikanTerakhir    string                  `form:"kd_pendidikan_terakhir" gorm:"<-:create"`
-	UuidIjazahTertinggi     string                  `form:"uuid_ijazah_tertinggi" gorm:"-"`
-	IdIjazahTertinggi       int                     `form:"id_ijazah_tertinggi" gorm:"<-:create"`
-	KdIjazahTertinggi       string                  `form:"kd_ijazah_tertinggi" gorm:"<-:create"`
 	IdJenisPendidikan       int                     `form:"id_jenis_pendidikan" gorm:"<-:create"`
 	kdJenisPendidikan       string                  `form:"kd_jenis_pendidikan" gorm:"<-:create"`
 	UuidJenisPegawai        string                  `form:"uuid_jenis_pegawai" gorm:"-"`
@@ -90,8 +88,6 @@ type PegawaiFungsionalCreate struct {
 	MasaKerjaBawaanBulan     string  `form:"masa_kerja_bawaan_bulan"`
 	MasaKerjaGajiTahun       string  `form:"masa_kerja_gaji_tahun"`
 	MasaKerjaGajiBulan       string  `form:"masa_kerja_gaji_bulan"`
-	MasaKerjaTotalTahun      string  `form:"masa_kerja_total_tahun"`
-	MasaKerjaTotalBulan      string  `form:"masa_kerja_total_bulan"`
 	AngkaKredit              string  `form:"angka_kredit"`
 	NomorSertifikasi         string  `form:"nomor_sertifikasi"`
 	UuidJenisNomorRegistrasi string  `form:"uuid_jenis_nomor_registrasi" gorm:"-"`
