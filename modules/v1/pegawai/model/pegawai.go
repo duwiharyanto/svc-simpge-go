@@ -610,27 +610,29 @@ func (b *PegawaiPendidikan) SetDownloadFileNamePendidikan(loc *time.Location) {
 
 func (a *PegawaiYayasan) SetMasaKerjaTotal(b *UnitKerjaPegawai) {
 	now := time.Now()
-	yearNow := now.Year()
-	monthNow := now.Month()
-	dayNow := now.Day()
+	yearNow, _ := conv.Int(now.Year())
+	monthNow, _ := conv.Int(now.Month())
+	dayNow, _ := conv.Int(now.Day())
+	maxMonth := 12
 
 	dateSk, err := time.Parse("2006-01-02", b.TmtSkPertama)
 	if err != nil {
 		return
 	}
 
-	yearSk := dateSk.Year()
-	monthSk := dateSk.Month()
-	daySk := dateSk.Day()
+	yearSk, _ := conv.Int(dateSk.Year())
+	monthSk, _ := conv.Int(dateSk.Month())
+	daySk, _ := conv.Int(dateSk.Day())
 
 	yearSkNow := yearNow - yearSk
-	monthSkNow := monthSk - monthNow
+	monthSkNow := monthNow - monthSk
 
 	if monthSkNow > 0 {
 		yearSkNow = yearSkNow - 1
+		monthSkNow = maxMonth - monthSkNow
 	}
 
-	daySkNow := daySk - dayNow
+	daySkNow := dayNow - daySk
 
 	if daySkNow > 0 {
 		monthSkNow = monthSkNow - 1
