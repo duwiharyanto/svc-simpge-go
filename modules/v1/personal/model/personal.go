@@ -1,14 +1,18 @@
 package model
 
 type PersonalDataPribadi struct {
-	Id            int    `json:"id" gorm:"primaryKey"`
-	IdKafka       int    `json:"id_kafka"`
+	Id            uint64 `json:"-" gorm:"primaryKey"`
+	IdKafka       int    `json:"-"`
 	NamaLengkap   string `json:"nama_lengkap"`
 	GelarDepan    string `json:"gelar_depan"`
 	GelarBelakang string `json:"gelar_belakang"`
 	NikKtp        string `json:"nik_ktp"`
 	NikPegawai    string `json:"nik_pegawai"`
 	Uuid          string `json:"uuid"`
+}
+
+type PersonalDataPribadiResponse struct {
+	Data []PersonalDataPribadi `json:"data"`
 }
 
 type PersonalDataPribadiId struct {

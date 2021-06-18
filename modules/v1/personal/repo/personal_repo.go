@@ -6,29 +6,43 @@ import (
 	"svc-insani-go/modules/v1/personal/model"
 )
 
-func SearchPersonal(a app.App, ctx context.Context, nama string, nik_pegawai string) (*model.PersonalDataPribadi, error) {
+func SearchPersonal(a app.App, ctx context.Context, nama string, nik_pegawai string) ([]model.PersonalDataPribadi, error) {
 
-	var personal model.PersonalDataPribadi
+	personals := []model.PersonalDataPribadi{}
 	tx := a.GormDB.WithContext(ctx)
 
 	if nama != "" {
-		res := tx.Where("nama_lengkap LIKE ?", "%"+nama+"%").
-			First(&personal)
+		res := tx.Where("nama_lengkap LIKE ? AND id NOT IN(SELECT id_personal_data_pribadi FROM pegawai)", "%"+nama+"%").
+			Find(&personals)
 		if res.Error != nil {
 			return nil, res.Error
 		}
 	}
 
 	if nama == "" && nik_pegawai != "" {
-		res := tx.Where("nik_ktp LIKE ?", "%"+nik_pegawai+"%").
-			First(&personal)
+		res := tx.Where("nik_ktp LIKE ? AND id NOT IN(SELECT id_personal_data_pribadi FROM pegawai)", "%"+nik_pegawai+"%").
+			Find(&personals)
 
 		if res.Error != nil {
 			return nil, res.Error
 		}
 	}
 
-	return &personal, nil
+	return personals, nil
+}
+
+func AllPersonal(a app.App, ctx context.Context) ([]model.PersonalDataPribadi, error) {
+
+	personals := []model.PersonalDataPribadi{}
+	tx := a.GormDB.WithContext(ctx)
+
+	res := tx.Where("id NOT IN(SELECT id_personal_data_pribadi FROM pegawai)").
+		Find(&personals)
+	if res.Error != nil {
+		return nil, res.Error
+	}
+
+	return personals, nil
 }
 
 func GetPersonalByUuid(a app.App, ctx context.Context, uuid string) (*model.PersonalDataPribadiId, error) {
