@@ -23,6 +23,7 @@ type PegawaiCreate struct {
 	KdPendidikanMasuk       string                  `form:"kd_pendidikan_masuk" gorm:"<-:create"`
 	IdStatusPendidikanMasuk int                     `form:"id_status_pendidikan_masuk" gorm:"<-:create"`
 	KdStatusPendidikanMasuk string                  `form:"kd_status_pendidikan_masuk" gorm:"<-:create"`
+	UuidPendidikanTerakhir  string                  `form:"uuid_pendidikan_terakhir" gorm:"-"`
 	IdPendidikanTerakhir    int                     `form:"id_pendidikan_terakhir" gorm:"<-:create"`
 	KdPendidikanTerakhir    string                  `form:"kd_pendidikan_terakhir" gorm:"<-:create"`
 	IdJenisPendidikan       int                     `form:"id_jenis_pendidikan" gorm:"<-:create"`
@@ -36,7 +37,8 @@ type PegawaiCreate struct {
 	UuidKelompokPegawai     string                  `form:"uuid_kelompok_pegawai" gorm:"-"`
 	IdKelompokPegawai       int                     `form:"id_kelompok_pegawai"`
 	KdKelompokPegawai       string                  `form:"kd_kelompok_pegawai"`
-	DetailProfesi           string                  `form:"detail_profesi"`
+	UuidDetailProfesi       string                  `form:"uuid_detail_profesi"  gorm:"-"`
+	IdDetailProfesi         int                     `form:"id_detail_profesi"`
 	UuidGolongan            string                  `form:"uuid_golongan" gorm:"-"`
 	IdGolongan              int                     `form:"id_golongan"`
 	KdGolongan              string                  `form:"kd_golongan"`

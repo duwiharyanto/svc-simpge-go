@@ -20,9 +20,13 @@ func getListAllPegawaiQuery(req *model.PegawaiRequest) string {
 	if req.UuidUnitKerja != "" {
 		kdUnitKerjaFilterQuery = fmt.Sprintf("AND b.uuid = '%s'", req.UuidUnitKerja)
 	}
+	// var namaFilterQuery string
+	// if req.Cari != "" {
+	// 	namaFilterQuery = fmt.Sprintf("AND a.nama LIKE '%%%s%%'", req.Cari)
+	// }
 	var namaFilterQuery string
 	if req.Cari != "" {
-		namaFilterQuery = fmt.Sprintf("AND a.nama LIKE '%%%s%%'", req.Cari)
+		namaFilterQuery = fmt.Sprintf("AND (a.nama LIKE '%%%s%%' OR a.nik LIKE '%%%s%%')", req.Cari, req.Cari)
 	}
 	var paginationFilterQuery string
 	if req.Limit != 0 {
@@ -39,7 +43,7 @@ func getListAllPegawaiQuery(req *model.PegawaiRequest) string {
 	LEFT JOIN kelompok_pegawai c ON a.id_kelompok_pegawai = c.id
 	LEFT JOIN jenis_pegawai d ON a.id_jenis_pegawai = d.id
 	LEFT JOIN status_pegawai e ON a.id_status_pegawai = e.id
-	WHERE a.flag_aktif=1 %s %s %s %s ORDER BY a.nama %s`,
+	WHERE a.flag_aktif=1 %s %s %s %sORDER BY a.nama %s`,
 		kdJenisPegawaiFilterQuery,
 		kdKelompokFilterQuery,
 		kdUnitKerjaFilterQuery,
@@ -63,7 +67,7 @@ func countPegawaiQuery(req *model.PegawaiRequest) string {
 	}
 	var namaFilterQuery string
 	if req.Cari != "" {
-		namaFilterQuery = fmt.Sprintf("AND a.nama LIKE '%%%s%%'", req.Cari)
+		namaFilterQuery = fmt.Sprintf("AND (a.nama LIKE '%%%s%%' OR a.nik LIKE '%%%s%%')", req.Cari, req.Cari)
 	}
 	return fmt.Sprintf(`SELECT COUNT(*)
 	FROM pegawai a
@@ -118,7 +122,11 @@ func getPegawaiYayasanQuery(uuid string) string {
 		COALESCE(jp2.uuid,''),
 		COALESCE(jp2.kd_jenjang,''),
 		COALESCE(jp2.jenjang,''),
-		COALESCE(p.detail_profesi,''),
+		COALESCE(jp3.uuid,''),
+		COALESCE(jp3.kd_jenjang,''),
+		COALESCE(jp3.jenjang,''),
+		COALESCE(df.uuid,''),
+		COALESCE(df.detail_profesi,''),
 		COALESCE(pgp.uuid,''),
 		COALESCE(pgp.kd_pangkat_gol,''),
 		COALESCE(pgp.pangkat,''),
@@ -158,6 +166,10 @@ func getPegawaiYayasanQuery(uuid string) string {
 		jenis_nomor_registrasi jnr ON pf.id_jenis_nomor_registrasi = jnr.id
 	LEFT JOIN 
 		jenjang_pendidikan jp2 ON p.id_pendidikan_masuk = jp2.id
+	LEFT JOIN 
+		jenjang_pendidikan jp3 ON p.id_pendidikan_terakhir = jp3.id
+	LEFT JOIN 
+		detail_profesi df ON p.id_detail_profesi = df.id
 	WHERE
 		p.uuid = %q AND p.flag_aktif = 1`, uuid)
 

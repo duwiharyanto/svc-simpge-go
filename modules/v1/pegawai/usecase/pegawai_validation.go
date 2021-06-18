@@ -7,6 +7,7 @@ import (
 	"svc-insani-go/modules/v1/pegawai/model"
 	"svc-insani-go/modules/v1/pegawai/repo"
 
+	detailProfesiRepo "svc-insani-go/modules/v1/master-detail-profesi/repo"
 	jabatanFungsionalRepo "svc-insani-go/modules/v1/master-jabatan-fungsional/repo"
 	jenisNoRegisRepo "svc-insani-go/modules/v1/master-jenis-nomor-registrasi/repo"
 	jenisPTTRepo "svc-insani-go/modules/v1/master-jenis-pegawai-tidak-tetap/repo"
@@ -84,15 +85,35 @@ func ValidateUpdatePegawaiByUUID(a app.App, c echo.Context) (model.PegawaiUpdate
 		pegawaiOld.KdKelompokPegawai = kelompokPegawai.KdKelompokPegawai
 	}
 
+	// Pengecekan Detail Profesi
+	if pegawaiReq.UuidDetailProfesi != "" {
+		detailProfesi, err := detailProfesiRepo.GetDetailProfesiByUUID(a, c.Request().Context(), pegawaiReq.UuidDetailProfesi)
+		if err != nil {
+			return model.PegawaiUpdate{}, fmt.Errorf("error from repo detail profesi by uuid, %w", err)
+		}
+		pegawaiOld.IdDetailProfesi, _ = conv.Int(detailProfesi.ID)
+	}
+
 	// Pengecekan Ijazah Pendidikan Masuk
-	fmt.Println("DEBUG : ", pegawaiReq.UuidPendidikanMasuk)
+	// fmt.Println("DEBUG : ", pegawaiReq.UuidPendidikanMasuk)
 	if pegawaiReq.UuidPendidikanMasuk != "" {
 		pendidikanMasuk, err := jenjangPendidikan.GetJenjangPendidikanByUUID(a, c.Request().Context(), pegawaiReq.UuidPendidikanMasuk)
 		if err != nil {
-			return model.PegawaiUpdate{}, fmt.Errorf("error from repo jenis ijazah by uuid, %w", err)
+			return model.PegawaiUpdate{}, fmt.Errorf("error from repo jenis ijazah pendidikan masuk by uuid, %w", err)
 		}
 		pegawaiOld.IdPendidikanMasuk, _ = conv.Int(pendidikanMasuk.ID)
 		pegawaiOld.KdPendidikanMasuk = pendidikanMasuk.KdJenjang
+	}
+
+	// Pengecekan Ijazah Pendidikan Terakhir
+	fmt.Println("DEBUG : ", pegawaiReq.UuidPendidikanTerakhir)
+	if pegawaiReq.UuidPendidikanTerakhir != "" {
+		pendidikanTerakhir, err := jenjangPendidikan.GetJenjangPendidikanByUUID(a, c.Request().Context(), pegawaiReq.UuidPendidikanTerakhir)
+		if err != nil {
+			return model.PegawaiUpdate{}, fmt.Errorf("error from repo jenis ijazah pendidikan terakhir by uuid, %w", err)
+		}
+		pegawaiOld.IdPendidikanTerakhir, _ = conv.Int(pendidikanTerakhir.ID)
+		pegawaiOld.KdPendidikanTerakhir = pendidikanTerakhir.KdJenjang
 	}
 
 	// Pengecekan Pangkat Golongan Pegawai
@@ -251,16 +272,7 @@ func ValidateUpdatePegawaiByUUID(a app.App, c echo.Context) (model.PegawaiUpdate
 		}
 		pegawaiOld.PegawaiFungsional.MasaKerjaGajiBulan = pegawaiReq.PegawaiFungsional.MasaKerjaGajiBulan
 	}
-	// if pegawaiReq.PegawaiFungsional.MasaKerjaTotalTahun != "" {
-	// 	pegawaiOld.PegawaiFungsional.MasaKerjaTotalTahun = pegawaiReq.PegawaiFungsional.MasaKerjaTotalTahun
-	// }
-	// if pegawaiReq.PegawaiFungsional.MasaKerjaTotalBulan != "" {
-	// 	a, _ := strconv.Atoi(pegawaiReq.PegawaiFungsional.MasaKerjaTotalBulan)
-	// 	if a > 12 {
-	// 		return model.PegawaiUpdate{}, fmt.Errorf("error data bulan tidak valid")
-	// 	}
-	// 	pegawaiOld.PegawaiFungsional.MasaKerjaTotalBulan = pegawaiReq.PegawaiFungsional.MasaKerjaTotalBulan
-	// }
+
 	if pegawaiReq.PegawaiFungsional.AngkaKredit != "" {
 		pegawaiOld.PegawaiFungsional.AngkaKredit = pegawaiReq.PegawaiFungsional.AngkaKredit
 	}
@@ -322,9 +334,7 @@ func ValidateUpdatePegawaiByUUID(a app.App, c echo.Context) (model.PegawaiUpdate
 	if pegawaiReq.PegawaiPNS.Keterangan != "" {
 		pegawaiOld.PegawaiPNS.Keterangan = pegawaiReq.PegawaiPNS.Keterangan
 	}
-	if pegawaiReq.DetailProfesi != "" {
-		pegawaiOld.DetailProfesi = pegawaiReq.DetailProfesi
-	}
+
 	pegawaiOld.UserUpdate = user
 	pegawaiOld.PegawaiFungsional.UserUpdate = user
 
@@ -413,15 +423,34 @@ func ValidateCreatePegawai(a app.App, c echo.Context) (model.PegawaiCreate, erro
 		pegawaiReq.KdKelompokPegawai = kelompokPegawai.KdKelompokPegawai
 	}
 
+	// Pengecekan Detail Profesi
+	if pegawaiReq.UuidDetailProfesi != "" {
+		detailProfesi, err := detailProfesiRepo.GetDetailProfesiByUUID(a, c.Request().Context(), pegawaiReq.UuidDetailProfesi)
+		if err != nil {
+			return model.PegawaiCreate{}, fmt.Errorf("error from repo detail profesi by uuid, %w", err)
+		}
+		pegawaiReq.IdDetailProfesi, _ = conv.Int(detailProfesi.ID)
+	}
+
 	// Pengecekan Pendidikan Masuk
-	fmt.Println("DEBUG : ", pegawaiReq.UuidPendidikanMasuk)
 	if pegawaiReq.UuidPendidikanMasuk != "" {
 		pendidikanMasuk, err := jenjangPendidikan.GetJenjangPendidikanByUUID(a, c.Request().Context(), pegawaiReq.UuidPendidikanMasuk)
 		if err != nil {
-			return model.PegawaiCreate{}, fmt.Errorf("error from repo jenis ijazah by uuid, %w", err)
+			return model.PegawaiCreate{}, fmt.Errorf("error from repo jenis ijazah pendidikan masuk by uuid, %w", err)
 		}
 		pegawaiReq.IdPendidikanMasuk, _ = conv.Int(pendidikanMasuk.ID)
 		pegawaiReq.KdPendidikanMasuk = pendidikanMasuk.KdJenjang
+	}
+
+	// Pengecekan Pendidikan Terakhir
+	fmt.Println("DEBUG : ", pegawaiReq.UuidPendidikanTerakhir)
+	if pegawaiReq.UuidPendidikanTerakhir != "" {
+		pendidikanTerakhir, err := jenjangPendidikan.GetJenjangPendidikanByUUID(a, c.Request().Context(), pegawaiReq.UuidPendidikanTerakhir)
+		if err != nil {
+			return model.PegawaiCreate{}, fmt.Errorf("error from repo jenis ijazah pendidikan terakhir by uuid, %w", err)
+		}
+		pegawaiReq.IdPendidikanTerakhir, _ = conv.Int(pendidikanTerakhir.ID)
+		pegawaiReq.KdPendidikanTerakhir = pendidikanTerakhir.KdJenjang
 	}
 
 	// Pengecekan Pangkat Golongan Pegawai
@@ -603,13 +632,6 @@ func ValidateCreatePegawai(a app.App, c echo.Context) (model.PegawaiCreate, erro
 		a, _ := strconv.Atoi(pegawaiReq.PegawaiPNS.MasaKerjaBulan)
 		if a > 12 {
 			return model.PegawaiCreate{}, fmt.Errorf("error data bulan tidak valid")
-		}
-	}
-
-	if pegawaiReq.DetailProfesi != "" {
-		fmt.Println("Ini Detail Profese : ", pegawaiReq.DetailProfesi)
-		if len(pegawaiReq.DetailProfesi) > 35 {
-			return model.PegawaiCreate{}, fmt.Errorf("error detail terlalu panjang")
 		}
 	}
 

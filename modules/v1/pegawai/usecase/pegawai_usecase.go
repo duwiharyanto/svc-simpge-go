@@ -104,7 +104,6 @@ func PrepareGetSimpegPegawaiByUUID(a app.App, uuidPegawai string) (model.Pegawai
 	if err != nil {
 		return model.PegawaiDetail{}, fmt.Errorf("error repo get pendidikan pegawai by uuid, %w", err)
 	}
-
 	kepegawaianYayasan.SetMasaKerjaTotal(unitKerjaPegawai)
 	pegawaiDetail.PegawaiYayasan = kepegawaianYayasan
 	pegawaiDetail.UnitKerjaPegawai = unitKerjaPegawai
@@ -276,6 +275,18 @@ func prepareSinkronSimpeg(ctx context.Context, pegawaiInsani *model.PegawaiDetai
 	}
 
 	// fmt.Printf("DEBUG fmt : %+v \n ", pegawaiOra.KdStatusPegawai)
+
+	if pegawaiInsani.PegawaiYayasan.KdPendidikanMasuk != "" {
+		pegawaiOra.KdPendidikanMasuk = pegawaiInsani.PegawaiYayasan.KdPendidikanMasuk
+	}
+
+	// fmt.Printf("DEBUG fmt : %+v \n ", pegawaiOra.KdPendidikanMasuk)
+
+	if pegawaiInsani.PegawaiYayasan.KdPendidikanTerakhir != "" {
+		pegawaiOra.KdPendidikan = pegawaiInsani.PegawaiYayasan.KdPendidikanTerakhir
+	}
+
+	// fmt.Printf("DEBUG fmt : %+v \n ", pegawaiOra.KdPendidikanMasuk)
 
 	if pegawaiInsani.PegawaiYayasan.KdKelompokPegawai != "" {
 		pegawaiOra.KelompokPegawai.KdKelompokPegawai = pegawaiInsani.PegawaiYayasan.KdKelompokPegawai
