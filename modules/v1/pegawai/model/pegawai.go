@@ -312,6 +312,10 @@ type JenjangPendidikan struct {
 	Data              []PegawaiPendidikan `json:"data"`
 }
 
+type PendidikanPersonal struct {
+	Data []JenjangPendidikan `json:"data_pendidikan"`
+}
+
 type PegawaiUpdate struct {
 	Id                      int                     `form:"id" gorm:"primaryKey;<-false"`
 	IdPersonalDataPribadi   string                  `form:"id_personal_data_pribadi" gorm:"<-:create"`
@@ -430,13 +434,6 @@ type PegawaiFungsionalUpdate struct {
 func (*PegawaiFungsionalUpdate) TableName() string {
 	return "pegawai_fungsional"
 }
-
-// func (p *PegawaiFungsionalUpdate) BeforeSave(tx *gorm.DB) error {
-// 	if *p.TmtPangkatGolongan == "" {
-// 		p.TmtPangkatGolongan = nil
-// 	}
-// 	return nil
-// }
 
 type PegawaiPNSUpdate struct {
 	Id                    int     `form:"-" gorm:"primaryKey"`
@@ -603,21 +600,42 @@ func (b *PegawaiPendidikan) SetDownloadFileNamePendidikan(loc *time.Location) {
 	b.NamaFileSKPenyetaraan = fmt.Sprintf("%s.%s", penyetaraan, fileExtensionPenyetaraan)
 }
 
-func (a *PegawaiYayasan) SetMasaKerjaTotal() {
+func (a *PegawaiYayasan) SetMasaKerjaTotal(b *UnitKerjaPegawai) {
+	now := time.Now()
+	yearNow := now.Year()
+	monthNow := now.Month()
+	dayNow := now.Day()
+
+	dateSk, err := time.Parse("2006-01-02", b.TmtSkPertama)
+	if err != nil {
+		return
+	}
+
+	yearSk := dateSk.Year()
+	monthSk := dateSk.Month()
+	daySk := dateSk.Day()
+
+	yearSkNow := yearNow - yearSk
+	monthSkNow := monthNow - monthSk
+
+	daySkNow := dayNow - daySk
+
+	if daySkNow >= 0 {
+		monthSkNow = monthSkNow + 1
+	}
+
 	var MasaBawaanBulan, _ = conv.Int(a.MasaKerjaBawaanBulan)
 	var MasaBawaanTahun, _ = conv.Int(a.MasaKerjaBawaanTahun)
-	var MasaGajiBulan, _ = conv.Int(a.MasaKerjaGajiBulan)
-	var MasaGajiTahun, _ = conv.Int(a.MasaKerjaGajiTahun)
 	var MasaTotalTahun = 0
 	var MasaTotalBulan = 0
 
 	if a.MasaKerjaBawaanTahun != "" || a.MasaKerjaGajiTahun != "" {
-		MasaTotalTahun = MasaBawaanTahun + MasaGajiTahun
+		MasaTotalTahun = MasaBawaanTahun + yearSkNow
 	}
 
 	if a.MasaKerjaBawaanBulan != "" || a.MasaKerjaGajiBulan != "" {
-		MasaTotalBulan = MasaBawaanBulan + MasaGajiBulan
-		if MasaTotalBulan > 12 {
+		MasaTotalBulan = MasaBawaanBulan + int(monthSkNow)
+		if MasaTotalBulan >= 12 {
 			MasaTotalBulan = MasaTotalBulan - 12
 			MasaTotalTahun = MasaTotalTahun + 1
 		}

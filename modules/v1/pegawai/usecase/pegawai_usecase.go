@@ -105,6 +105,7 @@ func PrepareGetSimpegPegawaiByUUID(a app.App, uuidPegawai string) (model.Pegawai
 		return model.PegawaiDetail{}, fmt.Errorf("error repo get pendidikan pegawai by uuid, %w", err)
 	}
 
+	kepegawaianYayasan.SetMasaKerjaTotal(unitKerjaPegawai)
 	pegawaiDetail.PegawaiYayasan = kepegawaianYayasan
 	pegawaiDetail.UnitKerjaPegawai = unitKerjaPegawai
 	pegawaiDetail.StatusAktif = statusPegawaiAktif
@@ -177,13 +178,15 @@ func HandleUpdatePegawai(a app.App, ctx context.Context, errChan chan error) ech
 		uuidPendidikanDiakui := c.FormValue("uuid_tingkat_pdd_diakui")
 		uuidPendidikanTerakhir := c.FormValue("uuid_tingkat_pdd_terakhir")
 		idPersonalPegawai := pegawaiUpdate.IdPersonalDataPribadi
-
 		// fmt.Println("[ERROR] Uuid Pendidikan Diakui : ", uuidPendidikanDiakui)
 		// fmt.Println("[ERROR] Uuid Pendidikan Terakhir : ", uuidPendidikanTerakhir)
-		err = repo.UpdatePendidikanPegawai(a, c.Request().Context(), uuidPendidikanDiakui, uuidPendidikanTerakhir, idPersonalPegawai)
-		if err != nil {
-			fmt.Printf("[ERROR], %s\n", err.Error())
-			return c.JSON(http.StatusBadRequest, map[string]string{"message": err.Error()})
+
+		if uuidPendidikanDiakui != "" || uuidPendidikanTerakhir != "" {
+			err = repo.UpdatePendidikanPegawai(a, c.Request().Context(), uuidPendidikanDiakui, uuidPendidikanTerakhir, idPersonalPegawai)
+			if err != nil {
+				fmt.Printf("[ERROR], %s\n", err.Error())
+				return c.JSON(http.StatusBadRequest, map[string]string{"message": err.Error()})
+			}
 		}
 
 		// Menampilkan response
@@ -562,11 +565,16 @@ func HandleGetPendidikanByUUIDPersonal(a app.App) echo.HandlerFunc {
 			return c.JSON(http.StatusBadRequest, map[string]string{"message": "parameter uuid personal wajib diisi"})
 		}
 
-		pendidikanDetail, err := repo.GetPegawaiPendidikanPersonal(a, uuidPersonal)
+		pendidikanPegawai, err := repo.GetPegawaiPendidikanPersonal(a, uuidPersonal)
 		if err != nil {
 			log.Printf("[ERROR] repo get pendidikan, %s\n", err.Error())
 			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
 		}
+
+		pendidikanDetail := model.PendidikanPersonal{
+			Data: pendidikanPegawai,
+		}
+
 		return c.JSON(http.StatusOK, pendidikanDetail)
 	}
 	return echo.HandlerFunc(h)

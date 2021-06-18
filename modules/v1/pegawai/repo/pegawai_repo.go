@@ -156,7 +156,7 @@ func GetKepegawaianYayasan(a app.App, uuid string) (*model.PegawaiYayasan, error
 	}
 
 	pegawaiYayasan.SetTanggalIDN()
-	pegawaiYayasan.SetMasaKerjaTotal()
+	// pegawaiYayasan.SetMasaKerjaTotal()
 
 	return &pegawaiYayasan, nil
 }
@@ -532,6 +532,14 @@ func UpdatePendidikanPegawai(a app.App, ctx context.Context, uuidPendidikanDiaku
 
 	var pegawaiPendidikanUpdate model.PegawaiPendidikanUpdate
 
+	// Flag Ijazah Diakui ke Nul
+	res := db.Model(&pegawaiPendidikanUpdate).
+		Where("id_personal_data_pribadi = ?", idPersonalPegawai).
+		Update("flag_ijazah_diakui", "0")
+	if res.Error != nil {
+		return res.Error
+	}
+
 	// Flag Ijazah Diakui
 	if uuidPendidikanDiakui != "" {
 		res := db.Model(&pegawaiPendidikanUpdate).
@@ -541,13 +549,14 @@ func UpdatePendidikanPegawai(a app.App, ctx context.Context, uuidPendidikanDiaku
 			return res.Error
 		}
 
-		// Flag Ijazah ke Nul
-		res = db.Model(&pegawaiPendidikanUpdate).
-			Where("id_personal_data_pribadi = ? AND uuid != ?", idPersonalPegawai, uuidPendidikanDiakui).
-			Update("flag_ijazah_diakui", "0")
-		if res.Error != nil {
-			return res.Error
-		}
+	}
+
+	// Flag Ijazah Terakhir ke Nul
+	res = db.Model(&pegawaiPendidikanUpdate).
+		Where("id_personal_data_pribadi = ?", idPersonalPegawai).
+		Update("flag_ijazah_terakhir", "0")
+	if res.Error != nil {
+		return res.Error
 	}
 
 	// Flag Ijazah Terakhir
@@ -559,13 +568,33 @@ func UpdatePendidikanPegawai(a app.App, ctx context.Context, uuidPendidikanDiaku
 			return res.Error
 		}
 
-		// Flag Ijazah ke Nul
-		res = db.Model(&pegawaiPendidikanUpdate).
-			Where("id_personal_data_pribadi = ? AND uuid != ?", idPersonalPegawai, uuidPendidikanTerakhir).
-			Update("flag_ijazah_terakhir", "0")
+	}
+
+	return nil
+}
+
+func UpdatePendidikanDiakui(a app.App, ctx context.Context, uuidPendidikanDiakui string, idPersonalPegawai string) error {
+	db := a.GormDB.WithContext(ctx)
+
+	var pegawaiPendidikanUpdate model.PegawaiPendidikanUpdate
+
+	// Flag Ijazah Diakui ke Nul
+	res := db.Model(&pegawaiPendidikanUpdate).
+		Where("id_personal_data_pribadi = ?", idPersonalPegawai).
+		Update("flag_ijazah_diakui", "0")
+	if res.Error != nil {
+		return res.Error
+	}
+
+	// Flag Ijazah Diakui
+	if uuidPendidikanDiakui != "" {
+		res := db.Model(&pegawaiPendidikanUpdate).
+			Where("uuid = ?", uuidPendidikanDiakui).
+			Update("flag_ijazah_diakui", "1")
 		if res.Error != nil {
 			return res.Error
 		}
+
 	}
 
 	return nil
