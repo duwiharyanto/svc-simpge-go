@@ -6,23 +6,14 @@ import (
 	"svc-insani-go/modules/v1/personal/model"
 )
 
-func SearchPersonal(a app.App, ctx context.Context, nama string, nik_pegawai string) ([]model.PersonalDataPribadi, error) {
+func SearchPersonal(a app.App, ctx context.Context, cari string) ([]model.PersonalDataPribadi, error) {
 
 	personals := []model.PersonalDataPribadi{}
 	tx := a.GormDB.WithContext(ctx)
 
-	if nama != "" {
-		res := tx.Where("nama_lengkap LIKE ? AND id NOT IN(SELECT id_personal_data_pribadi FROM pegawai)", "%"+nama+"%").
+	if cari != "" {
+		res := tx.Where("(nama_lengkap LIKE ? OR nik_ktp LIKE ? ) AND (id NOT IN(SELECT id_personal_data_pribadi FROM pegawai))", "%"+cari+"%", "%"+cari+"%").
 			Find(&personals)
-		if res.Error != nil {
-			return nil, res.Error
-		}
-	}
-
-	if nama == "" && nik_pegawai != "" {
-		res := tx.Where("nik_ktp LIKE ? AND id NOT IN(SELECT id_personal_data_pribadi FROM pegawai)", "%"+nik_pegawai+"%").
-			Find(&personals)
-
 		if res.Error != nil {
 			return nil, res.Error
 		}

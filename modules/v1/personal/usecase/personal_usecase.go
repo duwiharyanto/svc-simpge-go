@@ -12,21 +12,9 @@ import (
 
 func HandleSearchPersonal(a app.App) echo.HandlerFunc {
 	h := func(c echo.Context) error {
-		nama := c.QueryParam("nama")
-		nikKTP := c.QueryParam("nik_ktp")
+		cari := c.QueryParam("cari")
 
-		// if nama == "" && nikKTP == "" {
-		// 	pp, err := repo.AllPersonal(a, c.Request().Context())
-		// 	if err != nil {
-		// 		fmt.Printf("[ERROR] repo all personal, %s\n", err.Error())
-		// 		return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
-		// 	}
-		// 	return c.JSON(http.StatusOK, model.PersonalDataPribadiResponse{
-		// 		Data: pp,
-		// 	})
-		// }
-
-		pp, err := repo.SearchPersonal(a, c.Request().Context(), nama, nikKTP)
+		pp, err := repo.SearchPersonal(a, c.Request().Context(), cari)
 		if err != nil {
 			fmt.Printf("[ERROR] repo search personal, %s\n", err.Error())
 			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
