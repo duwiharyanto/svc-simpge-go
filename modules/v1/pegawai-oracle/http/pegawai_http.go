@@ -199,7 +199,7 @@ func CreateKepegawaianYayasan(ctx context.Context, client *http.Client, pegawai 
 	// authToken := os.Getenv("AUTH_TOKEN")
 	header := map[string]string{
 		// "Authorization": authToken,
-		"X-Member": pegawai.UserUpdate,
+		"X-Member": pegawai.UserInput,
 	}
 	// fmt.Printf("DEBUG header : %+v \n", header)
 	fmt.Printf("DEBUG pegawai : %+v \n", pegawai)

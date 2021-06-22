@@ -282,6 +282,8 @@ func GetPegawaiPribadi(a app.App, uuid string) (*model.PegawaiPribadi, error) {
 		&pegawaiPribadi.JenisPegawai,
 		&pegawaiPribadi.KelompokPegawai,
 		&pegawaiPribadi.UnitKerja,
+		&pegawaiPribadi.UserInput,
+		&pegawaiPribadi.UserUpdate,
 		&pegawaiPribadi.UUID,
 	)
 

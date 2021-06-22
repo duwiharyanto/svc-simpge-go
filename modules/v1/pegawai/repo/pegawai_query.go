@@ -291,6 +291,8 @@ func getPegawaiPribadiQuery(uuid string) string {
 		COALESCE(jp.nama_jenis_pegawai,''),
 		COALESCE(kp.kelompok_pegawai,''),
 		COALESCE(u2.unit2,''),
+		COALESCE(p.user_input,''), 
+		COALESCE(p.user_update,''), 
 		COALESCE(p.uuid,'') 
 	FROM 
 		pegawai p

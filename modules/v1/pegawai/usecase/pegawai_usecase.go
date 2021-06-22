@@ -468,6 +468,8 @@ func prepareSinkronSimpeg(ctx context.Context, pegawaiInsani *model.PegawaiDetai
 		}
 	}
 
+	pegawaiOra.UserUpdate = pegawaiInsani.PegawaiPribadi.UserUpdate
+
 	// fmt.Println("DEBUG : Update Kepegawaian Yayasan")
 
 	err := pegawaiOraHttp.UpdateKepegawaianYayasan(ctx, &http.Client{}, pegawaiOra)
@@ -839,6 +841,8 @@ func prepareSinkronCreateSimpeg(ctx context.Context, pegawaiInsani *model.Pegawa
 			pegawaiOra.KdStatusHidup = "N"
 		}
 	}
+
+	pegawaiOra.UserInput = pegawaiInsani.PegawaiPribadi.UserInput
 
 	// fmt.Println("DEBUG : Update Kepegawaian Yayasan")
 

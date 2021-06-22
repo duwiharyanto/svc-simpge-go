@@ -44,6 +44,7 @@ type KepegawaianYayasanSimpeg struct {
 	NoKTP             string `json:"no_ktp"`
 	NoTelepon         string `json:"telponhp"`
 	KdStatusHidup     string `json:"kd_status_hidup"`
+	UserInput         string `json:"user_input,omitempty"`
 	UserUpdate        string `json:"user_update,omitempty"`
 	TglUpdate         string `json:"tgl_update,omitempty"`
 	NipKopertis       string `json:"nip_kopertis"`

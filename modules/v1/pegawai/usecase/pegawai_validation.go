@@ -596,13 +596,6 @@ func ValidateCreatePegawai(a app.App, c echo.Context) (model.PegawaiCreate, erro
 			return model.PegawaiCreate{}, fmt.Errorf("[ERROR] data bulan tidak valid")
 		}
 	}
-
-	// if pegawaiReq.PegawaiFungsional.MasaKerjaTotalBulan != "" {
-	// 	a, _ := strconv.Atoi(pegawaiReq.PegawaiFungsional.MasaKerjaTotalBulan)
-	// 	if a > 12 {
-	// 		return model.PegawaiCreate{}, fmt.Errorf("error data bulan tidak valid")
-	// 	}
-	// }
 	if pegawaiReq.PegawaiFungsional.NomorSertifikasi != "" {
 		if len(pegawaiReq.PegawaiFungsional.NomorSertifikasi) > 20 {
 			return model.PegawaiCreate{}, fmt.Errorf("error nomor sertifikasi tidak valid")
@@ -642,6 +635,7 @@ func ValidateCreatePegawai(a app.App, c echo.Context) (model.PegawaiCreate, erro
 	}
 
 	pegawaiReq.UserUpdate = user
+	pegawaiReq.UserInput = user
 	pegawaiReq.PegawaiFungsional.UserUpdate = user
 
 	return pegawaiReq, nil

@@ -134,8 +134,7 @@ type PegawaiPribadi struct {
 }
 
 type PegawaiDetail struct {
-	PegawaiPribadi *PegawaiPribadi `json:"pribadi"`
-	// JenjangPendidikan []JenjangPendidikan `json:"pendidikan"`
+	PegawaiPribadi    *PegawaiPribadi      `json:"pribadi"`
 	JenjangPendidikan DataPendidikanDetail `json:"pendidikan"`
 	PegawaiYayasan    *PegawaiYayasan      `json:"kepegawaian"`
 	UnitKerjaPegawai  *UnitKerjaPegawai    `json:"unit_kerja"`
