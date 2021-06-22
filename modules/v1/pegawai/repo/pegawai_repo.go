@@ -619,7 +619,10 @@ func CreatePegawai(a app.App, ctx context.Context, pegawaiCreate model.PegawaiCr
 		// FullSaveAssociations: true,
 	})
 
-	result := tx.Omit(clause.Associations).Create(&pegawaiCreate)
+	result := tx.Omit(clause.Associations).Clauses(clause.OnConflict{
+		Columns:   []clause.Column{{Name: "nik"}},
+		UpdateAll: true}).
+		Create(&pegawaiCreate)
 	if result.Error != nil {
 		return fmt.Errorf("error creating data simpeg : %w", result.Error)
 	}

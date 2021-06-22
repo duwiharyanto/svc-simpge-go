@@ -2,32 +2,32 @@ package model
 
 type PegawaiCreate struct {
 	Id                      int                     `form:"id" gorm:"primaryKey"`
-	IdPersonalDataPribadi   string                  `form:"id_personal_data_pribadi" gorm:"<-:create"`
+	IdPersonalDataPribadi   string                  `form:"id_personal_data_pribadi"`
 	FlagAktif               int                     `form:"flag_aktif" gorm:"->"`
-	Nik                     string                  `form:"nik" gorm:"->;<-:create"`
-	NikKtp                  string                  `form:"nik_ktp" gorm:"->"`
-	Nama                    string                  `form:"nama" gorm:"->;<-:create"`
-	GelarDepan              string                  `form:"gelar_depan" gorm:"<-:create"`
-	GelarBelakang           string                  `form:"gelar_belakang" gorm:"<-:create"`
-	TempatLahir             string                  `form:"tempat_lahir" gorm:"<-:create"`
-	TglLahir                string                  `form:"tgl_lahir" gorm:"<-:create"`
-	JenisKelamin            string                  `form:"jenis_kelamin" gorm:"<-:create"`
-	IdAgama                 string                  `form:"id_agama" gorm:"<-:create"`
-	KdAgama                 string                  `form:"kd_agama" gorm:"<-:create"`
-	IdGolonganDarah         int                     `form:"id_golongan_darah" gorm:"<-:create"`
-	KdGolonganDarah         string                  `form:"kd_golongan_darah" gorm:"<-:create"`
-	IdStatusPerkawinan      int                     `form:"id_status_perkawinan" gorm:"<-:create"`
-	KdStatusPerkawinan      string                  `form:"kd_status_perkawinan" gorm:"<-:create"`
+	Nik                     string                  `form:"nik" gorm:"uniqueIndex"`
+	NikKtp                  string                  `form:"nik_ktp"`
+	Nama                    string                  `form:"nama"`
+	GelarDepan              string                  `form:"gelar_depan"`
+	GelarBelakang           string                  `form:"gelar_belakang"`
+	TempatLahir             string                  `form:"tempat_lahir"`
+	TglLahir                string                  `form:"tgl_lahir"`
+	JenisKelamin            string                  `form:"jenis_kelamin"`
+	IdAgama                 string                  `form:"id_agama"`
+	KdAgama                 string                  `form:"kd_agama"`
+	IdGolonganDarah         int                     `form:"id_golongan_darah"`
+	KdGolonganDarah         string                  `form:"kd_golongan_darah"`
+	IdStatusPerkawinan      int                     `form:"id_status_perkawinan"`
+	KdStatusPerkawinan      string                  `form:"kd_status_perkawinan"`
 	UuidPendidikanMasuk     string                  `form:"uuid_pendidikan_masuk" gorm:"-"`
-	IdPendidikanMasuk       int                     `form:"id_pendidikan_masuk" gorm:"<-:create"`
-	KdPendidikanMasuk       string                  `form:"kd_pendidikan_masuk" gorm:"<-:create"`
-	IdStatusPendidikanMasuk int                     `form:"id_status_pendidikan_masuk" gorm:"<-:create"`
-	KdStatusPendidikanMasuk string                  `form:"kd_status_pendidikan_masuk" gorm:"<-:create"`
+	IdPendidikanMasuk       int                     `form:"id_pendidikan_masuk"`
+	KdPendidikanMasuk       string                  `form:"kd_pendidikan_masuk"`
+	IdStatusPendidikanMasuk int                     `form:"id_status_pendidikan_masuk"`
+	KdStatusPendidikanMasuk string                  `form:"kd_status_pendidikan_masuk"`
 	UuidPendidikanTerakhir  string                  `form:"uuid_pendidikan_terakhir" gorm:"-"`
-	IdPendidikanTerakhir    int                     `form:"id_pendidikan_terakhir" gorm:"<-:create"`
-	KdPendidikanTerakhir    string                  `form:"kd_pendidikan_terakhir" gorm:"<-:create"`
-	IdJenisPendidikan       int                     `form:"id_jenis_pendidikan" gorm:"<-:create"`
-	kdJenisPendidikan       string                  `form:"kd_jenis_pendidikan" gorm:"<-:create"`
+	IdPendidikanTerakhir    int                     `form:"id_pendidikan_terakhir"`
+	KdPendidikanTerakhir    string                  `form:"kd_pendidikan_terakhir"`
+	IdJenisPendidikan       int                     `form:"id_jenis_pendidikan"`
+	kdJenisPendidikan       string                  `form:"kd_jenis_pendidikan"`
 	UuidJenisPegawai        string                  `form:"uuid_jenis_pegawai" gorm:"-"`
 	IdJenisPegawai          int                     `form:"id_jenis_pegawai"`
 	KdJenisPegawai          string                  `form:"kd_jenis_pegawai"`
@@ -61,9 +61,9 @@ type PegawaiCreate struct {
 	TglPensiun              string                  `form:"tgl_pensiun" gorm:"->"`
 	FlagMeninggal           string                  `form:"flag_meninggal" gorm:"->"`
 	TglInput                string                  `form:"tgl_input" gorm:"->"`
-	UserInput               string                  `form:"user_input" gorm:"<-:create"`
+	UserInput               string                  `form:"user_input"`
 	TglUpdate               string                  `form:"tgl_update" gorm:"->"`
-	UserUpdate              string                  `form:"user_update" gorm:"<-:create"`
+	UserUpdate              string                  `form:"user_update"`
 	PegawaiFungsional       PegawaiFungsionalCreate `gorm:"foreignKey:Id"`
 	PegawaiPNS              PegawaiPNSCreate        `gorm:"foreignKey:Id"`
 }
@@ -107,9 +107,9 @@ type PegawaiFungsionalCreate struct {
 	UuidHomebaseUii          string  `form:"uuid_homebase_uii" gorm:"-"`
 	IdHomebaseUii            int     `form:"id_homebase_uii"`
 	TglInput                 string  `form:"-" gorm:"-"`
-	UserInput                string  `form:"-" gorm:"<-:create"`
+	UserInput                string  `form:"-"`
 	TglUpdate                string  `form:"-" gorm:"-"`
-	UserUpdate               string  `form:"-" gorm:"<-:create"`
+	UserUpdate               string  `form:"-"`
 	FlagAktif                int     `form:"-" gorm:"-"`
 }
 
@@ -141,9 +141,9 @@ type PegawaiPNSCreate struct {
 	AngkaKredit           string  `form:"angka_kredit_pns" gorm:"column:angka_kredit"`
 	Keterangan            string  `form:"keterangan_pns" gorm:"column:keterangan"`
 	TglInput              string  `form:"-" gorm:"-"`
-	UserInput             string  `form:"-" gorm:"<-:create"`
+	UserInput             string  `form:"-"`
 	TglUpdate             string  `form:"-" gorm:"-"`
-	UserUpdate            string  `form:"-" gorm:"<-:create"`
+	UserUpdate            string  `form:"-"`
 	FlagAktif             int     `form:"-" gorm:"-"`
 }
 
