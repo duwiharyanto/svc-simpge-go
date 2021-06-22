@@ -611,6 +611,42 @@ func prepareSinkronCreateSimpeg(ctx context.Context, pegawaiInsani *model.Pegawa
 	// Sinkron NIP Pegawai
 	pegawaiOra.NIP = pegawaiInsani.PegawaiPribadi.NIK
 
+	// Sinkron Nama Pegawai
+	pegawaiOra.Nama = pegawaiInsani.PegawaiPribadi.Nama
+
+	// Sinkron Kd Agama
+	pegawaiOra.KdAgama = pegawaiInsani.PegawaiPribadi.KdAgama
+
+	// Sinkron Kd Golongan Darah
+	pegawaiOra.KdGolonganDarah = pegawaiInsani.PegawaiPribadi.KdGolonganDarah
+
+	// Sinkron Kd Kelamin
+	pegawaiOra.KdKelamin = pegawaiInsani.PegawaiPribadi.KdKelamin
+
+	// Sinkron Kd Nikah
+	// pegawaiOra.KdNikah = pegawaiInsani.PegawaiPribadi.KdNikah
+
+	// Sinkron Tempat Lahir
+	pegawaiOra.TempatLahir = pegawaiInsani.PegawaiPribadi.TempatLahir
+
+	// Sinkron Gelar Belakang
+	pegawaiOra.GelarBelakang = pegawaiInsani.PegawaiPribadi.GelarBelakang
+
+	// Sinkron Jumlah Anak
+	// pegawaiOra.JumlahAnak = pegawaiInsani.PegawaiPribadi.JumlahAnak
+
+	// Sinkron Jumlah Ditanggung
+	// pegawaiOra.JumlahDitanggung = pegawaiInsani.PegawaiPribadi.JumlahDitanggung
+
+	// Sinkron Jumlah Keluarga
+	// pegawaiOra.JumlahKeluarga = pegawaiInsani.PegawaiPribadi.JumlahKeluarga
+
+	// Sinkron No KTP
+	pegawaiOra.NoKTP = pegawaiInsani.PegawaiPribadi.NoKTP
+
+	// Sinkron No Telepon
+	// pegawaiOra.NoTelepon = pegawaiInsani.PegawaiPribadi.NoTelepon
+
 	// Sinkron Kepegawaian Yayaysan - Status
 	if pegawaiInsani.PegawaiYayasan.KDJenisPegawai != "" {
 		// pegawaiOra.KdJenisPegawai = pegawaiInsani.PegawaiYayasan.KDJenisPegawai

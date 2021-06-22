@@ -30,7 +30,19 @@ type GetPegawaiStatusSimpegResult struct {
 
 type KepegawaianYayasanSimpeg struct {
 	NIP               string `json:"-"`
+	Nama              string `json:"-"`
+	KdAgama           string `json:"-"`
+	KdGolonganDarah   string `json:"-"`
+	KdKelamin         string `json:"-"`
+	KdNikah           string `json:"-"`
+	TempatLahir       string `json:"-"`
 	FlagPensiun       string `json:"flag_pensiun"`
+	GelarBelakang     string `json:"-"`
+	JumlahAnak        string `json:"-"`
+	JumlahDitanggung  string `json:"-"`
+	JumlahKeluarga    string `json:"-"`
+	NoKTP             string `json:"-"`
+	NoTelepon         string `json:"-"`
 	KdStatusHidup     string `json:"kd_status_hidup"`
 	UserUpdate        string `json:"user_update,omitempty"`
 	TglUpdate         string `json:"tgl_update,omitempty"`

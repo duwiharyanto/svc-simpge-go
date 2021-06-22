@@ -125,8 +125,6 @@ func getPegawaiYayasanQuery(uuid string) string {
 		COALESCE(jp3.uuid,''),
 		COALESCE(jp3.kd_jenjang,''),
 		COALESCE(jp3.jenjang,''),
-		COALESCE(df.uuid,''),
-		COALESCE(df.detail_profesi,''),
 		COALESCE(pgp.uuid,''),
 		COALESCE(pgp.kd_pangkat_gol,''),
 		COALESCE(pgp.pangkat,''),
@@ -168,8 +166,6 @@ func getPegawaiYayasanQuery(uuid string) string {
 		jenjang_pendidikan jp2 ON p.id_pendidikan_masuk = jp2.id
 	LEFT JOIN 
 		jenjang_pendidikan jp3 ON p.id_pendidikan_terakhir = jp3.id
-	LEFT JOIN 
-		detail_profesi df ON p.id_detail_profesi = df.id
 	WHERE
 		p.uuid = %q AND p.flag_aktif = 1`, uuid)
 
@@ -222,6 +218,8 @@ func getPegawaiPNSQuery(uuid string) string {
 	SELECT 
 		COALESCE(pp.nip_pns,''),
 		COALESCE(pp.no_kartu_pegawai,''),
+		COALESCE(df.uuid,''),
+		COALESCE(df.detail_profesi,''),
 		COALESCE(jptt.uuid,''),
 		COALESCE(jptt.kd_jenis_ptt,''),
 		COALESCE(jptt.jenis_ptt,''),
@@ -251,6 +249,8 @@ func getPegawaiPNSQuery(uuid string) string {
 		jabatan_fungsional jf ON pp.id_jabatan_fungsional = jf.id
 	LEFT JOIN
 		jenis_pegawai_tidak_tetap jptt ON pp.id_jenis_ptt = jptt.id
+	LEFT JOIN 
+		detail_profesi df ON p.id_detail_profesi = df.id
 	WHERE 
 		p.uuid = %q AND p.flag_aktif = 1`, uuid)
 
@@ -281,6 +281,13 @@ func getPegawaiPribadiQuery(uuid string) string {
 	SELECT 
 		COALESCE(p.nama,''),
 		COALESCE(p.nik,''),
+		COALESCE(p.kd_agama,''),
+		COALESCE(p.kd_golongan_darah,''),
+		COALESCE(p.jenis_kelamin,''),
+		COALESCE(p.tempat_lahir,''),
+		COALESCE(p.flag_pensiun,''),
+		COALESCE(p.gelar_belakang ,''),
+		COALESCE(p.nik_ktp,''),
 		COALESCE(jp.nama_jenis_pegawai,''),
 		COALESCE(kp.kelompok_pegawai,''),
 		COALESCE(u2.unit2,''),

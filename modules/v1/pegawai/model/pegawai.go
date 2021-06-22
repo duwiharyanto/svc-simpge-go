@@ -113,6 +113,18 @@ type PegawaiPribadi struct {
 	ID              string `json:"-"`
 	NIK             string `json:"nik"`
 	Nama            string `json:"nama"`
+	KdAgama         string `json:"kd_agama"`
+	KdGolonganDarah string `json:"kd_gol_darah"`
+	KdKelamin       string `json:"kd_kelamin"`
+	// KdNikah          string `json:"-"`
+	TempatLahir   string `json:"tempat_lahir"`
+	FlagPensiun   string `json:"flag_pensiun"`
+	GelarBelakang string `json:"gelar_belakang"`
+	// JumlahAnak       string `json:"-"`
+	// JumlahDitanggung string `json:"-"`
+	// JumlahKeluarga   string `json:"-"`
+	NoKTP string `json:"no_ktp"`
+	// NoTelepon       string `json:"no_telpon"`
 	JenisPegawai    string `json:"jenis_pegawai"`
 	KelompokPegawai string `json:"kelompok_pegawai"`
 	UnitKerja       string `json:"unit_kerja"`
@@ -147,9 +159,6 @@ type PegawaiYayasan struct {
 	IdPendidikanTerakhir   int    `json:"-"`
 	KdPendidikanTerakhir   string `json:"-"`
 	PendidikanTerakhir     string `json:"-"`
-	UuidDetailProfesi      string `json:"uuid_detail_profesi" form:"uuid_detail_profesi"`
-	IdDetailProfesi        int    `json:"-"`
-	DetailProfesi          string `json:"detail_profesi"`
 	UuidStatusPegawai      string `json:"uuid_status_pegawai"`
 	KDStatusPegawai        string `json:"kd_status_pegawai"`
 	StatusPegawai          string `json:"status_pegawai"`
@@ -209,6 +218,9 @@ type UnitKerjaPegawai struct {
 type PegawaiPNSPTT struct {
 	NipPNS                string `json:"nip_pns"`
 	NoKartuPegawai        string `json:"no_kartu_pegawai"`
+	UuidDetailProfesi     string `json:"uuid_detail_profesi" form:"uuid_detail_profesi"`
+	IdDetailProfesi       int    `json:"-"`
+	DetailProfesi         string `json:"detail_profesi"`
 	UuidPangkatGolongan   string `json:"uuid_pangkat_gol_ruang_pns"`
 	KdPangkatGolonganPns  string `json:"kd_pangkat_golongan"`
 	PangkatPNS            string `json:"pangkat_pns"`
