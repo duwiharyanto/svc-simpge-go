@@ -113,17 +113,18 @@ type PegawaiPribadi struct {
 	ID              string `json:"-"`
 	NIK             string `json:"nik"`
 	Nama            string `json:"nama"`
-	KdAgama         string `json:"kd_agama"`
-	KdGolonganDarah string `json:"kd_gol_darah"`
-	KdKelamin       string `json:"kd_kelamin"`
+	KdAgama         string `json:"-"`
+	KdGolonganDarah string `json:"-"`
+	KdKelamin       string `json:"-"`
 	// KdNikah          string `json:"-"`
-	TempatLahir   string `json:"tempat_lahir"`
-	FlagPensiun   string `json:"flag_pensiun"`
+	TempatLahir   string `json:"-"`
+	TanggalLahir  string `json:"-"`
+	FlagPensiun   string `json:"-"`
 	GelarBelakang string `json:"gelar_belakang"`
 	// JumlahAnak       string `json:"-"`
 	// JumlahDitanggung string `json:"-"`
 	// JumlahKeluarga   string `json:"-"`
-	NoKTP string `json:"no_ktp"`
+	NoKTP string `json:"-"`
 	// NoTelepon       string `json:"no_telpon"`
 	JenisPegawai    string `json:"jenis_pegawai"`
 	KelompokPegawai string `json:"kelompok_pegawai"`

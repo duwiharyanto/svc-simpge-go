@@ -276,6 +276,7 @@ func GetPegawaiPribadi(a app.App, uuid string) (*model.PegawaiPribadi, error) {
 		&pegawaiPribadi.KdGolonganDarah,
 		&pegawaiPribadi.KdKelamin,
 		&pegawaiPribadi.TempatLahir,
+		&pegawaiPribadi.TanggalLahir,
 		&pegawaiPribadi.FlagPensiun,
 		&pegawaiPribadi.GelarBelakang,
 		&pegawaiPribadi.NoKTP,

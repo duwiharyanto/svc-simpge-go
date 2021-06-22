@@ -35,7 +35,8 @@ type KepegawaianYayasanSimpeg struct {
 	KdGolonganDarah string `json:"kd_gol_darah"`
 	KdKelamin       string `json:"kd_kelamin"`
 	KdNikah         string `json:"kd_nikah"`
-	TempatLahir     string `json:"lahit_tempat"`
+	TempatLahir     string `json:"lahir_tempat"`
+	TanggalLahir    string `json:"lahir_tanggal"`
 	FlagPensiun     string `json:"flag_pensiun"`
 	GelarBelakang   string `json:"gelar_belakang"`
 	// JumlahAnak        string `json:"jml_anak"`
