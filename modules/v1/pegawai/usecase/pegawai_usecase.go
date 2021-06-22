@@ -842,9 +842,9 @@ func prepareSinkronCreateSimpeg(ctx context.Context, pegawaiInsani *model.Pegawa
 
 	// fmt.Println("DEBUG : Update Kepegawaian Yayasan")
 
-	err := pegawaiOraHttp.UpdateKepegawaianYayasan(ctx, &http.Client{}, pegawaiOra)
+	err := pegawaiOraHttp.CreateKepegawaianYayasan(ctx, &http.Client{}, pegawaiOra)
 	if err != nil {
-		return fmt.Errorf("[ERROR] repo get kepegawaian yayasan update, %s\n", err.Error())
+		return fmt.Errorf("[ERROR] repo create kepegawaian yayasan, %s\n", err.Error())
 	}
 
 	return nil
