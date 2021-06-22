@@ -61,9 +61,9 @@ type PegawaiCreate struct {
 	TglPensiun              string                  `form:"tgl_pensiun" gorm:"->"`
 	FlagMeninggal           string                  `form:"flag_meninggal" gorm:"->"`
 	TglInput                string                  `form:"tgl_input" gorm:"->"`
-	UserInput               string                  `form:"user_input" gorm:"->"`
+	UserInput               string                  `form:"user_input" gorm:"<-:create"`
 	TglUpdate               string                  `form:"tgl_update" gorm:"->"`
-	UserUpdate              string                  `form:"user_update"`
+	UserUpdate              string                  `form:"user_update" gorm:"<-:create"`
 	PegawaiFungsional       PegawaiFungsionalCreate `gorm:"foreignKey:Id"`
 	PegawaiPNS              PegawaiPNSCreate        `gorm:"foreignKey:Id"`
 }
@@ -107,9 +107,9 @@ type PegawaiFungsionalCreate struct {
 	UuidHomebaseUii          string  `form:"uuid_homebase_uii" gorm:"-"`
 	IdHomebaseUii            int     `form:"id_homebase_uii"`
 	TglInput                 string  `form:"-" gorm:"-"`
-	UserInput                string  `form:"-" gorm:"-"`
+	UserInput                string  `form:"-" gorm:"<-:create"`
 	TglUpdate                string  `form:"-" gorm:"-"`
-	UserUpdate               string  `form:"-"`
+	UserUpdate               string  `form:"-" gorm:"<-:create"`
 	FlagAktif                int     `form:"-" gorm:"-"`
 }
 
@@ -141,9 +141,9 @@ type PegawaiPNSCreate struct {
 	AngkaKredit           string  `form:"angka_kredit_pns" gorm:"column:angka_kredit"`
 	Keterangan            string  `form:"keterangan_pns" gorm:"column:keterangan"`
 	TglInput              string  `form:"-" gorm:"-"`
-	UserInput             string  `form:"-" gorm:"-"`
+	UserInput             string  `form:"-" gorm:"<-:create"`
 	TglUpdate             string  `form:"-" gorm:"-"`
-	UserUpdate            string  `form:"-"`
+	UserUpdate            string  `form:"-" gorm:"<-:create"`
 	FlagAktif             int     `form:"-" gorm:"-"`
 }
 

@@ -201,8 +201,8 @@ func CreateKepegawaianYayasan(ctx context.Context, client *http.Client, pegawai 
 		// "Authorization": authToken,
 		"X-Member": pegawai.UserInput,
 	}
-	// fmt.Printf("DEBUG header : %+v \n", header)
-	fmt.Printf("DEBUG pegawai : %+v \n", pegawai)
+	fmt.Printf("DEBUG header : %+v \n", header)
+	fmt.Printf("DEBUG reqbody pegawai : %+v \n", pegawai)
 	// fmt.Printf("DEBUG pegawai : %+v \n", pegawai.JenisPegawai.KdJenisPegawai)
 	res, err := app.SendHttpRequest(ctx, client, http.MethodPut, endpoint, contentTypeJSON, header, pegawai)
 	if err != nil {
