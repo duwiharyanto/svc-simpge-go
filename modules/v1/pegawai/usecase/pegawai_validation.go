@@ -607,17 +607,17 @@ func ValidateCreatePegawai(a app.App, c echo.Context) (model.PegawaiCreate, erro
 		}
 	}
 	if pegawaiReq.PegawaiFungsional.NomorSkPertama != "" {
-		if len(pegawaiReq.PegawaiFungsional.NomorSkPertama) > 10 {
+		if len(pegawaiReq.PegawaiFungsional.NomorSkPertama) > 30 {
 			return model.PegawaiCreate{}, fmt.Errorf("error nomor sk pertama tidak valid")
 		}
 	}
 	if pegawaiReq.PegawaiPNS.NipPns != "" {
-		if len(pegawaiReq.PegawaiPNS.NipPns) < 18 {
+		if len(pegawaiReq.PegawaiPNS.NipPns) != 18 {
 			return model.PegawaiCreate{}, fmt.Errorf("error nip pns tidak valid")
 		}
 	}
 	if pegawaiReq.PegawaiPNS.NoKartuPegawai != "" {
-		if len(pegawaiReq.PegawaiPNS.NoKartuPegawai) > 18 {
+		if len(pegawaiReq.PegawaiPNS.NoKartuPegawai) != 18 {
 			return model.PegawaiCreate{}, fmt.Errorf("error nomor kartu pegawai tidak valid")
 		}
 	}
