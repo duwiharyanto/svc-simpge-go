@@ -631,6 +631,9 @@ func prepareSinkronCreateSimpeg(ctx context.Context, pegawaiInsani *model.Pegawa
 	// Sinkron Tempat Lahir
 	pegawaiOra.TempatLahir = pegawaiInsani.PegawaiPribadi.TempatLahir
 
+	// Sinkron Tanggal Lahir
+	pegawaiOra.TanggalLahir = pegawaiInsani.PegawaiPribadi.TempatLahir
+
 	// Sinkron Gelar Belakang
 	pegawaiOra.GelarBelakang = pegawaiInsani.PegawaiPribadi.GelarBelakang
 

@@ -285,6 +285,7 @@ func getPegawaiPribadiQuery(uuid string) string {
 		COALESCE(p.kd_golongan_darah,''),
 		COALESCE(p.jenis_kelamin,''),
 		COALESCE(p.tempat_lahir,''),
+		COALESCE(pdp.tgl_lahir,''),
 		COALESCE(p.flag_pensiun,''),
 		COALESCE(p.gelar_belakang ,''),
 		COALESCE(p.nik_ktp,''),
@@ -302,6 +303,8 @@ func getPegawaiPribadiQuery(uuid string) string {
 		kelompok_pegawai kp ON p.id_kelompok_pegawai = kp.id 
 	LEFT JOIN
 		unit2 u2 ON p.id_unit_kerja2 = u2.id 
+	LEFT JOIN
+		personal_data_pribadi pdp ON p.id_personal_data_pribadi = pdp.id 
 	WHERE
 		p.uuid = %q AND p.flag_aktif = 1`, uuid)
 
