@@ -301,13 +301,13 @@ func ValidateUpdatePegawaiByUUID(a app.App, c echo.Context) (model.PegawaiUpdate
 		pegawaiOld.PegawaiPNS.InstansiAsal = pegawaiReq.PegawaiPNS.InstansiAsal
 	}
 	if pegawaiReq.PegawaiPNS.NipPns != "" {
-		if len(pegawaiReq.PegawaiPNS.NipPns) > 18 {
+		if len(pegawaiReq.PegawaiPNS.NipPns) != 18 {
 			return model.PegawaiUpdate{}, fmt.Errorf("error nip pns tidak valid")
 		}
 		pegawaiOld.PegawaiPNS.NipPns = pegawaiReq.PegawaiPNS.NipPns
 	}
 	if pegawaiReq.PegawaiPNS.NoKartuPegawai != "" {
-		if len(pegawaiReq.PegawaiPNS.NoKartuPegawai) > 18 {
+		if len(pegawaiReq.PegawaiPNS.NoKartuPegawai) != 18 {
 			return model.PegawaiUpdate{}, fmt.Errorf("error nomor kartu pegawai tidak valid")
 		}
 		pegawaiOld.PegawaiPNS.NoKartuPegawai = pegawaiReq.PegawaiPNS.NoKartuPegawai

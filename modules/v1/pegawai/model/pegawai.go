@@ -87,12 +87,13 @@ type PegawaiRequest struct {
 	UuidJenisPegawai    string `query:"uuid_jenis_pegawai"`
 	UuidUnitKerja       string `query:"uuid_unit_kerja"`
 	UuidKelompokPegawai string `query:"uuid_kelompok_pegawai"`
-	KdJenisPegawai      string `query:"kd_jenis_pegawai"`
-	KdUnitKerja         string `query:"kd_unit_kerja"`
-	KdKelompokPegawai   string `query:"kd_kelompok_pegawai"`
-	Limit               int    `query:"limit"`
-	Offset              int    `query:"offset"`
-	Cari                string `query:"cari"`
+	UuidStatusAktif     string `query:"uuid_status_aktif"`
+	// KdJenisPegawai      string `query:"kd_jenis_pegawai"`
+	// KdUnitKerja         string `query:"kd_unit_kerja"`
+	// KdKelompokPegawai   string `query:"kd_kelompok_pegawai"`
+	Limit  int    `query:"limit"`
+	Offset int    `query:"offset"`
+	Cari   string `query:"cari"`
 }
 
 type PegawaiResponseTest struct {
