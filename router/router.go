@@ -7,10 +7,12 @@ import (
 	"net/http"
 	"svc-insani-go/app"
 	"svc-insani-go/app/database"
+	detailProfesi "svc-insani-go/modules/v1/master-detail-profesi/usecase"
 	jabatanFungsional "svc-insani-go/modules/v1/master-jabatan-fungsional/usecase"
 	jenisNoRegis "svc-insani-go/modules/v1/master-jenis-nomor-registrasi/usecase"
 	jenisPTT "svc-insani-go/modules/v1/master-jenis-pegawai-tidak-tetap/usecase"
 	jenisPegawai "svc-insani-go/modules/v1/master-jenis-pegawai/usecase"
+	jenjangPendidikan "svc-insani-go/modules/v1/master-jenjang-pendidikan/usecase"
 	kelompokPegawai "svc-insani-go/modules/v1/master-kelompok-pegawai/usecase"
 	lokasiKerja "svc-insani-go/modules/v1/master-lokasi-kerja/usecase"
 	indukKerja "svc-insani-go/modules/v1/master-organisasi/usecase"
@@ -36,7 +38,9 @@ func InitRoute(a app.App, appCtx context.Context, e *echo.Echo, slackErrChan cha
 	// insaniGroupingPath.GET("/filter-pegawai-simpeg", pegawai.HandleSearchPegawaiSimpeg(a))
 	insaniGroupingPath.GET("/pegawai-simpeg/:uuidPegawai/detail", pegawai.HandleGetSimpegPegawaiByUUID(a))
 	insaniGroupingPath.PUT("/pegawai-simpeg/:uuidPegawai", pegawai.HandleUpdatePegawai(a, appCtx, slackErrChan))
-	// insaniGroupingPath.POST("/pegawai-simpeg/:uuidPegawai", pegawai.HandleCreatePegawai(a, appCtx, slackErrChan))
+	insaniGroupingPath.POST("/pegawai-simpeg/:uuidPegawai", pegawai.HandleCreatePegawai(a, appCtx, slackErrChan))
+	insaniGroupingPath.GET("/pegawai/personal", personal.HandleSearchPersonal(a))
+	insaniGroupingPath.GET("/pegawai/personal-pendidikan/:uuidPersonal", pegawai.HandleGetPendidikanByUUIDPersonal(a))
 
 	// Data Master
 	insaniGroupingPath.GET("/jabatan-struktural", organisasiV2.HandleGetAllJabatanStruktural(a))
@@ -47,6 +51,8 @@ func InitRoute(a app.App, appCtx context.Context, e *echo.Echo, slackErrChan cha
 	insaniGroupingPath.GET("/pejabat-struktural", organisasiV2.HandleGetPejabatStruktural(a))
 	insaniGroupingPath.GET("/unit2", organisasiV2.HandleGetAllUnit2(a))
 
+	insaniGroupingPath.GET("/master-detail-profesi", detailProfesi.HandleGetDetailProfesi(a))
+	insaniGroupingPath.GET("/master-jenjang-pendidikan", jenjangPendidikan.HandleGetJenjangPendidikan(a))
 	insaniGroupingPath.GET("/master-ijazah-pegawai", sk.HandleGetAllJenisIjazah(a))
 	insaniGroupingPath.GET("/master-jabatan-fungsional", jabatanFungsional.HandleGetJabatanFungsional(a))
 	insaniGroupingPath.GET("/master-jabatan-penetap", sk.HandleGetJabatanPenetap(a))
@@ -67,8 +73,6 @@ func InitRoute(a app.App, appCtx context.Context, e *echo.Echo, slackErrChan cha
 	insaniGroupingPath.GET("/bagian-kerja", indukKerja.HandleGetBagianKerja(a))
 	insaniGroupingPath.GET("/master-homebase", indukKerja.HandleHomebase(a))
 	insaniGroupingPath.GET("/instansi", indukKerja.HandleSearchInstansi(a))
-
-	insaniGroupingPath.GET("/pegawai/personal", personal.HandleSearchPersonal(a))
 	insaniGroupingPath.GET("/master-status-pengangkatan", sk.HandleGetAllStatusPengangkat(a))
 	insaniGroupingPath.GET("/master-unit-kerja", unitKerja.HandleGetUnitKerja(a)) // unit kerja lama, masih dipake atau tidak
 	insaniGroupingPath.GET("/master-unit-pengangkat", unitKerja.HandleGetUnitPengangkat(a))
@@ -100,6 +104,9 @@ func InitRoute(a app.App, appCtx context.Context, e *echo.Echo, slackErrChan cha
 	// Pengaturan Personal
 	insaniGroupingPath.GET("/pengaturan", pengaturan.HandleGetPengaturan(&a, nil))
 	insaniGroupingPath.PUT("/pengaturan", pengaturan.HandleUpdatePengaturan(&a, nil))
+
+	// Testing
+	// insaniGroupingPath.GET("/testing", detailProfesi.HandleDetailProfesiByUUID(a))
 
 }
 
