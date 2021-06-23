@@ -8,7 +8,13 @@ import (
 )
 
 func GetStatusPegawaiAktif(a app.App, FlagStatus string) ([]model.StatusPegawaiAktif, error) {
-	sqlQuery := getStatusPegawaiAktifQuery(FlagStatus)
+
+	sqlQuery := getStatusPegawaiAktifAllQuery()
+
+	if FlagStatus != "" {
+		sqlQuery = getStatusPegawaiAktifQuery(FlagStatus)
+	}
+
 	rows, err := a.DB.Query(sqlQuery)
 	if err != nil {
 		return nil, fmt.Errorf("error querying get status pegawai aktif, %w", err)
