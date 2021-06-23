@@ -629,24 +629,20 @@ func ValidateCreatePegawai(a app.App, c echo.Context) (model.PegawaiCreate, erro
 		}
 	}
 
-	if pegawaiReq.Nik != "" {
-		if len(pegawaiReq.Nik) != 9 {
-			return model.PegawaiCreate{}, fmt.Errorf("error panjang NIK pegawai tidak valid")
-		}
+	// if pegawaiReq.Nik != "" {
+	// 	if len(pegawaiReq.Nik) != 9 {
+	// 		return model.PegawaiCreate{}, fmt.Errorf("error panjang NIK pegawai tidak valid")
+	// 	}
 
-		checkNik, err := repo.CheckNikPegawai(a, c.Request().Context(), pegawaiReq.Nik)
-		if err != nil {
-			return model.PegawaiCreate{}, fmt.Errorf("error from check nik pegawai, %w", err)
-		}
+	// 	checkNik, flagCheck, err := repo.CheckNikPegawai(a, c.Request().Context(), pegawaiReq.Nik)
+	// 	if err != nil {
+	// 		return model.PegawaiCreate{}, fmt.Errorf("error from check nik pegawai, %w", err)
+	// 	}
 
-		// if checkNik == true {
-		// 	return model.PegawaiCreate{}, fmt.Errorf("nik sudah digunakan")
-		// }
-
-		if checkNik.Nik != "" {
-			return model.PegawaiCreate{}, fmt.Errorf("nik %s sudah digunakan oleh %s", checkNik.Nik, checkNik.Nama)
-		}
-	}
+	// 	if flagCheck == true {
+	// 		return model.PegawaiCreate{}, fmt.Errorf("nik %s sudah digunakan oleh %s", checkNik.Nik, checkNik.Nama)
+	// 	}
+	// }
 
 	pegawaiReq.UserUpdate = user
 	pegawaiReq.UserInput = user

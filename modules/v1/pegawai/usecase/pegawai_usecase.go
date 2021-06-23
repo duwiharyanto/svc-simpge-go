@@ -856,3 +856,28 @@ func prepareSinkronCreateSimpeg(ctx context.Context, pegawaiInsani *model.Pegawa
 
 	return nil
 }
+
+func HandleCheckNikPegawai(a app.App) echo.HandlerFunc {
+	h := func(c echo.Context) error {
+		nikPegawai := c.QueryParam("nik")
+		if nikPegawai == "" {
+			return c.JSON(http.StatusBadRequest, map[string]string{"message": "parameter nik pegawai wajib diisi"})
+		}
+
+		if len(nikPegawai) != 9 {
+			return c.JSON(http.StatusBadRequest, map[string]string{"message": "panjang NIK pegawai tidak valid"})
+		}
+
+		checkNik, flagCheck, err := repo.CheckNikPegawai(a, c.Request().Context(), nikPegawai)
+		if err != nil {
+			log.Printf("[ERROR] check nik pegawai, %s\n", err.Error())
+			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
+		}
+		if flagCheck == true {
+			// fmt.Printf("nik %s sudah digunakan oleh %s", checkNik.Nik, checkNik.Nama)
+			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "NIK " + checkNik.Nik + " sudah digunakan oleh " + checkNik.Nama})
+		}
+		return c.JSON(http.StatusOK, nil)
+	}
+	return echo.HandlerFunc(h)
+}
