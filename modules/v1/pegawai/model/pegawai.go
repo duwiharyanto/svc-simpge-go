@@ -628,45 +628,60 @@ func (a *PegawaiYayasan) SetMasaKerjaTotal(b *UnitKerjaPegawai) {
 	dayNow, _ := conv.Int(now.Day())
 	maxMonth := 12
 
-	dateSk, err := time.Parse("2006-01-02", b.TmtSkPertama)
-	if err != nil {
-		return
-	}
+	var yearSk int
+	var monthSk int
+	var daySk int
 
-	yearSk, _ := conv.Int(dateSk.Year())
-	monthSk, _ := conv.Int(dateSk.Month())
-	daySk, _ := conv.Int(dateSk.Day())
+	fmt.Println("TMT SK Pertama : ", b.TmtSkPertama)
+
+	if b.TmtSkPertama != "" {
+		dateSk, err := time.Parse("2006-01-02", b.TmtSkPertama)
+		if err != nil {
+			return
+		}
+		yearSk, _ = conv.Int(dateSk.Year())
+		monthSk, _ = conv.Int(dateSk.Month())
+		daySk, _ = conv.Int(dateSk.Day())
+	}
 
 	yearSkNow := yearNow - yearSk
 	monthSkNow := monthNow - monthSk
 
-	if monthSkNow > 0 {
+	if monthSkNow < 0 {
 		yearSkNow = yearSkNow - 1
-		monthSkNow = maxMonth - monthSkNow
+		monthSkNow = maxMonth + monthSkNow
 	}
 
 	daySkNow := dayNow - daySk
 
-	if daySkNow > 0 {
-		monthSkNow = monthSkNow - 1
+	if daySkNow < 0 {
+		monthSkNow = monthSkNow + 1
 	}
+
+	// fmt.Println("Year Sk Now : ", yearSkNow)
+	// fmt.Println("Month Sk Now : ", monthSkNow)
 
 	var MasaBawaanBulan, _ = conv.Int(a.MasaKerjaBawaanBulan)
 	var MasaBawaanTahun, _ = conv.Int(a.MasaKerjaBawaanTahun)
 	var MasaTotalTahun = 0
 	var MasaTotalBulan = 0
 
-	if a.MasaKerjaBawaanTahun != "" || a.MasaKerjaGajiTahun != "" {
+	// fmt.Println("Year Bawaan Tahun : ", MasaBawaanTahun)
+	// fmt.Println("Month Bawaan Tahun : ", MasaBawaanBulan)
+
+	if MasaBawaanTahun != 0 || yearSkNow != 0 {
 		MasaTotalTahun = MasaBawaanTahun + yearSkNow
 	}
 
-	if a.MasaKerjaBawaanBulan != "" || a.MasaKerjaGajiBulan != "" {
-		MasaTotalBulan = MasaBawaanBulan + int(monthSkNow)
+	if MasaBawaanBulan != 00 || monthSkNow != 0 {
+		MasaTotalBulan = MasaBawaanBulan + monthSkNow
 		if MasaTotalBulan >= 12 {
 			MasaTotalBulan = MasaTotalBulan - 12
 			MasaTotalTahun = MasaTotalTahun + 1
 		}
 	}
+	// fmt.Println("Year Total Tahun : ", MasaTotalTahun)
+	// fmt.Println("Month Total Tahun : ", MasaTotalBulan)
 
 	a.MasaKerjaTotalBulan, _ = conv.String(MasaTotalBulan)
 	a.MasaKerjaTotalTahun, _ = conv.String(MasaTotalTahun)

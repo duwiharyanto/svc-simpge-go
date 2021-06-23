@@ -337,6 +337,7 @@ func ValidateUpdatePegawaiByUUID(a app.App, c echo.Context) (model.PegawaiUpdate
 
 	pegawaiOld.UserUpdate = user
 	pegawaiOld.PegawaiFungsional.UserUpdate = user
+	pegawaiOld.PegawaiPNS.UserUpdate = user
 
 	return pegawaiOld, nil
 }
@@ -362,7 +363,6 @@ func PrepareCreateSimpeg(a app.App, c echo.Context) (model.PegawaiCreate, error)
 	pegawai.IdPersonalDataPribadi, _ = conv.String(personal.Id)
 	pegawai.Nama = personal.NamaLengkap
 	pegawai.NikKtp = personal.NikKtp
-	// pegawai.Nik = personal.NikPegawai
 	pegawai.TglLahir = personal.TglLahir
 	pegawai.TempatLahir = personal.TempatLahir
 	pegawai.IdAgama, _ = conv.String(personal.IdAgama)
@@ -636,7 +636,10 @@ func ValidateCreatePegawai(a app.App, c echo.Context) (model.PegawaiCreate, erro
 
 	pegawaiReq.UserUpdate = user
 	pegawaiReq.UserInput = user
+	pegawaiReq.PegawaiFungsional.UserInput = user
 	pegawaiReq.PegawaiFungsional.UserUpdate = user
+	pegawaiReq.PegawaiPNS.UserInput = user
+	pegawaiReq.PegawaiPNS.UserUpdate = user
 
 	return pegawaiReq, nil
 }
