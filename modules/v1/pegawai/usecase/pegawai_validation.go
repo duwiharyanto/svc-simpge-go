@@ -352,7 +352,8 @@ func PrepareCreateSimpeg(a app.App, c echo.Context) (model.PegawaiCreate, error)
 
 	pegawai, err := ValidateCreatePegawai(a, c)
 	if err != nil {
-		return model.PegawaiCreate{}, fmt.Errorf("error validate create pegawai, %s\n", err.Error())
+		return model.PegawaiCreate{}, fmt.Errorf(err.Error())
+		// return model.PegawaiCreate{}, fmt.Errorf("error validate create pegawai, %s", err.Error())
 	}
 
 	personal, err := personalRepo.GetPersonalByUuid(a, c.Request().Context(), uuidPersonal)
@@ -629,8 +630,21 @@ func ValidateCreatePegawai(a app.App, c echo.Context) (model.PegawaiCreate, erro
 	}
 
 	if pegawaiReq.Nik != "" {
-		if len(pegawaiReq.Nik) > 9 {
-			return model.PegawaiCreate{}, fmt.Errorf("error NIK terlalu panjang")
+		if len(pegawaiReq.Nik) != 9 {
+			return model.PegawaiCreate{}, fmt.Errorf("error panjang NIK pegawai tidak valid")
+		}
+
+		checkNik, err := repo.CheckNikPegawai(a, c.Request().Context(), pegawaiReq.Nik)
+		if err != nil {
+			return model.PegawaiCreate{}, fmt.Errorf("error from check nik pegawai, %w", err)
+		}
+
+		// if checkNik == true {
+		// 	return model.PegawaiCreate{}, fmt.Errorf("nik sudah digunakan")
+		// }
+
+		if checkNik.Nik != "" {
+			return model.PegawaiCreate{}, fmt.Errorf("nik %s sudah digunakan oleh %s", checkNik.Nik, checkNik.Nama)
 		}
 	}
 

@@ -738,3 +738,40 @@ func GetPegawaiPendidikanPersonal(a app.App, uuid string) ([]model.JenjangPendid
 
 	return jenjangPendidikan, nil
 }
+
+func CheckNikPegawai(a app.App, ctx context.Context, nik string) (*model.PegawaiUpdate, error) {
+
+	var pegawaiOld model.PegawaiUpdate
+	// var flagCheck bool
+
+	db := a.GormDB.WithContext(ctx)
+	res := db.Find(&pegawaiOld, "nik = ?", nik)
+	if res.Error != nil {
+		return nil, res.Error
+	}
+
+	if res.RowsAffected == 0 {
+		return nil, nil
+	}
+
+	return &pegawaiOld, nil
+}
+
+// func CheckNikPegawai(a app.App, ctx context.Context, nik string) (*model.PegawaiUpdate, bool, error) {
+
+// 	var pegawaiOld model.PegawaiUpdate
+// 	var flagCheck bool
+
+// 	db := a.GormDB.WithContext(ctx)
+// 	res := db.Find(&pegawaiOld, "nik = ?", nik)
+// 	if res.Error != nil {
+// 		return nil, flagCheck, res.Error
+// 	}
+
+// 	if res.RowsAffected == 0 {
+// 		flagCheck = true
+// 		return nil, flagCheck, nil
+// 	}
+
+// 	return nil, flagCheck, nil
+// }
