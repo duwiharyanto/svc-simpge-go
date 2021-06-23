@@ -875,7 +875,7 @@ func HandleCheckNikPegawai(a app.App) echo.HandlerFunc {
 		}
 		if flagCheck == true {
 			// fmt.Printf("nik %s sudah digunakan oleh %s", checkNik.Nik, checkNik.Nama)
-			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "NIK " + checkNik.Nik + " sudah digunakan oleh " + checkNik.Nama})
+			return c.JSON(http.StatusBadRequest, map[string]string{"message": "NIK " + checkNik.Nik + " sudah digunakan oleh " + checkNik.Nama})
 		}
 		return c.JSON(http.StatusOK, nil)
 	}
