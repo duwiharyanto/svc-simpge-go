@@ -655,7 +655,7 @@ func (a *PegawaiYayasan) SetMasaKerjaTotal(b *UnitKerjaPegawai) {
 	daySkNow := dayNow - daySk
 
 	if daySkNow < 0 {
-		monthSkNow = monthSkNow + 1
+		monthSkNow = monthSkNow - 1
 	}
 
 	// fmt.Println("Year Sk Now : ", yearSkNow)
