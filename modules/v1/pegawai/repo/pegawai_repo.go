@@ -637,12 +637,18 @@ func CreatePegawai(a app.App, ctx context.Context, pegawaiCreate model.PegawaiCr
 	pegawaiCreate.PegawaiFungsional.IdPegawai = pegawaiCreate.Id
 	pegawaiCreate.PegawaiPNS.IdPegawai = pegawaiCreate.Id
 
-	result = tx.Create(&pegawaiCreate.PegawaiFungsional)
+	result = tx.Omit(clause.Associations).Clauses(clause.OnConflict{
+		Columns:   []clause.Column{{Name: "id_pegawai"}},
+		UpdateAll: true}).
+		Create(&pegawaiCreate.PegawaiFungsional)
 	if result.Error != nil {
 		return fmt.Errorf("error creating data simpeg : %w", result.Error)
 	}
 
-	result = tx.Create(&pegawaiCreate.PegawaiPNS)
+	result = tx.Omit(clause.Associations).Clauses(clause.OnConflict{
+		Columns:   []clause.Column{{Name: "id_pegawai"}},
+		UpdateAll: true}).
+		Create(&pegawaiCreate.PegawaiPNS)
 	if result.Error != nil {
 		return fmt.Errorf("error creating data simpeg : %w", result.Error)
 	}
