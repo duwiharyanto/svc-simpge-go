@@ -286,7 +286,7 @@ func prepareSinkronSimpeg(ctx context.Context, pegawaiInsani *model.PegawaiDetai
 		pegawaiOra.KdPendidikan = pegawaiInsani.PegawaiYayasan.KdPendidikanTerakhir
 	}
 
-	// fmt.Printf("DEBUG fmt : %+v \n ", pegawaiOra.KdPendidikanMasuk)
+	// fmt.Printf("DEBUG fmt : %+v \n ", pegawaiOra.KdPendidikan)
 
 	if pegawaiInsani.PegawaiYayasan.KdKelompokPegawai != "" {
 		pegawaiOra.KelompokPegawai.KdKelompokPegawai = pegawaiInsani.PegawaiYayasan.KdKelompokPegawai
@@ -651,6 +651,18 @@ func prepareSinkronCreateSimpeg(ctx context.Context, pegawaiInsani *model.Pegawa
 
 	// Sinkron No Telepon
 	// pegawaiOra.NoTelepon = pegawaiInsani.PegawaiPribadi.NoTelepon
+
+	if pegawaiInsani.PegawaiYayasan.KdPendidikanMasuk != "" {
+		pegawaiOra.KdPendidikanMasuk = pegawaiInsani.PegawaiYayasan.KdPendidikanMasuk
+	}
+
+	// fmt.Printf("DEBUG fmt : %+v \n ", pegawaiOra.KdPendidikanMasuk)
+
+	if pegawaiInsani.PegawaiYayasan.KdPendidikanTerakhir != "" {
+		pegawaiOra.KdPendidikan = pegawaiInsani.PegawaiYayasan.KdPendidikanTerakhir
+	}
+
+	// fmt.Printf("DEBUG fmt : %+v \n ", pegawaiOra.KdPendidikan)
 
 	// Sinkron Kepegawaian Yayaysan - Status
 	if pegawaiInsani.PegawaiYayasan.KDJenisPegawai != "" {
