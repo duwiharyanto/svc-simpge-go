@@ -301,13 +301,13 @@ func ValidateUpdatePegawaiByUUID(a app.App, c echo.Context) (model.PegawaiUpdate
 		pegawaiOld.PegawaiPNS.InstansiAsal = pegawaiReq.PegawaiPNS.InstansiAsal
 	}
 	if pegawaiReq.PegawaiPNS.NipPns != "" {
-		if len(pegawaiReq.PegawaiPNS.NipPns) > 18 {
+		if len(pegawaiReq.PegawaiPNS.NipPns) != 18 {
 			return model.PegawaiUpdate{}, fmt.Errorf("error nip pns tidak valid")
 		}
 		pegawaiOld.PegawaiPNS.NipPns = pegawaiReq.PegawaiPNS.NipPns
 	}
 	if pegawaiReq.PegawaiPNS.NoKartuPegawai != "" {
-		if len(pegawaiReq.PegawaiPNS.NoKartuPegawai) > 18 {
+		if len(pegawaiReq.PegawaiPNS.NoKartuPegawai) != 18 {
 			return model.PegawaiUpdate{}, fmt.Errorf("error nomor kartu pegawai tidak valid")
 		}
 		pegawaiOld.PegawaiPNS.NoKartuPegawai = pegawaiReq.PegawaiPNS.NoKartuPegawai
@@ -337,6 +337,7 @@ func ValidateUpdatePegawaiByUUID(a app.App, c echo.Context) (model.PegawaiUpdate
 
 	pegawaiOld.UserUpdate = user
 	pegawaiOld.PegawaiFungsional.UserUpdate = user
+	pegawaiOld.PegawaiPNS.UserUpdate = user
 
 	return pegawaiOld, nil
 }
@@ -351,7 +352,8 @@ func PrepareCreateSimpeg(a app.App, c echo.Context) (model.PegawaiCreate, error)
 
 	pegawai, err := ValidateCreatePegawai(a, c)
 	if err != nil {
-		return model.PegawaiCreate{}, fmt.Errorf("error validate create pegawai, %s\n", err.Error())
+		return model.PegawaiCreate{}, fmt.Errorf(err.Error())
+		// return model.PegawaiCreate{}, fmt.Errorf("error validate create pegawai, %s", err.Error())
 	}
 
 	personal, err := personalRepo.GetPersonalByUuid(a, c.Request().Context(), uuidPersonal)
@@ -362,7 +364,6 @@ func PrepareCreateSimpeg(a app.App, c echo.Context) (model.PegawaiCreate, error)
 	pegawai.IdPersonalDataPribadi, _ = conv.String(personal.Id)
 	pegawai.Nama = personal.NamaLengkap
 	pegawai.NikKtp = personal.NikKtp
-	// pegawai.Nik = personal.NikPegawai
 	pegawai.TglLahir = personal.TglLahir
 	pegawai.TempatLahir = personal.TempatLahir
 	pegawai.IdAgama, _ = conv.String(personal.IdAgama)
@@ -607,17 +608,17 @@ func ValidateCreatePegawai(a app.App, c echo.Context) (model.PegawaiCreate, erro
 		}
 	}
 	if pegawaiReq.PegawaiFungsional.NomorSkPertama != "" {
-		if len(pegawaiReq.PegawaiFungsional.NomorSkPertama) > 10 {
+		if len(pegawaiReq.PegawaiFungsional.NomorSkPertama) > 30 {
 			return model.PegawaiCreate{}, fmt.Errorf("error nomor sk pertama tidak valid")
 		}
 	}
 	if pegawaiReq.PegawaiPNS.NipPns != "" {
-		if len(pegawaiReq.PegawaiPNS.NipPns) < 18 {
+		if len(pegawaiReq.PegawaiPNS.NipPns) != 18 {
 			return model.PegawaiCreate{}, fmt.Errorf("error nip pns tidak valid")
 		}
 	}
 	if pegawaiReq.PegawaiPNS.NoKartuPegawai != "" {
-		if len(pegawaiReq.PegawaiPNS.NoKartuPegawai) > 18 {
+		if len(pegawaiReq.PegawaiPNS.NoKartuPegawai) != 18 {
 			return model.PegawaiCreate{}, fmt.Errorf("error nomor kartu pegawai tidak valid")
 		}
 	}
@@ -628,15 +629,27 @@ func ValidateCreatePegawai(a app.App, c echo.Context) (model.PegawaiCreate, erro
 		}
 	}
 
-	if pegawaiReq.Nik != "" {
-		if len(pegawaiReq.Nik) > 9 {
-			return model.PegawaiCreate{}, fmt.Errorf("error NIK terlalu panjang")
-		}
-	}
+	// if pegawaiReq.Nik != "" {
+	// 	if len(pegawaiReq.Nik) != 9 {
+	// 		return model.PegawaiCreate{}, fmt.Errorf("error panjang NIK pegawai tidak valid")
+	// 	}
+
+	// 	checkNik, flagCheck, err := repo.CheckNikPegawai(a, c.Request().Context(), pegawaiReq.Nik)
+	// 	if err != nil {
+	// 		return model.PegawaiCreate{}, fmt.Errorf("error from check nik pegawai, %w", err)
+	// 	}
+
+	// 	if flagCheck == true {
+	// 		return model.PegawaiCreate{}, fmt.Errorf("nik %s sudah digunakan oleh %s", checkNik.Nik, checkNik.Nama)
+	// 	}
+	// }
 
 	pegawaiReq.UserUpdate = user
 	pegawaiReq.UserInput = user
+	pegawaiReq.PegawaiFungsional.UserInput = user
 	pegawaiReq.PegawaiFungsional.UserUpdate = user
+	pegawaiReq.PegawaiPNS.UserInput = user
+	pegawaiReq.PegawaiPNS.UserUpdate = user
 
 	return pegawaiReq, nil
 }

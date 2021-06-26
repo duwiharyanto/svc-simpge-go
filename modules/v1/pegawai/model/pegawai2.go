@@ -82,7 +82,7 @@ type PegawaiFungsionalCreate struct {
 	UuidJabatanFungsional    string  `form:"uuid_jabatan_fungsional" gorm:"-"`
 	IdJabatanFungsional      int     `form:"id_jabatan_fungsional"`
 	KdJabatanFungsional      string  `form:"kd_jabatan_fungsional"`
-	TmtPangkatGolongan       *string `form:"tmt_pangkat_golongan" gorm:"default:null"`
+	TmtPangkatGolongan       *string `form:"tmt_pangkat_golongan"`
 	TmtPangkatGolonganIDN    string  `form:"tmt_pangkat_golongan_idn" gorm:"-"`
 	TmtJabatan               *string `form:"tmt_jabatan"`
 	TmtJabatanIDN            string  `form:"tmt_jabatan_idn" gorm:"-"`

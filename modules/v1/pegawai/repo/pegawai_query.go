@@ -20,10 +20,10 @@ func getListAllPegawaiQuery(req *model.PegawaiRequest) string {
 	if req.UuidUnitKerja != "" {
 		kdUnitKerjaFilterQuery = fmt.Sprintf("AND b.uuid = '%s'", req.UuidUnitKerja)
 	}
-	// var namaFilterQuery string
-	// if req.Cari != "" {
-	// 	namaFilterQuery = fmt.Sprintf("AND a.nama LIKE '%%%s%%'", req.Cari)
-	// }
+	var kdStatusAktifFilterQuery string
+	if req.UuidStatusAktif != "" {
+		kdStatusAktifFilterQuery = fmt.Sprintf("AND e.uuid = '%s'", req.UuidStatusAktif)
+	}
 	var namaFilterQuery string
 	if req.Cari != "" {
 		namaFilterQuery = fmt.Sprintf("AND (a.nama LIKE '%%%s%%' OR a.nik LIKE '%%%s%%')", req.Cari, req.Cari)
@@ -36,17 +36,19 @@ func getListAllPegawaiQuery(req *model.PegawaiRequest) string {
 	COALESCE(a.kd_kelompok_pegawai,''), COALESCE(c.kelompok_pegawai,''), COALESCE(c.uuid,''),
 	COALESCE(a.kd_unit2,''), COALESCE(b.unit2,''), COALESCE(b.uuid,''),
 	COALESCE(d.kd_jenis_pegawai,''), COALESCE(d.nama_jenis_pegawai,''), COALESCE(d.uuid,''),
-	COALESCE(e.kd_status_pegawai,''), COALESCE(e.status_pegawai,''), COALESCE(e.uuid,''),
+	COALESCE(e.kd_status,''), COALESCE(e.status,''), COALESCE(e.uuid,''),
 	a.uuid
 	FROM pegawai a
+	LEFT JOIN pegawai_fungsional f ON a.id = f.id_pegawai
 	LEFT JOIN unit2 b ON a.id_unit_kerja2 = b.id
 	LEFT JOIN kelompok_pegawai c ON a.id_kelompok_pegawai = c.id
 	LEFT JOIN jenis_pegawai d ON a.id_jenis_pegawai = d.id
-	LEFT JOIN status_pegawai e ON a.id_status_pegawai = e.id
-	WHERE a.flag_aktif=1 %s %s %s %sORDER BY a.nama %s`,
+	LEFT JOIN status_pegawai_aktif e ON f.id_status_pegawai_aktif = e.id
+	WHERE a.flag_aktif=1 %s %s %s %s %s ORDER BY a.nama %s`,
 		kdJenisPegawaiFilterQuery,
 		kdKelompokFilterQuery,
 		kdUnitKerjaFilterQuery,
+		kdStatusAktifFilterQuery,
 		namaFilterQuery,
 		paginationFilterQuery,
 	)
@@ -65,19 +67,26 @@ func countPegawaiQuery(req *model.PegawaiRequest) string {
 	if req.UuidUnitKerja != "" {
 		uuidUnitKerjaFilterQuery = fmt.Sprintf("AND b.uuid = '%s'", req.UuidUnitKerja)
 	}
+	var kdStatusAktifFilterQuery string
+	if req.UuidStatusAktif != "" {
+		kdStatusAktifFilterQuery = fmt.Sprintf("AND e.uuid = '%s'", req.UuidStatusAktif)
+	}
 	var namaFilterQuery string
 	if req.Cari != "" {
 		namaFilterQuery = fmt.Sprintf("AND (a.nama LIKE '%%%s%%' OR a.nik LIKE '%%%s%%')", req.Cari, req.Cari)
 	}
 	return fmt.Sprintf(`SELECT COUNT(*)
 	FROM pegawai a
+	LEFT JOIN pegawai_fungsional f ON a.id = f.id_pegawai
 	LEFT JOIN unit2 b ON a.id_unit_kerja2 = b.id
 	LEFT JOIN kelompok_pegawai c ON a.id_kelompok_pegawai = c.id
 	LEFT JOIN jenis_pegawai d ON a.id_jenis_pegawai = d.id
-	WHERE a.flag_aktif = 1 %s %s %s %s`,
+	LEFT JOIN status_pegawai_aktif e ON f.id_status_pegawai_aktif = e.id
+	WHERE a.flag_aktif = 1 %s %s %s %s %s`,
 		uuidJenisPegawaiFilterQuery,
 		uuidKelompokFilterQuery,
 		uuidUnitKerjaFilterQuery,
+		kdStatusAktifFilterQuery,
 		namaFilterQuery,
 	)
 }

@@ -35,6 +35,7 @@ func InitRoute(a app.App, appCtx context.Context, e *echo.Echo, slackErrChan cha
 	insaniGroupingPath := e.Group("/public/api/v1")
 	// Route di bawah akan dikelola oleh handler
 	insaniGroupingPath.GET("/pegawai", pegawai.HandleGetPegawai(a))
+	insaniGroupingPath.GET("/pegawai-nik", pegawai.HandleCheckNikPegawai(a))
 	// insaniGroupingPath.GET("/filter-pegawai-simpeg", pegawai.HandleSearchPegawaiSimpeg(a))
 	insaniGroupingPath.GET("/pegawai-simpeg/:uuidPegawai/detail", pegawai.HandleGetSimpegPegawaiByUUID(a))
 	insaniGroupingPath.PUT("/pegawai-simpeg/:uuidPegawai", pegawai.HandleUpdatePegawai(a, appCtx, slackErrChan))
