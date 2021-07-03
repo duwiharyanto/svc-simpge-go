@@ -10,6 +10,7 @@ import (
 	"svc-insani-go/modules/v1/pegawai/model"
 
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 const (
@@ -119,6 +120,12 @@ func GetKepegawaianYayasan(a app.App, uuid string) (*model.PegawaiYayasan, error
 		&pegawaiYayasan.UuidKelompokPegawai,
 		&pegawaiYayasan.KdKelompokPegawai,
 		&pegawaiYayasan.KelompokPegawai,
+		&pegawaiYayasan.UuidPendidikanMasuk,
+		&pegawaiYayasan.KdPendidikanMasuk,
+		&pegawaiYayasan.PendidikanMasuk,
+		&pegawaiYayasan.UuidPendidikanTerakhir,
+		&pegawaiYayasan.KdPendidikanTerakhir,
+		&pegawaiYayasan.PendidikanTerakhir,
 		&pegawaiYayasan.UuidPangkatGolongan,
 		&pegawaiYayasan.KdPangkat,
 		&pegawaiYayasan.Pangkat,
@@ -134,8 +141,6 @@ func GetKepegawaianYayasan(a app.App, uuid string) (*model.PegawaiYayasan, error
 		&pegawaiYayasan.MasaKerjaBawaanBulan,
 		&pegawaiYayasan.MasaKerjaGajiTahun,
 		&pegawaiYayasan.MasaKerjaGajiBulan,
-		&pegawaiYayasan.MasaKerjaTotalahun,
-		&pegawaiYayasan.MasaKerjaTotalBulan,
 		&pegawaiYayasan.AngkaKredit,
 		&pegawaiYayasan.NoSertifikasi,
 		&pegawaiYayasan.UuidJenisRegis,
@@ -153,6 +158,7 @@ func GetKepegawaianYayasan(a app.App, uuid string) (*model.PegawaiYayasan, error
 	}
 
 	pegawaiYayasan.SetTanggalIDN()
+	// pegawaiYayasan.SetMasaKerjaTotal()
 
 	return &pegawaiYayasan, nil
 }
@@ -202,6 +208,8 @@ func GetPegawaiPNS(a app.App, uuid string) (*model.PegawaiPNSPTT, error) {
 	err := a.DB.QueryRow(sqlQuery).Scan(
 		&pegawaiPNSPTT.NipPNS,
 		&pegawaiPNSPTT.NoKartuPegawai,
+		&pegawaiPNSPTT.UuidDetailProfesi,
+		&pegawaiPNSPTT.DetailProfesi,
 		&pegawaiPNSPTT.UuidJenisPTT,
 		&pegawaiPNSPTT.KdJenisPTT,
 		&pegawaiPNSPTT.JenisPTT,
@@ -264,9 +272,19 @@ func GetPegawaiPribadi(a app.App, uuid string) (*model.PegawaiPribadi, error) {
 	err := a.DB.QueryRow(sqlQuery).Scan(
 		&pegawaiPribadi.Nama,
 		&pegawaiPribadi.NIK,
+		&pegawaiPribadi.KdAgama,
+		&pegawaiPribadi.KdGolonganDarah,
+		&pegawaiPribadi.KdKelamin,
+		&pegawaiPribadi.TempatLahir,
+		&pegawaiPribadi.TanggalLahir,
+		&pegawaiPribadi.FlagPensiun,
+		&pegawaiPribadi.GelarBelakang,
+		&pegawaiPribadi.NoKTP,
 		&pegawaiPribadi.JenisPegawai,
 		&pegawaiPribadi.KelompokPegawai,
 		&pegawaiPribadi.UnitKerja,
+		&pegawaiPribadi.UserInput,
+		&pegawaiPribadi.UserUpdate,
 		&pegawaiPribadi.UUID,
 	)
 
@@ -403,22 +421,6 @@ func GetPegawaiPendidikan(a app.App, uuid string) ([]model.JenjangPendidikan, er
 	return jenjangPendidikan, nil
 }
 
-// func GetURLFilePendidikan(a app.App, pendidikanList []*model.PegawaiPendidikan) []*model.PegawaiPendidikan {
-// 	for _, pendidikan := range pendidikanList {
-// 		if pendidikan.PathIjazah != "" {
-// 			fmt.Println("Path Ijazah : ", pendidikan.PathIjazah)
-// 			var err error
-// 			minioBucketNamePersonal := "personal"
-// 			pendidikan.URLIjazah, err = a.MinioClient.GetDownloadURL(minioBucketNamePersonal, pendidikan.PathIjazah, pendidikan.NamaFileIjazah)
-// 			if err != nil {
-// 				fmt.Printf("error getting file url, %s", err.Error())
-// 				pendidikan.URLIjazah = ""
-// 			}
-// 		}
-// 	}
-// 	return pendidikanList
-// }
-
 func setBerkasPendukungWithURL(a app.App, list model.BerkasPendukungList) {
 	for i, berkas := range list {
 		if berkas.PathFile == "" {
@@ -490,6 +492,19 @@ func GetPegawaiByUUIDx(a app.App, ctx context.Context, uuid string) (*model.Pega
 	return &pegawaiAll, nil
 }
 
+func GetPegawaiByNIK(a app.App, ctx context.Context, nik string) (*model.CreatePegawai, error) {
+
+	var pegawaiAll model.CreatePegawai
+	tx := a.GormDB.WithContext(ctx)
+
+	res := tx.First(&pegawaiAll, "nik = ?", nik)
+	if res.Error != nil {
+		return nil, res.Error
+	}
+
+	return &pegawaiAll, nil
+}
+
 func GetOldPegawai(a app.App, ctx context.Context, uuidPegawai string) (model.PegawaiUpdate, error) {
 
 	var pegawaiOld model.PegawaiUpdate
@@ -531,6 +546,14 @@ func UpdatePendidikanPegawai(a app.App, ctx context.Context, uuidPendidikanDiaku
 
 	var pegawaiPendidikanUpdate model.PegawaiPendidikanUpdate
 
+	// Flag Ijazah Diakui ke Nul
+	res := db.Model(&pegawaiPendidikanUpdate).
+		Where("id_personal_data_pribadi = ?", idPersonalPegawai).
+		Update("flag_ijazah_diakui", "0")
+	if res.Error != nil {
+		return res.Error
+	}
+
 	// Flag Ijazah Diakui
 	if uuidPendidikanDiakui != "" {
 		res := db.Model(&pegawaiPendidikanUpdate).
@@ -540,13 +563,14 @@ func UpdatePendidikanPegawai(a app.App, ctx context.Context, uuidPendidikanDiaku
 			return res.Error
 		}
 
-		// Flag Ijazah ke Nul
-		res = db.Model(&pegawaiPendidikanUpdate).
-			Where("id_personal_data_pribadi = ? AND uuid != ?", idPersonalPegawai, uuidPendidikanDiakui).
-			Update("flag_ijazah_diakui", "0")
-		if res.Error != nil {
-			return res.Error
-		}
+	}
+
+	// Flag Ijazah Terakhir ke Nul
+	res = db.Model(&pegawaiPendidikanUpdate).
+		Where("id_personal_data_pribadi = ?", idPersonalPegawai).
+		Update("flag_ijazah_terakhir", "0")
+	if res.Error != nil {
+		return res.Error
 	}
 
 	// Flag Ijazah Terakhir
@@ -558,28 +582,184 @@ func UpdatePendidikanPegawai(a app.App, ctx context.Context, uuidPendidikanDiaku
 			return res.Error
 		}
 
-		// Flag Ijazah ke Nul
-		res = db.Model(&pegawaiPendidikanUpdate).
-			Where("id_personal_data_pribadi = ? AND uuid != ?", idPersonalPegawai, uuidPendidikanTerakhir).
-			Update("flag_ijazah_terakhir", "0")
-		if res.Error != nil {
-			return res.Error
-		}
 	}
 
 	return nil
 }
 
-func CreatePegawai(a app.App, ctx context.Context, pegawaiUpdate model.PegawaiUpdate) error {
-	tx := a.GormDB.Session(&gorm.Session{
-		Context:              ctx,
-		FullSaveAssociations: true,
-	})
+func UpdatePendidikanDiakui(a app.App, ctx context.Context, uuidPendidikanDiakui string, idPersonalPegawai string) error {
+	db := a.GormDB.WithContext(ctx)
 
-	result := tx.Create(&pegawaiUpdate)
-	if result.Error != nil {
-		return fmt.Errorf("error creating data simpeg tendik: %w", result.Error)
+	var pegawaiPendidikanUpdate model.PegawaiPendidikanUpdate
+
+	// Flag Ijazah Diakui ke Nul
+	res := db.Model(&pegawaiPendidikanUpdate).
+		Where("id_personal_data_pribadi = ?", idPersonalPegawai).
+		Update("flag_ijazah_diakui", "0")
+	if res.Error != nil {
+		return res.Error
+	}
+
+	// Flag Ijazah Diakui
+	if uuidPendidikanDiakui != "" {
+		res := db.Model(&pegawaiPendidikanUpdate).
+			Where("uuid = ?", uuidPendidikanDiakui).
+			Update("flag_ijazah_diakui", "1")
+		if res.Error != nil {
+			return res.Error
+		}
+
 	}
 
 	return nil
+}
+
+func CreatePegawai(a app.App, ctx context.Context, pegawaiCreate model.PegawaiCreate) error {
+	tx := a.GormDB.Session(&gorm.Session{
+		Context: ctx,
+		// FullSaveAssociations: true,
+	})
+
+	result := tx.Omit(clause.Associations).Clauses(clause.OnConflict{
+		Columns:   []clause.Column{{Name: "nik"}},
+		UpdateAll: true}).
+		Create(&pegawaiCreate)
+	if result.Error != nil {
+		return fmt.Errorf("error creating data simpeg : %w", result.Error)
+	}
+
+	result = tx.Find(&pegawaiCreate, "nik = ?", pegawaiCreate.Nik)
+	if result.Error != nil {
+		tx.Rollback()
+		return fmt.Errorf("error find data simpeg nik : %w", result.Error)
+	}
+
+	pegawaiCreate.PegawaiFungsional.IdPegawai = pegawaiCreate.Id
+	pegawaiCreate.PegawaiPNS.IdPegawai = pegawaiCreate.Id
+
+	result = tx.Omit(clause.Associations).Clauses(clause.OnConflict{
+		Columns:   []clause.Column{{Name: "id_pegawai"}},
+		UpdateAll: true}).
+		Create(&pegawaiCreate.PegawaiFungsional)
+	if result.Error != nil {
+		return fmt.Errorf("error creating data simpeg : %w", result.Error)
+	}
+
+	result = tx.Omit(clause.Associations).Clauses(clause.OnConflict{
+		Columns:   []clause.Column{{Name: "id_pegawai"}},
+		UpdateAll: true}).
+		Create(&pegawaiCreate.PegawaiPNS)
+	if result.Error != nil {
+		return fmt.Errorf("error creating data simpeg : %w", result.Error)
+	}
+
+	return nil
+}
+
+func GetPegawaiPendidikanPersonal(a app.App, uuid string) ([]model.JenjangPendidikan, error) {
+	sqlQuery := getPegawaiPendidikanPersonalQuery(uuid)
+
+	rows, err := a.DB.Query(sqlQuery)
+	if err != nil {
+		return nil, fmt.Errorf("error querying get pendidikan file, %w", err)
+	}
+	defer rows.Close()
+
+	m := make(map[string][]model.PegawaiPendidikan)
+	idPendidikanList := []string{}
+	for rows.Next() {
+		var pegawaiPendidikan model.PegawaiPendidikan
+		err := rows.Scan(
+			&pegawaiPendidikan.UuidPendidikan,
+			&pegawaiPendidikan.IdPendidikan,
+			&pegawaiPendidikan.KdJenjang,
+			&pegawaiPendidikan.UrutanJenjang,
+			&pegawaiPendidikan.NamaInstitusi,
+			&pegawaiPendidikan.Jurusan,
+			&pegawaiPendidikan.TglKelulusan,
+			&pegawaiPendidikan.FlagIjazahDiakui,
+			&pegawaiPendidikan.FlagIjazahTerakhir,
+			&pegawaiPendidikan.Akreditasi,
+			&pegawaiPendidikan.KonsentrasiBidang,
+			&pegawaiPendidikan.Gelar,
+			&pegawaiPendidikan.NomorInduk,
+			&pegawaiPendidikan.TahunMasuk,
+			&pegawaiPendidikan.JudulTugasAkhir,
+			&pegawaiPendidikan.FlagInstitusiLuarNegeri,
+			&pegawaiPendidikan.NomorIjazah,
+			&pegawaiPendidikan.TglIjazah,
+			&pegawaiPendidikan.PathIjazah,
+			&pegawaiPendidikan.FlagIjazahTerverifikasi,
+			&pegawaiPendidikan.Nilai,
+			&pegawaiPendidikan.JumlahPelajaran,
+			&pegawaiPendidikan.PathSKPenyetaraan,
+			&pegawaiPendidikan.NomorSKPenyetaraan,
+			&pegawaiPendidikan.TglSKPenyetaraan,
+			&pegawaiPendidikan.UUIDPersonal,
+		)
+		if err != nil {
+			return nil, fmt.Errorf("error scanning pendidikan pegawai, %w", err)
+		}
+		pegawaiPendidikan.SetTanggalIDN()
+		pegawaiPendidikan.SetNamaFileIjazah()
+		pegawaiPendidikan.SetNamaFilePenyetaraan()
+		pegawaiPendidikan.SetDownloadFileNamePendidikan(a.TimeLocation)
+		setIjazahWithURL(a, &pegawaiPendidikan)
+		idPendidikanList = append(idPendidikanList, pegawaiPendidikan.IdPendidikan)
+		m[fmt.Sprint(pegawaiPendidikan.KdJenjang, ".", pegawaiPendidikan.UrutanJenjang)] = append(m[fmt.Sprint(pegawaiPendidikan.KdJenjang, ".", pegawaiPendidikan.UrutanJenjang)], pegawaiPendidikan)
+
+	}
+
+	filePegawaiList, err := GetPegawaiFilePendidikan(a, idPendidikanList...)
+	if err != nil {
+		return nil, fmt.Errorf("error get file pendidikan: %w", err)
+	}
+
+	setBerkasPendukungWithURL(a, filePegawaiList)
+
+	filePegawaiMap := filePegawaiList.MapByIdPendidikan()
+
+	jenjangPendidikan := []model.JenjangPendidikan{}
+	for kdJenjangUrut, pendidikanList := range m {
+		for n, pendidikan := range pendidikanList {
+			pendidikanList[n].BerkasPendukungList = filePegawaiMap[pendidikan.IdPendidikan]
+		}
+		splittedKdJenjangUrut := strings.Split(kdJenjangUrut, ".")
+		kdJenjang := splittedKdJenjangUrut[0]
+		urutanJenjang := splittedKdJenjangUrut[1]
+		jenjangPendidikan = append(jenjangPendidikan, model.JenjangPendidikan{
+			JenjangPendidikan: kdJenjang,
+			UrutanJenjang:     urutanJenjang,
+			Data:              pendidikanList,
+		})
+	}
+
+	sort.SliceStable(jenjangPendidikan, func(i, j int) bool {
+		return jenjangPendidikan[i].UrutanJenjang < jenjangPendidikan[j].UrutanJenjang
+	})
+
+	if err != nil {
+		return nil, fmt.Errorf("error querying and scanning data pendidikan pegawai, %s", err.Error())
+	}
+
+	return jenjangPendidikan, nil
+}
+
+func CheckNikPegawai(a app.App, ctx context.Context, nik string) (*model.PegawaiCreate, bool, error) {
+
+	var pegawaiOld model.PegawaiCreate
+	var flagCheck bool
+
+	db := a.GormDB.WithContext(ctx)
+	res := db.Find(&pegawaiOld, "nik = ?", nik)
+	if res.Error != nil {
+		return nil, flagCheck, res.Error
+	}
+
+	if res.RowsAffected != 0 {
+		flagCheck = true
+		return &pegawaiOld, flagCheck, nil
+	}
+
+	return &pegawaiOld, flagCheck, nil
 }

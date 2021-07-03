@@ -10,6 +10,8 @@ import (
 	statusPegawai "svc-insani-go/modules/v1/master-status-pegawai/model"
 	unitKerja "svc-insani-go/modules/v1/master-unit-kerja/model"
 	"time"
+
+	"github.com/cstockton/go-conv"
 )
 
 type Pegawai struct {
@@ -28,6 +30,17 @@ type Pegawai struct {
 	UserInput                       string                `json:"-"`
 	UserUpdate                      string                `json:"-"`
 	UUID                            string                `json:"uuid"`
+}
+
+type CreatePegawai struct {
+	ID   string `json:"-" gorm:"primaryKey"`
+	NIK  string `json:"nik" gorm:"type:varchar;not null"`
+	Nama string `json:"nama" gorm:"type:varchar;not null"`
+	UUID string `json:"uuid"`
+}
+
+func (*CreatePegawai) TableName() string {
+	return "pegawai"
 }
 
 type PegawaiRequestParam struct {
@@ -74,12 +87,13 @@ type PegawaiRequest struct {
 	UuidJenisPegawai    string `query:"uuid_jenis_pegawai"`
 	UuidUnitKerja       string `query:"uuid_unit_kerja"`
 	UuidKelompokPegawai string `query:"uuid_kelompok_pegawai"`
-	KdJenisPegawai      string `query:"kd_jenis_pegawai"`
-	KdUnitKerja         string `query:"kd_unit_kerja"`
-	KdKelompokPegawai   string `query:"kd_kelompok_pegawai"`
-	Limit               int    `query:"limit"`
-	Offset              int    `query:"offset"`
-	Cari                string `query:"cari"`
+	UuidStatusAktif     string `query:"uuid_status_aktif"`
+	// KdJenisPegawai      string `query:"kd_jenis_pegawai"`
+	// KdUnitKerja         string `query:"kd_unit_kerja"`
+	// KdKelompokPegawai   string `query:"kd_kelompok_pegawai"`
+	Limit  int    `query:"limit"`
+	Offset int    `query:"offset"`
+	Cari   string `query:"cari"`
 }
 
 type PegawaiResponseTest struct {
@@ -100,6 +114,19 @@ type PegawaiPribadi struct {
 	ID              string `json:"-"`
 	NIK             string `json:"nik"`
 	Nama            string `json:"nama"`
+	KdAgama         string `json:"-"`
+	KdGolonganDarah string `json:"-"`
+	KdKelamin       string `json:"-"`
+	// KdNikah          string `json:"-"`
+	TempatLahir   string `json:"-"`
+	TanggalLahir  string `json:"-"`
+	FlagPensiun   string `json:"-"`
+	GelarBelakang string `json:"gelar_belakang"`
+	// JumlahAnak       string `json:"-"`
+	// JumlahDitanggung string `json:"-"`
+	// JumlahKeluarga   string `json:"-"`
+	NoKTP string `json:"-"`
+	// NoTelepon       string `json:"no_telpon"`
 	JenisPegawai    string `json:"jenis_pegawai"`
 	KelompokPegawai string `json:"kelompok_pegawai"`
 	UnitKerja       string `json:"unit_kerja"`
@@ -109,50 +136,58 @@ type PegawaiPribadi struct {
 }
 
 type PegawaiDetail struct {
-	PegawaiPribadi    *PegawaiPribadi     `json:"pribadi"`
-	JenjangPendidikan []JenjangPendidikan `json:"pendidikan"`
-	PegawaiYayasan    *PegawaiYayasan     `json:"kepegawaian"`
-	UnitKerjaPegawai  *UnitKerjaPegawai   `json:"unit_kerja"`
-	PegawaiPNSPTT     *PegawaiPNSPTT      `json:"negara_ptt"`
-	StatusAktif       *StatusAktif        `json:"status_aktif"`
+	PegawaiPribadi    *PegawaiPribadi      `json:"pribadi"`
+	JenjangPendidikan DataPendidikanDetail `json:"pendidikan"`
+	PegawaiYayasan    *PegawaiYayasan      `json:"kepegawaian"`
+	UnitKerjaPegawai  *UnitKerjaPegawai    `json:"unit_kerja"`
+	PegawaiPNSPTT     *PegawaiPNSPTT       `json:"negara_ptt"`
+	StatusAktif       *StatusAktif         `json:"status_aktif"`
 }
 
 type PegawaiYayasan struct {
-	ID                    string `json:"-" gorm:"primaryKey;not null"`
-	KDJenisPegawai        string `json:"kd_jenis_pegawai"`
-	UuidJenisPegawai      string `json:"uuid_jenis_pegawai"`
-	JenisPegawai          string `json:"jenis_pegawai"`
-	UuidKelompokPegawai   string `json:"uuid_kelompok_pegawai"`
-	KdKelompokPegawai     string `json:"kd_kelompok_pegawai"`
-	KelompokPegawai       string `json:"kelompok_pegawai"`
-	UuidStatusPegawai     string `json:"uuid_status_pegawai"`
-	KDStatusPegawai       string `json:"kd_status_pegawai"`
-	StatusPegawai         string `json:"status_pegawai"`
-	UuidPangkatGolongan   string `json:"uuid_pangkat_golongan"`
-	KdPangkat             string `json:"kd_pangkat_golongan"`
-	Pangkat               string `json:"pangkat"`
-	Golongan              string `json:"golongan"`
-	KdGolongan            string `json:"kd_golongan"`
-	KdRuang               string `json:"kd_ruang"`
-	TmtPangkatGolongan    string `json:"tmt_pangkat_gol_ruang_pegawai"`
-	TmtPangkatGolonganIdn string `json:"tmt_pangkat_gol_ruang_pegawai_idn"`
-	UuidJabatanFungsional string `json:"uuid_jabatan_fungsional"`
-	KdJabatanFungsional   string `json:"kd_jabatan_fungsional"`
-	JabatanFungsional     string `json:"jabatan_fungsional"`
-	TmtJabatan            string `json:"tmt_jabatan"`
-	TmtJabatanIdn         string `json:"tmt_jabatan_idn"`
-	MasaKerjaBawaanTahun  string `json:"masa_kerja_bawaan_tahun"`
-	MasaKerjaBawaanBulan  string `json:"masa_kerja_bawaan_bulan"`
-	MasaKerjaGajiTahun    string `json:"masa_kerja_gaji_tahun"`
-	MasaKerjaGajiBulan    string `json:"masa_kerja_gaji_bulan"`
-	MasaKerjaTotalahun    string `json:"masa_kerja_total_tahun"`
-	MasaKerjaTotalBulan   string `json:"masa_kerja_total_bulan"`
-	AngkaKredit           string `json:"angka_kredit"`
-	NoSertifikasi         string `json:"nomor_sertifikasi_pegawai"`
-	UuidJenisRegis        string `json:"uuid_jenis_regis"`
-	KdJenisRegis          string `json:"kd_jenis_regis"`
-	JenisNomorRegis       string `json:"jenis_no_regis"`
-	NomorRegis            string `json:"no_regis"`
+	ID                     string `json:"-" gorm:"primaryKey;not null"`
+	KDJenisPegawai         string `json:"kd_jenis_pegawai"`
+	UuidJenisPegawai       string `json:"uuid_jenis_pegawai"`
+	JenisPegawai           string `json:"jenis_pegawai"`
+	UuidKelompokPegawai    string `json:"uuid_kelompok_pegawai"`
+	KdKelompokPegawai      string `json:"kd_kelompok_pegawai"`
+	KelompokPegawai        string `json:"kelompok_pegawai"`
+	UuidPendidikanMasuk    string `json:"-" form:"uuid_pendidikan_masuk"`
+	IdPendidikanMasuk      int    `json:"-"`
+	KdPendidikanMasuk      string `json:"-"`
+	PendidikanMasuk        string `json:"-"`
+	UuidPendidikanTerakhir string `json:"-" form:"uuid_pendidikan_terakhir"`
+	IdPendidikanTerakhir   int    `json:"-"`
+	KdPendidikanTerakhir   string `json:"-"`
+	PendidikanTerakhir     string `json:"-"`
+	UuidStatusPegawai      string `json:"uuid_status_pegawai"`
+	KDStatusPegawai        string `json:"kd_status_pegawai"`
+	StatusPegawai          string `json:"status_pegawai"`
+	UuidPangkatGolongan    string `json:"uuid_pangkat_golongan"`
+	KdPangkat              string `json:"kd_pangkat_golongan"`
+	Pangkat                string `json:"pangkat"`
+	Golongan               string `json:"golongan"`
+	KdGolongan             string `json:"kd_golongan"`
+	KdRuang                string `json:"kd_ruang"`
+	TmtPangkatGolongan     string `json:"tmt_pangkat_gol_ruang_pegawai"`
+	TmtPangkatGolonganIdn  string `json:"tmt_pangkat_gol_ruang_pegawai_idn"`
+	UuidJabatanFungsional  string `json:"uuid_jabatan_fungsional"`
+	KdJabatanFungsional    string `json:"kd_jabatan_fungsional"`
+	JabatanFungsional      string `json:"jabatan_fungsional"`
+	TmtJabatan             string `json:"tmt_jabatan"`
+	TmtJabatanIdn          string `json:"tmt_jabatan_idn"`
+	MasaKerjaBawaanTahun   string `json:"masa_kerja_bawaan_tahun"`
+	MasaKerjaBawaanBulan   string `json:"masa_kerja_bawaan_bulan"`
+	MasaKerjaGajiTahun     string `json:"masa_kerja_gaji_tahun"`
+	MasaKerjaGajiBulan     string `json:"masa_kerja_gaji_bulan"`
+	MasaKerjaTotalTahun    string `json:"masa_kerja_total_tahun"`
+	MasaKerjaTotalBulan    string `json:"masa_kerja_total_bulan"`
+	AngkaKredit            string `json:"angka_kredit"`
+	NoSertifikasi          string `json:"nomor_sertifikasi_pegawai"`
+	UuidJenisRegis         string `json:"uuid_jenis_regis"`
+	KdJenisRegis           string `json:"kd_jenis_regis"`
+	JenisNomorRegis        string `json:"jenis_no_regis"`
+	NomorRegis             string `json:"no_regis"`
 }
 
 func (*PegawaiYayasan) TableName() string {
@@ -184,6 +219,9 @@ type UnitKerjaPegawai struct {
 type PegawaiPNSPTT struct {
 	NipPNS                string `json:"nip_pns"`
 	NoKartuPegawai        string `json:"no_kartu_pegawai"`
+	UuidDetailProfesi     string `json:"uuid_detail_profesi" form:"uuid_detail_profesi"`
+	IdDetailProfesi       int    `json:"-"`
+	DetailProfesi         string `json:"detail_profesi"`
 	UuidPangkatGolongan   string `json:"uuid_pangkat_gol_ruang_pns"`
 	KdPangkatGolonganPns  string `json:"kd_pangkat_golongan"`
 	PangkatPNS            string `json:"pangkat_pns"`
@@ -280,19 +318,30 @@ type BerkasPendukung struct {
 	UUIDPersonal  string                `json:"-"`
 }
 
+type DataPendidikanDetail struct {
+	UuidPendidikanMasuk string              `json:"uuid_pendidikan_masuk"`
+	KdPendidikanMasuk   string              `json:"kd_pendidikan_masuk"`
+	PendidikanMasuk     string              `json:"pendidikan_masuk"`
+	Data                []JenjangPendidikan `json:"data_pendidikan"`
+}
+
 type JenjangPendidikan struct {
 	JenjangPendidikan string              `json:"jenjang"`
 	UrutanJenjang     string              `json:"-"`
 	Data              []PegawaiPendidikan `json:"data"`
 }
 
+type PendidikanPersonal struct {
+	Data []JenjangPendidikan `json:"data_pendidikan"`
+}
+
 type PegawaiUpdate struct {
-	Id                      int                     `form:"id" gorm:"primaryKey"`
+	Id                      int                     `form:"id" gorm:"primaryKey;<-false"`
 	IdPersonalDataPribadi   string                  `form:"id_personal_data_pribadi" gorm:"<-:create"`
 	FlagAktif               int                     `form:"flag_aktif" gorm:"->"`
-	Nik                     string                  `form:"nik" gorm:"->"`
+	Nik                     string                  `form:"nik" gorm:"->;<-:create"`
 	NikKtp                  string                  `form:"nik_ktp" gorm:"->"`
-	Nama                    string                  `form:"nama" gorm:"->"`
+	Nama                    string                  `form:"nama" gorm:"->;<-:create"`
 	GelarDepan              string                  `form:"gelar_depan" gorm:"<-:create"`
 	GelarBelakang           string                  `form:"gelar_belakang" gorm:"<-:create"`
 	TempatLahir             string                  `form:"tempat_lahir" gorm:"<-:create"`
@@ -304,12 +353,14 @@ type PegawaiUpdate struct {
 	KdGolonganDarah         string                  `form:"kd_golongan_darah" gorm:"<-:create"`
 	IdStatusPerkawinan      int                     `form:"id_status_perkawinan" gorm:"<-:create"`
 	KdStatusPerkawinan      string                  `form:"kd_status_perkawinan" gorm:"<-:create"`
-	IdPendidikanMasuk       int                     `form:"id_pendidikan_masuk" gorm:"<-:create"`
-	KdPendidikanMasuk       string                  `form:"kd_pendidikan_masuk" gorm:"<-:create"`
+	UuidPendidikanMasuk     string                  `form:"uuid_pendidikan_masuk" gorm:"-"`
+	IdPendidikanMasuk       int                     `form:"id_pendidikan_masuk"`
+	KdPendidikanMasuk       string                  `form:"kd_pendidikan_masuk"`
+	UuidPendidikanTerakhir  string                  `form:"uuid_pendidikan_terakhir" gorm:"-"`
+	IdPendidikanTerakhir    int                     `form:"id_pendidikan_terakhir"`
+	KdPendidikanTerakhir    string                  `form:"kd_pendidikan_terakhir"`
 	IdStatusPendidikanMasuk int                     `form:"id_status_pendidikan_masuk" gorm:"<-:create"`
 	KdStatusPendidikanMasuk string                  `form:"kd_status_pendidikan_masuk" gorm:"<-:create"`
-	IdPendidikanTerakhir    int                     `form:"id_pendidikan_terakhir" gorm:"<-:create"`
-	KdPendidikanTerakhir    string                  `form:"kd_pendidikan_terakhir" gorm:"<-:create"`
 	IdJenisPendidikan       int                     `form:"id_jenis_pendidikan" gorm:"<-:create"`
 	kdJenisPendidikan       string                  `form:"kd_jenis_pendidikan" gorm:"<-:create"`
 	UuidJenisPegawai        string                  `form:"uuid_jenis_pegawai" gorm:"-"`
@@ -321,6 +372,8 @@ type PegawaiUpdate struct {
 	UuidKelompokPegawai     string                  `form:"uuid_kelompok_pegawai" gorm:"-"`
 	IdKelompokPegawai       int                     `form:"id_kelompok_pegawai"`
 	KdKelompokPegawai       string                  `form:"kd_kelompok_pegawai"`
+	UuidDetailProfesi       string                  `form:"uuid_detail_profesi"  gorm:"-"`
+	IdDetailProfesi         int                     `form:"id_detail_profesi"`
 	UuidGolongan            string                  `form:"uuid_golongan" gorm:"-"`
 	IdGolongan              int                     `form:"id_golongan"`
 	KdGolongan              string                  `form:"kd_golongan"`
@@ -340,13 +393,13 @@ type PegawaiUpdate struct {
 	LokasiKerja             string                  `form:"lokasi_kerja"`
 	UuidLokasiKerja         string                  `form:"uuid_lokasi_kerja" gorm:"-"`
 	FlagPensiun             string                  `form:"flag_pensiun" gorm:"->"`
-	TglPensiun              string                  `form:"tgl_pensiun" gorm:"<-:create" gorm:"->"`
+	TglPensiun              string                  `form:"tgl_pensiun" gorm:"->"`
 	FlagMeninggal           string                  `form:"flag_meninggal" gorm:"->"`
-	TglInput                string                  `form:"tgl_input" gorm:"->" gorm:"->"`
+	TglInput                string                  `form:"tgl_input" gorm:"->"`
 	UserInput               string                  `form:"user_input" gorm:"->"`
 	TglUpdate               string                  `form:"tgl_update" gorm:"->"`
 	UserUpdate              string                  `form:"user_update"`
-	Uuid                    string                  `form:"uuid" gorm:"->"`
+	Uuid                    string                  `form:"uuid" gorm:"->;<-false"`
 	PegawaiFungsional       PegawaiFungsionalUpdate `gorm:"foreignkey:IdPegawai;references:Id"`
 	PegawaiPNS              PegawaiPNSUpdate        `gorm:"foreignkey:IdPegawai;references:Id"`
 }
@@ -356,25 +409,25 @@ func (*PegawaiUpdate) TableName() string {
 }
 
 type PegawaiFungsionalUpdate struct {
-	Id                       int     `form:"-"`
-	IdKafka                  int     `form:"-"`
-	IdPegawai                int     `form:"-"`
-	UuidPangkatGolongan      string  `form:"uuid_pangkat_golongan" gorm:"-"`
-	IdPangkatGolongan        int     `form:"id_pangkat_golongan"`
-	KdPangkatGolongan        string  `form:"kd_pangkat_golongan"`
-	UuidJabatanFungsional    string  `form:"uuid_jabatan_fungsional" gorm:"-"`
-	IdJabatanFungsional      int     `form:"id_jabatan_fungsional"`
-	KdJabatanFungsional      string  `form:"kd_jabatan_fungsional"`
-	TmtPangkatGolongan       *string `form:"tmt_pangkat_golongan" gorm:"default:null"`
-	TmtPangkatGolonganIDN    string  `form:"tmt_pangkat_golongan_idn" gorm:"-"`
-	TmtJabatan               *string `form:"tmt_jabatan"`
-	TmtJabatanIDN            string  `form:"tmt_jabatan_idn" gorm:"-"`
-	MasaKerjaBawaanTahun     string  `form:"masa_kerja_bawaan_tahun"`
-	MasaKerjaBawaanBulan     string  `form:"masa_kerja_bawaan_bulan"`
-	MasaKerjaGajiTahun       string  `form:"masa_kerja_gaji_tahun"`
-	MasaKerjaGajiBulan       string  `form:"masa_kerja_gaji_bulan"`
-	MasaKerjaTotalTahun      string  `form:"masa_kerja_total_tahun"`
-	MasaKerjaTotalBulan      string  `form:"masa_kerja_total_bulan"`
+	Id                    int     `form:"-"`
+	IdKafka               int     `form:"-"`
+	IdPegawai             int     `form:"-"`
+	UuidPangkatGolongan   string  `form:"uuid_pangkat_golongan" gorm:"-"`
+	IdPangkatGolongan     int     `form:"id_pangkat_golongan"`
+	KdPangkatGolongan     string  `form:"kd_pangkat_golongan"`
+	UuidJabatanFungsional string  `form:"uuid_jabatan_fungsional" gorm:"-"`
+	IdJabatanFungsional   int     `form:"id_jabatan_fungsional"`
+	KdJabatanFungsional   string  `form:"kd_jabatan_fungsional"`
+	TmtPangkatGolongan    *string `form:"tmt_pangkat_golongan" gorm:"default:null"`
+	TmtPangkatGolonganIDN string  `form:"tmt_pangkat_golongan_idn" gorm:"-"`
+	TmtJabatan            *string `form:"tmt_jabatan"`
+	TmtJabatanIDN         string  `form:"tmt_jabatan_idn" gorm:"-"`
+	MasaKerjaBawaanTahun  string  `form:"masa_kerja_bawaan_tahun"`
+	MasaKerjaBawaanBulan  string  `form:"masa_kerja_bawaan_bulan"`
+	MasaKerjaGajiTahun    string  `form:"masa_kerja_gaji_tahun"`
+	MasaKerjaGajiBulan    string  `form:"masa_kerja_gaji_bulan"`
+	// MasaKerjaTotalTahun      string  `form:"masa_kerja_total_tahun"`
+	// MasaKerjaTotalBulan      string  `form:"masa_kerja_total_bulan"`
 	AngkaKredit              string  `form:"angka_kredit"`
 	NomorSertifikasi         string  `form:"nomor_sertifikasi"`
 	UuidJenisNomorRegistrasi string  `form:"uuid_jenis_nomor_registrasi" gorm:"-"`
@@ -402,13 +455,6 @@ type PegawaiFungsionalUpdate struct {
 func (*PegawaiFungsionalUpdate) TableName() string {
 	return "pegawai_fungsional"
 }
-
-// func (p *PegawaiFungsionalUpdate) BeforeSave(tx *gorm.DB) error {
-// 	if *p.TmtPangkatGolongan == "" {
-// 		p.TmtPangkatGolongan = nil
-// 	}
-// 	return nil
-// }
 
 type PegawaiPNSUpdate struct {
 	Id                    int     `form:"-" gorm:"primaryKey"`
@@ -573,4 +619,70 @@ func (b *PegawaiPendidikan) SetDownloadFileNamePendidikan(loc *time.Location) {
 	splittedPathPenyetaraan := strings.Split(b.PathSKPenyetaraan, ".")
 	fileExtensionPenyetaraan := splittedPathPenyetaraan[1]
 	b.NamaFileSKPenyetaraan = fmt.Sprintf("%s.%s", penyetaraan, fileExtensionPenyetaraan)
+}
+
+func (a *PegawaiYayasan) SetMasaKerjaTotal(b *UnitKerjaPegawai) {
+	now := time.Now()
+	yearNow, _ := conv.Int(now.Year())
+	monthNow, _ := conv.Int(now.Month())
+	dayNow, _ := conv.Int(now.Day())
+	maxMonth := 12
+
+	var yearSk int
+	var monthSk int
+	var daySk int
+
+	fmt.Println("TMT SK Pertama : ", b.TmtSkPertama)
+
+	if b.TmtSkPertama != "" {
+		dateSk, err := time.Parse("2006-01-02", b.TmtSkPertama)
+		if err != nil {
+			return
+		}
+		yearSk, _ = conv.Int(dateSk.Year())
+		monthSk, _ = conv.Int(dateSk.Month())
+		daySk, _ = conv.Int(dateSk.Day())
+	}
+
+	yearSkNow := yearNow - yearSk
+	monthSkNow := monthNow - monthSk
+
+	if monthSkNow < 0 {
+		yearSkNow = yearSkNow - 1
+		monthSkNow = maxMonth + monthSkNow
+	}
+
+	daySkNow := dayNow - daySk
+
+	if daySkNow < 0 {
+		monthSkNow = monthSkNow - 1
+	}
+
+	// fmt.Println("Year Sk Now : ", yearSkNow)
+	// fmt.Println("Month Sk Now : ", monthSkNow)
+
+	var MasaBawaanBulan, _ = conv.Int(a.MasaKerjaBawaanBulan)
+	var MasaBawaanTahun, _ = conv.Int(a.MasaKerjaBawaanTahun)
+	var MasaTotalTahun = 0
+	var MasaTotalBulan = 0
+
+	// fmt.Println("Year Bawaan Tahun : ", MasaBawaanTahun)
+	// fmt.Println("Month Bawaan Tahun : ", MasaBawaanBulan)
+
+	if MasaBawaanTahun != 0 || yearSkNow != 0 {
+		MasaTotalTahun = MasaBawaanTahun + yearSkNow
+	}
+
+	if MasaBawaanBulan != 00 || monthSkNow != 0 {
+		MasaTotalBulan = MasaBawaanBulan + monthSkNow
+		if MasaTotalBulan >= 12 {
+			MasaTotalBulan = MasaTotalBulan - 12
+			MasaTotalTahun = MasaTotalTahun + 1
+		}
+	}
+	// fmt.Println("Year Total Tahun : ", MasaTotalTahun)
+	// fmt.Println("Month Total Tahun : ", MasaTotalBulan)
+
+	a.MasaKerjaTotalBulan, _ = conv.String(MasaTotalBulan)
+	a.MasaKerjaTotalTahun, _ = conv.String(MasaTotalTahun)
 }

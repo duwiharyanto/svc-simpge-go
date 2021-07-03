@@ -22,8 +22,8 @@ func TestSearchPersonal(t *testing.T) {
 	ax := app.App{GormDB: gormDB}
 
 	nama := "Bobo"
-	nikPegawai := "795110101"
-	personal, err := SearchPersonal(ax, context.Background(), nama, nikPegawai)
+	// nikPegawai := "795110101"
+	personal, err := SearchPersonal(ax, context.Background(), nama)
 
 	if err != nil {
 		t.Fatal("failed get personal:", err)

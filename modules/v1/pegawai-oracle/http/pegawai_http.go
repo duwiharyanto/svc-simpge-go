@@ -191,3 +191,38 @@ func UpdatePegawaiStatus(ctx context.Context, client *http.Client, pegawaiStatus
 	fmt.Printf("[DEBUG] response from update pegawai status simpeg: %s\n", resBody)
 	return nil
 }
+
+func CreateKepegawaianYayasan(ctx context.Context, client *http.Client, pegawai *model.KepegawaianYayasanSimpeg) error {
+	endpoint := fmt.Sprintf(pegawaiSimpegURL)
+	// fmt.Printf("DEBUG endpoint : %+v \n", endpoint)
+	// fmt.Printf("DEBUG pegawaisimpegURL : %+v \n", pegawaiSimpegURL)
+	// authToken := os.Getenv("AUTH_TOKEN")
+	header := map[string]string{
+		// "Authorization": authToken,
+		"X-Member": pegawai.UserInput,
+	}
+	fmt.Printf("DEBUG header : %+v \n", header)
+
+	// fmt.Printf("DEBUG reqbody pegawai : %+v \n", pegawai)
+
+	j, _ := json.MarshalIndent(pegawai, "", "\t")
+	fmt.Printf("DEBUG reqbody pegawai : \n%s\n", j)
+
+	// fmt.Printf("DEBUG pegawai : %+v \n", pegawai.JenisPegawai.KdJenisPegawai)
+	res, err := app.SendHttpRequest(ctx, client, http.MethodPost, endpoint, contentTypeJSON, header, pegawai)
+	if err != nil {
+		return fmt.Errorf("error send http request: %w", err)
+	}
+
+	resBody, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		return fmt.Errorf("error read response body: %w", err)
+	}
+
+	if res.StatusCode != http.StatusOK {
+		return fmt.Errorf("error status not ok: %s", resBody)
+	}
+
+	fmt.Printf("[DEBUG] response from create kepegawaian yayasan simpeg: %s\n", resBody)
+	return nil
+}
