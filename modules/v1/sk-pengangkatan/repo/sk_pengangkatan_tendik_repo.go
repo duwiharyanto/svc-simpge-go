@@ -17,7 +17,7 @@ const (
 	//BucketSKDosen   = "sk-dosen"
 )
 
-func CreateSKPengangkatanTendik(a app.App, skPegawai skPegawaiModel.SKPegawai) error {
+func CreateSKPengangkatanTendik(a *app.App, skPegawai skPegawaiModel.SKPegawai) error {
 	tx, err := a.DB.Begin()
 	if err != nil {
 		return fmt.Errorf("error beginning transaction, %w", err)
@@ -58,7 +58,7 @@ func CreateSKPengangkatanTendik(a app.App, skPegawai skPegawaiModel.SKPegawai) e
 	return nil
 }
 
-func UploadFIleSK(a app.App, bucketName, filePath string, fileSKPengangkatanTendik *multipart.FileHeader) error {
+func UploadFIleSK(a *app.App, bucketName, filePath string, fileSKPengangkatanTendik *multipart.FileHeader) error {
 	if fileSKPengangkatanTendik == nil {
 		return nil
 	}
@@ -76,7 +76,7 @@ func UploadFIleSK(a app.App, bucketName, filePath string, fileSKPengangkatanTend
 	return nil
 }
 
-func PrepareFileUploadPath(a app.App, fileSKPengangkatanTendik *multipart.FileHeader, idSKUtama string) string {
+func PrepareFileUploadPath(a *app.App, fileSKPengangkatanTendik *multipart.FileHeader, idSKUtama string) string {
 	if fileSKPengangkatanTendik == nil {
 		return ""
 	}
@@ -94,7 +94,7 @@ func PrepareFileUploadPath(a app.App, fileSKPengangkatanTendik *multipart.FileHe
 	return skPengangkatanMinioUploadPath
 }
 
-func GetDetailSKPengangkatanTendik(a app.App, UUIDSKPengangkatanTendik string) (*model.SKPengangkatanTendikDetail, error) {
+func GetDetailSKPengangkatanTendik(a *app.App, UUIDSKPengangkatanTendik string) (*model.SKPengangkatanTendikDetail, error) {
 	var sk model.SKPengangkatanTendikDetail
 	sqlQuery := getDetailSKPengangkatanTendikQuery(UUIDSKPengangkatanTendik)
 	// fmt.Printf("[DEBUG] q: %s\n", sqlQuery)
@@ -179,7 +179,7 @@ func GetDetailSKPengangkatanTendik(a app.App, UUIDSKPengangkatanTendik string) (
 	return &sk, nil
 }
 
-func DeleteSKPengangkatanTendikByUUID(a app.App, uuid string) error {
+func DeleteSKPengangkatanTendikByUUID(a *app.App, uuid string) error {
 	sqlQuery := deleteSKPengangkatanTendikByUUID()
 	stmt, err := a.DB.Prepare(sqlQuery)
 	if err != nil {
@@ -194,7 +194,7 @@ func DeleteSKPengangkatanTendikByUUID(a app.App, uuid string) error {
 	return nil
 }
 
-// func UpdateSKPengangkatanTendik(a app.App, skPegawai skPegawaiModel.SKPegawai) error {
+// func UpdateSKPengangkatanTendik(a *app.App, skPegawai skPegawaiModel.SKPegawai) error {
 // 	// if skPegawaiModel.PathSKTendik != nil {
 // 	// 	skPegawaiModel.PathSKTendik = PrepareFileUploadPath(a, pendidikan.FileIjazah, pendidikan.UUIDPersonal)
 // 	// }

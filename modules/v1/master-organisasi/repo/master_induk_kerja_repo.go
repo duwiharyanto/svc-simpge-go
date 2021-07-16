@@ -8,7 +8,7 @@ import (
 	"svc-insani-go/modules/v1/master-organisasi/model"
 )
 
-func GetIndukKerja(a app.App) ([]model.IndukKerja, error) {
+func GetIndukKerja(a *app.App) ([]model.IndukKerja, error) {
 	sqlQuery := getIndukKerjaQuery()
 	rows, err := a.DB.Query(sqlQuery)
 	if err != nil {
@@ -39,7 +39,7 @@ func GetIndukKerja(a app.App) ([]model.IndukKerja, error) {
 	return pp, nil
 }
 
-func GetUnitKerja(a app.App, IndukKerja string) ([]model.IndukKerja, error) {
+func GetUnitKerja(a *app.App, IndukKerja string) ([]model.IndukKerja, error) {
 	sqlQuery := getUnitKerjaQuery(IndukKerja)
 	rows, err := a.DB.Query(sqlQuery)
 	if err != nil {
@@ -70,7 +70,7 @@ func GetUnitKerja(a app.App, IndukKerja string) ([]model.IndukKerja, error) {
 	return pp, nil
 }
 
-func GetBagianKerja(a app.App, UnitKerja string) ([]model.IndukKerja, error) {
+func GetBagianKerja(a *app.App, UnitKerja string) ([]model.IndukKerja, error) {
 	sqlQuery := getBagianKerjaQuery(UnitKerja)
 	rows, err := a.DB.Query(sqlQuery)
 	if err != nil {
@@ -101,7 +101,7 @@ func GetBagianKerja(a app.App, UnitKerja string) ([]model.IndukKerja, error) {
 	return pp, nil
 }
 
-func GetIndukKerjaByUUID(a app.App, ctx context.Context, uuid string) (*model.Unit1, error) {
+func GetIndukKerjaByUUID(a *app.App, ctx context.Context, uuid string) (*model.Unit1, error) {
 	var indukKerja model.Unit1
 
 	tx := a.GormDB.WithContext(ctx)
@@ -112,7 +112,7 @@ func GetIndukKerjaByUUID(a app.App, ctx context.Context, uuid string) (*model.Un
 	return &indukKerja, nil
 }
 
-func GetUnitKerjaByUUID(a app.App, ctx context.Context, uuid string) (*model.Unit2, error) {
+func GetUnitKerjaByUUID(a *app.App, ctx context.Context, uuid string) (*model.Unit2, error) {
 	var unitKerja model.Unit2
 
 	tx := a.GormDB.WithContext(ctx)
@@ -123,7 +123,7 @@ func GetUnitKerjaByUUID(a app.App, ctx context.Context, uuid string) (*model.Uni
 	return &unitKerja, nil
 }
 
-func GetBagianKerjaByUUID(a app.App, ctx context.Context, uuid string) (*model.Unit3, error) {
+func GetBagianKerjaByUUID(a *app.App, ctx context.Context, uuid string) (*model.Unit3, error) {
 	var bagianKerja model.Unit3
 
 	tx := a.GormDB.WithContext(ctx)
@@ -134,7 +134,7 @@ func GetBagianKerjaByUUID(a app.App, ctx context.Context, uuid string) (*model.U
 	return &bagianKerja, nil
 }
 
-func GetAllIndukKerja(a app.App, ctx context.Context) ([]model.Unit1, error) {
+func GetAllIndukKerja(a *app.App, ctx context.Context) ([]model.Unit1, error) {
 	var indukKerja []model.Unit1
 
 	tx := a.GormDB.WithContext(ctx)
@@ -145,7 +145,7 @@ func GetAllIndukKerja(a app.App, ctx context.Context) ([]model.Unit1, error) {
 	return indukKerja, nil
 }
 
-func GetAllUnitKerja(a app.App, ctx context.Context) ([]model.Unit2, error) {
+func GetAllUnitKerja(a *app.App, ctx context.Context) ([]model.Unit2, error) {
 	var unitKerja []model.Unit2
 
 	tx := a.GormDB.WithContext(ctx)
@@ -156,7 +156,7 @@ func GetAllUnitKerja(a app.App, ctx context.Context) ([]model.Unit2, error) {
 	return unitKerja, nil
 }
 
-func GetAllBagianKerja(a app.App, ctx context.Context) ([]model.Unit3, error) {
+func GetAllBagianKerja(a *app.App, ctx context.Context) ([]model.Unit3, error) {
 	var bagianKerja []model.Unit3
 
 	tx := a.GormDB.WithContext(ctx)
@@ -167,7 +167,7 @@ func GetAllBagianKerja(a app.App, ctx context.Context) ([]model.Unit3, error) {
 	return bagianKerja, nil
 }
 
-func GetHomebase(a app.App, ctx context.Context) ([]model.Homebase, error) {
+func GetHomebase(a *app.App, ctx context.Context) ([]model.Homebase, error) {
 	var homebases []model.Homebase
 
 	tx := a.GormDB.WithContext(ctx)
@@ -179,7 +179,7 @@ func GetHomebase(a app.App, ctx context.Context) ([]model.Homebase, error) {
 	return homebases, nil
 }
 
-func GetHomebaseByUUID(a app.App, ctx context.Context, uuid string) (*model.Homebase, error) {
+func GetHomebaseByUUID(a *app.App, ctx context.Context, uuid string) (*model.Homebase, error) {
 	var homebase model.Homebase
 
 	tx := a.GormDB.WithContext(ctx)
@@ -189,7 +189,7 @@ func GetHomebaseByUUID(a app.App, ctx context.Context, uuid string) (*model.Home
 	}
 	return &homebase, nil
 }
-func GetIndukKerjaByUUIDx(a app.App, uuid string) (*model.IndukKerja, error) {
+func GetIndukKerjaByUUIDx(a *app.App, uuid string) (*model.IndukKerja, error) {
 	sqlQuery := getIndukKerjaQueryByUUID(uuid)
 	//fmt.Printf("log query induk kerja : %s\n", sqlQuery)
 	var indukKerja model.IndukKerja

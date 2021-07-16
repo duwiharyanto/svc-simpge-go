@@ -7,10 +7,10 @@ import (
 	"svc-insani-go/modules/v1/master-unit-kerja/model"
 	"svc-insani-go/modules/v1/master-unit-kerja/repo"
 
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 )
 
-func HandleGetUnitKerja(a app.App) echo.HandlerFunc {
+func HandleGetUnitKerja(a *app.App) echo.HandlerFunc {
 	h := func(c echo.Context) error {
 		UnitKerja, err := repo.GetAllUnitKerja(a)
 		if err != nil {
@@ -25,7 +25,7 @@ func HandleGetUnitKerja(a app.App) echo.HandlerFunc {
 	return echo.HandlerFunc(h)
 }
 
-// func HandleGetUnitKerjaByUUID(a app.App) echo.HandlerFunc {
+// func HandleGetUnitKerjaByUUID(a *app.App) echo.HandlerFunc {
 // 	h := func(c echo.Context) error {
 // 		uuid := c.Param("uuid")
 // 		unitKerja, err := repo.GetUnitKerjaByUUID(a, uuid)

@@ -2,6 +2,7 @@ package usecase_test
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -13,13 +14,13 @@ import (
 	"svc-insani-go/router"
 	"testing"
 
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 )
 
 func TestHandleGetAllJabatanStruktural(t *testing.T) {
 	// init server
 	e := echo.New()
-	e.Use(router.SetResponseTimeout)
+	e.Use(router.SetResponseTimeout(context.Background()))
 
 	db, err := database.Connect()
 	if err != nil {
@@ -29,7 +30,7 @@ func TestHandleGetAllJabatanStruktural(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	a := app.App{DB: db, GormDB: gormDb}
+	a := &app.App{DB: db, GormDB: gormDb}
 	fmt.Print(a)
 	// router.InitRoute(a, e)
 	server := httptest.NewServer(e)
@@ -77,7 +78,7 @@ func TestHandleGetAllJabatanStruktural(t *testing.T) {
 func TestHandleGetPejabatStruktural(t *testing.T) {
 	// init server
 	e := echo.New()
-	e.Use(router.SetResponseTimeout)
+	e.Use(router.SetResponseTimeout(context.Background()))
 
 	db, err := database.Connect()
 	if err != nil {
@@ -87,7 +88,7 @@ func TestHandleGetPejabatStruktural(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	a := app.App{DB: db, GormDB: gormDb}
+	a := &app.App{DB: db, GormDB: gormDb}
 	fmt.Print(a)
 	// router.InitRoute(a, e)
 	server := httptest.NewServer(e)

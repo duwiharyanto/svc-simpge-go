@@ -16,12 +16,12 @@ import (
 	skRepo "svc-insani-go/modules/v1/sk/repo"
 	statusPengangkatanRepo "svc-insani-go/modules/v1/sk/repo"
 
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 )
 
 const ErrEchoEmptyRequestBody = "Request body can't be empty"
 
-func ValidateCreateSKPengangkatanTendik(a app.App, c echo.Context) (skPegawai skPegawaiModel.SKPegawai, err error) {
+func ValidateCreateSKPengangkatanTendik(a *app.App, c echo.Context) (skPegawai skPegawaiModel.SKPegawai, err error) {
 	uuidPegawai := c.QueryParam("uuid_pegawai")
 
 	ctx := c.Request().Context()

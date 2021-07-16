@@ -10,7 +10,7 @@ import (
 	"time"
 
 	_ "github.com/go-sql-driver/mysql"
-	"gorm.io/driver/mysql"
+	gmysql "gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 	"gorm.io/gorm/schema"
@@ -85,8 +85,8 @@ func InitGorm(db *sql.DB, withLog bool) (*gorm.DB, error) {
 		)
 	}
 
-	gormDB, err := gorm.Open(mysql.New(
-		mysql.Config{
+	gormDB, err := gorm.Open(gmysql.New(
+		gmysql.Config{
 			Conn: db,
 		}),
 		cfg,

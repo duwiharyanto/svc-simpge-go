@@ -13,15 +13,15 @@ func TestSearchPersonal(t *testing.T) {
 	if err != nil {
 		t.Fatal("failed connect to db:", err)
 	}
-	a := app.App{DB: db}
+	a := &app.App{DB: db}
 
 	gormDB, err := database.InitGorm(a.DB, true)
 	if err != nil {
 		t.Fatal("failed connect to gorm db:", err)
 	}
-	ax := app.App{GormDB: gormDB}
+	ax := &app.App{GormDB: gormDB}
 
-	nama := "Bobo"
+	nama := "qwe"
 	// nikPegawai := "795110101"
 	personal, err := SearchPersonal(ax, context.Background(), nama)
 

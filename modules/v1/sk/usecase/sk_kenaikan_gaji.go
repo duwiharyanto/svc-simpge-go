@@ -4,17 +4,17 @@ import (
 	"net/http"
 	"svc-insani-go/app"
 
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 )
 
-func HandleUpdateSkKenaikanGaji(a app.App) echo.HandlerFunc {
+func HandleUpdateSkKenaikanGaji(a *app.App) echo.HandlerFunc {
 	h := func(c echo.Context) error {
 		return c.JSON(http.StatusOK, map[string]string{"message": "Perubahan sk kenaikan gaji berhasil disimpan"})
 	}
 	return echo.HandlerFunc(h)
 }
 
-func HandleGetSkKenaikanGajiDummy(a app.App) echo.HandlerFunc {
+func HandleGetSkKenaikanGajiDummy(a *app.App) echo.HandlerFunc {
 	h := func(c echo.Context) error {
 		return c.JSONBlob(http.StatusOK, []byte(dummySkKenaikanGajiDetail))
 	}

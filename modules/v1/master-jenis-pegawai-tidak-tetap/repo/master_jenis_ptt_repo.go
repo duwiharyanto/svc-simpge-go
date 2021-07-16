@@ -7,7 +7,7 @@ import (
 	"svc-insani-go/modules/v1/master-jenis-pegawai-tidak-tetap/model"
 )
 
-func GetJenisPTT(a app.App) ([]model.JenisPTT, error) {
+func GetJenisPTT(a *app.App) ([]model.JenisPTT, error) {
 	sqlQuery := getJenisNomorRegistrasiQuery()
 	rows, err := a.DB.Query(sqlQuery)
 	if err != nil {
@@ -37,7 +37,7 @@ func GetJenisPTT(a app.App) ([]model.JenisPTT, error) {
 	return pp, nil
 }
 
-func GetJenisPTTByUUID(a app.App, ctx context.Context, uuid string) (*model.JenisPTT, error) {
+func GetJenisPTTByUUID(a *app.App, ctx context.Context, uuid string) (*model.JenisPTT, error) {
 	var jenisPTT model.JenisPTT
 
 	tx := a.GormDB.WithContext(ctx)

@@ -22,10 +22,10 @@ import (
 	personalRepo "svc-insani-go/modules/v1/personal/repo"
 
 	"github.com/cstockton/go-conv"
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 )
 
-func ValidateUpdatePegawaiByUUID(a app.App, c echo.Context) (model.PegawaiUpdate, error) {
+func ValidateUpdatePegawaiByUUID(a *app.App, c echo.Context) (model.PegawaiUpdate, error) {
 
 	uuidPegawai := c.Param("uuidPegawai")
 	if uuidPegawai == "" {
@@ -342,13 +342,11 @@ func ValidateUpdatePegawaiByUUID(a app.App, c echo.Context) (model.PegawaiUpdate
 	return pegawaiOld, nil
 }
 
-func PrepareCreateSimpeg(a app.App, c echo.Context) (model.PegawaiCreate, error) {
+func PrepareCreateSimpeg(a *app.App, c echo.Context) (model.PegawaiCreate, error) {
 	uuidPersonal := c.Param("uuidPegawai")
 	if uuidPersonal == "" {
 		return model.PegawaiCreate{}, fmt.Errorf("uuid personal tidak boleh kosong")
 	}
-
-	// fmt.Println("Uuid personal : ", uuidPersonal)
 
 	pegawai, err := ValidateCreatePegawai(a, c)
 	if err != nil {
@@ -376,19 +374,14 @@ func PrepareCreateSimpeg(a app.App, c echo.Context) (model.PegawaiCreate, error)
 	return pegawai, nil
 }
 
-func ValidateCreatePegawai(a app.App, c echo.Context) (model.PegawaiCreate, error) {
+func ValidateCreatePegawai(a *app.App, c echo.Context) (model.PegawaiCreate, error) {
 
 	user := c.Request().Header.Get("X-Member")
-
 	pegawaiReq := model.PegawaiCreate{}
-
-	fmt.Println("[ERROR] before binding")
 	err := c.Bind(&pegawaiReq)
 	if err != nil {
-		fmt.Printf("[ERROR] binding requestpegawai , %s\n", err.Error())
+		fmt.Printf("[WARNING] binding create pegawai request: %s\n", err.Error())
 	}
-
-	fmt.Println("[ERROR] after binding")
 
 	//Pengecekan Jenis Pegawai
 	if pegawaiReq.UuidJenisPegawai != "" {

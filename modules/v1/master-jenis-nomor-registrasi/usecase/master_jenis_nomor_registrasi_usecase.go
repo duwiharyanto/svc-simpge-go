@@ -7,10 +7,10 @@ import (
 	"svc-insani-go/modules/v1/master-jenis-nomor-registrasi/model"
 	"svc-insani-go/modules/v1/master-jenis-nomor-registrasi/repo"
 
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 )
 
-func HandleGetJenisNoRegis(a app.App) echo.HandlerFunc {
+func HandleGetJenisNoRegis(a *app.App) echo.HandlerFunc {
 	h := func(c echo.Context) error {
 		JenisNoRegis, err := repo.GetJenisNomorRegistrasi(a)
 		if err != nil {
@@ -25,7 +25,7 @@ func HandleGetJenisNoRegis(a app.App) echo.HandlerFunc {
 	return echo.HandlerFunc(h)
 }
 
-func HandleJenisNoRegisByUUID(a app.App) echo.HandlerFunc {
+func HandleJenisNoRegisByUUID(a *app.App) echo.HandlerFunc {
 	h := func(c echo.Context) error {
 		uuid := c.QueryParam("uuid")
 		pp, err := repo.GetJenisNoRegisByUUID(a, c.Request().Context(), uuid)

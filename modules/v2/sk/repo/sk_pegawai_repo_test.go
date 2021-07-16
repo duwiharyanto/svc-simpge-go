@@ -17,7 +17,7 @@ func TestGetAllSkPegawai(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	a := app.App{GormDB: db}
+	a := &app.App{GormDB: db}
 	ssp := GetAllSkPegawai(a, context.Background())
 	if len(ssp) == 0 {
 		t.Fatal("should not be empty")
@@ -36,7 +36,7 @@ func TestGetSkPegawaiByUUID(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	a := app.App{GormDB: db}
+	a := &app.App{GormDB: db}
 	uuid := "79fb7ae9-d436-4c2e-87ed-cd68c78c5b9e"
 	skp := GetSkPegawai(a, context.Background(), uuid)
 	if skp == nil {
@@ -54,7 +54,7 @@ func TestGetAllJenisIjazah(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	a := app.App{GormDB: db}
+	a := &app.App{GormDB: db}
 	jj, err := GetAllJenisIjazah(a, context.Background())
 	if err != nil {
 		t.Fatal(err)

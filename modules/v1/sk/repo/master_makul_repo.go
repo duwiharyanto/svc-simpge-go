@@ -7,7 +7,7 @@ import (
 	"svc-insani-go/modules/v1/sk/model"
 )
 
-func GetAllMataKuliah(a app.App) ([]model.MataKuliah, error) {
+func GetAllMataKuliah(a *app.App) ([]model.MataKuliah, error) {
 	// c.Param("kd_jenis_pegawai")
 	sqlQuery := getMataKuliahQuery()
 	rows, err := a.DB.Query(sqlQuery)
@@ -33,7 +33,7 @@ func GetAllMataKuliah(a app.App) ([]model.MataKuliah, error) {
 	return makul, nil
 }
 
-func GetMataKuliahByUUID(a app.App, uuid string) (*model.MataKuliah, error) {
+func GetMataKuliahByUUID(a *app.App, uuid string) (*model.MataKuliah, error) {
 	sqlQuery := getMataKuliahByUUID(uuid)
 	//fmt.Printf("[DEBUG] unit pengangkat by uuid:\n%s\n", sqlQuery)
 	var makul model.MataKuliah
@@ -47,7 +47,7 @@ func GetMataKuliahByUUID(a app.App, uuid string) (*model.MataKuliah, error) {
 	return &makul, nil
 }
 
-func GetMataKuliahIDByUUID(a app.App, uuidMataKuliah []string) ([]string, error) {
+func GetMataKuliahIDByUUID(a *app.App, uuidMataKuliah []string) ([]string, error) {
 	// c.Param("kd_jenis_pegawai")
 	sqlQuery := getMataKuliahIDByUUID(uuidMataKuliah)
 	// fmt.Printf("[DEBUG] getMataKuliahIDByUUID:\n%s\n", sqlQuery)

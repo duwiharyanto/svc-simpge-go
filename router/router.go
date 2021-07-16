@@ -28,11 +28,11 @@ import (
 	organisasiV2 "svc-insani-go/modules/v2/organisasi/usecase"
 	skV2 "svc-insani-go/modules/v2/sk/usecase"
 
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 )
 
-func InitRoute(a app.App, appCtx context.Context, e *echo.Echo, slackErrChan chan error) {
-	insaniGroupingPath := e.Group("/public/api/v1")
+func InitRoute(a *app.App, appCtx context.Context, e *echo.Echo, slackErrChan chan error) {
+	insaniGroupingPath := e.Group("/public/api/v1/insani")
 	// Route di bawah akan dikelola oleh handler
 	insaniGroupingPath.GET("/pegawai", pegawai.HandleGetPegawai(a))
 	insaniGroupingPath.GET("/pegawai-nik", pegawai.HandleCheckNikPegawai(a))
@@ -103,8 +103,8 @@ func InitRoute(a app.App, appCtx context.Context, e *echo.Echo, slackErrChan cha
 	insaniGroupingPath.PUT("/sk-kgb/:uuidSk", sk.HandleUpdateSkKenaikanGaji(a))
 
 	// Pengaturan Personal
-	insaniGroupingPath.GET("/pengaturan", pengaturan.HandleGetPengaturan(&a, nil))
-	insaniGroupingPath.PUT("/pengaturan", pengaturan.HandleUpdatePengaturan(&a, nil))
+	insaniGroupingPath.GET("/pengaturan", pengaturan.HandleGetPengaturan(a, nil))
+	insaniGroupingPath.PUT("/pengaturan", pengaturan.HandleUpdatePengaturan(a, nil))
 
 	// Testing
 	// insaniGroupingPath.GET("/testing", detailProfesi.HandleDetailProfesiByUUID(a))

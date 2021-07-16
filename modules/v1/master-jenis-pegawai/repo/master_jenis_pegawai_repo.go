@@ -7,7 +7,7 @@ import (
 	"svc-insani-go/modules/v1/master-jenis-pegawai/model"
 )
 
-func GetAllJenisPegawai(a app.App) ([]model.JenisPegawai, error) {
+func GetAllJenisPegawai(a *app.App) ([]model.JenisPegawai, error) {
 	sqlQuery := getJenisPegawaiQuery()
 	rows, err := a.DB.Query(sqlQuery)
 	if err != nil {
@@ -31,7 +31,7 @@ func GetAllJenisPegawai(a app.App) ([]model.JenisPegawai, error) {
 
 	return JenisPegawai, nil
 }
-func GetJenisPegawaiByUUID(a app.App, uuid string) (*model.JenisPegawai, error) {
+func GetJenisPegawaiByUUID(a *app.App, uuid string) (*model.JenisPegawai, error) {
 	sqlQuery := getJenisPegawaiQueryByUUID(uuid)
 	var jenisPegawai model.JenisPegawai
 	err := a.DB.QueryRow(sqlQuery).Scan(&jenisPegawai.ID, &jenisPegawai.KDJenisPegawai, &jenisPegawai.JenisPegawai, &jenisPegawai.UUID)
@@ -43,7 +43,7 @@ func GetJenisPegawaiByUUID(a app.App, uuid string) (*model.JenisPegawai, error) 
 	}
 	return &jenisPegawai, nil
 }
-func GetJenisPegawaiByKD(a app.App, KDJenisPegawai string) (*model.JenisPegawai, error) {
+func GetJenisPegawaiByKD(a *app.App, KDJenisPegawai string) (*model.JenisPegawai, error) {
 	sqlQuery := getJenisPegawaiQueryByKdJenisPegawai(KDJenisPegawai)
 	var jenisPegawai model.JenisPegawai
 	err := a.DB.QueryRow(sqlQuery).Scan(&jenisPegawai.ID, &jenisPegawai.KDJenisPegawai, &jenisPegawai.JenisPegawai, &jenisPegawai.UUID)

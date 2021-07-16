@@ -2,6 +2,7 @@ package usecase_test
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -16,13 +17,13 @@ import (
 	"svc-insani-go/router"
 	"testing"
 
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 )
 
 func TestHandleCreateSkPengangkatanDosen(t *testing.T) {
 	// init server
 	e := echo.New()
-	e.Use(router.SetResponseTimeout)
+	e.Use(router.SetResponseTimeout(context.Background()))
 
 	db, err := database.Connect()
 	if err != nil {
@@ -39,7 +40,7 @@ func TestHandleCreateSkPengangkatanDosen(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	a := app.App{DB: db, GormDB: gormDb, MinioClient: mc, MinioBucketName: "insani"}
+	a := &app.App{DB: db, GormDB: gormDb, MinioClient: mc, MinioBucketName: "insani"}
 	fmt.Print(a)
 	// router.InitRoute(a, e)
 	server := httptest.NewServer(e)
@@ -139,7 +140,7 @@ func TestHandleCreateSkPengangkatanDosen(t *testing.T) {
 func TestHandleUpdateSkPengangkatanDosen(t *testing.T) {
 	// init server
 	e := echo.New()
-	e.Use(router.SetResponseTimeout)
+	e.Use(router.SetResponseTimeout(context.Background()))
 
 	db, err := database.Connect()
 	if err != nil {
@@ -156,7 +157,7 @@ func TestHandleUpdateSkPengangkatanDosen(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	a := app.App{DB: db, GormDB: gormDb, MinioClient: mc, MinioBucketName: "insani"}
+	a := &app.App{DB: db, GormDB: gormDb, MinioClient: mc, MinioBucketName: "insani"}
 	fmt.Print(a)
 	// router.InitRoute(a, e)
 	server := httptest.NewServer(e)
@@ -261,7 +262,7 @@ func TestHandleUpdateSkPengangkatanDosen(t *testing.T) {
 func TestHandleGetSkPengangkatanDosen(t *testing.T) {
 	// init server
 	e := echo.New()
-	e.Use(router.SetResponseTimeout)
+	e.Use(router.SetResponseTimeout(context.Background()))
 
 	db, err := database.Connect()
 	if err != nil {
@@ -278,7 +279,7 @@ func TestHandleGetSkPengangkatanDosen(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	a := app.App{DB: db, GormDB: gormDb, MinioBucketName: "insani", MinioClient: mc}
+	a := &app.App{DB: db, GormDB: gormDb, MinioBucketName: "insani", MinioClient: mc}
 	fmt.Print(a)
 	// router.InitRoute(a, e)
 	server := httptest.NewServer(e)
@@ -330,7 +331,7 @@ func TestHandleGetSkPengangkatanDosen(t *testing.T) {
 func TestHandleDeleteSkPengangkatanDosen(t *testing.T) {
 	// init server
 	e := echo.New()
-	e.Use(router.SetResponseTimeout)
+	e.Use(router.SetResponseTimeout(context.Background()))
 
 	db, err := database.Connect()
 	if err != nil {
@@ -342,7 +343,7 @@ func TestHandleDeleteSkPengangkatanDosen(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	a := app.App{DB: db, GormDB: gormDb}
+	a := &app.App{DB: db, GormDB: gormDb}
 	fmt.Print(a)
 	// router.InitRoute(a, e)
 	server := httptest.NewServer(e)

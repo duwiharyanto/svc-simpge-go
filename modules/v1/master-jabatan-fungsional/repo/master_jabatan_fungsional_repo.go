@@ -8,7 +8,7 @@ import (
 	"svc-insani-go/modules/v1/master-jabatan-fungsional/model"
 )
 
-func GetAllJabatanFungsional(a app.App, kdJenisPegawai string) ([]model.JabatanFungsional, error) {
+func GetAllJabatanFungsional(a *app.App, kdJenisPegawai string) ([]model.JabatanFungsional, error) {
 	sqlQuery := getJabatanFungsionalQuery(kdJenisPegawai)
 	rows, err := a.DB.Query(sqlQuery)
 	if err != nil {
@@ -32,7 +32,7 @@ func GetAllJabatanFungsional(a app.App, kdJenisPegawai string) ([]model.JabatanF
 
 	return jabatanFungsional, nil
 }
-func GetJabatanFungsionalByUUIDx(a app.App, uuid string) (*model.JabatanFungsional, error) {
+func GetJabatanFungsionalByUUIDx(a *app.App, uuid string) (*model.JabatanFungsional, error) {
 	sqlQuery := getJabatanFungsionalByUUID(uuid)
 	//fmt.Printf("[DEBUG] jabatan fungsional pegawai by uuid:\n%s\n", sqlQuery)
 	var jabatanFungsional model.JabatanFungsional
@@ -46,7 +46,7 @@ func GetJabatanFungsionalByUUIDx(a app.App, uuid string) (*model.JabatanFungsion
 	return &jabatanFungsional, nil
 }
 
-func GetJabatanFungsionalByUUID(a app.App, ctx context.Context, uuid string) (*model.JabatanFungsional, error) {
+func GetJabatanFungsionalByUUID(a *app.App, ctx context.Context, uuid string) (*model.JabatanFungsional, error) {
 	var jabatanFungsional model.JabatanFungsional
 
 	tx := a.GormDB.WithContext(ctx)

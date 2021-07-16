@@ -7,7 +7,7 @@ import (
 	"svc-insani-go/modules/v1/master-unit-kerja/model"
 )
 
-func GetAllUnitPengangkat(a app.App) ([]model.UnitPengangkat, error) {
+func GetAllUnitPengangkat(a *app.App) ([]model.UnitPengangkat, error) {
 	// c.Param("kd_jenis_pegawai")
 	sqlQuery := getUnitPengangkatQuery()
 	rows, err := a.DB.Query(sqlQuery)
@@ -32,7 +32,7 @@ func GetAllUnitPengangkat(a app.App) ([]model.UnitPengangkat, error) {
 
 	return unitPengangkat, nil
 }
-func GetUnitPengangkatByUUID(a app.App, uuid string) (*model.UnitPengangkat, error) {
+func GetUnitPengangkatByUUID(a *app.App, uuid string) (*model.UnitPengangkat, error) {
 	sqlQuery := getUnitPengangkatQueryByUUID(uuid)
 	var unitPengangkat model.UnitPengangkat
 	err := a.DB.QueryRow(sqlQuery).Scan(&unitPengangkat.ID, &unitPengangkat.KdUnitPengangkat, &unitPengangkat.UnitPengangkat, &unitPengangkat.UUID)

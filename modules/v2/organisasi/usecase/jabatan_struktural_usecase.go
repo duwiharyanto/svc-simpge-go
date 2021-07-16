@@ -6,10 +6,10 @@ import (
 	"svc-insani-go/modules/v2/organisasi/model"
 	"svc-insani-go/modules/v2/organisasi/repo"
 
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 )
 
-func HandleGetAllJabatanStruktural(a app.App) echo.HandlerFunc {
+func HandleGetAllJabatanStruktural(a *app.App) echo.HandlerFunc {
 	h := func(c echo.Context) error {
 		ctx := c.Request().Context()
 		jj, err := repo.GetAllJabatanStruktural(a, ctx)
@@ -27,7 +27,7 @@ func HandleGetAllJabatanStruktural(a app.App) echo.HandlerFunc {
 	return echo.HandlerFunc(h)
 }
 
-func HandleGetPejabatStruktural(a app.App) echo.HandlerFunc {
+func HandleGetPejabatStruktural(a *app.App) echo.HandlerFunc {
 	h := func(c echo.Context) error {
 		ctx := c.Request().Context()
 		uuidJabatanStruktural := c.QueryParam("uuid_jabatan_struktural")

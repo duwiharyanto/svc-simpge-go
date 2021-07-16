@@ -7,10 +7,10 @@ import (
 	"svc-insani-go/modules/v1/master-jenis-pegawai-tidak-tetap/model"
 	"svc-insani-go/modules/v1/master-jenis-pegawai-tidak-tetap/repo"
 
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 )
 
-func HandleGetJenisPTT(a app.App) echo.HandlerFunc {
+func HandleGetJenisPTT(a *app.App) echo.HandlerFunc {
 	h := func(c echo.Context) error {
 		JenisNoRegis, err := repo.GetJenisPTT(a)
 		if err != nil {
@@ -25,14 +25,14 @@ func HandleGetJenisPTT(a app.App) echo.HandlerFunc {
 	return echo.HandlerFunc(h)
 }
 
-// func HandleGetJenisNoRegisDummy(a app.App) echo.HandlerFunc {
+// func HandleGetJenisNoRegisDummy(a *app.App) echo.HandlerFunc {
 // 	h := func(c echo.Context) error {
 // 		return c.JSONBlob(http.StatusOK, []byte(dummyJenisNoRegis))
 // 	}
 // 	return echo.HandlerFunc(h)
 // }
 
-func HandleJenisPTTByUUID(a app.App) echo.HandlerFunc {
+func HandleJenisPTTByUUID(a *app.App) echo.HandlerFunc {
 	h := func(c echo.Context) error {
 		uuid := c.QueryParam("uuid")
 		pp, err := repo.GetJenisPTTByUUID(a, c.Request().Context(), uuid)

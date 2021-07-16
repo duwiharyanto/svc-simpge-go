@@ -7,7 +7,7 @@ import (
 	"svc-insani-go/modules/v1/master-lokasi-kerja/model"
 )
 
-func GetLokasiKerja(a app.App) ([]model.LokasiKerja, error) {
+func GetLokasiKerja(a *app.App) ([]model.LokasiKerja, error) {
 	sqlQuery := getLokasiKerjaQuery()
 	rows, err := a.DB.Query(sqlQuery)
 	if err != nil {
@@ -37,7 +37,7 @@ func GetLokasiKerja(a app.App) ([]model.LokasiKerja, error) {
 	return pp, nil
 }
 
-func GetLokasiKerjaByUUID(a app.App, ctx context.Context, uuid string) (*model.LokasiKerja, error) {
+func GetLokasiKerjaByUUID(a *app.App, ctx context.Context, uuid string) (*model.LokasiKerja, error) {
 	var lokasiKerja model.LokasiKerja
 
 	tx := a.GormDB.WithContext(ctx)

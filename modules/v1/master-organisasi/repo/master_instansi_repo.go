@@ -6,7 +6,7 @@ import (
 	"svc-insani-go/modules/v1/master-organisasi/model"
 )
 
-func SearchInstansi(a app.App, ctx context.Context) ([]model.Instansi, error) {
+func SearchInstansi(a *app.App, ctx context.Context) ([]model.Instansi, error) {
 
 	var instansi []model.Instansi
 	tx := a.GormDB.WithContext(ctx)

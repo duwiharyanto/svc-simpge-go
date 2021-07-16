@@ -10,7 +10,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func GetAllUnit2(a app.App, ctx context.Context) ([]model.Unit2, error) {
+func GetAllUnit2(a *app.App, ctx context.Context) ([]model.Unit2, error) {
 	var uu []model.Unit2
 	err := a.GormDB.
 		WithContext(ctx).
@@ -25,7 +25,7 @@ func GetAllUnit2(a app.App, ctx context.Context) ([]model.Unit2, error) {
 	return uu, nil
 }
 
-func GetUnit2(a app.App, ctx context.Context, uuid string) (*model.Unit2, error) {
+func GetUnit2(a *app.App, ctx context.Context, uuid string) (*model.Unit2, error) {
 	var u model.Unit2
 	err := a.GormDB.
 		WithContext(ctx).

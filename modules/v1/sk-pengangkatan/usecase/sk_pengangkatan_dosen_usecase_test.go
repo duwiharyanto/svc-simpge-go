@@ -2,6 +2,7 @@ package usecase_test
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -13,13 +14,13 @@ import (
 	"svc-insani-go/router"
 	"testing"
 
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 )
 
 func TestHandleGetSkPengangkatanDosen(t *testing.T) {
 	// init server
 	e := echo.New()
-	e.Use(router.SetResponseTimeout)
+	e.Use(router.SetResponseTimeout(context.Background()))
 
 	db, err := database.Connect()
 	if err != nil {
@@ -36,7 +37,7 @@ func TestHandleGetSkPengangkatanDosen(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	a := app.App{DB: db, GormDB: gormDb, MinioBucketName: "insani", MinioClient: mc}
+	a := &app.App{DB: db, GormDB: gormDb, MinioBucketName: "insani", MinioClient: mc}
 	// router.InitRoute(a, e)
 	fmt.Print(a)
 	server := httptest.NewServer(e)

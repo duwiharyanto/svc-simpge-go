@@ -9,7 +9,7 @@ import (
 	"svc-insani-go/app/database"
 	"testing"
 
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 )
 
 func TestHandleGetAllJenisSKPengangkatan(t *testing.T) {
@@ -26,7 +26,7 @@ func TestHandleGetAllJenisSKPengangkatan(t *testing.T) {
 	if err != nil {
 		t.Skip("failed connect db:", err)
 	}
-	a := app.App{DB: db}
+	a := &app.App{DB: db}
 	HandleGetAllJenisSKPengangkatan(a)(c)
 
 	var buf bytes.Buffer

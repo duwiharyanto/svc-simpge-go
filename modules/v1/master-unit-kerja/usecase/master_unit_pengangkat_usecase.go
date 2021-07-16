@@ -7,10 +7,10 @@ import (
 	"svc-insani-go/modules/v1/master-unit-kerja/model"
 	"svc-insani-go/modules/v1/master-unit-kerja/repo"
 
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 )
 
-func HandleGetUnitPengangkat(a app.App) echo.HandlerFunc {
+func HandleGetUnitPengangkat(a *app.App) echo.HandlerFunc {
 	h := func(c echo.Context) error {
 		unitPengangkat, err := repo.GetAllUnitPengangkat(a)
 		if err != nil {

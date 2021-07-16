@@ -10,10 +10,10 @@ import (
 	"svc-insani-go/modules/v1/master-kelompok-pegawai/model"
 	"svc-insani-go/modules/v1/master-kelompok-pegawai/repo"
 
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 )
 
-func HandleGetKelompokPegawai(a app.App) echo.HandlerFunc {
+func HandleGetKelompokPegawai(a *app.App) echo.HandlerFunc {
 	h := func(c echo.Context) error {
 		kdJenisPegawai := c.QueryParam("kd_jenis_pegawai")
 		kk, err := repo.GetAllKelompokPegawai(a, kdJenisPegawai)
@@ -29,7 +29,7 @@ func HandleGetKelompokPegawai(a app.App) echo.HandlerFunc {
 	return echo.HandlerFunc(h)
 }
 
-func HandleKelompokPegawaiByUUID(a app.App) echo.HandlerFunc {
+func HandleKelompokPegawaiByUUID(a *app.App) echo.HandlerFunc {
 	h := func(c echo.Context) error {
 		uuid := c.QueryParam("uuid")
 		pp, err := repo.GetKelompokPegawaiByUUID(a, c.Request().Context(), uuid)

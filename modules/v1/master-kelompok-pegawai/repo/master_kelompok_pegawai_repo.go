@@ -7,7 +7,7 @@ import (
 	"svc-insani-go/modules/v1/master-kelompok-pegawai/model"
 )
 
-func GetAllKelompokPegawai(a app.App, kdJenisPegawai string) ([]model.KelompokPegawai, error) {
+func GetAllKelompokPegawai(a *app.App, kdJenisPegawai string) ([]model.KelompokPegawai, error) {
 	sqlQuery := getKelompokPegawaiQuery(kdJenisPegawai)
 	rows, err := a.DB.Query(sqlQuery)
 	if err != nil {
@@ -32,7 +32,7 @@ func GetAllKelompokPegawai(a app.App, kdJenisPegawai string) ([]model.KelompokPe
 	return KelompokPegawai, nil
 }
 
-func GetAllKelompokPegawaiByUUID(a app.App, uuid string) ([]model.KelompokPegawai, error) {
+func GetAllKelompokPegawaiByUUID(a *app.App, uuid string) ([]model.KelompokPegawai, error) {
 	//c.Param("kd_jenis_pegawai")
 	sqlQuery := getAllKelompokPegawaiByUUID(uuid)
 	rows, err := a.DB.Query(sqlQuery)
@@ -58,7 +58,7 @@ func GetAllKelompokPegawaiByUUID(a app.App, uuid string) ([]model.KelompokPegawa
 	return KelompokPegawai, nil
 }
 
-func GetKelompokPegawaiByUUID(a app.App, ctx context.Context, uuid string) (*model.KelompokPegawai, error) {
+func GetKelompokPegawaiByUUID(a *app.App, ctx context.Context, uuid string) (*model.KelompokPegawai, error) {
 	var kelompokPegawai model.KelompokPegawai
 
 	tx := a.GormDB.WithContext(ctx)

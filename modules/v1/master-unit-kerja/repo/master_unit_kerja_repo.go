@@ -7,7 +7,7 @@ import (
 	"svc-insani-go/modules/v1/master-unit-kerja/model"
 )
 
-func GetAllUnitKerja(a app.App) ([]model.UnitKerja, error) {
+func GetAllUnitKerja(a *app.App) ([]model.UnitKerja, error) {
 	// c.Param("kd_jenis_pegawai")
 	sqlQuery := getUnitKerjaQuery()
 	rows, err := a.DB.Query(sqlQuery)
@@ -33,7 +33,7 @@ func GetAllUnitKerja(a app.App) ([]model.UnitKerja, error) {
 	return UnitKerja, nil
 }
 
-func GetUnitKerjaByUUID(a app.App, uuid string) (*model.UnitKerja, error) {
+func GetUnitKerjaByUUID(a *app.App, uuid string) (*model.UnitKerja, error) {
 	sqlQuery := getUnitKerjaByUUID(uuid)
 	// fmt.Printf("\n\n[DEBUG] query unit kerja : \n%s\n", sqlQuery)
 	var unitKerja model.UnitKerja
@@ -47,7 +47,7 @@ func GetUnitKerjaByUUID(a app.App, uuid string) (*model.UnitKerja, error) {
 	return &unitKerja, nil
 }
 
-func GetUnit2ByUUID(a app.App, uuid string) (*model.Unit2, error) {
+func GetUnit2ByUUID(a *app.App, uuid string) (*model.Unit2, error) {
 	sqlQuery := getUnit2ByUUID(uuid)
 	// fmt.Printf("\n\n[DEBUG] query unit 2 : \n%s\n", sqlQuery)
 	var unit2 model.Unit2

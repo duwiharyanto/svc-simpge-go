@@ -17,8 +17,8 @@ import (
 	"svc-insani-go/router"
 	"testing"
 
-	"github.com/labstack/echo"
-	"github.com/labstack/echo/middleware"
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 )
 
 func FillFormDataFieldMap(w *multipart.Writer, m map[string]string) error {
@@ -52,7 +52,7 @@ func FillFormDataField(w *multipart.Writer, formField io.Writer, key, value stri
 
 func TestHandleUpdateSimpeg(t *testing.T) {
 	e := echo.New()
-	e.Use(router.SetResponseTimeout)
+	e.Use(router.SetResponseTimeout(context.Background()))
 
 	db, err := database.Connect()
 	if err != nil {
@@ -69,7 +69,7 @@ func TestHandleUpdateSimpeg(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	a := app.App{DB: db, GormDB: gormDb, MinioClient: mc, MinioBucketName: "insani"}
+	a := &app.App{DB: db, GormDB: gormDb, MinioClient: mc, MinioBucketName: "insani"}
 
 	appCtx := context.Background()
 
@@ -178,7 +178,7 @@ func TestHandleUpdateSimpeg(t *testing.T) {
 
 func TestHandleCreateSimpeg(t *testing.T) {
 	e := echo.New()
-	e.Use(router.SetResponseTimeout)
+	e.Use(router.SetResponseTimeout(context.Background()))
 
 	db, err := database.Connect()
 	if err != nil {
@@ -195,7 +195,7 @@ func TestHandleCreateSimpeg(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	a := app.App{DB: db, GormDB: gormDb, MinioClient: mc, MinioBucketName: "insani"}
+	a := &app.App{DB: db, GormDB: gormDb, MinioClient: mc, MinioBucketName: "insani"}
 
 	appCtx := context.Background()
 

@@ -10,7 +10,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func GetAllJabatanStruktural(a app.App, ctx context.Context) ([]model.JabatanStruktural, error) {
+func GetAllJabatanStruktural(a *app.App, ctx context.Context) ([]model.JabatanStruktural, error) {
 	var jj []model.JabatanStruktural
 	err := a.GormDB.
 		WithContext(ctx).
@@ -28,7 +28,7 @@ func GetAllJabatanStruktural(a app.App, ctx context.Context) ([]model.JabatanStr
 	return jj, nil
 }
 
-func GetJabatanStruktural(a app.App, ctx context.Context, uuid string) (*model.JabatanStruktural, error) {
+func GetJabatanStruktural(a *app.App, ctx context.Context, uuid string) (*model.JabatanStruktural, error) {
 	var js model.JabatanStruktural
 	err := a.GormDB.
 		WithContext(ctx).
@@ -50,7 +50,7 @@ func GetJabatanStruktural(a app.App, ctx context.Context, uuid string) (*model.J
 	return &js, nil
 }
 
-func GetPejabatStruktural(a app.App, ctx context.Context, uuidJabatanStruktural string) ([]model.PejabatStruktural, error) {
+func GetPejabatStruktural(a *app.App, ctx context.Context, uuidJabatanStruktural string) ([]model.PejabatStruktural, error) {
 	var pp []model.PejabatStruktural
 	err := a.GormDB.
 		WithContext(ctx).
@@ -67,7 +67,7 @@ func GetPejabatStruktural(a app.App, ctx context.Context, uuidJabatanStruktural 
 	return pp, nil
 }
 
-func GetPejabatStrukturalByUUID(a app.App, ctx context.Context, uuid string) (*model.PejabatStruktural, error) {
+func GetPejabatStrukturalByUUID(a *app.App, ctx context.Context, uuid string) (*model.PejabatStruktural, error) {
 	var ps model.PejabatStruktural
 	err := a.GormDB.
 		WithContext(ctx).

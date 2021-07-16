@@ -13,7 +13,7 @@ import (
 	"svc-insani-go/app/minio"
 	"testing"
 
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 )
 
 const (
@@ -48,7 +48,7 @@ func TestServer(t *testing.T) {
 	}
 
 	timeLocation := app.GetFixedTimeZone()
-	a := app.App{
+	a := &app.App{
 		DB:              db,
 		HttpClient:      &http.Client{},
 		Name:            "Personal Service",
