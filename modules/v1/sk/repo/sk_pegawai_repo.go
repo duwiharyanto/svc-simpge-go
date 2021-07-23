@@ -8,7 +8,7 @@ import (
 
 // sk list
 
-func GetAllSKPegawaiV0(a app.App, req *model.SKPegawaiRequest) ([]model.SKPegawai, error) {
+func GetAllSKPegawaiV0(a *app.App, req *model.SKPegawaiRequest) ([]model.SKPegawai, error) {
 	var sqlQuery string
 	if req.KdJenisPegawai == "ED" {
 		sqlQuery = getAllSKDosenQuery(req.UUIDPegawai)
@@ -48,7 +48,7 @@ func GetAllSKPegawaiV0(a app.App, req *model.SKPegawaiRequest) ([]model.SKPegawa
 	return ss, nil
 }
 
-func GetAllSKPegawai(a app.App, req *model.SKPegawaiRequest) ([]model.SKPegawai, error) {
+func GetAllSKPegawai(a *app.App, req *model.SKPegawaiRequest) ([]model.SKPegawai, error) {
 	var sqlQuery = getAllSkQuery(req.UUIDPegawai)
 	rows, err := a.DB.Query(sqlQuery)
 	if err != nil {

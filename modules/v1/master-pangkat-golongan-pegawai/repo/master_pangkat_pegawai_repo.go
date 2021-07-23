@@ -7,7 +7,7 @@ import (
 	"svc-insani-go/modules/v1/master-pangkat-golongan-pegawai/model"
 )
 
-func GetAllPangkatPegawai(a app.App) ([]model.PangkatPegawai, error) {
+func GetAllPangkatPegawai(a *app.App) ([]model.PangkatPegawai, error) {
 	sqlQuery := getPangkatPegawaiQuery()
 	rows, err := a.DB.Query(sqlQuery)
 	if err != nil {
@@ -31,7 +31,7 @@ func GetAllPangkatPegawai(a app.App) ([]model.PangkatPegawai, error) {
 
 	return PangkatPegawai, nil
 }
-func GetPangkatPegawaiByUUID(a app.App, uuid string) (*model.PangkatPegawai, error) {
+func GetPangkatPegawaiByUUID(a *app.App, uuid string) (*model.PangkatPegawai, error) {
 	sqlQuery := getPangkatPegawaiByUUIDQuery(uuid)
 	var pangkatPegawai model.PangkatPegawai
 	err := a.DB.QueryRow(sqlQuery).Scan(&pangkatPegawai.ID, &pangkatPegawai.KdPangkat, &pangkatPegawai.NamaPangkat, &pangkatPegawai.UUID)
@@ -44,7 +44,7 @@ func GetPangkatPegawaiByUUID(a app.App, uuid string) (*model.PangkatPegawai, err
 	return &pangkatPegawai, nil
 }
 
-func GetPangkatGolonganPegawai(a app.App) ([]model.PangkatGolonganPegawai, error) {
+func GetPangkatGolonganPegawai(a *app.App) ([]model.PangkatGolonganPegawai, error) {
 	sqlQuery := getPangkatGolonganPegawaiQuery()
 	rows, err := a.DB.Query(sqlQuery)
 	if err != nil {
@@ -69,7 +69,7 @@ func GetPangkatGolonganPegawai(a app.App) ([]model.PangkatGolonganPegawai, error
 	return PangkatGolPegawai, nil
 }
 
-func GetPangkatGolonganPegawaiByUUID(a app.App, uuid string) (*model.PangkatGolonganPegawai, error) {
+func GetPangkatGolonganPegawaiByUUID(a *app.App, uuid string) (*model.PangkatGolonganPegawai, error) {
 	sqlQuery := getPangkatGolonganPegawaiQueryByUUID(uuid)
 	var pangkatGolonganPegawai model.PangkatGolonganPegawai
 	err := a.DB.QueryRow(sqlQuery).Scan(&pangkatGolonganPegawai.ID, &pangkatGolonganPegawai.KdPangkat, &pangkatGolonganPegawai.Pangkat, &pangkatGolonganPegawai.Golongan, &pangkatGolonganPegawai.UUID)

@@ -10,7 +10,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func GetAllJenisSk(a app.App, ctx context.Context) ([]model.JenisSk, error) {
+func GetAllJenisSk(a *app.App, ctx context.Context) ([]model.JenisSk, error) {
 	var jjs []model.JenisSk
 	err := a.GormDB.
 		WithContext(ctx).
@@ -25,7 +25,7 @@ func GetAllJenisSk(a app.App, ctx context.Context) ([]model.JenisSk, error) {
 	return jjs, nil
 }
 
-func GetJenisSk(a app.App, ctx context.Context, code string) (*model.JenisSk, error) {
+func GetJenisSk(a *app.App, ctx context.Context, code string) (*model.JenisSk, error) {
 	var js model.JenisSk
 	err := a.GormDB.
 		WithContext(ctx).

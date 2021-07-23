@@ -13,8 +13,8 @@ import (
 	"svc-insani-go/app/minio"
 	"svc-insani-go/router"
 
-	"github.com/labstack/echo"
-	"github.com/labstack/echo/middleware"
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 	"github.com/labstack/gommon/log"
 )
 
@@ -40,7 +40,7 @@ func main() {
 	// berisi koneksi database
 	// dan data lain yang memungkinkan untuk digunakan secara berulang
 
-	a := app.App{
+	a := &app.App{
 		DB:              db,
 		GormDB:          gormDB,
 		HttpClient:      &http.Client{},

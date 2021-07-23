@@ -13,7 +13,7 @@ func TestGetPegawaiPendidikan(t *testing.T) {
 	if err != nil {
 		t.Fatal("failed connect to db:", err)
 	}
-	a := app.App{DB: db}
+	a := &app.App{DB: db}
 	uuid := "db3b4cea-1437-11eb-a014-7eb0d4a3c7a0"
 	jenjangPendidikan, err := GetPegawaiPendidikan(a, uuid)
 	if err != nil {
@@ -29,7 +29,7 @@ func TestGetPegawaiFilePendidikan(t *testing.T) {
 	if err != nil {
 		t.Fatal("failed connect to db:", err)
 	}
-	a := app.App{DB: db}
+	a := &app.App{DB: db}
 	idList := []string{"3887303357", "1101348424"}
 	filePendidikan, err := GetPegawaiFilePendidikan(a, idList...)
 	if err != nil {
@@ -45,7 +45,7 @@ func TestGetPegawaiFilePendidikan(t *testing.T) {
 // 	if err != nil {
 // 		t.Fatal("failed connect to db:", err)
 // 	}
-// 	a := app.App{DB: db}
+// 	a := &app.App{DB: db}
 
 // 	gormDB, err := database.InitGorm(a.DB)
 // 	if err != nil {
@@ -69,13 +69,13 @@ func TestGetPegawaiByUUID(t *testing.T) {
 	if err != nil {
 		t.Fatal("failed connect to db:", err)
 	}
-	a := app.App{DB: db}
+	a := &app.App{DB: db}
 
 	gormDB, err := database.InitGorm(a.DB, true)
 	if err != nil {
 		t.Fatal("failed connect to gorm db:", err)
 	}
-	ax := app.App{GormDB: gormDB}
+	ax := &app.App{GormDB: gormDB}
 
 	// pu := model.PegawaiUpdate{}
 	// pu.Id = 819533014919819842
@@ -100,17 +100,17 @@ func TestUpdatePendidikanPegawai(t *testing.T) {
 	if err != nil {
 		t.Fatal("failed connect to db:", err)
 	}
-	a := app.App{DB: db}
+	a := &app.App{DB: db}
 
 	gormDB, err := database.InitGorm(a.DB, true)
 	if err != nil {
 		t.Fatal("failed connect to gorm db:", err)
 	}
-	ax := app.App{GormDB: gormDB}
+	ax := &app.App{GormDB: gormDB}
 
 	uuidPendidikanDiakui := "822c2cd9-4d0f-47ac-91b8-80f4b5d42444"
 	uuidPendidikanTerakhir := "822c2cd9-4d0f-47ac-91b8-80f4b5d42444"
-	idPegawai := "1231231"
+	var idPegawai uint64 = 1231231
 
 	err = UpdatePendidikanPegawai(ax, context.Background(), uuidPendidikanDiakui, uuidPendidikanTerakhir, idPegawai)
 

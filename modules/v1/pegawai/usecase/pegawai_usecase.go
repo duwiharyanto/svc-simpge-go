@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"log"
 	"os"
@@ -16,14 +17,14 @@ import (
 	"svc-insani-go/modules/v1/pegawai/repo"
 	pengaturan "svc-insani-go/modules/v1/pengaturan-insani/usecase"
 
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 )
 
 const (
 	pengaturanAtributFlagSinkronSimpeg = "flag_sinkron_simpeg"
 )
 
-func HandleGetPegawai(a app.App) echo.HandlerFunc {
+func HandleGetPegawai(a *app.App) echo.HandlerFunc {
 	h := func(c echo.Context) error {
 		req := &model.PegawaiRequest{}
 		err := c.Bind(req)
@@ -55,7 +56,7 @@ func HandleGetPegawai(a app.App) echo.HandlerFunc {
 	return echo.HandlerFunc(h)
 }
 
-func HandleGetSimpegPegawaiByUUID(a app.App) echo.HandlerFunc {
+func HandleGetSimpegPegawaiByUUID(a *app.App) echo.HandlerFunc {
 	h := func(c echo.Context) error {
 		uuidPegawai := c.Param("uuidPegawai")
 		if uuidPegawai == "" {
@@ -72,7 +73,7 @@ func HandleGetSimpegPegawaiByUUID(a app.App) echo.HandlerFunc {
 	return echo.HandlerFunc(h)
 }
 
-func PrepareGetSimpegPegawaiByUUID(a app.App, uuidPegawai string) (model.PegawaiDetail, error) {
+func PrepareGetSimpegPegawaiByUUID(a *app.App, uuidPegawai string) (model.PegawaiDetail, error) {
 	pegawaiDetail := model.PegawaiDetail{}
 
 	pegawaiPribadi, err := repo.GetPegawaiPribadi(a, uuidPegawai)
@@ -120,7 +121,7 @@ func PrepareGetSimpegPegawaiByUUID(a app.App, uuidPegawai string) (model.Pegawai
 }
 
 // Get All Pegawai With GORM
-func HandleGetPegawaix(a app.App) echo.HandlerFunc {
+func HandleGetPegawaix(a *app.App) echo.HandlerFunc {
 	h := func(c echo.Context) error {
 		limit, err := strconv.Atoi(c.QueryParam("limit"))
 		if err != nil {
@@ -143,7 +144,7 @@ func HandleGetPegawaix(a app.App) echo.HandlerFunc {
 }
 
 // Get Pegawai With GORM
-func HandleGetPegawaiByUUIDx(a app.App) echo.HandlerFunc {
+func HandleGetPegawaiByUUIDx(a *app.App) echo.HandlerFunc {
 	h := func(c echo.Context) error {
 		uuidPersonal := c.Param("uuidPersonal")
 		pp, err := repo.GetPegawaiByUUIDx(a, c.Request().Context(), uuidPersonal)
@@ -156,7 +157,7 @@ func HandleGetPegawaiByUUIDx(a app.App) echo.HandlerFunc {
 	return echo.HandlerFunc(h)
 }
 
-func HandleUpdatePegawai(a app.App, ctx context.Context, errChan chan error) echo.HandlerFunc {
+func HandleUpdatePegawai(a *app.App, ctx context.Context, errChan chan error) echo.HandlerFunc {
 	h := func(c echo.Context) error {
 
 		// Validasi Data
@@ -196,13 +197,13 @@ func HandleUpdatePegawai(a app.App, ctx context.Context, errChan chan error) ech
 		}
 
 		go func(
-			a app.App,
+			a *app.App,
 			ctx context.Context,
 			errChan chan error,
 		) {
 			fmt.Println("DEBUG : Go routin")
 
-			flagSinkronSimpeg, err := pengaturan.LoadPengaturan(&a, ctx, nil, pengaturanAtributFlagSinkronSimpeg)
+			flagSinkronSimpeg, err := pengaturan.LoadPengaturan(a, ctx, nil, pengaturanAtributFlagSinkronSimpeg)
 			if err != nil {
 				log.Println("error load pengaturan flag sinkron simpeg: %w", err)
 				errChan <- err
@@ -480,13 +481,15 @@ func prepareSinkronSimpeg(ctx context.Context, pegawaiInsani *model.PegawaiDetai
 	return nil
 }
 
-func HandleCreatePegawai(a app.App, ctx context.Context, errChan chan error) echo.HandlerFunc {
+func HandleCreatePegawai(a *app.App, ctx context.Context, errChan chan error) echo.HandlerFunc {
 	h := func(c echo.Context) error {
-
 		// Validasi Data
 		pegawaiCreate, err := PrepareCreateSimpeg(a, c)
+		if errors.Unwrap(err) != nil {
+			fmt.Printf("[ERROR] prepare create simpeg: %s\n", err.Error())
+			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
+		}
 		if err != nil {
-			fmt.Printf("[ERROR], %s\n", err.Error())
 			return c.JSON(http.StatusBadRequest, map[string]string{"message": err.Error()})
 		}
 
@@ -523,13 +526,13 @@ func HandleCreatePegawai(a app.App, ctx context.Context, errChan chan error) ech
 		}
 
 		go func(
-			a app.App,
+			a *app.App,
 			ctx context.Context,
 			errChan chan error,
 		) {
 			fmt.Println("DEBUG : Go routin")
 
-			flagSinkronSimpeg, err := pengaturan.LoadPengaturan(&a, ctx, nil, pengaturanAtributFlagSinkronSimpeg)
+			flagSinkronSimpeg, err := pengaturan.LoadPengaturan(a, ctx, nil, pengaturanAtributFlagSinkronSimpeg)
 			if err != nil {
 				log.Println("error load pengaturan flag sinkron simpeg: %w", err)
 				errChan <- err
@@ -571,7 +574,7 @@ func HandleCreatePegawai(a app.App, ctx context.Context, errChan chan error) ech
 	return echo.HandlerFunc(h)
 }
 
-func HandleGetPendidikanByUUIDPersonal(a app.App) echo.HandlerFunc {
+func HandleGetPendidikanByUUIDPersonal(a *app.App) echo.HandlerFunc {
 	h := func(c echo.Context) error {
 		uuidPersonal := c.Param("uuidPersonal")
 		if uuidPersonal == "" {
@@ -869,7 +872,7 @@ func prepareSinkronCreateSimpeg(ctx context.Context, pegawaiInsani *model.Pegawa
 	return nil
 }
 
-func HandleCheckNikPegawai(a app.App) echo.HandlerFunc {
+func HandleCheckNikPegawai(a *app.App) echo.HandlerFunc {
 	h := func(c echo.Context) error {
 		nikPegawai := c.QueryParam("nik")
 		if nikPegawai == "" {

@@ -10,7 +10,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func GetPegawai(a app.App, ctx context.Context, uuid string) (*model.Pegawai, error) {
+func GetPegawai(a *app.App, ctx context.Context, uuid string) (*model.Pegawai, error) {
 	var pgw model.Pegawai
 	err := a.GormDB.
 		WithContext(ctx).

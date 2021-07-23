@@ -17,7 +17,7 @@ const (
 	//BucketSKDosen   = "sk-dosen"
 )
 
-func CreateSKPengangkatanDosen(a app.App, skPegawai skPegawaiModel.SKPegawai) error {
+func CreateSKPengangkatanDosen(a *app.App, skPegawai skPegawaiModel.SKPegawai) error {
 	// skPengangkatan.PathSKPengangkatan = PrepareFileUploadPath(a, skPengangkatan.FileSKPengangkatan, skPengangkatan.UUIDSKUtama)
 	tx, err := a.DB.Begin()
 	if err != nil {
@@ -65,7 +65,7 @@ func CreateSKPengangkatanDosen(a app.App, skPegawai skPegawaiModel.SKPegawai) er
 	return nil
 }
 
-func UploadFIleSKDosen(a app.App, bucketName, filePath string, fileSKPengangkatanDosen *multipart.FileHeader) error {
+func UploadFIleSKDosen(a *app.App, bucketName, filePath string, fileSKPengangkatanDosen *multipart.FileHeader) error {
 	if fileSKPengangkatanDosen == nil {
 		return nil
 	}
@@ -83,7 +83,7 @@ func UploadFIleSKDosen(a app.App, bucketName, filePath string, fileSKPengangkata
 	return nil
 }
 
-func PrepareFileUploadPathDosen(a app.App, fileSKPengangkatanDosen *multipart.FileHeader, idSKUtama string) string {
+func PrepareFileUploadPathDosen(a *app.App, fileSKPengangkatanDosen *multipart.FileHeader, idSKUtama string) string {
 	if fileSKPengangkatanDosen == nil {
 		// fmt.Printf("PRINT DEBUG FILE SK Pengangkatan kosong : \n")
 		return ""
@@ -102,7 +102,7 @@ func PrepareFileUploadPathDosen(a app.App, fileSKPengangkatanDosen *multipart.Fi
 	return skPengangkatanMinioUploadPath
 }
 
-func GetDetailSKPengangkatanDosen(a app.App, UUIDSKPengangkatanDosen string) ([]model.SKPengangkatanDosen, error) {
+func GetDetailSKPengangkatanDosen(a *app.App, UUIDSKPengangkatanDosen string) ([]model.SKPengangkatanDosen, error) {
 	sqlQuery := getDetailSKPengangkatanDosenQuery(UUIDSKPengangkatanDosen)
 	rows, err := a.DB.Query(sqlQuery)
 	if err != nil {
@@ -176,7 +176,7 @@ func ExecMakulSkPengangkatanDosen(tx *sql.Tx, idSkPengangkatanDosen, userUpdate 
 	return nil
 }
 
-func DeleteSKPengangkatanDosenByUUID(a app.App, uuid string) error {
+func DeleteSKPengangkatanDosenByUUID(a *app.App, uuid string) error {
 	sqlQuery := deleteSKPengangkatanDosenByUUID()
 	stmt, err := a.DB.Prepare(sqlQuery)
 	if err != nil {
@@ -190,7 +190,7 @@ func DeleteSKPengangkatanDosenByUUID(a app.App, uuid string) error {
 
 	return nil
 }
-func UpdateSKPengangkatanDosen(a app.App, skPegawai skPegawaiModel.SKPegawai) error {
+func UpdateSKPengangkatanDosen(a *app.App, skPegawai skPegawaiModel.SKPegawai) error {
 	tx, err := a.DB.Begin()
 	if err != nil {
 		return fmt.Errorf("error beginning transaction, %w", err)

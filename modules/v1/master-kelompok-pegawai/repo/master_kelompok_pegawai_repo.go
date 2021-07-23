@@ -2,12 +2,15 @@ package repo
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"svc-insani-go/app"
 	"svc-insani-go/modules/v1/master-kelompok-pegawai/model"
+
+	"gorm.io/gorm"
 )
 
-func GetAllKelompokPegawai(a app.App, kdJenisPegawai string) ([]model.KelompokPegawai, error) {
+func GetAllKelompokPegawai(a *app.App, kdJenisPegawai string) ([]model.KelompokPegawai, error) {
 	sqlQuery := getKelompokPegawaiQuery(kdJenisPegawai)
 	rows, err := a.DB.Query(sqlQuery)
 	if err != nil {
@@ -32,7 +35,7 @@ func GetAllKelompokPegawai(a app.App, kdJenisPegawai string) ([]model.KelompokPe
 	return KelompokPegawai, nil
 }
 
-func GetAllKelompokPegawaiByUUID(a app.App, uuid string) ([]model.KelompokPegawai, error) {
+func GetAllKelompokPegawaiByUUID(a *app.App, uuid string) ([]model.KelompokPegawai, error) {
 	//c.Param("kd_jenis_pegawai")
 	sqlQuery := getAllKelompokPegawaiByUUID(uuid)
 	rows, err := a.DB.Query(sqlQuery)
@@ -58,13 +61,23 @@ func GetAllKelompokPegawaiByUUID(a app.App, uuid string) ([]model.KelompokPegawa
 	return KelompokPegawai, nil
 }
 
-func GetKelompokPegawaiByUUID(a app.App, ctx context.Context, uuid string) (*model.KelompokPegawai, error) {
+func GetKelompokPegawaiByUUID(a *app.App, ctx context.Context, uuid string) (*model.KelompokPegawai, error) {
 	var kelompokPegawai model.KelompokPegawai
 
-	tx := a.GormDB.WithContext(ctx)
-	res := tx.First(&kelompokPegawai, "uuid = ?", uuid)
-	if res.Error != nil {
-		return nil, fmt.Errorf("error querying kelompok pegawai by uuid %s", res.Error)
+	err := a.GormDB.
+		WithContext(ctx).
+		Joins("JenisPegawai").
+		Joins("StatusPegawai").
+		Where("kelompok_pegawai.flag_aktif = 1 AND kelompok_pegawai.uuid = ?", uuid).
+		First(&kelompokPegawai).
+		Error
+
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return nil, nil
+	}
+
+	if err != nil {
+		return nil, fmt.Errorf("error get kelompok pegawai by uuid: %w", err)
 	}
 	return &kelompokPegawai, nil
 }

@@ -7,7 +7,7 @@ import (
 	"svc-insani-go/modules/v1/sk/model"
 )
 
-func GetAllJenisSKPengangkatan(a app.App, kdJenisPegawai string) ([]model.JenisSKPengangkatan, error) {
+func GetAllJenisSKPengangkatan(a *app.App, kdJenisPegawai string) ([]model.JenisSKPengangkatan, error) {
 	sqlQuery := getJenisSKPengangkatanQuery(kdJenisPegawai)
 	rows, err := a.DB.Query(sqlQuery)
 	if err != nil {
@@ -32,7 +32,7 @@ func GetAllJenisSKPengangkatan(a app.App, kdJenisPegawai string) ([]model.JenisS
 	return jenisSkPengangkatan, nil
 }
 
-func GetJenisSKPengangkatanByUUID(a app.App, uuid string) (*model.JenisSKPengangkatan, error) {
+func GetJenisSKPengangkatanByUUID(a *app.App, uuid string) (*model.JenisSKPengangkatan, error) {
 	sqlQuery := getJenisSKPengangkatanQueryByUUID(uuid)
 	var jenisSKPengangkatan model.JenisSKPengangkatan
 	err := a.DB.QueryRow(sqlQuery).Scan(&jenisSKPengangkatan.ID, &jenisSKPengangkatan.KdJenisSKPengangkatan, &jenisSKPengangkatan.JenisSKPengangkatan, &jenisSKPengangkatan.KdKelompokPegawai, &jenisSKPengangkatan.UUID)

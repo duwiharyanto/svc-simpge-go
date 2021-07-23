@@ -11,7 +11,7 @@ import (
 )
 
 // TODO: add error handling and return it
-func GetAllSkPegawai(a app.App, ctx context.Context) []model.SkPegawai {
+func GetAllSkPegawai(a *app.App, ctx context.Context) []model.SkPegawai {
 	var ssp []model.SkPegawai
 	a.GormDB.
 		WithContext(ctx).
@@ -21,7 +21,7 @@ func GetAllSkPegawai(a app.App, ctx context.Context) []model.SkPegawai {
 }
 
 // TODO: add error handling and return it
-func GetSkPegawai(a app.App, ctx context.Context, uuid string) *model.SkPegawai {
+func GetSkPegawai(a *app.App, ctx context.Context, uuid string) *model.SkPegawai {
 	var skp model.SkPegawai
 	err := a.GormDB.
 		WithContext(ctx).
@@ -38,7 +38,7 @@ func GetSkPegawai(a app.App, ctx context.Context, uuid string) *model.SkPegawai 
 	return &skp
 }
 
-func GetAllJenisIjazah(a app.App, ctx context.Context) ([]model.JenisIjazah, error) {
+func GetAllJenisIjazah(a *app.App, ctx context.Context) ([]model.JenisIjazah, error) {
 	var jj []model.JenisIjazah
 	err := a.GormDB.
 		WithContext(ctx).
@@ -53,7 +53,7 @@ func GetAllJenisIjazah(a app.App, ctx context.Context) ([]model.JenisIjazah, err
 	return jj, nil
 }
 
-func GetJenisIjazah(a app.App, ctx context.Context, uuid string) (*model.JenisIjazah, error) {
+func GetJenisIjazah(a *app.App, ctx context.Context, uuid string) (*model.JenisIjazah, error) {
 	var j model.JenisIjazah
 	err := a.GormDB.
 		WithContext(ctx).

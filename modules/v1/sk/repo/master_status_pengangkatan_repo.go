@@ -7,7 +7,7 @@ import (
 	"svc-insani-go/modules/v1/sk/model"
 )
 
-func GetAllStatusPengangkatan(a app.App) ([]model.StatusPengangkatan, error) {
+func GetAllStatusPengangkatan(a *app.App) ([]model.StatusPengangkatan, error) {
 	// c.Param("kd_jenis_pegawai")
 	sqlQuery := getStatusPengangkatanQuery()
 	rows, err := a.DB.Query(sqlQuery)
@@ -33,7 +33,7 @@ func GetAllStatusPengangkatan(a app.App) ([]model.StatusPengangkatan, error) {
 	return statusPengangkatan, nil
 }
 
-func GetStatusPengangkatanByUUID(a app.App, uuid string) (*model.StatusPengangkatan, error) {
+func GetStatusPengangkatanByUUID(a *app.App, uuid string) (*model.StatusPengangkatan, error) {
 	sqlQuery := getStatusPengangkatanQueryByUUID(uuid)
 	var statusPengangkatan model.StatusPengangkatan
 	err := a.DB.QueryRow(sqlQuery).Scan(&statusPengangkatan.ID, &statusPengangkatan.KdStatusPengangkatan, &statusPengangkatan.StatusPengangkatan, &statusPengangkatan.UUID)

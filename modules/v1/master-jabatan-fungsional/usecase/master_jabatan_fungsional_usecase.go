@@ -7,10 +7,10 @@ import (
 	"svc-insani-go/modules/v1/master-jabatan-fungsional/model"
 	"svc-insani-go/modules/v1/master-jabatan-fungsional/repo"
 
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 )
 
-func HandleGetJabatanFungsional(a app.App) echo.HandlerFunc {
+func HandleGetJabatanFungsional(a *app.App) echo.HandlerFunc {
 	h := func(c echo.Context) error {
 		kdJenisPegawai := c.QueryParam("kd_jenis_pegawai")
 		jabatanFungsional, err := repo.GetAllJabatanFungsional(a, kdJenisPegawai)
@@ -26,7 +26,7 @@ func HandleGetJabatanFungsional(a app.App) echo.HandlerFunc {
 	return echo.HandlerFunc(h)
 }
 
-func HandleJabatanFungsionalByUUID(a app.App) echo.HandlerFunc {
+func HandleJabatanFungsionalByUUID(a *app.App) echo.HandlerFunc {
 	h := func(c echo.Context) error {
 		uuid := c.QueryParam("uuid")
 		pp, err := repo.GetJabatanFungsionalByUUID(a, c.Request().Context(), uuid)

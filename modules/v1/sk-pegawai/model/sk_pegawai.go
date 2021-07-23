@@ -11,13 +11,13 @@ const (
 )
 
 type SKPegawai struct {
-	IDPegawai            string                                   `json:"-"`
+	IDPegawai            uint64                                   `json:"-"`
 	ID                   string                                   `json:"-"`
 	NIK                  string                                   `json:"nik"`
 	Nama                 string                                   `json:"nama"`
 	GelarDepan           string                                   `json:"gelar_depan"`
 	GelarBelakang        string                                   `json:"gelar_belakang"`
-	IDJenisSK            string                                   `json:"id_jenis_sk"`
+	IDJenisSK            uint64                                   `json:"id_jenis_sk"`
 	NomorSK              string                                   `json:"nomor_sk"`
 	TentangSK            string                                   `json:"tentang_sk"`
 	TMT                  string                                   `json:"tmt"`

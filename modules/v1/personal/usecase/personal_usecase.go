@@ -7,10 +7,10 @@ import (
 	"svc-insani-go/modules/v1/personal/model"
 	"svc-insani-go/modules/v1/personal/repo"
 
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 )
 
-func HandleSearchPersonal(a app.App) echo.HandlerFunc {
+func HandleSearchPersonal(a *app.App) echo.HandlerFunc {
 	h := func(c echo.Context) error {
 		cari := c.QueryParam("cari")
 
@@ -27,7 +27,7 @@ func HandleSearchPersonal(a app.App) echo.HandlerFunc {
 	return echo.HandlerFunc(h)
 }
 
-func HandleGetPersonalByID(a app.App) echo.HandlerFunc {
+func HandleGetPersonalByID(a *app.App) echo.HandlerFunc {
 	h := func(c echo.Context) error {
 		uuidPersonal := c.Param("uuidPersonal")
 		fmt.Println("Uuid Personal : ", uuidPersonal)

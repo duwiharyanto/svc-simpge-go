@@ -17,7 +17,7 @@ func TestGetAllJenisSk(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	a := app.App{GormDB: db}
+	a := &app.App{GormDB: db}
 	jjs, err := GetAllJenisSk(a, context.Background())
 	if err != nil {
 		t.Fatal(err)
@@ -39,7 +39,7 @@ func TestGetJenisSk(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	a := app.App{GormDB: db}
+	a := &app.App{GormDB: db}
 	js, err := GetJenisSk(a, context.Background(), "1")
 	if err != nil {
 		t.Fatal(err)

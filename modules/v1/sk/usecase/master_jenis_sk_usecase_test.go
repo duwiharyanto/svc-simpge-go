@@ -10,7 +10,7 @@ import (
 	"svc-insani-go/app/database"
 	"testing"
 
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 )
 
 func TestHandleGetAllJenisSK(t *testing.T) {
@@ -27,7 +27,7 @@ func TestHandleGetAllJenisSK(t *testing.T) {
 	if err != nil {
 		t.Skip("failed connect db:", err)
 	}
-	a := app.App{DB: db}
+	a := &app.App{DB: db}
 	HandleGetAllJenisSK(a)(c)
 
 	// wantedRawResult := fmt.Sprint(`{"data":[{"kd_jenis_sk_pengangkatan":"1","jenis_sk_pengangkatan":"Pengangkatan","uuid":"ebc9e2c0-ee60-11ea-8c77-7eb0d4a3c7a0"},{"kd_jenis_sk_pengangkatan":"2","jenis_sk_pengangkatan":"Prajabatan","uuid":"01649d73-ee61-11ea-8c77-7eb0d4a3c7a0"},{"kd_jenis_sk_pengangkatan":"3","jenis_sk_pengangkatan":"Penetapan","uuid":"0b8c0fd2-ee61-11ea-8c77-7eb0d4a3c7a0"},{"kd_jenis_sk_pengangkatan":"4","jenis_sk_pengangkatan":"Kenaikan Gaji Berkala ","uuid":"fd92ab13-ee79-11ea-8c77-7eb0d4a3c7a0"},{"kd_jenis_sk_pengangkatan":"5","jenis_sk_pengangkatan":"Pangkat/Golongan/Ruang","uuid":"fd94084f-ee79-11ea-8c77-7eb0d4a3c7a0"},{"kd_jenis_sk_pengangkatan":"6","jenis_sk_pengangkatan":"Perpanjangan ","uuid":"fd952bcf-ee79-11ea-8c77-7eb0d4a3c7a0"},{"kd_jenis_sk_pengangkatan":"7","jenis_sk_pengangkatan":"Perpindahan ","uuid":"fd96751f-ee79-11ea-8c77-7eb0d4a3c7a0"},{"kd_jenis_sk_pengangkatan":"8","jenis_sk_pengangkatan":"Pemberhentian ","uuid":"fd97c835-ee79-11ea-8c77-7eb0d4a3c7a0"},{"kd_jenis_sk_pengangkatan":"9","jenis_sk_pengangkatan":"Jabatan Fungsional ","uuid":"fd991c5a-ee79-11ea-8c77-7eb0d4a3c7a0"},{"kd_jenis_sk_pengangkatan":"10","jenis_sk_pengangkatan":"Sanksi ","uuid":"fd9a76d9-ee79-11ea-8c77-7eb0d4a3c7a0"},{"kd_jenis_sk_pengangkatan":"11","jenis_sk_pengangkatan":"Jabatan Struktural ","uuid":"fd9bd8c7-ee79-11ea-8c77-7eb0d4a3c7a0"},{"kd_jenis_sk_pengangkatan":"12","jenis_sk_pengangkatan":"Riwayat Karyassiwa ","uuid":"fd9d569d-ee79-11ea-8c77-7eb0d4a3c7a0"}]}`)

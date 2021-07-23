@@ -4,7 +4,7 @@ type PangkatPegawai struct {
 	KdPangkat   string `json:"kd_pangkat"`
 	NamaPangkat string `json:"nama_pangkat"`
 	UUID        string `json:"uuid"`
-	ID          string `json:"-"`
+	ID          uint64 `json:"-"`
 }
 
 type PangkatGolonganPegawai struct {
@@ -12,7 +12,7 @@ type PangkatGolonganPegawai struct {
 	Pangkat   string `json:"pangkat"`
 	Golongan  string `json:"golongan"`
 	UUID      string `json:"uuid"`
-	ID        string `json:"-"`
+	ID        uint64 `json:"-"`
 }
 
 type PangkatPegawaiResponse struct {

@@ -17,10 +17,10 @@ import (
 	"svc-insani-go/modules/v1/sk-pengangkatan/model"
 	skRepo "svc-insani-go/modules/v1/sk/repo" //cek
 
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 )
 
-func ValidateCreateSKPengangkatanDosen(a app.App, c echo.Context) (skPegawai skPegawaiModel.SKPegawai, err error) {
+func ValidateCreateSKPengangkatanDosen(a *app.App, c echo.Context) (skPegawai skPegawaiModel.SKPegawai, err error) {
 	uuidPegawai := c.QueryParam("uuid_pegawai")
 	ctx := c.Request().Context()
 	skPengangkatanDosen := &model.SKPengangkatanDosen{}

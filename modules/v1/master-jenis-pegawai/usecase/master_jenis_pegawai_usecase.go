@@ -7,10 +7,10 @@ import (
 	"svc-insani-go/modules/v1/master-jenis-pegawai/model"
 	"svc-insani-go/modules/v1/master-jenis-pegawai/repo"
 
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 )
 
-func HandleGetAllJenisPegawai(a app.App) echo.HandlerFunc {
+func HandleGetAllJenisPegawai(a *app.App) echo.HandlerFunc {
 	h := func(c echo.Context) error {
 		JenisPegawai, err := repo.GetAllJenisPegawai(a)
 		if err != nil {

@@ -17,7 +17,7 @@ func TestGetAllJabatanStruktural(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	a := app.App{GormDB: db}
+	a := &app.App{GormDB: db}
 	jj, err := GetAllJabatanStruktural(a, context.Background())
 	if err != nil {
 		t.Fatal(err)
@@ -40,7 +40,7 @@ func TestGetPejabatStruktural(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	a := app.App{GormDB: db}
+	a := &app.App{GormDB: db}
 	uuidJabatanStruktural := "6c1d68ef-9461-11eb-b06a-000c2977b907"
 	jj, err := GetPejabatStruktural(a, context.Background(), uuidJabatanStruktural)
 	if err != nil {

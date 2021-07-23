@@ -7,10 +7,10 @@ import (
 	"svc-insani-go/modules/v1/master-lokasi-kerja/model"
 	"svc-insani-go/modules/v1/master-lokasi-kerja/repo"
 
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 )
 
-func HandleGetLokasiKerja(a app.App) echo.HandlerFunc {
+func HandleGetLokasiKerja(a *app.App) echo.HandlerFunc {
 	h := func(c echo.Context) error {
 		LokasiKerja, err := repo.GetLokasiKerja(a)
 		if err != nil {
@@ -25,14 +25,14 @@ func HandleGetLokasiKerja(a app.App) echo.HandlerFunc {
 	return echo.HandlerFunc(h)
 }
 
-func HandleGetLokasiKerjaDummy(a app.App) echo.HandlerFunc {
+func HandleGetLokasiKerjaDummy(a *app.App) echo.HandlerFunc {
 	h := func(c echo.Context) error {
 		return c.JSONBlob(http.StatusOK, []byte(dummyLokasiKerja))
 	}
 	return echo.HandlerFunc(h)
 }
 
-func HandleLokasiKerjaByUUID(a app.App) echo.HandlerFunc {
+func HandleLokasiKerjaByUUID(a *app.App) echo.HandlerFunc {
 	h := func(c echo.Context) error {
 		uuid := c.QueryParam("uuid")
 		pp, err := repo.GetLokasiKerjaByUUID(a, c.Request().Context(), uuid)

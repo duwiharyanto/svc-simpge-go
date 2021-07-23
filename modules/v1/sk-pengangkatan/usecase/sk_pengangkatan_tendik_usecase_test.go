@@ -13,7 +13,7 @@ import (
 	"svc-insani-go/app/minio"
 	"testing"
 
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 )
 
 func TestUsecase(t *testing.T) {
@@ -30,7 +30,7 @@ func TestUsecase(t *testing.T) {
 	if err != nil {
 		t.Skip("failed connect minio:", err)
 	}
-	a := app.App{DB: db, TimeLocation: loc, MinioClient: minio, MinioBucketName: "insani"}
+	a := &app.App{DB: db, TimeLocation: loc, MinioClient: minio, MinioBucketName: "insani"}
 
 	e := echo.New()
 	t.Run("create_sk_pengangkatan_tendik", func(t *testing.T) {

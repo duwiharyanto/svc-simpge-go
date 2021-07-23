@@ -6,10 +6,10 @@ import (
 	"svc-insani-go/modules/v2/organisasi/model"
 	"svc-insani-go/modules/v2/organisasi/repo"
 
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 )
 
-func HandleGetAllUnit2(a app.App) echo.HandlerFunc {
+func HandleGetAllUnit2(a *app.App) echo.HandlerFunc {
 	h := func(c echo.Context) error {
 		ctx := c.Request().Context()
 		jj, err := repo.GetAllUnit2(a, ctx)

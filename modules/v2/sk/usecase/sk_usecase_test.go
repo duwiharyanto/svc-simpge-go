@@ -2,6 +2,7 @@ package usecase_test
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -12,13 +13,13 @@ import (
 	"svc-insani-go/router"
 	"testing"
 
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 )
 
 func TestHandleGetAllJenisIjazah(t *testing.T) {
 	// init server
 	e := echo.New()
-	e.Use(router.SetResponseTimeout)
+	e.Use(router.SetResponseTimeout(context.Background()))
 
 	db, err := database.Connect()
 	if err != nil {
@@ -28,7 +29,7 @@ func TestHandleGetAllJenisIjazah(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	a := app.App{DB: db, GormDB: gormDb}
+	a := &app.App{DB: db, GormDB: gormDb}
 	fmt.Print(a)
 	// router.InitRoute(a, e)
 	server := httptest.NewServer(e)
@@ -81,7 +82,7 @@ func TestHandleGetAllJenisIjazah(t *testing.T) {
 func TestHandleGetAllJenisSk(t *testing.T) {
 	// init server
 	e := echo.New()
-	e.Use(router.SetResponseTimeout)
+	e.Use(router.SetResponseTimeout(context.Background()))
 
 	db, err := database.Connect()
 	if err != nil {
@@ -91,7 +92,7 @@ func TestHandleGetAllJenisSk(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	a := app.App{DB: db, GormDB: gormDb}
+	a := &app.App{DB: db, GormDB: gormDb}
 	fmt.Print(a)
 	// router.InitRoute(a, e)
 	server := httptest.NewServer(e)
@@ -141,7 +142,7 @@ func TestHandleGetAllJenisSk(t *testing.T) {
 func TestHandleGetAllKelompokSkPengangkatan(t *testing.T) {
 	// init server
 	e := echo.New()
-	e.Use(router.SetResponseTimeout)
+	e.Use(router.SetResponseTimeout(context.Background()))
 
 	db, err := database.Connect()
 	if err != nil {
@@ -151,7 +152,7 @@ func TestHandleGetAllKelompokSkPengangkatan(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	a := app.App{DB: db, GormDB: gormDb}
+	a := &app.App{DB: db, GormDB: gormDb}
 	fmt.Print(a)
 	// router.InitRoute(a, e)
 	server := httptest.NewServer(e)
@@ -201,7 +202,7 @@ func TestHandleGetAllKelompokSkPengangkatan(t *testing.T) {
 func TestHandleGetAllMataKuliah(t *testing.T) {
 	// init server
 	e := echo.New()
-	e.Use(router.SetResponseTimeout)
+	e.Use(router.SetResponseTimeout(context.Background()))
 
 	db, err := database.Connect()
 	if err != nil {
@@ -211,7 +212,7 @@ func TestHandleGetAllMataKuliah(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	a := app.App{DB: db, GormDB: gormDb}
+	a := &app.App{DB: db, GormDB: gormDb}
 	fmt.Print(a)
 	// router.InitRoute(a, e)
 	server := httptest.NewServer(e)

@@ -17,7 +17,7 @@ func TestGetAllUnit2(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	a := app.App{GormDB: db}
+	a := &app.App{GormDB: db}
 	uu, err := GetAllUnit2(a, context.Background())
 	if err != nil {
 		t.Fatal(err)

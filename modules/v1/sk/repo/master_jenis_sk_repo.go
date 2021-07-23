@@ -7,7 +7,7 @@ import (
 	"svc-insani-go/modules/v1/sk/model"
 )
 
-func GetAllJenisSK(a app.App) ([]model.JenisSK, error) {
+func GetAllJenisSK(a *app.App) ([]model.JenisSK, error) {
 	// c.Param("kd_jenis_pegawai")
 	sqlQuery := getJenisSKQuery()
 	rows, err := a.DB.Query(sqlQuery)
@@ -33,7 +33,7 @@ func GetAllJenisSK(a app.App) ([]model.JenisSK, error) {
 	return jj, nil
 }
 
-func GetJenisSKByUUID(a app.App, uuid string) (*model.JenisSK, error) {
+func GetJenisSKByUUID(a *app.App, uuid string) (*model.JenisSK, error) {
 	sqlQuery := getJenisSKByUUID(uuid)
 	var jenisSK model.JenisSK
 	err := a.DB.QueryRow(sqlQuery).Scan(&jenisSK.ID, &jenisSK.KdJenisSK, &jenisSK.JeniSKPengangkatan, &jenisSK.UUID)
@@ -47,7 +47,7 @@ func GetJenisSKByUUID(a app.App, uuid string) (*model.JenisSK, error) {
 	return &jenisSK, nil
 }
 
-func GetJenisSKByCode(a app.App, code string) (*model.JenisSK, error) {
+func GetJenisSKByCode(a *app.App, code string) (*model.JenisSK, error) {
 	var jenisSK model.JenisSK
 	sqlQuery := getJenisSKByCode(code)
 	err := a.DB.QueryRow(sqlQuery).Scan(&jenisSK.ID, &jenisSK.KdJenisSK, &jenisSK.JeniSKPengangkatan, &jenisSK.UUID)
