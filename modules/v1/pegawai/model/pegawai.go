@@ -15,7 +15,7 @@ import (
 )
 
 type Pegawai struct {
-	ID                              string `json:"-" gorm:"primaryKey"`
+	ID                              uint64 `json:"-" gorm:"primaryKey"`
 	NIK                             string `json:"nik" gorm:"type:varchar;not null"`
 	Nama                            string `json:"nama" gorm:"type:varchar;not null"`
 	GelarDepan                      string `json:"gelar_depan" gorm:"type:varchar"`
@@ -336,8 +336,8 @@ type PendidikanPersonal struct {
 }
 
 type PegawaiUpdate struct {
-	Id                      int                     `form:"id" gorm:"primaryKey;<-false"`
-	IdPersonalDataPribadi   string                  `form:"id_personal_data_pribadi" gorm:"<-:create"`
+	Id                      uint64                  `form:"id" gorm:"primaryKey;<-false"`
+	IdPersonalDataPribadi   uint64                  `form:"id_personal_data_pribadi" gorm:"<-:create"`
 	FlagAktif               int                     `form:"flag_aktif" gorm:"->"`
 	Nik                     string                  `form:"nik" gorm:"->;<-:create"`
 	NikKtp                  string                  `form:"nik_ktp" gorm:"->"`
@@ -347,49 +347,49 @@ type PegawaiUpdate struct {
 	TempatLahir             string                  `form:"tempat_lahir" gorm:"<-:create"`
 	TglLahir                string                  `form:"tgl_lahir" gorm:"<-:create"`
 	JenisKelamin            string                  `form:"jenis_kelamin" gorm:"<-:create"`
-	IdAgama                 string                  `form:"id_agama" gorm:"<-:create"`
+	IdAgama                 uint64                  `form:"id_agama" gorm:"<-:create"`
 	KdAgama                 string                  `form:"kd_agama" gorm:"<-:create"`
-	IdGolonganDarah         int                     `form:"id_golongan_darah" gorm:"<-:create"`
+	IdGolonganDarah         uint64                  `form:"id_golongan_darah" gorm:"<-:create"`
 	KdGolonganDarah         string                  `form:"kd_golongan_darah" gorm:"<-:create"`
-	IdStatusPerkawinan      int                     `form:"id_status_perkawinan" gorm:"<-:create"`
+	IdStatusPerkawinan      uint64                  `form:"id_status_perkawinan" gorm:"<-:create"`
 	KdStatusPerkawinan      string                  `form:"kd_status_perkawinan" gorm:"<-:create"`
 	UuidPendidikanMasuk     string                  `form:"uuid_pendidikan_masuk" gorm:"-"`
-	IdPendidikanMasuk       int                     `form:"id_pendidikan_masuk"`
+	IdPendidikanMasuk       uint64                  `form:"id_pendidikan_masuk"`
 	KdPendidikanMasuk       string                  `form:"kd_pendidikan_masuk"`
 	UuidPendidikanTerakhir  string                  `form:"uuid_pendidikan_terakhir" gorm:"-"`
-	IdPendidikanTerakhir    int                     `form:"id_pendidikan_terakhir"`
+	IdPendidikanTerakhir    uint64                  `form:"id_pendidikan_terakhir"`
 	KdPendidikanTerakhir    string                  `form:"kd_pendidikan_terakhir"`
-	IdStatusPendidikanMasuk int                     `form:"id_status_pendidikan_masuk" gorm:"<-:create"`
+	IdStatusPendidikanMasuk uint64                  `form:"id_status_pendidikan_masuk" gorm:"<-:create"`
 	KdStatusPendidikanMasuk string                  `form:"kd_status_pendidikan_masuk" gorm:"<-:create"`
-	IdJenisPendidikan       int                     `form:"id_jenis_pendidikan" gorm:"<-:create"`
+	IdJenisPendidikan       uint64                  `form:"id_jenis_pendidikan" gorm:"<-:create"`
 	kdJenisPendidikan       string                  `form:"kd_jenis_pendidikan" gorm:"<-:create"`
 	UuidJenisPegawai        string                  `form:"uuid_jenis_pegawai" gorm:"-"`
-	IdJenisPegawai          int                     `form:"id_jenis_pegawai"`
+	IdJenisPegawai          uint64                  `form:"id_jenis_pegawai"`
 	KdJenisPegawai          string                  `form:"kd_jenis_pegawai"`
 	UuidStatusPegawai       string                  `form:"uuid_status_pegawai" gorm:"-"`
-	IdStatusPegawai         int                     `form:"id_status_pegawai"`
+	IdStatusPegawai         uint64                  `form:"id_status_pegawai"`
 	KdStatusPegawai         string                  `form:"kd_status_pegawai"`
 	UuidKelompokPegawai     string                  `form:"uuid_kelompok_pegawai" gorm:"-"`
-	IdKelompokPegawai       int                     `form:"id_kelompok_pegawai"`
+	IdKelompokPegawai       uint64                  `form:"id_kelompok_pegawai"`
 	KdKelompokPegawai       string                  `form:"kd_kelompok_pegawai"`
 	UuidDetailProfesi       string                  `form:"uuid_detail_profesi"  gorm:"-"`
-	IdDetailProfesi         int                     `form:"id_detail_profesi"`
+	IdDetailProfesi         uint64                  `form:"id_detail_profesi"`
 	UuidGolongan            string                  `form:"uuid_golongan" gorm:"-"`
-	IdGolongan              int                     `form:"id_golongan"`
+	IdGolongan              uint64                  `form:"id_golongan"`
 	KdGolongan              string                  `form:"kd_golongan"`
 	UuidRuang               string                  `form:"uuid_ruang" gorm:"-"`
-	IdRuang                 int                     `form:"id_ruang"`
+	IdRuang                 uint64                  `form:"id_ruang"`
 	KdRuang                 string                  `form:"kd_ruang"`
 	UuidUnitKerja1          string                  `form:"uuid_induk_kerja" gorm:"-"` //Perubahan
-	IdUnitKerja1            int                     `form:"id_unit_kerja1"`
+	IdUnitKerja1            uint64                  `form:"id_unit_kerja1"`
 	KdUnit1                 string                  `form:"kd_unit1"`
 	UuidUnitKerja2          string                  `form:"uuid_unit_kerja" gorm:"-"` //Perubahan
-	IdUnitKerja2            int                     `form:"id_unit_kerja2"`
+	IdUnitKerja2            uint64                  `form:"id_unit_kerja2"`
 	KdUnit2                 string                  `form:"kd_unit2"`
 	UuidUnitKerja3          string                  `form:"uuid_bagian_kerja" gorm:"-"` //Perubahan
-	IdUnitKerja3            int                     `form:"id_unit_kerja3"`
+	IdUnitKerja3            uint64                  `form:"id_unit_kerja3"`
 	KdUnit3                 string                  `form:"kd_unit3"`
-	IdUnitKerjaLokasi       int                     `form:"id_unit_kerja_lokasi"`
+	IdUnitKerjaLokasi       uint64                  `form:"id_unit_kerja_lokasi"`
 	LokasiKerja             string                  `form:"lokasi_kerja"`
 	UuidLokasiKerja         string                  `form:"uuid_lokasi_kerja" gorm:"-"`
 	FlagPensiun             string                  `form:"flag_pensiun" gorm:"->"`
@@ -409,14 +409,14 @@ func (*PegawaiUpdate) TableName() string {
 }
 
 type PegawaiFungsionalUpdate struct {
-	Id                    int     `form:"-"`
-	IdKafka               int     `form:"-"`
-	IdPegawai             int     `form:"-"`
+	Id                    uint64  `form:"-"`
+	IdKafka               uint64  `form:"-"`
+	IdPegawai             uint64  `form:"-"`
 	UuidPangkatGolongan   string  `form:"uuid_pangkat_golongan" gorm:"-"`
-	IdPangkatGolongan     int     `form:"id_pangkat_golongan"`
+	IdPangkatGolongan     uint64  `form:"id_pangkat_golongan"`
 	KdPangkatGolongan     string  `form:"kd_pangkat_golongan"`
 	UuidJabatanFungsional string  `form:"uuid_jabatan_fungsional" gorm:"-"`
-	IdJabatanFungsional   int     `form:"id_jabatan_fungsional"`
+	IdJabatanFungsional   uint64  `form:"id_jabatan_fungsional"`
 	KdJabatanFungsional   string  `form:"kd_jabatan_fungsional"`
 	TmtPangkatGolongan    *string `form:"tmt_pangkat_golongan" gorm:"default:null"`
 	TmtPangkatGolonganIDN string  `form:"tmt_pangkat_golongan_idn" gorm:"-"`
@@ -431,24 +431,24 @@ type PegawaiFungsionalUpdate struct {
 	AngkaKredit              string  `form:"angka_kredit"`
 	NomorSertifikasi         string  `form:"nomor_sertifikasi"`
 	UuidJenisNomorRegistrasi string  `form:"uuid_jenis_nomor_registrasi" gorm:"-"`
-	IdJenisNomorRegistrasi   int     `form:"id_jenis_nomor_registrasi"`
+	IdJenisNomorRegistrasi   uint64  `form:"id_jenis_nomor_registrasi"`
 	KdJenisNomorRegistrasi   string  `form:"kd_jenis_nomor_registrasi"`
 	NomorRegistrasi          string  `form:"nomor_registrasi"`
 	NomorSkPertama           string  `form:"nomor_sk_pertama"`
 	TmtSkPertama             *string `form:"tmt_sk_pertama"`
 	TmtSkPertamaIDN          string  `form:"tmt_sk_pertama_idn" gorm:"-"`
 	UuidStatusPegawaiAktif   string  `form:"uuid_status_pegawai_aktif" gorm:"-"`
-	IdStatusPegawaiAktif     int     `form:"id_status_pegawai_aktif"`
+	IdStatusPegawaiAktif     uint64  `form:"id_status_pegawai_aktif"`
 	KdStatusPegawaiAktif     string  `form:"kd_status_pegawai_aktif"`
 	UuidHomebasePddikti      string  `form:"uuid_homebase_pddikti" gorm:"-"` //Perubahan
-	IdHomebasePddikti        int     `form:"id_homebase_pddikti"`            //Perubahan
+	IdHomebasePddikti        uint64  `form:"id_homebase_pddikti"`            //Perubahan
 	UuidHomebaseUii          string  `form:"uuid_homebase_uii" gorm:"-"`     //Perubahan
-	IdHomebaseUii            int     `form:"id_homebase_uii"`                //Perubahan
+	IdHomebaseUii            uint64  `form:"id_homebase_uii"`                //Perubahan
 	TglInput                 string  `form:"-" gorm:"-"`
 	UserInput                string  `form:"-" gorm:"-"`
 	TglUpdate                string  `form:"-" gorm:"-"`
 	UserUpdate               string  `form:"-"`
-	FlagAktif                int     `form:"-" gorm:"-"`
+	FlagAktif                uint64  `form:"-" gorm:"-"`
 	// Uuid                     string `form:"-"`
 }
 
@@ -457,21 +457,21 @@ func (*PegawaiFungsionalUpdate) TableName() string {
 }
 
 type PegawaiPNSUpdate struct {
-	Id                    int     `form:"-" gorm:"primaryKey"`
-	IdPegawai             int     `form:"-"`
+	Id                    uint64  `form:"-" gorm:"primaryKey"`
+	IdPegawai             uint64  `form:"-"`
 	NipPns                string  `form:"nip_pns"`
 	NoKartuPegawai        string  `form:"no_kartu_pegawai"`
 	UuidJenisPtt          string  `form:"uuid_jenis_ptt" gorm:"-"`
-	IdJenisPtt            int     `form:"id_jenis_ptt"`
+	IdJenisPtt            uint64  `form:"id_jenis_ptt"`
 	KdJenisPtt            string  `form:"kd_jenis_ptt"`
 	InstansiAsal          string  `form:"instansi_asal_ptt" gorm:"column:instansi_asal"`
 	UuidPangkatGolongan   string  `form:"uuid_pangkat_gol_ruang_pns" gorm:"-"` //Perubahan
-	IdPangkatGolongan     int     `form:"id_pangkat_golongan"`
+	IdPangkatGolongan     uint64  `form:"id_pangkat_golongan"`
 	KdPangkatGolongan     string  `form:"kd_pangkat_golongan"`
 	TmtPangkatGolongan    *string `form:"tmt_pangkat_gol_ruang_pns" gorm:"column:tmt_pangkat_golongan"` //Perubahan
 	TmtPangkatGolonganIDN string  `form:"tmt_pangkat_gol_ruang_pns_idn" gorm:"-"`                       //Perubahan
 	UuidJabatanFungsional string  `form:"uuid_jabatan_pns" gorm:"-"`                                    //Perubahan
-	IdJabatanFungsional   int     `form:"id_jabatan_fungsional"`
+	IdJabatanFungsional   uint64  `form:"id_jabatan_fungsional"`
 	KdJabatanFungsional   string  `form:"kd_jabatan_fungsional"`
 	TmtJabatan            *string `form:"tmt_jabatan_pns" gorm:"tmt_jabatan"`                  //Perubahan
 	TmtJabatanIDN         string  `form:"tmt_jabatan_pns_idn" gorm:"-"`                        //Perubahan
@@ -483,7 +483,7 @@ type PegawaiPNSUpdate struct {
 	UserInput             string  `form:"-" gorm:"-"`
 	TglUpdate             string  `form:"-" gorm:"-"`
 	UserUpdate            string  `form:"-"`
-	FlagAktif             int     `form:"-" gorm:"-"`
+	FlagAktif             uint64  `form:"-" gorm:"-"`
 	Uuid                  string  `form:"-"`
 }
 
@@ -493,8 +493,8 @@ func (*PegawaiPNSUpdate) TableName() string {
 
 type PegawaiPendidikanUpdate struct {
 	UuidPendidikan        string `form:"uuid_pendidikan" json:"uuid_pendidikan"`
-	IdPendidikan          string `form:"id_pendidikan" json:"id_pendidikan" gorm:"primaryKey;column:id"`
-	IdPersonalDataPribadi string `form:"id_personal_data_pribadi" json:"-"`
+	IdPendidikan          uint64 `form:"id_pendidikan" json:"id_pendidikan" gorm:"primaryKey;column:id"`
+	IdPersonalDataPribadi uint64 `form:"id_personal_data_pribadi" json:"-"`
 	FlagIjazahDiakui      string `form:"flag_ijazah_diakui" json:"flag_ijazah_diakui"`
 	FlagIjazahTerakhir    string `form:"flag_ijazah_terakhir" json:"flag_ijazah_terakhir"`
 	NomorIjazah           string `json:"nomor_ijazah"`

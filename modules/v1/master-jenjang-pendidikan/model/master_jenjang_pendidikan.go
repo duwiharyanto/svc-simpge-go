@@ -1,7 +1,7 @@
 package model
 
 type JenjangPendidikan struct {
-	ID          string `json:"-" gorm:"primaryKey"`
+	ID          uint64 `json:"-" gorm:"primaryKey"`
 	KdJenjang   string `json:"kd_jenjang"`
 	Jenjang     string `json:"jenjang"`
 	NamaJenjang string `json:"nama_jenjang"`

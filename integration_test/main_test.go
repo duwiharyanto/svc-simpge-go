@@ -11,12 +11,6 @@ func TestMain(t *testing.T) {
 	}
 	defer srv.Server.Close()
 
-	// personal, err := srv.TestPersonal()
-	// if err != nil {
-	// 	t.Fatal(err)
-	// }
-	// fmt.Printf("[DEBUG] personal: %+v\n", personal)
-	// fmt.Println("len data:", len(personal["data"].([]interface{})))
-
-	// srv.CreatePersonal(t)
+	// t.Run("kelompok", GetKelompokPegawai(t, srv, groups))
+	t.Run("pegawai", Pegawai(t, srv))
 }

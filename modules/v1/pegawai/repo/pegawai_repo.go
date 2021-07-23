@@ -541,7 +541,7 @@ func UpdatePegawai(a *app.App, ctx context.Context, pegawaiUpdate model.PegawaiU
 	return nil
 }
 
-func UpdatePendidikanPegawai(a *app.App, ctx context.Context, uuidPendidikanDiakui string, uuidPendidikanTerakhir string, idPersonalPegawai string) error {
+func UpdatePendidikanPegawai(a *app.App, ctx context.Context, uuidPendidikanDiakui string, uuidPendidikanTerakhir string, idPersonalPegawai uint64) error {
 	db := a.GormDB.WithContext(ctx)
 
 	var pegawaiPendidikanUpdate model.PegawaiPendidikanUpdate

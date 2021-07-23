@@ -2,9 +2,12 @@ package repo
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"svc-insani-go/app"
 	"svc-insani-go/modules/v1/master-kelompok-pegawai/model"
+
+	"gorm.io/gorm"
 )
 
 func GetAllKelompokPegawai(a *app.App, kdJenisPegawai string) ([]model.KelompokPegawai, error) {
@@ -61,10 +64,20 @@ func GetAllKelompokPegawaiByUUID(a *app.App, uuid string) ([]model.KelompokPegaw
 func GetKelompokPegawaiByUUID(a *app.App, ctx context.Context, uuid string) (*model.KelompokPegawai, error) {
 	var kelompokPegawai model.KelompokPegawai
 
-	tx := a.GormDB.WithContext(ctx)
-	res := tx.First(&kelompokPegawai, "uuid = ?", uuid)
-	if res.Error != nil {
-		return nil, fmt.Errorf("error querying kelompok pegawai by uuid %s", res.Error)
+	err := a.GormDB.
+		WithContext(ctx).
+		Joins("JenisPegawai").
+		Joins("StatusPegawai").
+		Where("kelompok_pegawai.flag_aktif = 1 AND kelompok_pegawai.uuid = ?", uuid).
+		First(&kelompokPegawai).
+		Error
+
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return nil, nil
+	}
+
+	if err != nil {
+		return nil, fmt.Errorf("error get kelompok pegawai by uuid: %w", err)
 	}
 	return &kelompokPegawai, nil
 }

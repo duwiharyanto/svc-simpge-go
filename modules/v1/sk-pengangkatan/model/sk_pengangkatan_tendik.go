@@ -13,37 +13,37 @@ func EmptySKPengangkatanTendiki() SKPengangkatanTendik {
 
 type SKPengangkatanTendik struct {
 	// Jenis SK
-	IDJenisSK   string `json:"-" form:"-"`
+	IDJenisSK   uint64 `json:"-" form:"-"`
 	UUIDJenisSK string `json:"uuid_jenis_sk" form:"uuid_jenis_sk"`
 	KDJenisSK   string `json:"kd_jenis_sk" form:"-"`
 	JenisSK     string `json:"jenis_sk" form:"-"`
 
 	// Kelompok SK Pengangkatan
-	IDKelompokSKPengangkatan   string `json:"-" form:"-"`
+	IDKelompokSKPengangkatan   uint64 `json:"-" form:"-"`
 	UUIDKelompokSKPengangkatan string `json:"uuid_kelompok_sk_pengangkatan" form:"uuid_kelompok_sk_pengangkatan"`
 	KDKelompokSKPengangkatan   string `json:"kd_kelompok_sk_pengangkatan" form:"-"`
 	KelompokSKPengangkatan     string `json:"kelompok_sk_pengangkatan" form:"-"`
 
 	// Unit yang mengangkat
-	IDUnitPengangkat   string `json:"-" form:"-"`
+	IDUnitPengangkat   uint64 `json:"-" form:"-"`
 	UUIDUnitPengangkat string `json:"uuid_unit_pengangkat" form:"uuid_unit_pengangkat"`
 	KDUnitPengangkat   string `json:"kd_unit_pengangkat" form:"-"`
 	UnitPengangkat     string `json:"unit_pengangkat" form:"-"`
 
 	// Unit kerja
-	IDUnitPegawai   string `json:"-" form:"-"`
+	IDUnitPegawai   uint64 `json:"-" form:"-"`
 	UUIDUnitPegawai string `json:"uuid_unit_kerja" form:"uuid_unit_kerja"`
 	KDUnitPegawai   string `json:"kd_unit_kerja" form:"-"`
 	UnitPegawai     string `json:"unit_kerja" form:"-"`
 
 	// Jabatan fungsional
-	IDJabatanFungsional   string `json:"-" form:"-"`
+	IDJabatanFungsional   uint64 `json:"-" form:"-"`
 	UUIDJabatanFungsional string `json:"uuid_jabatan_fungsional" form:"uuid_jabatan_fungsional"`
 	KDJabatanFungsional   string `json:"kd_jabatan_fungsional" form:"-"`
 	JabatanFungsional     string `json:"jabatan_fungsional" form:"-"`
 
 	// Pangkat golongan/ruang
-	IDPangkatGolonganPegawai   string `json:"-" form:"-"`
+	IDPangkatGolonganPegawai   uint64 `json:"-" form:"-"`
 	UUIDPangkatGolonganPegawai string `json:"uuid_pangkat_golongan_pegawai" form:"uuid_pangkat_golongan_pegawai"`
 	KDPangkatGolonganPegawai   string `json:"kd_pangkat_golongan_pegawai" form:"-"`
 	PangkatGolonganPegawai     string `json:"pangkat_golongan_pegawai" form:"-"`
@@ -57,13 +57,13 @@ type SKPengangkatanTendik struct {
 	MasaKerjaDiakuiTahun int `json:"masa_kerja_diakui_tahun" form:"masa_kerja_diakui_tahun"`
 
 	// Status pengangkatan
-	IDStatusPengangkatan   string `json:"-" form:"-"`
+	IDStatusPengangkatan   uint64 `json:"-" form:"-"`
 	UUIDStatusPengangkatan string `json:"uuid_status_pengangkatan" form:"uuid_status_pengangkatan"`
 	KDStatusPengangkatan   string `json:"kd_status_pengangkatan" form:"-"`
 	StatusPengangkatan     string `json:"status_pengangkatan" form:"-"`
 
 	// Ijazah yang diakui
-	IDJenisIjazah   string `json:"-" form:"-"`
+	IDJenisIjazah   uint64 `json:"-" form:"-"`
 	UUIDJenisIjazah string `json:"uuid_jenis_ijazah" form:"uuid_jenis_ijazah"`
 	KDJenisIjazah   string `json:"kd_jenis_ijazah" form:"-"`
 	JenisIjazah     string `json:"jenis_ijazah" form:"-"`
@@ -73,15 +73,15 @@ type SKPengangkatanTendik struct {
 	URLSKTendik       string                `json:"url_sk_pengangkatan" form:"url_sk_pengangkatan"`
 	FileSKTendik      *multipart.FileHeader `form:"-"`
 
-	IDPegawaiPenetap    string `json:"-" form:"-"`
+	IDPegawaiPenetap    uint64 `json:"-" form:"-"`
 	UUIDPegawaiPenetap  string `json:"uuid_pegawai_penetapan" form:"uuid_pegawai_penetapan"`
-	IDGolonganPegawai   string `json:"-" form:"-"`
+	IDGolonganPegawai   uint64 `json:"-" form:"-"`
 	UUIDGolonganPegawai string `json:"uuid_golongan_pegawai" form:"uuid_golongan_pegawai"`
 
 	UserInput                string `json:"-" form:"-"`
 	UserUpdate               string `json:"-" form:"-"`
 	UUID                     string `json:"-" form:"-"`
-	IDSKPegawai              string `json:"-" form:"-"`
+	IDSKPegawai              uint64 `json:"-" form:"-"`
 	UUIDSKPengangkatanTendik string `json:"uuid_sk_pengangkatan_tendik" form:"uuid_sk_pengangkatan_tendik"`
 }
 

@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"mime/multipart"
 	"net/http"
 	"net/http/httptest"
@@ -17,12 +18,12 @@ import (
 )
 
 const (
-	v1path = "/public/api/v1/insani"
+	v1path = "public/api/v1/insani"
 )
 
 type TestServer struct {
 	Server *httptest.Server
-	Client *http.Client
+	Client *TestClient
 }
 
 func UpServer() (*TestServer, error) {
@@ -30,6 +31,12 @@ func UpServer() (*TestServer, error) {
 	err = db.Ping()
 	if err != nil {
 		return nil, fmt.Errorf("Can't connect to db: %s", err.Error())
+	}
+
+	gormLog := true
+	gormDb, err := database.InitGorm(db, gormLog)
+	if err != nil {
+		return nil, fmt.Errorf("Can't init db conn with gorm: %s", err.Error())
 	}
 
 	minioClient, err := minio.Connect()
@@ -40,6 +47,7 @@ func UpServer() (*TestServer, error) {
 	timeLocation := app.GetFixedTimeZone()
 	a := &app.App{
 		DB:              db,
+		GormDB:          gormDb,
 		HttpClient:      &http.Client{},
 		MinioBucketName: "insani",
 		MinioClient:     minioClient,
@@ -59,9 +67,31 @@ func UpServer() (*TestServer, error) {
 	srv := httptest.NewServer(e)
 	return &TestServer{
 		Server: srv,
-		Client: a.HttpClient,
+		Client: &TestClient{Client: a.HttpClient},
 	}, nil
 
+}
+
+type TestClient struct {
+	Client *http.Client
+}
+
+func (c *TestClient) SendRequest(method, targetUrl string, body io.Reader, header http.Header) ([]byte, error) {
+	req, err := http.NewRequest(method, targetUrl, body)
+	if err != nil {
+		return nil, err
+	}
+	req.Header = header.Clone()
+	hres, err := c.Client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	rawResBodyJSON, err := ioutil.ReadAll(hres.Body)
+	hres.Body.Close()
+	if err != nil {
+		return nil, err
+	}
+	return rawResBodyJSON, nil
 }
 
 func FillFormDataFieldMap(w *multipart.Writer, m map[string]string) error {

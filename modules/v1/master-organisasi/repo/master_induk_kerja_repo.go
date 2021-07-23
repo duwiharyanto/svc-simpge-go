@@ -3,9 +3,12 @@ package repo
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"fmt"
 	"svc-insani-go/app"
 	"svc-insani-go/modules/v1/master-organisasi/model"
+
+	"gorm.io/gorm"
 )
 
 func GetIndukKerja(a *app.App) ([]model.IndukKerja, error) {
@@ -115,21 +118,38 @@ func GetIndukKerjaByUUID(a *app.App, ctx context.Context, uuid string) (*model.U
 func GetUnitKerjaByUUID(a *app.App, ctx context.Context, uuid string) (*model.Unit2, error) {
 	var unitKerja model.Unit2
 
-	tx := a.GormDB.WithContext(ctx)
-	res := tx.First(&unitKerja, "uuid = ?", uuid)
-	if res.Error != nil {
-		return nil, fmt.Errorf("error querying unit kerja by uuid %s", res.Error)
+	err := a.GormDB.
+		WithContext(ctx).
+		Joins("Unit1").
+		Where("unit2.flag_aktif = 1 AND unit2.uuid = ?", uuid).
+		First(&unitKerja).
+		Error
+
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return nil, nil
 	}
+
+	if err != nil {
+		return nil, fmt.Errorf("error get unit kerja by uuid: %w", err)
+	}
+
 	return &unitKerja, nil
 }
 
 func GetBagianKerjaByUUID(a *app.App, ctx context.Context, uuid string) (*model.Unit3, error) {
 	var bagianKerja model.Unit3
+	err := a.GormDB.
+		WithContext(ctx).
+		Where("flag_aktif = ? AND uuid = ?", "Y", uuid).
+		First(&bagianKerja).
+		Error
 
-	tx := a.GormDB.WithContext(ctx)
-	res := tx.First(&bagianKerja, "uuid = ?", uuid)
-	if res.Error != nil {
-		return nil, fmt.Errorf("error querying bagian kerja by uuid %s", res.Error)
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return nil, nil
+	}
+
+	if err != nil {
+		return nil, fmt.Errorf("error get bagian kerja by uuid %s", err)
 	}
 	return &bagianKerja, nil
 }

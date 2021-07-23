@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"log"
 	"os"
@@ -482,11 +483,13 @@ func prepareSinkronSimpeg(ctx context.Context, pegawaiInsani *model.PegawaiDetai
 
 func HandleCreatePegawai(a *app.App, ctx context.Context, errChan chan error) echo.HandlerFunc {
 	h := func(c echo.Context) error {
-
 		// Validasi Data
 		pegawaiCreate, err := PrepareCreateSimpeg(a, c)
+		if errors.Unwrap(err) != nil {
+			fmt.Printf("[ERROR] prepare create simpeg: %s\n", err.Error())
+			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
+		}
 		if err != nil {
-			fmt.Printf("[ERROR], %s\n", err.Error())
 			return c.JSON(http.StatusBadRequest, map[string]string{"message": err.Error()})
 		}
 
