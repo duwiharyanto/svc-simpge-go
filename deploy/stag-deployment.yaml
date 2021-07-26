@@ -42,6 +42,12 @@ spec:
             - name: http-api
               containerPort: 80
           env:
+            - name: ENV
+              value: "staging"
+            - name: SERVICE_NAME
+              value: "svc-insani-go"
+            - name: APP_DEBUG
+              value: "true"
             - name: DBMS
               value: "mysql"
             - name: DB_USER
