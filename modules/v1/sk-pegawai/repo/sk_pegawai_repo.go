@@ -8,7 +8,7 @@ import (
 	guuid "github.com/google/uuid"
 )
 
-// func GetSKPegawai(a app.App, IDPegawai string) ([]model.SKPegawai, error) {
+// func GetSKPegawai(a *app.App, IDPegawai string) ([]model.SKPegawai, error) {
 // 	sqlQuery := getAllSKPegawaibyUUIDQuery(IDPegawai)
 // 	rows, err := a.DB.Query(sqlQuery)
 // 	if err != nil {
@@ -36,7 +36,7 @@ import (
 
 // 	return SKPegawai, nil
 // }
-// func GetSKPengangkatan(a app.App, IDSKPegawai string) (skPengangkatanModel.SKPengangkatanPegawai, error) {
+// func GetSKPengangkatan(a *app.App, IDSKPegawai string) (skPengangkatanModel.SKPengangkatanPegawai, error) {
 // 	// c.Param("kd_jenis_pegawai")
 // 	sqlQuery := getSKPengangkatanQuery(IDSKPegawai)
 // 	//fmt.Printf("log query : %s\n", sqlQuery)

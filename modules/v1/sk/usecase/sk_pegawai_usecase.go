@@ -7,10 +7,10 @@ import (
 	"svc-insani-go/modules/v1/sk/model"
 	"svc-insani-go/modules/v1/sk/repo"
 
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 )
 
-func HandleGetAllSKPegawaiV0(a app.App) echo.HandlerFunc {
+func HandleGetAllSKPegawaiV0(a *app.App) echo.HandlerFunc {
 	h := func(c echo.Context) error {
 		req := &model.SKPegawaiRequest{}
 		err := c.Bind(req)
@@ -38,7 +38,7 @@ func HandleGetAllSKPegawaiV0(a app.App) echo.HandlerFunc {
 	return echo.HandlerFunc(h)
 }
 
-func HandleGetAllSKPegawai(a app.App) echo.HandlerFunc {
+func HandleGetAllSKPegawai(a *app.App) echo.HandlerFunc {
 	h := func(c echo.Context) error {
 		req := &model.SKPegawaiRequest{}
 		err := c.Bind(req)

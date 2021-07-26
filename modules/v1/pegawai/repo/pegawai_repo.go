@@ -18,7 +18,7 @@ const (
 	JenisFileIjazah = "ijazah"
 )
 
-func GetAllPegawai(a app.App, req *model.PegawaiRequest) ([]model.Pegawai, error) {
+func GetAllPegawai(a *app.App, req *model.PegawaiRequest) ([]model.Pegawai, error) {
 	sqlQuery := getListAllPegawaiQuery(req)
 	rows, err := a.DB.Query(sqlQuery)
 	if err != nil {
@@ -62,7 +62,7 @@ func GetAllPegawai(a app.App, req *model.PegawaiRequest) ([]model.Pegawai, error
 	return pp, nil
 }
 
-func CountPegawai(a app.App, req *model.PegawaiRequest) (int, error) {
+func CountPegawai(a *app.App, req *model.PegawaiRequest) (int, error) {
 	sqlQuery := countPegawaiQuery(req)
 	var count int
 	err := a.DB.QueryRow(sqlQuery).Scan(&count)
@@ -76,10 +76,11 @@ func CountPegawai(a app.App, req *model.PegawaiRequest) (int, error) {
 	return count, nil
 
 }
-func GetPegawaiByUUID(a app.App, uuid string) (*model.Pegawai, error) {
+func GetPegawaiByUUID(a *app.App, uuid string) (*model.Pegawai, error) {
 	sqlQuery := getPegawaiByUUID(uuid)
 	var pegawai model.Pegawai
-	err := a.DB.QueryRow(sqlQuery).Scan(&pegawai.ID,
+	err := a.DB.QueryRow(sqlQuery).Scan(
+		&pegawai.Id,
 		&pegawai.NIK,
 		&pegawai.Nama,
 		&pegawai.GelarDepan,
@@ -106,7 +107,7 @@ func GetPegawaiByUUID(a app.App, uuid string) (*model.Pegawai, error) {
 
 }
 
-func GetKepegawaianYayasan(a app.App, uuid string) (*model.PegawaiYayasan, error) {
+func GetKepegawaianYayasan(a *app.App, uuid string) (*model.PegawaiYayasan, error) {
 	sqlQuery := getPegawaiYayasanQuery(uuid)
 	var pegawaiYayasan model.PegawaiYayasan
 
@@ -163,7 +164,7 @@ func GetKepegawaianYayasan(a app.App, uuid string) (*model.PegawaiYayasan, error
 	return &pegawaiYayasan, nil
 }
 
-func GetUnitKerjaPegawai(a app.App, uuid string) (*model.UnitKerjaPegawai, error) {
+func GetUnitKerjaPegawai(a *app.App, uuid string) (*model.UnitKerjaPegawai, error) {
 	sqlQuery := getUnitKerjaPegawaiQuery(uuid)
 	var unitKerjaPegawai model.UnitKerjaPegawai
 
@@ -201,7 +202,7 @@ func GetUnitKerjaPegawai(a app.App, uuid string) (*model.UnitKerjaPegawai, error
 	return &unitKerjaPegawai, nil
 }
 
-func GetPegawaiPNS(a app.App, uuid string) (*model.PegawaiPNSPTT, error) {
+func GetPegawaiPNS(a *app.App, uuid string) (*model.PegawaiPNSPTT, error) {
 	sqlQuery := getPegawaiPNSQuery(uuid)
 	var pegawaiPNSPTT model.PegawaiPNSPTT
 
@@ -243,7 +244,7 @@ func GetPegawaiPNS(a app.App, uuid string) (*model.PegawaiPNSPTT, error) {
 	return &pegawaiPNSPTT, nil
 }
 
-func GetStatusPegawaiAktif(a app.App, uuid string) (*model.StatusAktif, error) {
+func GetStatusPegawaiAktif(a *app.App, uuid string) (*model.StatusAktif, error) {
 	sqlQuery := getStatusPegawaiAktifQuery(uuid)
 	var statusAktif model.StatusAktif
 
@@ -265,7 +266,7 @@ func GetStatusPegawaiAktif(a app.App, uuid string) (*model.StatusAktif, error) {
 	return &statusAktif, nil
 }
 
-func GetPegawaiPribadi(a app.App, uuid string) (*model.PegawaiPribadi, error) {
+func GetPegawaiPribadi(a *app.App, uuid string) (*model.PegawaiPribadi, error) {
 	sqlQuery := getPegawaiPribadiQuery(uuid)
 	var pegawaiPribadi model.PegawaiPribadi
 
@@ -273,11 +274,15 @@ func GetPegawaiPribadi(a app.App, uuid string) (*model.PegawaiPribadi, error) {
 		&pegawaiPribadi.Nama,
 		&pegawaiPribadi.NIK,
 		&pegawaiPribadi.KdAgama,
+		&pegawaiPribadi.KdItemAgama,
 		&pegawaiPribadi.KdGolonganDarah,
+		&pegawaiPribadi.GolonganDarah,
 		&pegawaiPribadi.KdKelamin,
+		&pegawaiPribadi.KdNikah,
 		&pegawaiPribadi.TempatLahir,
 		&pegawaiPribadi.TanggalLahir,
 		&pegawaiPribadi.FlagPensiun,
+		&pegawaiPribadi.GelarDepan,
 		&pegawaiPribadi.GelarBelakang,
 		&pegawaiPribadi.NoKTP,
 		&pegawaiPribadi.JenisPegawai,
@@ -299,7 +304,7 @@ func GetPegawaiPribadi(a app.App, uuid string) (*model.PegawaiPribadi, error) {
 	return &pegawaiPribadi, nil
 }
 
-func GetPegawaiFilePendidikan(a app.App, id ...string) (model.BerkasPendukungList, error) {
+func GetPegawaiFilePendidikan(a *app.App, id ...string) (model.BerkasPendukungList, error) {
 
 	sqlQuery := getPegawaiFilePendidikanQuery(id...)
 
@@ -332,7 +337,7 @@ func GetPegawaiFilePendidikan(a app.App, id ...string) (model.BerkasPendukungLis
 	return berkasPendukungList, nil
 }
 
-func GetPegawaiPendidikan(a app.App, uuid string) ([]model.JenjangPendidikan, error) {
+func GetPegawaiPendidikan(a *app.App, uuid string) ([]model.JenjangPendidikan, error) {
 	sqlQuery := getPegawaiPendidikanQuery(uuid)
 
 	rows, err := a.DB.Query(sqlQuery)
@@ -421,7 +426,7 @@ func GetPegawaiPendidikan(a app.App, uuid string) ([]model.JenjangPendidikan, er
 	return jenjangPendidikan, nil
 }
 
-func setBerkasPendukungWithURL(a app.App, list model.BerkasPendukungList) {
+func setBerkasPendukungWithURL(a *app.App, list model.BerkasPendukungList) {
 	for i, berkas := range list {
 		if berkas.PathFile == "" {
 			continue
@@ -436,7 +441,7 @@ func setBerkasPendukungWithURL(a app.App, list model.BerkasPendukungList) {
 	}
 }
 
-func setIjazahWithURL(a app.App, pendidikan *model.PegawaiPendidikan) {
+func setIjazahWithURL(a *app.App, pendidikan *model.PegawaiPendidikan) {
 	var err error
 	minioBucketNamePersonal := "personal"
 
@@ -457,42 +462,7 @@ func setIjazahWithURL(a app.App, pendidikan *model.PegawaiPendidikan) {
 
 }
 
-func GetAllPegawaix(a app.App, ctx context.Context, limit int, offset int) (*model.PegawaiResponseTest, error) {
-
-	var pegawaiAll []model.Pegawai2
-	var count int64
-
-	tx := a.GormDB.WithContext(ctx)
-	results := model.PegawaiResponseTest{}
-	res := tx.Limit(limit).
-		Offset(offset).
-		Find(&pegawaiAll).Count(&count)
-	if res.Error != nil {
-		return nil, res.Error
-	}
-
-	countConv := int(count)
-
-	results.Data = pegawaiAll
-	results.Count = countConv
-
-	return &results, nil
-}
-
-func GetPegawaiByUUIDx(a app.App, ctx context.Context, uuid string) (*model.Pegawai, error) {
-
-	var pegawaiAll model.Pegawai
-	tx := a.GormDB.WithContext(ctx)
-
-	res := tx.First(&pegawaiAll, "uuid = ?", uuid)
-	if res.Error != nil {
-		return nil, res.Error
-	}
-
-	return &pegawaiAll, nil
-}
-
-func GetPegawaiByNIK(a app.App, ctx context.Context, nik string) (*model.CreatePegawai, error) {
+func GetPegawaiByNIK(a *app.App, ctx context.Context, nik string) (*model.CreatePegawai, error) {
 
 	var pegawaiAll model.CreatePegawai
 	tx := a.GormDB.WithContext(ctx)
@@ -505,7 +475,7 @@ func GetPegawaiByNIK(a app.App, ctx context.Context, nik string) (*model.CreateP
 	return &pegawaiAll, nil
 }
 
-func GetOldPegawai(a app.App, ctx context.Context, uuidPegawai string) (model.PegawaiUpdate, error) {
+func GetOldPegawai(a *app.App, ctx context.Context, uuidPegawai string) (model.PegawaiUpdate, error) {
 
 	var pegawaiOld model.PegawaiUpdate
 
@@ -520,7 +490,7 @@ func GetOldPegawai(a app.App, ctx context.Context, uuidPegawai string) (model.Pe
 	return pegawaiOld, nil
 }
 
-func UpdatePegawai(a app.App, ctx context.Context, pegawaiUpdate model.PegawaiUpdate) error {
+func UpdatePegawai(a *app.App, ctx context.Context, pegawaiUpdate model.PegawaiUpdate) error {
 	db := a.GormDB.WithContext(ctx)
 
 	res := db.Save(&pegawaiUpdate)
@@ -541,7 +511,7 @@ func UpdatePegawai(a app.App, ctx context.Context, pegawaiUpdate model.PegawaiUp
 	return nil
 }
 
-func UpdatePendidikanPegawai(a app.App, ctx context.Context, uuidPendidikanDiakui string, uuidPendidikanTerakhir string, idPersonalPegawai string) error {
+func UpdatePendidikanPegawai(a *app.App, ctx context.Context, uuidPendidikanDiakui string, uuidPendidikanTerakhir string, idPersonalPegawai uint64) error {
 	db := a.GormDB.WithContext(ctx)
 
 	var pegawaiPendidikanUpdate model.PegawaiPendidikanUpdate
@@ -587,7 +557,7 @@ func UpdatePendidikanPegawai(a app.App, ctx context.Context, uuidPendidikanDiaku
 	return nil
 }
 
-func UpdatePendidikanDiakui(a app.App, ctx context.Context, uuidPendidikanDiakui string, idPersonalPegawai string) error {
+func UpdatePendidikanDiakui(a *app.App, ctx context.Context, uuidPendidikanDiakui string, idPersonalPegawai string) error {
 	db := a.GormDB.WithContext(ctx)
 
 	var pegawaiPendidikanUpdate model.PegawaiPendidikanUpdate
@@ -614,7 +584,7 @@ func UpdatePendidikanDiakui(a app.App, ctx context.Context, uuidPendidikanDiakui
 	return nil
 }
 
-func CreatePegawai(a app.App, ctx context.Context, pegawaiCreate model.PegawaiCreate) error {
+func CreatePegawai(a *app.App, ctx context.Context, pegawaiCreate model.PegawaiCreate) error {
 	tx := a.GormDB.Session(&gorm.Session{
 		Context: ctx,
 		// FullSaveAssociations: true,
@@ -656,7 +626,7 @@ func CreatePegawai(a app.App, ctx context.Context, pegawaiCreate model.PegawaiCr
 	return nil
 }
 
-func GetPegawaiPendidikanPersonal(a app.App, uuid string) ([]model.JenjangPendidikan, error) {
+func GetPegawaiPendidikanPersonal(a *app.App, uuid string) ([]model.JenjangPendidikan, error) {
 	sqlQuery := getPegawaiPendidikanPersonalQuery(uuid)
 
 	rows, err := a.DB.Query(sqlQuery)
@@ -745,7 +715,7 @@ func GetPegawaiPendidikanPersonal(a app.App, uuid string) ([]model.JenjangPendid
 	return jenjangPendidikan, nil
 }
 
-func CheckNikPegawai(a app.App, ctx context.Context, nik string) (*model.PegawaiCreate, bool, error) {
+func CheckNikPegawai(a *app.App, ctx context.Context, nik string) (*model.PegawaiCreate, bool, error) {
 
 	var pegawaiOld model.PegawaiCreate
 	var flagCheck bool

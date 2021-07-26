@@ -10,7 +10,7 @@ import (
 	"svc-insani-go/app/database"
 	"testing"
 
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 )
 
 func TestHandleGetKelompokPegawai(t *testing.T) {
@@ -24,7 +24,7 @@ func TestHandleGetKelompokPegawai(t *testing.T) {
 	if err != nil {
 		t.Skip("failed connect db:", err)
 	}
-	a := app.App{DB: db}
+	a := &app.App{DB: db}
 	HandleGetKelompokPegawai(a)(c)
 
 	var buf bytes.Buffer

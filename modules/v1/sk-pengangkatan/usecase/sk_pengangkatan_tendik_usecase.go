@@ -13,10 +13,10 @@ import (
 
 	"bytes"
 
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 )
 
-func HandleCreateSKPengangkatanTendik(a app.App) echo.HandlerFunc {
+func HandleCreateSKPengangkatanTendik(a *app.App) echo.HandlerFunc {
 	h := func(c echo.Context) error {
 		kdKelompokPegawai := c.QueryParam("kd_kelompok_pegawai")
 		var skPegawai model.SKPegawai
@@ -65,7 +65,7 @@ func HandleCreateSKPengangkatanTendik(a app.App) echo.HandlerFunc {
 	return echo.HandlerFunc(h)
 }
 
-func HandleGetDetailSKPengangkatanTendik(a app.App) echo.HandlerFunc {
+func HandleGetDetailSKPengangkatanTendik(a *app.App) echo.HandlerFunc {
 	h := func(c echo.Context) error {
 		uuidSKPengangkatanTendik := c.QueryParam("uuid_sk_pengangkatan_tendik")
 		sk, err := repo.GetDetailSKPengangkatanTendik(a, uuidSKPengangkatanTendik)
@@ -100,7 +100,7 @@ func HandleGetDetailSKPengangkatanTendik(a app.App) echo.HandlerFunc {
 	return echo.HandlerFunc(h)
 }
 
-func HandleDeleteSKPengangkatanTendikByUUID(a app.App) echo.HandlerFunc {
+func HandleDeleteSKPengangkatanTendikByUUID(a *app.App) echo.HandlerFunc {
 	h := func(c echo.Context) error {
 		params := c.QueryParam("uuid_sk_pengangkatan_tendik")
 		err := repo.DeleteSKPengangkatanTendikByUUID(a, params)

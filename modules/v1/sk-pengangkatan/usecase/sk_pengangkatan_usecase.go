@@ -9,10 +9,10 @@ import (
 	"svc-insani-go/modules/v1/sk-pegawai/model"
 	"svc-insani-go/modules/v1/sk-pengangkatan/repo"
 
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 )
 
-func HandleCreateSKPengangkatan(a app.App) echo.HandlerFunc {
+func HandleCreateSKPengangkatan(a *app.App) echo.HandlerFunc {
 	h := func(c echo.Context) error {
 		kdKelompokPegawai := c.QueryParam("kd_kelompok_pegawai")
 		var skPegawai model.SKPegawai

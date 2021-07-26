@@ -7,7 +7,7 @@ import (
 	"svc-insani-go/modules/v1/master-jenis-nomor-registrasi/model"
 )
 
-func GetJenisNomorRegistrasi(a app.App) ([]model.JenisNomorRegistrasi, error) {
+func GetJenisNomorRegistrasi(a *app.App) ([]model.JenisNomorRegistrasi, error) {
 	sqlQuery := getJenisNomorRegistrasiQuery()
 	rows, err := a.DB.Query(sqlQuery)
 	if err != nil {
@@ -37,7 +37,7 @@ func GetJenisNomorRegistrasi(a app.App) ([]model.JenisNomorRegistrasi, error) {
 	return pp, nil
 }
 
-func GetJenisNoRegisByUUID(a app.App, ctx context.Context, uuid string) (*model.JenisNomorRegistrasi, error) {
+func GetJenisNoRegisByUUID(a *app.App, ctx context.Context, uuid string) (*model.JenisNomorRegistrasi, error) {
 	var jenisNoRegis model.JenisNomorRegistrasi
 
 	tx := a.GormDB.WithContext(ctx)

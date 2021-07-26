@@ -7,10 +7,10 @@ import (
 	"svc-insani-go/modules/v1/master-jabatan-fungsional/model"
 	"svc-insani-go/modules/v1/master-jabatan-fungsional/repo"
 
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 )
 
-func HandleGetJabatanPenetap(a app.App) echo.HandlerFunc {
+func HandleGetJabatanPenetap(a *app.App) echo.HandlerFunc {
 	h := func(c echo.Context) error {
 		jabatanFungsional, err := repo.GetAllJabatanFungsional(a, "")
 		if err != nil {

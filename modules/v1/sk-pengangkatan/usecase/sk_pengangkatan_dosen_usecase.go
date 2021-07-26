@@ -10,10 +10,10 @@ import (
 	skPengangkatanDosen "svc-insani-go/modules/v1/sk-pengangkatan/model"
 	"svc-insani-go/modules/v1/sk-pengangkatan/repo"
 
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 )
 
-func HandleCreateSKPengangkatanDosen(a app.App) echo.HandlerFunc {
+func HandleCreateSKPengangkatanDosen(a *app.App) echo.HandlerFunc {
 	h := func(c echo.Context) error {
 		kdKelompokPegawai := c.QueryParam("kd_kelompok_pegawai")
 		var skPegawai model.SKPegawai
@@ -59,7 +59,7 @@ func HandleCreateSKPengangkatanDosen(a app.App) echo.HandlerFunc {
 	return echo.HandlerFunc(h)
 }
 
-func HandleGetDetailSKPengangkatanDosen(a app.App) echo.HandlerFunc {
+func HandleGetDetailSKPengangkatanDosen(a *app.App) echo.HandlerFunc {
 	h := func(c echo.Context) error {
 		UUIDSKPengangkatanDosen := c.QueryParam("uuid_sk_pengangkatan_dosen")
 		SKPengangkatanDosen, err := repo.GetDetailSKPengangkatanDosen(a, UUIDSKPengangkatanDosen)
@@ -75,7 +75,7 @@ func HandleGetDetailSKPengangkatanDosen(a app.App) echo.HandlerFunc {
 	return echo.HandlerFunc(h)
 }
 
-func HandleDeleteSKPengangkatanDosenByUUID(a app.App) echo.HandlerFunc {
+func HandleDeleteSKPengangkatanDosenByUUID(a *app.App) echo.HandlerFunc {
 	h := func(c echo.Context) error {
 		param := c.QueryParam("uuid_sk_pengangkatan_dosen")
 		err := repo.DeleteSKPengangkatanDosenByUUID(a, param)

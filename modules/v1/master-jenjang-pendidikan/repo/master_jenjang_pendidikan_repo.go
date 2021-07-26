@@ -7,7 +7,7 @@ import (
 	"svc-insani-go/modules/v1/master-jenjang-pendidikan/model"
 )
 
-func GetJenjangPendidikan(a app.App, ctx context.Context) ([]model.JenjangPendidikan, error) {
+func GetJenjangPendidikan(a *app.App, ctx context.Context) ([]model.JenjangPendidikan, error) {
 	sqlQuery := getJenjangPendidikanQuery()
 	rows, err := a.DB.Query(sqlQuery)
 	if err != nil {
@@ -38,7 +38,7 @@ func GetJenjangPendidikan(a app.App, ctx context.Context) ([]model.JenjangPendid
 	return pp, nil
 }
 
-func GetJenjangPendidikanByUUID(a app.App, ctx context.Context, uuid string) (*model.JenjangPendidikan, error) {
+func GetJenjangPendidikanByUUID(a *app.App, ctx context.Context, uuid string) (*model.JenjangPendidikan, error) {
 	var lokasiKerja model.JenjangPendidikan
 
 	tx := a.GormDB.WithContext(ctx)

@@ -7,10 +7,10 @@ import (
 	"svc-insani-go/modules/v1/sk/model"
 	"svc-insani-go/modules/v1/sk/repo"
 
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 )
 
-func HandleGetAllMataKuliah(a app.App) echo.HandlerFunc {
+func HandleGetAllMataKuliah(a *app.App) echo.HandlerFunc {
 	h := func(c echo.Context) error {
 		makul, err := repo.GetAllMataKuliah(a)
 		if err != nil {

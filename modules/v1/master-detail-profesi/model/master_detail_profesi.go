@@ -1,7 +1,7 @@
 package model
 
 type DetailProfesi struct {
-	ID            string `json:"-" gorm:"primaryKey"`
+	ID            uint64 `json:"-" gorm:"primaryKey"`
 	DetailProfesi string `json:"nama_jenjang"`
 	UserInput     string `json:"-"`
 	UserUpdate    string `json:"-"`

@@ -10,7 +10,7 @@ import (
 	"time"
 
 	_ "github.com/go-sql-driver/mysql"
-	"gorm.io/driver/mysql"
+	gmysql "gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 	"gorm.io/gorm/schema"
@@ -67,26 +67,27 @@ func Healthz(ctx context.Context, db *sql.DB) error {
 }
 
 func InitGorm(db *sql.DB, withLog bool) (*gorm.DB, error) {
+	logLvl := logger.Info
+	if !withLog {
+		logLvl = logger.Silent
+	}
 	cfg := &gorm.Config{
 		NamingStrategy: schema.NamingStrategy{
 			SingularTable: true,
 		},
-		// Logger: newLogger,
-	}
-
-	if withLog {
-		cfg.Logger = logger.New(
+		Logger: logger.New(
 			log.New(os.Stdout, "\r\n", log.LstdFlags), // io writer
 			logger.Config{
-				SlowThreshold: time.Second, // Slow SQL threshold
-				LogLevel:      logger.Info, // Log level
-				Colorful:      false,       // Disable color
+				IgnoreRecordNotFoundError: withLog,
+				SlowThreshold:             500 * time.Millisecond, // Slow SQL threshold
+				LogLevel:                  logLvl,                 // Log level
+				Colorful:                  false,                  // Disable color
 			},
-		)
+		),
 	}
 
-	gormDB, err := gorm.Open(mysql.New(
-		mysql.Config{
+	gormDB, err := gorm.Open(gmysql.New(
+		gmysql.Config{
 			Conn: db,
 		}),
 		cfg,

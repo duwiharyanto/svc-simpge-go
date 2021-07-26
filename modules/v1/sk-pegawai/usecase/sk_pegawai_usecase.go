@@ -1,6 +1,6 @@
 package usecase
 
-//  func HandleGetSKPegawai(a app.App) echo.HandlerFunc {
+//  func HandleGetSKPegawai(a *app.App) echo.HandlerFunc {
 // h := func(c echo.Context) error {
 // IDPegawai := c.QueryParam("id_pegawai")
 // skPegawai, err := repo.GetSKPegawai(a, IDPegawai)

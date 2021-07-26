@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"math"
 	"strings"
+	"time"
 
 	_ "github.com/go-sql-driver/mysql"
 	"gorm.io/gorm"
@@ -45,13 +46,27 @@ func (dialector Dialector) Name() string {
 	return "mysql"
 }
 
+func (dialector Dialector) Apply(config *gorm.Config) error {
+	if config.NowFunc == nil {
+		if dialector.DefaultDatetimePrecision == nil {
+			var defaultDatetimePrecision = 3
+			dialector.DefaultDatetimePrecision = &defaultDatetimePrecision
+		}
+
+		round := time.Second / time.Duration(math.Pow10(*dialector.DefaultDatetimePrecision))
+		config.NowFunc = func() time.Time { return time.Now().Local().Round(round) }
+	}
+	return nil
+}
+
 func (dialector Dialector) Initialize(db *gorm.DB) (err error) {
 	ctx := context.Background()
 
 	// register callbacks
-	callbacks.RegisterDefaultCallbacks(db, &callbacks.Config{})
-
-	db.Callback().Update().Replace("gorm:update", Update)
+	callbacks.RegisterDefaultCallbacks(db, &callbacks.Config{
+		UpdateClauses: []string{"UPDATE", "SET", "WHERE", "ORDER BY", "LIMIT"},
+		DeleteClauses: []string{"DELETE", "FROM", "WHERE", "ORDER BY", "LIMIT"},
+	})
 
 	if dialector.DriverName == "" {
 		dialector.DriverName = "mysql"
@@ -188,9 +203,22 @@ func (dialector Dialector) BindVarTo(writer clause.Writer, stmt *gorm.Statement,
 }
 
 func (dialector Dialector) QuoteTo(writer clause.Writer, str string) {
+	if str == "*" {
+		writer.WriteString(str)
+		return
+	}
+
 	writer.WriteByte('`')
 	if strings.Contains(str, ".") {
 		for idx, str := range strings.Split(str, ".") {
+			if str == "*" {
+				if idx > 0 {
+					writer.WriteString(".")
+				}
+				writer.WriteString(str)
+				continue
+			}
+
 			if idx > 0 {
 				writer.WriteString(".`")
 			}

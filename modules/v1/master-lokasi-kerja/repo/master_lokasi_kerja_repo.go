@@ -2,12 +2,15 @@ package repo
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"svc-insani-go/app"
 	"svc-insani-go/modules/v1/master-lokasi-kerja/model"
+
+	"gorm.io/gorm"
 )
 
-func GetLokasiKerja(a app.App) ([]model.LokasiKerja, error) {
+func GetLokasiKerja(a *app.App) ([]model.LokasiKerja, error) {
 	sqlQuery := getLokasiKerjaQuery()
 	rows, err := a.DB.Query(sqlQuery)
 	if err != nil {
@@ -37,13 +40,21 @@ func GetLokasiKerja(a app.App) ([]model.LokasiKerja, error) {
 	return pp, nil
 }
 
-func GetLokasiKerjaByUUID(a app.App, ctx context.Context, uuid string) (*model.LokasiKerja, error) {
+func GetLokasiKerjaByUUID(a *app.App, ctx context.Context, uuid string) (*model.LokasiKerja, error) {
 	var lokasiKerja model.LokasiKerja
 
-	tx := a.GormDB.WithContext(ctx)
-	res := tx.First(&lokasiKerja, "uuid = ?", uuid)
-	if res.Error != nil {
-		return nil, fmt.Errorf("error querying lokasi kerja by uuid %s", res.Error)
+	err := a.GormDB.
+		WithContext(ctx).
+		Where("flag_aktif = 1 AND uuid = ?", uuid).
+		First(&lokasiKerja).
+		Error
+
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return nil, nil
+	}
+
+	if err != nil {
+		return nil, fmt.Errorf("error get lokasi kerja by uuid: %w", err)
 	}
 	return &lokasiKerja, nil
 }

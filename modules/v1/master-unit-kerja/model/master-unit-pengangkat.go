@@ -4,7 +4,7 @@ type UnitPengangkat struct {
 	KdUnitPengangkat string `json:"kd_unit_pengangkat"`
 	UnitPengangkat   string `json:"unit_pengangkat"`
 	UUID             string `json:"uuid"`
-	ID               string `json:"-"`
+	ID               uint64 `json:"-"`
 }
 
 type UnitPengangkatResponse struct {

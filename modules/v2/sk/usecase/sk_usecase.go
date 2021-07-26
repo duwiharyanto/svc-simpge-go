@@ -6,10 +6,10 @@ import (
 	"svc-insani-go/modules/v2/sk/model"
 	"svc-insani-go/modules/v2/sk/repo"
 
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 )
 
-func HandleGetAllJenisIjazah(a app.App) echo.HandlerFunc {
+func HandleGetAllJenisIjazah(a *app.App) echo.HandlerFunc {
 	h := func(c echo.Context) error {
 		ctx := c.Request().Context()
 		jj, err := repo.GetAllJenisIjazah(a, ctx)
@@ -36,7 +36,7 @@ func HandleGetAllJenisIjazah(a app.App) echo.HandlerFunc {
 	return echo.HandlerFunc(h)
 }
 
-func HandleGetAllJenisSk(a app.App) echo.HandlerFunc {
+func HandleGetAllJenisSk(a *app.App) echo.HandlerFunc {
 	h := func(c echo.Context) error {
 		ctx := c.Request().Context()
 		jj, err := repo.GetAllJenisSk(a, ctx)
@@ -64,7 +64,7 @@ func HandleGetAllJenisSk(a app.App) echo.HandlerFunc {
 	return echo.HandlerFunc(h)
 }
 
-func HandleGetAllKelompokSkPengangkatan(a app.App) echo.HandlerFunc {
+func HandleGetAllKelompokSkPengangkatan(a *app.App) echo.HandlerFunc {
 	h := func(c echo.Context) error {
 		ctx := c.Request().Context()
 		jj, err := repo.GetAllKelompokSkPengangkatan(a, ctx)
@@ -91,7 +91,7 @@ func HandleGetAllKelompokSkPengangkatan(a app.App) echo.HandlerFunc {
 	return echo.HandlerFunc(h)
 }
 
-func HandleGetAllMataKuliah(a app.App) echo.HandlerFunc {
+func HandleGetAllMataKuliah(a *app.App) echo.HandlerFunc {
 	h := func(c echo.Context) error {
 		// dummy
 		mk := []byte(`{

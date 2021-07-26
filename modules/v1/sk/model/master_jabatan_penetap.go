@@ -4,7 +4,7 @@ type JabatanPenetap struct {
 	KdJabatanPenetap string `json:"kd_jabatan_fungsional"`
 	JabatanPenetap   string `json:"jabatan_fungsional"`
 	UUID             string `json:"uuid"`
-	ID               string `json:"-"`
+	ID               uint64 `json:"-"`
 }
 
 type JabatanPenetapResponse struct {

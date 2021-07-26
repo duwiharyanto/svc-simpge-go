@@ -7,7 +7,7 @@ import (
 	"svc-insani-go/modules/v1/master-detail-profesi/model"
 )
 
-func GetDetailProfesi(a app.App, ctx context.Context) ([]model.DetailProfesi, error) {
+func GetDetailProfesi(a *app.App, ctx context.Context) ([]model.DetailProfesi, error) {
 	sqlQuery := getDetailProfesiQuery()
 	rows, err := a.DB.Query(sqlQuery)
 	if err != nil {
@@ -36,7 +36,7 @@ func GetDetailProfesi(a app.App, ctx context.Context) ([]model.DetailProfesi, er
 	return pp, nil
 }
 
-func GetDetailProfesiByUUID(a app.App, ctx context.Context, uuid string) (*model.DetailProfesi, error) {
+func GetDetailProfesiByUUID(a *app.App, ctx context.Context, uuid string) (*model.DetailProfesi, error) {
 	var detailProfesi model.DetailProfesi
 
 	tx := a.GormDB.WithContext(ctx)

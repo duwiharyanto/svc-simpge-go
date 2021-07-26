@@ -1,7 +1,7 @@
 package model
 
 type JenisNomorRegistrasi struct {
-	ID              string `json:"-" gorm:"primaryKey"`
+	ID              uint64 `json:"-" gorm:"primaryKey"`
 	JenisNomorRegis string `json:"jenis_no_regis" gorm:"column:jenis_no_regis"`
 	KdJenisRegis    string `json:"kd_jenis_regis"`
 	UserInput       string `json:"-"`

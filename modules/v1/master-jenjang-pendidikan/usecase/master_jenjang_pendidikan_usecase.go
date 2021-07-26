@@ -7,10 +7,10 @@ import (
 	"svc-insani-go/modules/v1/master-jenjang-pendidikan/model"
 	"svc-insani-go/modules/v1/master-jenjang-pendidikan/repo"
 
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 )
 
-func HandleGetJenjangPendidikan(a app.App) echo.HandlerFunc {
+func HandleGetJenjangPendidikan(a *app.App) echo.HandlerFunc {
 	h := func(c echo.Context) error {
 		JenjangPendidikan, err := repo.GetJenjangPendidikan(a, c.Request().Context())
 		if err != nil {
@@ -25,7 +25,7 @@ func HandleGetJenjangPendidikan(a app.App) echo.HandlerFunc {
 	return echo.HandlerFunc(h)
 }
 
-func HandleJenjangPendidikanByUUID(a app.App) echo.HandlerFunc {
+func HandleJenjangPendidikanByUUID(a *app.App) echo.HandlerFunc {
 	h := func(c echo.Context) error {
 		uuid := c.QueryParam("uuid")
 		pp, err := repo.GetJenjangPendidikanByUUID(a, c.Request().Context(), uuid)

@@ -7,7 +7,7 @@ import (
 	"svc-insani-go/modules/v1/sk/model"
 )
 
-func GetAllJenisIjazah(a app.App) ([]model.JenisIjazah, error) {
+func GetAllJenisIjazah(a *app.App) ([]model.JenisIjazah, error) {
 	// c.Param("kd_jenis_pegawai")
 	sqlQuery := getJenisIjazahQuery()
 	rows, err := a.DB.Query(sqlQuery)
@@ -33,7 +33,7 @@ func GetAllJenisIjazah(a app.App) ([]model.JenisIjazah, error) {
 	return JenisIjazah, nil
 }
 
-func GetJenisIjazahByUUID(a app.App, uuid string) (*model.JenisIjazah, error) {
+func GetJenisIjazahByUUID(a *app.App, uuid string) (*model.JenisIjazah, error) {
 	sqlQuery := getJenisIjazahByUUID(uuid)
 	//fmt.Printf("log query : \n %s\n ", sqlQuery)
 	var jenisIjazah model.JenisIjazah

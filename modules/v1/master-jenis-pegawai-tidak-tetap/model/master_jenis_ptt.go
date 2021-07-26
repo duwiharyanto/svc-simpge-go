@@ -1,7 +1,7 @@
 package model
 
 type JenisPTT struct {
-	ID         string `json:"-" gorm:"primaryKey"`
+	ID         uint64 `json:"-" gorm:"primaryKey"`
 	KdJenisPTT string `json:"kd_jenis_ptt"`
 	JenisPTT   string `json:"jenis_ptt"`
 	UserInput  string `json:"-"`

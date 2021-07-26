@@ -16,7 +16,7 @@ func TestGetPegawai(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	a := app.App{GormDB: db}
+	a := &app.App{GormDB: db}
 	uuid := "d8c26983-1437-11eb-a014-7eb0d4a3c7a0x"
 	pgw, err := GetPegawai(a, context.Background(), uuid)
 	if err != nil {
