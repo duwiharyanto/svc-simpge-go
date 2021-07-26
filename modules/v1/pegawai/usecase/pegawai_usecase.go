@@ -185,12 +185,6 @@ func HandleUpdatePegawai(a *app.App, ctx context.Context, errChan chan error) ec
 			ctx, cancel := context.WithTimeout(ctx, dur)
 			// ctx, cancel := context.WithTimeout(context.Background(), dur) // kalau ke cancel pake yang ini
 			defer cancel()
-			// fmt.Println("DEBUG : Go routin before prepare sipeg")
-			pegawaiDetail, err := PrepareGetSimpegPegawaiByUUID(a, pegawaiUpdate.Uuid)
-			if err != nil {
-				errChan <- err
-				return
-			}
 
 			// fmt.Println("DEBUG : Go routin before sinkron simpeg")
 			pegawaiOra := newPegawaiOra(&pegawaiDetail)
@@ -285,7 +279,6 @@ func HandleCreatePegawai(a *app.App, ctx context.Context, errChan chan error) ec
 			}
 
 			pegawaiOra := newPegawaiOra(&pegawaiDetail)
-			pegawaiOra.NIP = pegawaiDetail.PegawaiPribadi.NIK
 			pegawaiOra.Nama = pegawaiDetail.PegawaiPribadi.Nama
 			pegawaiOra.KdAgama = pegawaiDetail.PegawaiPribadi.KdItemAgama
 			pegawaiOra.KdGolonganDarah = pegawaiDetail.PegawaiPribadi.GolonganDarah
@@ -353,6 +346,8 @@ func newPegawaiOra(pegawaiInsani *model.PegawaiDetail) *pegawaiOraModel.Kepegawa
 	pegawaiOra.PegawaiStatus.PangkatYayasan = &pegawaiOraModel.Pangkat{}
 	pegawaiOra.PegawaiStatus.JabatanFungsionalKopertis = &pegawaiOraModel.JabatanFungsional{}
 	pegawaiOra.PegawaiStatus.JabatanFungsional = &pegawaiOraModel.JabatanFungsional{}
+
+	pegawaiOra.NIP = pegawaiInsani.PegawaiPribadi.NIK
 	// Sinkron Kepegawaian Yayaysan - Status
 	if pegawaiInsani.PegawaiYayasan.KDJenisPegawai != "" {
 		// pegawaiOra.KdJenisPegawai = pegawaiInsani.PegawaiYayasan.KDJenisPegawai
@@ -364,11 +359,11 @@ func newPegawaiOra(pegawaiInsani *model.PegawaiDetail) *pegawaiOraModel.Kepegawa
 	}
 
 	if pegawaiInsani.PegawaiYayasan.KdPendidikanMasuk != "" {
-		pegawaiOra.KdPendidikanMasuk = pegawaiInsani.PegawaiYayasan.KdPendidikanMasuk
+		pegawaiOra.KdPendidikanMasuk = pegawaiInsani.PegawaiYayasan.KdPendidikanMasukSimpeg
 	}
 
 	if pegawaiInsani.PegawaiYayasan.KdPendidikanTerakhir != "" {
-		pegawaiOra.KdPendidikan = pegawaiInsani.PegawaiYayasan.KdPendidikanTerakhir
+		pegawaiOra.KdPendidikan = pegawaiInsani.PegawaiYayasan.KdPendidikanTerakhirSimpeg
 	}
 
 	if pegawaiInsani.PegawaiYayasan.KdKelompokPegawai != "" {
@@ -571,7 +566,6 @@ func HandleOracleResync(a *app.App) echo.HandlerFunc {
 
 		if pegawaiOra == nil {
 			pegawaiOraCreate := newPegawaiOra(&pegawai)
-			pegawaiOraCreate.NIP = pegawai.PegawaiPribadi.NIK
 			pegawaiOraCreate.Nama = pegawai.PegawaiPribadi.Nama
 			pegawaiOraCreate.KdAgama = pegawai.PegawaiPribadi.KdItemAgama
 			pegawaiOraCreate.KdGolonganDarah = pegawai.PegawaiPribadi.GolonganDarah

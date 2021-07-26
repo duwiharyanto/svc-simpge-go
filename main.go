@@ -7,6 +7,7 @@ import (
 	lg "log"
 	"net/http"
 	"os"
+	"strconv"
 	"strings"
 	"svc-insani-go/app"
 	"svc-insani-go/app/database"
@@ -25,7 +26,11 @@ func main() {
 		lg.Println("Can't connect to db:", err.Error())
 	}
 
-	gormDB, err := database.InitGorm(db, true)
+	isDebug, err := strconv.ParseBool(os.Getenv("APP_DEBUG"))
+	if err != nil {
+		lg.Println("Error parse APP_DEBUG:", err.Error())
+	}
+	gormDB, err := database.InitGorm(db, isDebug)
 	if err != nil {
 		lg.Println("Can't connect to gorm db:", err.Error())
 	}
@@ -46,7 +51,7 @@ func main() {
 		HttpClient:      &http.Client{},
 		MinioBucketName: os.Getenv("MINIO_BUCKETNAME"),
 		MinioClient:     minioClient,
-		Name:            "Personal Service",
+		Name:            os.Getenv("SERVICE_NAME"),
 		TimeLocation:    timeLocation,
 	}
 	if a.MinioBucketName == "" {

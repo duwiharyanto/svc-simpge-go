@@ -158,16 +158,13 @@ func sendErrorToSlack(ctx context.Context, client *http.Client, err error) error
 	// msg := fmt.Sprintf(slackMsgTemplate, strings.Trim(fmt.Sprintf("%q", err), `"`))
 	msg := strings.Trim(fmt.Sprintf("%q", err), `"`)
 	header := map[string]string{"Accept": "application/json"}
-	slackMsgTmpl := map[string]interface{}{
-		"blocks": []map[string]interface{}{
-			map[string]interface{}{
-				"type": "section",
-				"text": map[string]interface{}{
-					"type": "mrkdwn",
-					"text": fmt.Sprintf("Prod | svc-insani-go | 500\n```%s```", msg),
-				},
-			},
-		},
+	slackMsgTmpl := map[string]string{
+		"text": fmt.Sprintf(
+			"%s\n%s\n%s\n",
+			os.Getenv("SERVICE_NAME"),
+			os.Getenv("ENV"),
+			msg,
+		),
 	}
 	res, err := SendHttpRequest(ctx, client, http.MethodPost, slackHookEndpoint, contentTypeJSON, header, slackMsgTmpl)
 	if err != nil {
