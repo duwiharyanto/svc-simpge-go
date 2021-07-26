@@ -62,8 +62,7 @@ func SendHttpRequest(ctx context.Context, client *http.Client, method, baseURL, 
 	var reqBody io.Reader
 	// mengecek http request content type
 
-	fmt.Printf("DEBUG method : %+v \n", method)
-	fmt.Printf("DEBUG base URL : %+v \n", baseURL)
+	fmt.Printf("[DEBUG] endpoint: %s %s\n", method, baseURL)
 	switch contentType {
 	case contentTypeJSON:
 		jsonBody, err := json.Marshal(body)

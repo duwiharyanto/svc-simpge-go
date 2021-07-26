@@ -291,11 +291,15 @@ func getPegawaiPribadiQuery(uuid string) string {
 		COALESCE(p.nama,''),
 		COALESCE(p.nik,''),
 		COALESCE(p.kd_agama,''),
+		COALESCE(ag.kd_item,''),
 		COALESCE(p.kd_golongan_darah,''),
+		COALESCE(gd.golongan_darah,''),
 		COALESCE(p.jenis_kelamin,''),
+		COALESCE(sp.kd_status,''),
 		COALESCE(p.tempat_lahir,''),
 		COALESCE(pdp.tgl_lahir,''),
 		COALESCE(p.flag_pensiun,''),
+		COALESCE(p.gelar_depan ,''),
 		COALESCE(p.gelar_belakang ,''),
 		COALESCE(p.nik_ktp,''),
 		COALESCE(jp.nama_jenis_pegawai,''),
@@ -306,6 +310,12 @@ func getPegawaiPribadiQuery(uuid string) string {
 		COALESCE(p.uuid,'') 
 	FROM 
 		pegawai p
+	LEFT JOIN 
+		agama ag ON p.id_agama = ag.id 
+	LEFT JOIN 
+		golongan_darah gd ON p.id_golongan_darah = gd.id 
+	LEFT JOIN 
+		status_pernikahan sp ON p.id_status_perkawinan = sp.id 
 	LEFT JOIN 
 		jenis_pegawai jp ON p.id_jenis_pegawai = jp.id 
 	LEFT JOIN 

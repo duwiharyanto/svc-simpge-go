@@ -31,7 +31,7 @@ const (
 )
 
 func CreatePegawai(t *testing.T, s *TestServer, resp map[string]interface{}) func(*testing.T) {
-	uuidPersonal := "7ab3f8d0-e6f7-433f-84c4-ef80270e6fca"
+	uuidPersonal := "5f1fee30-906d-407d-9b57-185507234544"
 
 	groupsResp := make(map[string]interface{})
 	t.Run("get_kelompok_pegawai", GetKelompokPegawai(t, s, groupsResp))
@@ -213,6 +213,22 @@ func CreatePegawai(t *testing.T, s *TestServer, resp map[string]interface{}) fun
 			},
 			failMsg: func(caseTitle string, reqBody, resBody interface{}) string {
 				return fmt.Sprintf(`%s, input: %+v, want: status should be bad request and return "%s", got: %+v`, caseTitle, reqBody, notFoundUuidLokasiKerjaMsg, resBody)
+			},
+		},
+		{
+			title: "debug",
+			body: map[string]string{
+				"nik":                   "200000315",
+				"uuid_kelompok_pegawai": "f9a4a054-ec0a-11ea-8c77-7eb0d4a3c7a0",
+				"uuid_unit_kerja":       "79968c39-1fd3-11eb-a014-7eb0d4a3c7a0",
+				"uuid_bagian_kerja":     "7fa3930a-1fd7-11eb-a014-7eb0d4a3c7a0",
+				"uuid_lokasi_kerja":     "a818eb6c-4fff-11eb-bf95-a74048ab8082",
+			},
+			checkResFunc: func(code int, body map[string]interface{}) bool {
+				return code == http.StatusOK // && body["message"] == notFoundUuidLokasiKerjaMsg
+			},
+			failMsg: func(caseTitle string, reqBody, resBody interface{}) string {
+				return fmt.Sprintf(`%s, input: %+v, want: status should be ok, got: %+v`, caseTitle, reqBody, resBody)
 			},
 		},
 		{

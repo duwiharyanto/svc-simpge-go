@@ -70,6 +70,7 @@ func main() {
 
 	slackErrChan := app.NewSlackLogger(appCtx, a.HttpClient)
 	// Memanggil fungsi yang mengelola routing
+	e.Use(router.SetResponseTimeout(appCtx))
 	router.InitRoute(a, appCtx, e, slackErrChan)
 
 	e.HTTPErrorHandler = func(err error, c echo.Context) {

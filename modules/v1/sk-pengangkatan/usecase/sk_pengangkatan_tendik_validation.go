@@ -141,7 +141,7 @@ func ValidateCreateSKPengangkatanTendik(a *app.App, c echo.Context) (skPegawai s
 	skPegawai.TMT = c.FormValue("tmt")
 	skPegawai.UserUpdate = c.Request().Header.Get("X-Member")
 	skPegawai.UserInput = c.Request().Header.Get("X-Member")
-	skPegawai.IDPegawai = pegawai.ID
+	skPegawai.IDPegawai = pegawai.Id
 	skPegawai.Pegawai = pegawai
 	return skPegawai, nil
 

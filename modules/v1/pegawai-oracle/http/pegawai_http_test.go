@@ -12,60 +12,6 @@ import (
 	"time"
 )
 
-func TestPegawai(t *testing.T) {
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
-	defer cancel()
-
-	client := &http.Client{Transport: app.DefaultHttpTransport()}
-	// nip := "041002467"
-	// nip := "985240101"
-	nip := "985240103"
-	var pegawai *model.PegawaiSimpeg
-	var err error
-
-	t.Run("get_pegawai", func(t *testing.T) {
-		pegawai, err = GetPegawai(ctx, client, nip)
-		if err != nil {
-			t.Fatalf("error get pegawai: %s", err.Error())
-		}
-		t.Logf("pegawai: %+v\n", pegawai)
-	})
-
-}
-
-func TestPegawaiStatus(t *testing.T) {
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
-	defer cancel()
-
-	client := &http.Client{Transport: app.DefaultHttpTransport()}
-	nip := "041002467"
-	// nip := "985240101"
-	// nip := "985240102"
-	// nip := "131002106"
-	var pegawai *model.PegawaiStatusSimpeg
-	var err error
-
-	t.Run("get_pegawai_status", func(t *testing.T) {
-		pegawai, err = GetPegawaiStatus(ctx, client, nip)
-		if err != nil {
-			t.Fatalf("error get pegawai status: %s", err.Error())
-		}
-		t.Logf("pegawai status: %+v\n", pegawai)
-	})
-
-	pegawai.FlagSekantor = "N"
-	nipSuamiIstri := "200000101"
-	pegawai.NipSuamiIstri = &nipSuamiIstri
-	pegawai.NipSuamiIstri = nil
-	t.Run("update_pegawai_status", func(t *testing.T) {
-		err = UpdatePegawaiStatus(ctx, client, *pegawai)
-		if err != nil {
-			t.Fatalf("error update pegawai status: %s", err.Error())
-		}
-	})
-
-}
-
 func TestKepegawaianYayasan(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
 	defer cancel()
@@ -73,11 +19,11 @@ func TestKepegawaianYayasan(t *testing.T) {
 	client := &http.Client{Transport: app.DefaultHttpTransport()}
 	// nip := "864210102" // kd_golongan != kd_golongan_kopertis
 	// nip := "041002467" // kd_fungsional null
-	nip := "200000112" // kd_golongan null
+	// nip := "200000112" // kd_golongan null
 	// nip := "974200410"
 	// nip := "985240101" // tmt_jabatan null
 	// nip := "785110201"
-	// nip := "145230403"
+	nip := "145230403ß"
 	// nip := "051002465"
 	var pegawai *model.KepegawaianYayasanSimpeg
 	var err error
@@ -86,6 +32,9 @@ func TestKepegawaianYayasan(t *testing.T) {
 		pegawai, err = GetKepegawaianYayasan(ctx, client, nip)
 		if err != nil {
 			t.Fatalf("error get kepegawaian yayasan: %s", err.Error())
+		}
+		if pegawai == nil {
+			t.Fatal("Should not be nil")
 		}
 		t.Logf("kepegawaian yayasan: %+v\n%+v\n%+v\n%+v\n", pegawai, pegawai.JenisPegawai, pegawai.KelompokPegawai, pegawai.StatusPegawai)
 		if pegawai.PegawaiStatus != nil {
