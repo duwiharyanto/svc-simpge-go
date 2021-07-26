@@ -52,7 +52,7 @@ func ValidateUpdatePegawaiByUUID(a *app.App, c echo.Context) (model.PegawaiUpdat
 	}
 
 	pegawaiReq.Uuid = uuidPegawai
-	pegawaiReq.Id = pegawai.ID
+	pegawaiReq.Id = pegawai.Id
 
 	//Pengecekan Jenis Pegawai
 	if pegawaiReq.UuidJenisPegawai != "" {
@@ -338,7 +338,6 @@ func ValidateUpdatePegawaiByUUID(a *app.App, c echo.Context) (model.PegawaiUpdat
 	pegawaiOld.UserUpdate = user
 	pegawaiOld.PegawaiFungsional.UserUpdate = user
 	pegawaiOld.PegawaiPNS.UserUpdate = user
-
 	return pegawaiOld, nil
 }
 
@@ -381,6 +380,9 @@ func PrepareCreateSimpeg(a *app.App, c echo.Context) (model.PegawaiCreate, error
 	if err != nil {
 		return model.PegawaiCreate{}, fmt.Errorf("error search personal")
 	}
+	if personal.Pegawai.PegawaiFungsional.StatusPegawaiAktif.IsActive() {
+		return model.PegawaiCreate{}, fmt.Errorf("tidak dapat menambah data dari pegawai yang sudah aktif")
+	}
 
 	pegawai.IdPersonalDataPribadi = personal.Id
 	pegawai.Nama = personal.NamaLengkap
@@ -393,6 +395,9 @@ func PrepareCreateSimpeg(a *app.App, c echo.Context) (model.PegawaiCreate, error
 	pegawai.IdGolonganDarah = personal.IdGolonganDarah
 	pegawai.KdGolonganDarah = personal.KdGolonganDarah
 	pegawai.IdStatusPerkawinan = personal.IdStatusPernikahan
+	pegawai.KdStatusPerkawinan = personal.KdStatusPerkawinan
+	pegawai.GelarDepan = personal.GelarDepan
+	pegawai.GelarBelakang = personal.GelarBelakang
 
 	return pegawai, nil
 }
@@ -427,6 +432,8 @@ func ValidateCreatePegawai(a *app.App, c echo.Context) (model.PegawaiCreate, err
 	}
 	pegawaiReq.IdKelompokPegawai = kelompokPegawai.ID
 	pegawaiReq.KdKelompokPegawai = kelompokPegawai.KdKelompokPegawai
+	pegawaiReq.IdJenisPegawai = kelompokPegawai.JenisPegawai.ID
+	pegawaiReq.KdJenisPegawai = kelompokPegawai.JenisPegawai.KDJenisPegawai
 	pegawaiReq.IdStatusPegawai = kelompokPegawai.StatusPegawai.ID
 	pegawaiReq.KdStatusPegawai = kelompokPegawai.StatusPegawai.KDStatusPegawai
 	// Pengecekan Unit Kerja
@@ -464,6 +471,5 @@ func ValidateCreatePegawai(a *app.App, c echo.Context) (model.PegawaiCreate, err
 	pegawaiReq.IdUnitKerjaLokasi = lokasiKerja.ID
 	pegawaiReq.LokasiKerja = lokasiKerja.LokasiKerja
 
-	// return model.PegawaiCreate{}, fmt.Errorf("errorrororo")
 	return pegawaiReq, nil
 }

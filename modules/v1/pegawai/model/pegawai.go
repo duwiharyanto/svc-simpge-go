@@ -7,6 +7,8 @@ import (
 	jenisPegawai "svc-insani-go/modules/v1/master-jenis-pegawai/model"
 	kelompokPegawai "svc-insani-go/modules/v1/master-kelompok-pegawai/model"
 	indukKerja "svc-insani-go/modules/v1/master-organisasi/model"
+
+	statusPegawaiAktif "svc-insani-go/modules/v1/master-status-pegawai-aktif/model"
 	statusPegawai "svc-insani-go/modules/v1/master-status-pegawai/model"
 	unitKerja "svc-insani-go/modules/v1/master-unit-kerja/model"
 	"time"
@@ -15,21 +17,24 @@ import (
 )
 
 type Pegawai struct {
-	ID                              uint64 `json:"-" gorm:"primaryKey"`
+	Id                              uint64 `json:"-" gorm:"primaryKey"`
+	IdPersonalDataPribadi           uint64 `json:"-"`
 	NIK                             string `json:"nik" gorm:"type:varchar;not null"`
 	Nama                            string `json:"nama" gorm:"type:varchar;not null"`
 	GelarDepan                      string `json:"gelar_depan" gorm:"type:varchar"`
 	GelarBelakang                   string `json:"gelar_belakang" gorm:"type:varchar"`
-	FlagDosen                       int    `json:"flag_dosen"`
-	KdUnit2                         int    `json:"kd_unit2"`
-	jenisPegawai.JenisPegawai       `json:"jenis_pegawai"`
-	kelompokPegawai.KelompokPegawai `json:"kelompok_pegawai"`
-	statusPegawai.StatusPegawai     `json:"status_pegawai"`
+	FlagDosen                       int    `json:"flag_dosen" gorm:"-"`
+	KdUnit2                         string `json:"kd_unit2"`
+	UserInput                       string `json:"-"`
+	UserUpdate                      string `json:"-"`
+	UUID                            string `json:"uuid"`
+	jenisPegawai.JenisPegawai       `json:"jenis_pegawai" gorm:"-"`
+	kelompokPegawai.KelompokPegawai `json:"kelompok_pegawai" gorm:"-"`
+	statusPegawai.StatusPegawai     `json:"status_pegawai" gorm:"-"`
 	UnitKerja                       unitKerja.UnitKerja   `json:"unit_kerja" gorm:"foreignKey:KdUnit2"`
 	IndukKerja                      indukKerja.IndukKerja `json:"induk_kerja" gorm:"-"`
-	UserInput                       string                `json:"-"`
-	UserUpdate                      string                `json:"-"`
-	UUID                            string                `json:"uuid"`
+
+	PegawaiFungsional PegawaiFungsional `json:"-" gorm:"foreignKey:IdPegawai"`
 }
 
 type CreatePegawai struct {
@@ -57,6 +62,14 @@ func (p *Pegawai) SetFlagDosen() {
 	if !p.JenisPegawai.IsEmpty() && p.JenisPegawai.KDJenisPegawai == "ED" {
 		p.FlagDosen = 1
 	}
+}
+
+type PegawaiFungsional struct {
+	Id        uint64 `json:"-" gorm:"primaryKey"`
+	IdPegawai uint64 `json:"-"`
+
+	IdStatusPegawaiAktif uint64                                `json:"-"`
+	StatusPegawaiAktif   statusPegawaiAktif.StatusPegawaiAktif `json:"-" gorm:"foreignKey:IdStatusPegawaiAktif"`
 }
 
 type Pegawai2 struct {
@@ -115,13 +128,16 @@ type PegawaiPribadi struct {
 	NIK             string `json:"nik"`
 	Nama            string `json:"nama"`
 	KdAgama         string `json:"-"`
+	KdItemAgama     string `json:"-"`
 	KdGolonganDarah string `json:"-"`
+	GolonganDarah   string `json:"-"`
 	KdKelamin       string `json:"-"`
-	// KdNikah          string `json:"-"`
-	TempatLahir   string `json:"-"`
-	TanggalLahir  string `json:"-"`
-	FlagPensiun   string `json:"-"`
-	GelarBelakang string `json:"gelar_belakang"`
+	KdNikah         string `json:"-"`
+	TempatLahir     string `json:"-"`
+	TanggalLahir    string `json:"-"`
+	FlagPensiun     string `json:"-"`
+	GelarDepan      string `json:"gelar_depan"`
+	GelarBelakang   string `json:"gelar_belakang"`
 	// JumlahAnak       string `json:"-"`
 	// JumlahDitanggung string `json:"-"`
 	// JumlahKeluarga   string `json:"-"`
@@ -142,6 +158,10 @@ type PegawaiDetail struct {
 	UnitKerjaPegawai  *UnitKerjaPegawai    `json:"unit_kerja"`
 	PegawaiPNSPTT     *PegawaiPNSPTT       `json:"negara_ptt"`
 	StatusAktif       *StatusAktif         `json:"status_aktif"`
+}
+
+func (pd PegawaiDetail) IsEmpty() bool {
+	return pd.PegawaiPribadi == nil
 }
 
 type PegawaiYayasan struct {

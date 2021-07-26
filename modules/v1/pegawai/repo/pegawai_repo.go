@@ -79,7 +79,8 @@ func CountPegawai(a *app.App, req *model.PegawaiRequest) (int, error) {
 func GetPegawaiByUUID(a *app.App, uuid string) (*model.Pegawai, error) {
 	sqlQuery := getPegawaiByUUID(uuid)
 	var pegawai model.Pegawai
-	err := a.DB.QueryRow(sqlQuery).Scan(&pegawai.ID,
+	err := a.DB.QueryRow(sqlQuery).Scan(
+		&pegawai.Id,
 		&pegawai.NIK,
 		&pegawai.Nama,
 		&pegawai.GelarDepan,
@@ -273,11 +274,15 @@ func GetPegawaiPribadi(a *app.App, uuid string) (*model.PegawaiPribadi, error) {
 		&pegawaiPribadi.Nama,
 		&pegawaiPribadi.NIK,
 		&pegawaiPribadi.KdAgama,
+		&pegawaiPribadi.KdItemAgama,
 		&pegawaiPribadi.KdGolonganDarah,
+		&pegawaiPribadi.GolonganDarah,
 		&pegawaiPribadi.KdKelamin,
+		&pegawaiPribadi.KdNikah,
 		&pegawaiPribadi.TempatLahir,
 		&pegawaiPribadi.TanggalLahir,
 		&pegawaiPribadi.FlagPensiun,
+		&pegawaiPribadi.GelarDepan,
 		&pegawaiPribadi.GelarBelakang,
 		&pegawaiPribadi.NoKTP,
 		&pegawaiPribadi.JenisPegawai,
@@ -455,41 +460,6 @@ func setIjazahWithURL(a *app.App, pendidikan *model.PegawaiPendidikan) {
 	}
 	// fmt.Println("URL Sk Penyetaraan : ", pendidikan.URLSKPenyetaraan)
 
-}
-
-func GetAllPegawaix(a *app.App, ctx context.Context, limit int, offset int) (*model.PegawaiResponseTest, error) {
-
-	var pegawaiAll []model.Pegawai2
-	var count int64
-
-	tx := a.GormDB.WithContext(ctx)
-	results := model.PegawaiResponseTest{}
-	res := tx.Limit(limit).
-		Offset(offset).
-		Find(&pegawaiAll).Count(&count)
-	if res.Error != nil {
-		return nil, res.Error
-	}
-
-	countConv := int(count)
-
-	results.Data = pegawaiAll
-	results.Count = countConv
-
-	return &results, nil
-}
-
-func GetPegawaiByUUIDx(a *app.App, ctx context.Context, uuid string) (*model.Pegawai, error) {
-
-	var pegawaiAll model.Pegawai
-	tx := a.GormDB.WithContext(ctx)
-
-	res := tx.First(&pegawaiAll, "uuid = ?", uuid)
-	if res.Error != nil {
-		return nil, res.Error
-	}
-
-	return &pegawaiAll, nil
 }
 
 func GetPegawaiByNIK(a *app.App, ctx context.Context, nik string) (*model.CreatePegawai, error) {

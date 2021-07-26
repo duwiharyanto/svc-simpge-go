@@ -2,9 +2,12 @@ package repo
 
 import (
 	"context"
+	"errors"
 	"svc-insani-go/app"
 	"svc-insani-go/app/helper"
 	"svc-insani-go/modules/v1/personal/model"
+
+	"gorm.io/gorm"
 )
 
 func SearchPersonal(a *app.App, ctx context.Context, cari string) ([]model.PersonalDataPribadi, error) {
@@ -32,15 +35,21 @@ func SearchPersonal(a *app.App, ctx context.Context, cari string) ([]model.Perso
 }
 
 func GetPersonalByUuid(a *app.App, ctx context.Context, uuid string) (*model.PersonalDataPribadiId, error) {
-
 	var personal model.PersonalDataPribadiId
-	tx := a.GormDB.WithContext(ctx)
+	err := a.GormDB.
+		WithContext(ctx).
+		Preload("Pegawai.PegawaiFungsional.StatusPegawaiAktif").
+		Joins("Pegawai").
+		Where("personal_data_pribadi.flag_aktif = 1 AND personal_data_pribadi.uuid = ?", uuid).
+		First(&personal).
+		Error
 
-	res := tx.Where("uuid = ?", uuid).
-		First(&personal)
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return nil, nil
+	}
 
-	if res.Error != nil {
-		return nil, res.Error
+	if err != nil {
+		return nil, err
 	}
 
 	return &personal, nil
