@@ -101,10 +101,7 @@ func main() {
 	// e.Use(router.PostRequest(a))
 	// e.Use(router.HandleError)
 	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
-		Format: `{"status":${status},"method":"${method}","uri":"${uri}","time":"${time_rfc3339_nano}","x-member":"${header:X-Member}","id":"${id}","remote_ip":"${remote_ip}","host":"${host}",` +
-			`"error":"${error}","latency":${latency},` +
-			`"latency_human":"${latency_human}","bytes_in":${bytes_in},` +
-			`"bytes_out":${bytes_out}}` + "\n",
+		Format: `${status} ${method} ${uri} ${time_rfc3339_nano} ${header:X-Member} ${latency} ${latency_human} ${bytes_in} ${bytes_out} ${error}` + "\n",
 	}))
 
 	e.Use(middleware.Recover())

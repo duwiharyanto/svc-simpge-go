@@ -8,6 +8,7 @@ import (
 	"strings"
 	"svc-insani-go/app"
 	"svc-insani-go/modules/v1/pegawai/model"
+	"time"
 
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
@@ -112,20 +113,26 @@ func GetKepegawaianYayasan(a *app.App, uuid string) (*model.PegawaiYayasan, erro
 	var pegawaiYayasan model.PegawaiYayasan
 
 	err := a.DB.QueryRow(sqlQuery).Scan(
+		&pegawaiYayasan.ID,
 		&pegawaiYayasan.UuidJenisPegawai,
+		&pegawaiYayasan.IDJenisPegawai,
 		&pegawaiYayasan.KDJenisPegawai,
 		&pegawaiYayasan.JenisPegawai,
 		&pegawaiYayasan.UuidStatusPegawai,
+		&pegawaiYayasan.IDStatusPegawai,
 		&pegawaiYayasan.KDStatusPegawai,
 		&pegawaiYayasan.StatusPegawai,
 		&pegawaiYayasan.UuidKelompokPegawai,
+		&pegawaiYayasan.IdKelompokPegawai,
 		&pegawaiYayasan.KdKelompokPegawai,
 		&pegawaiYayasan.KelompokPegawai,
+		&pegawaiYayasan.IdPendidikanMasuk,
 		&pegawaiYayasan.UuidPendidikanMasuk,
 		&pegawaiYayasan.KdPendidikanMasuk,
 		&pegawaiYayasan.KdPendidikanMasukSimpeg,
 		&pegawaiYayasan.PendidikanMasuk,
 		&pegawaiYayasan.UuidPendidikanTerakhir,
+		&pegawaiYayasan.IdPendidikanTerakhir,
 		&pegawaiYayasan.KdPendidikanTerakhir,
 		&pegawaiYayasan.KdPendidikanTerakhirSimpeg,
 		&pegawaiYayasan.PendidikanTerakhir,
@@ -147,6 +154,7 @@ func GetKepegawaianYayasan(a *app.App, uuid string) (*model.PegawaiYayasan, erro
 		&pegawaiYayasan.AngkaKredit,
 		&pegawaiYayasan.NoSertifikasi,
 		&pegawaiYayasan.UuidJenisRegis,
+		&pegawaiYayasan.IdJenisRegis,
 		&pegawaiYayasan.KdJenisRegis,
 		&pegawaiYayasan.JenisNomorRegis,
 		&pegawaiYayasan.NomorRegis,
@@ -273,13 +281,17 @@ func GetPegawaiPribadi(a *app.App, uuid string) (*model.PegawaiPribadi, error) {
 	var pegawaiPribadi model.PegawaiPribadi
 
 	err := a.DB.QueryRow(sqlQuery).Scan(
+		&pegawaiPribadi.ID,
 		&pegawaiPribadi.Nama,
 		&pegawaiPribadi.NIK,
+		&pegawaiPribadi.IdAgama,
 		&pegawaiPribadi.KdAgama,
 		&pegawaiPribadi.KdItemAgama,
+		&pegawaiPribadi.IdGolonganDarah,
 		&pegawaiPribadi.KdGolonganDarah,
 		&pegawaiPribadi.GolonganDarah,
 		&pegawaiPribadi.KdKelamin,
+		&pegawaiPribadi.IdStatusPerkawinan,
 		&pegawaiPribadi.KdNikah,
 		&pegawaiPribadi.TempatLahir,
 		&pegawaiPribadi.TanggalLahir,
@@ -492,23 +504,30 @@ func GetOldPegawai(a *app.App, ctx context.Context, uuidPegawai string) (model.P
 	return pegawaiOld, nil
 }
 
+// TODO: jadikan dalam satu transaksi
 func UpdatePegawai(a *app.App, ctx context.Context, pegawaiUpdate model.PegawaiUpdate) error {
 	db := a.GormDB.WithContext(ctx)
 
+	st := time.Now()
 	res := db.Save(&pegawaiUpdate)
 	if res.Error != nil {
 		return res.Error
 	}
+	fmt.Printf("[DEBUG] update pegawai: %v ms\n", time.Now().Sub(st).Milliseconds())
 
+	st = time.Now()
 	res = db.Save(&pegawaiUpdate.PegawaiPNS)
 	if res.Error != nil {
 		return res.Error
 	}
+	fmt.Printf("[DEBUG] update pegawai pns: %v ms\n", time.Now().Sub(st).Milliseconds())
 
+	st = time.Now()
 	res = db.Save(&pegawaiUpdate.PegawaiFungsional)
 	if res.Error != nil {
 		return res.Error
 	}
+	fmt.Printf("[DEBUG] update pegawai fung: %v ms\n", time.Now().Sub(st).Milliseconds())
 
 	return nil
 }
