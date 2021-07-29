@@ -158,13 +158,16 @@ func HandleUpdatePegawai(a *app.App, ctx context.Context, errChan chan error) ec
 			fmt.Printf("[ERROR] repo get kepegawaian: %s\n", err.Error())
 			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
 		}
-
+		fmt.Printf("[DEBUG] update response end\n")
 		go func(
 			a *app.App,
 			ctx context.Context,
 			errChan chan error,
 		) {
-			fmt.Println("DEBUG : Go routin")
+			defer func(n time.Time) {
+				fmt.Printf("[DEBUG] send to simpeg: %v ms\n", time.Now().Sub(n).Milliseconds())
+			}(time.Now())
+			fmt.Println("[DEBUG] Go routine start after update")
 
 			flagSinkronSimpeg, err := pengaturan.LoadPengaturan(a, ctx, nil, pengaturanAtributFlagSinkronSimpeg)
 			if err != nil {
@@ -245,25 +248,7 @@ func HandleCreatePegawai(a *app.App, ctx context.Context, errChan chan error) ec
 			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
 		}
 
-		go func(
-			a *app.App,
-			ctx context.Context,
-			errChan chan error,
-		) {
-			fmt.Println("DEBUG : Go routin")
-
-			flagSinkronSimpeg, err := pengaturan.LoadPengaturan(a, ctx, nil, pengaturanAtributFlagSinkronSimpeg)
-			if err != nil {
-				log.Println("error load pengaturan flag sinkron simpeg: %w", err)
-				errChan <- err
-				return
-			}
-
-			if flagSinkronSimpeg != "1" {
-				log.Printf("[DEBUG] flag sinkron simpeg 0\n")
-				return
-			}
-
+		go func(a *app.App, errChan chan error, uuidPegawai string) {
 			dur, err := time.ParseDuration(os.Getenv("RESPONSE_TIMEOUT_MS" + "ms"))
 			if err != nil {
 				dur = time.Second * 40
@@ -271,37 +256,12 @@ func HandleCreatePegawai(a *app.App, ctx context.Context, errChan chan error) ec
 			ctx, cancel := context.WithTimeout(ctx, dur)
 			// ctx, cancel := context.WithTimeout(context.Background(), dur) // kalau ke cancel pake yang ini
 			defer cancel()
-			// fmt.Println("DEBUG : Go routin before prepare sipeg")
-			pegawaiDetail, err := PrepareGetSimpegPegawaiByUUID(a, pegawai.UUID)
+			err = SendPegawaiToOracle(a, ctx, uuidPegawai)
 			if err != nil {
 				errChan <- err
 				return
 			}
-
-			pegawaiOra := newPegawaiOra(&pegawaiDetail)
-			pegawaiOra.Nama = pegawaiDetail.PegawaiPribadi.Nama
-			pegawaiOra.KdAgama = pegawaiDetail.PegawaiPribadi.KdItemAgama
-			pegawaiOra.KdGolonganDarah = pegawaiDetail.PegawaiPribadi.GolonganDarah
-			pegawaiOra.KdKelamin = pegawaiDetail.PegawaiPribadi.KdKelamin
-			pegawaiOra.KdNikah = pegawaiDetail.PegawaiPribadi.KdNikah
-			pegawaiOra.TempatLahir = pegawaiDetail.PegawaiPribadi.TempatLahir
-			pegawaiOra.TanggalLahir = pegawaiDetail.PegawaiPribadi.TanggalLahir
-			pegawaiOra.GelarDepan = pegawaiDetail.PegawaiPribadi.GelarDepan
-			pegawaiOra.GelarBelakang = pegawaiDetail.PegawaiPribadi.GelarBelakang
-			// pegawaiOra.JumlahAnak = pegawaiDetail.PegawaiPribadi.JumlahAnak
-			// pegawaiOra.JumlahDitanggung = pegawaiDetail.PegawaiPribadi.JumlahDitanggung
-			// pegawaiOra.JumlahKeluarga = pegawaiDetail.PegawaiPribadi.JumlahKeluarga
-			pegawaiOra.NoKTP = pegawaiDetail.PegawaiPribadi.NoKTP
-			// pegawaiOra.NoTelepon = pegawaiDetail.PegawaiPribadi.NoTelepon
-			pegawaiOra.UserInput = pegawaiDetail.PegawaiPribadi.UserInput
-
-			err = pegawaiOraHttp.CreateKepegawaianYayasan(ctx, a.HttpClient, pegawaiOra)
-			if err != nil {
-				errChan <- fmt.Errorf("[ERROR] create kepegawaian yayasan: %w", err)
-				return
-			}
-
-		}(a, ctx, errChan)
+		}(a, errChan, pegawai.UUID)
 
 		return c.JSON(http.StatusOK, pegawaiDetail)
 	}
@@ -540,7 +500,7 @@ func HandleCheckNikPegawai(a *app.App) echo.HandlerFunc {
 	return echo.HandlerFunc(h)
 }
 
-func HandleOracleResync(a *app.App) echo.HandlerFunc {
+func HandleResyncOracle(a *app.App) echo.HandlerFunc {
 	h := func(c echo.Context) error {
 		uuidPegawai := c.Param("uuidPegawai")
 		if uuidPegawai == "" {
@@ -598,4 +558,46 @@ func HandleOracleResync(a *app.App) echo.HandlerFunc {
 		return c.JSON(http.StatusOK, map[string]string{"message": "Berhasil sinkron ulang pegawai"})
 	}
 	return echo.HandlerFunc(h)
+}
+
+func SendPegawaiToOracle(a *app.App, ctx context.Context, uuid string) error {
+	flagSinkronSimpeg, err := pengaturan.LoadPengaturan(a, ctx, nil, pengaturanAtributFlagSinkronSimpeg)
+	if err != nil {
+		return fmt.Errorf("error load pengaturan flag sinkron simpeg: %w", err)
+	}
+
+	if flagSinkronSimpeg != "1" {
+		log.Printf("[DEBUG] flag sinkron simpeg 0\n")
+		return nil
+	}
+
+	pegawaiDetail, err := PrepareGetSimpegPegawaiByUUID(a, uuid)
+	if err != nil {
+		return fmt.Errorf("error prepare get simpeg pegawai by uuid: %w", err)
+	}
+
+	pegawaiOra := newPegawaiOra(&pegawaiDetail)
+	pegawaiOra.Nama = pegawaiDetail.PegawaiPribadi.Nama
+	pegawaiOra.KdAgama = pegawaiDetail.PegawaiPribadi.KdItemAgama
+	pegawaiOra.KdGolonganDarah = pegawaiDetail.PegawaiPribadi.GolonganDarah
+	pegawaiOra.KdKelamin = pegawaiDetail.PegawaiPribadi.KdKelamin
+	pegawaiOra.KdNikah = pegawaiDetail.PegawaiPribadi.KdNikah
+	pegawaiOra.TempatLahir = pegawaiDetail.PegawaiPribadi.TempatLahir
+	pegawaiOra.TanggalLahir = pegawaiDetail.PegawaiPribadi.TanggalLahir
+	pegawaiOra.GelarDepan = pegawaiDetail.PegawaiPribadi.GelarDepan
+	pegawaiOra.GelarBelakang = pegawaiDetail.PegawaiPribadi.GelarBelakang
+	// pegawaiOra.JumlahAnak = pegawaiDetail.PegawaiPribadi.JumlahAnak
+	// pegawaiOra.JumlahDitanggung = pegawaiDetail.PegawaiPribadi.JumlahDitanggung
+	// pegawaiOra.JumlahKeluarga = pegawaiDetail.PegawaiPribadi.JumlahKeluarga
+	pegawaiOra.NoKTP = pegawaiDetail.PegawaiPribadi.NoKTP
+	// pegawaiOra.NoTelepon = pegawaiDetail.PegawaiPribadi.NoTelepon
+	pegawaiOra.UserInput = pegawaiDetail.PegawaiPribadi.UserInput
+
+	err = pegawaiOraHttp.CreateKepegawaianYayasan(ctx, a.HttpClient, pegawaiOra)
+	if err != nil {
+		return fmt.Errorf("[ERROR] create kepegawaian yayasan: %w", err)
+	}
+
+	return nil
+
 }

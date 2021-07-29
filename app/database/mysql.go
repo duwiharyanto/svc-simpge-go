@@ -79,7 +79,7 @@ func InitGorm(db *sql.DB, withLog bool) (*gorm.DB, error) {
 			log.New(os.Stdout, "\r\n", log.LstdFlags), // io writer
 			logger.Config{
 				IgnoreRecordNotFoundError: withLog,
-				SlowThreshold:             500 * time.Millisecond, // Slow SQL threshold
+				SlowThreshold:             450 * time.Millisecond, // Slow SQL threshold
 				LogLevel:                  logLvl,                 // Log level
 				Colorful:                  false,                  // Disable color
 			},

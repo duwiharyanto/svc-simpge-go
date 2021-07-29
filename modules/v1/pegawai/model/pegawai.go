@@ -124,20 +124,23 @@ type PegawaiResponse struct {
 }
 
 type PegawaiPribadi struct {
-	ID              string `json:"-"`
-	NIK             string `json:"nik"`
-	Nama            string `json:"nama"`
-	KdAgama         string `json:"-"`
-	KdItemAgama     string `json:"-"`
-	KdGolonganDarah string `json:"-"`
-	GolonganDarah   string `json:"-"`
-	KdKelamin       string `json:"-"`
-	KdNikah         string `json:"-"`
-	TempatLahir     string `json:"-"`
-	TanggalLahir    string `json:"-"`
-	FlagPensiun     string `json:"-"`
-	GelarDepan      string `json:"gelar_depan"`
-	GelarBelakang   string `json:"gelar_belakang"`
+	ID                 uint64 `json:"-"`
+	NIK                string `json:"nik"`
+	Nama               string `json:"nama"`
+	IdAgama            uint64 `json:"-"`
+	KdAgama            string `json:"-"`
+	KdItemAgama        string `json:"-"`
+	IdGolonganDarah    uint64 `json:"-"`
+	KdGolonganDarah    string `json:"-"`
+	GolonganDarah      string `json:"-"`
+	KdKelamin          string `json:"-"`
+	IdStatusPerkawinan uint64 `json:"-"`
+	KdNikah            string `json:"-"`
+	TempatLahir        string `json:"-"`
+	TanggalLahir       string `json:"-"`
+	FlagPensiun        string `json:"-"`
+	GelarDepan         string `json:"gelar_depan"`
+	GelarBelakang      string `json:"gelar_belakang"`
 	// JumlahAnak       string `json:"-"`
 	// JumlahDitanggung string `json:"-"`
 	// JumlahKeluarga   string `json:"-"`
@@ -165,35 +168,44 @@ func (pd PegawaiDetail) IsEmpty() bool {
 }
 
 type PegawaiYayasan struct {
-	ID                         string `json:"-" gorm:"primaryKey;not null"`
+	ID                         uint64 `json:"-" gorm:"primaryKey;not null"`
+	IDJenisPegawai             uint64 `json:"-"`
 	KDJenisPegawai             string `json:"kd_jenis_pegawai"`
 	UuidJenisPegawai           string `json:"uuid_jenis_pegawai"`
 	JenisPegawai               string `json:"jenis_pegawai"`
 	UuidKelompokPegawai        string `json:"uuid_kelompok_pegawai"`
+	IdKelompokPegawai          uint64 `json:"-"`
 	KdKelompokPegawai          string `json:"kd_kelompok_pegawai"`
 	KelompokPegawai            string `json:"kelompok_pegawai"`
 	UuidPendidikanMasuk        string `json:"-" form:"uuid_pendidikan_masuk"`
-	IdPendidikanMasuk          int    `json:"-"`
+	IdPendidikanMasuk          uint64 `json:"-"`
 	KdPendidikanMasuk          string `json:"-"`
+	IdPendidikanMasukSimpeg    uint64 `json:"-"`
 	KdPendidikanMasukSimpeg    string `json:"-"`
 	PendidikanMasuk            string `json:"-"`
 	UuidPendidikanTerakhir     string `json:"-" form:"uuid_pendidikan_terakhir"`
-	IdPendidikanTerakhir       int    `json:"-"`
+	IdPendidikanTerakhir       uint64 `json:"-"`
 	KdPendidikanTerakhir       string `json:"-"`
+	IdPendidikanTerakhirSimpeg uint64 `json:"-"`
 	KdPendidikanTerakhirSimpeg string `json:"-"`
 	PendidikanTerakhir         string `json:"-"`
 	UuidStatusPegawai          string `json:"uuid_status_pegawai"`
+	IDStatusPegawai            uint64 `json:"-"`
 	KDStatusPegawai            string `json:"kd_status_pegawai"`
 	StatusPegawai              string `json:"status_pegawai"`
 	UuidPangkatGolongan        string `json:"uuid_pangkat_golongan"`
+	IdPangkat                  uint64 `json:"-"`
 	KdPangkat                  string `json:"kd_pangkat_golongan"`
 	Pangkat                    string `json:"pangkat"`
 	Golongan                   string `json:"golongan"`
+	IdGolongan                 uint64 `json:"-"`
 	KdGolongan                 string `json:"kd_golongan"`
+	IdRuang                    uint64 `json:"-"`
 	KdRuang                    string `json:"kd_ruang"`
 	TmtPangkatGolongan         string `json:"tmt_pangkat_gol_ruang_pegawai"`
 	TmtPangkatGolonganIdn      string `json:"tmt_pangkat_gol_ruang_pegawai_idn"`
 	UuidJabatanFungsional      string `json:"uuid_jabatan_fungsional"`
+	IdJabatanFungsional        uint64 `json:"-"`
 	KdJabatanFungsional        string `json:"kd_jabatan_fungsional"`
 	JabatanFungsional          string `json:"jabatan_fungsional"`
 	TmtJabatan                 string `json:"tmt_jabatan"`
@@ -207,6 +219,7 @@ type PegawaiYayasan struct {
 	AngkaKredit                string `json:"angka_kredit"`
 	NoSertifikasi              string `json:"nomor_sertifikasi_pegawai"`
 	UuidJenisRegis             string `json:"uuid_jenis_regis"`
+	IdJenisRegis               uint64 `json:"-"`
 	KdJenisRegis               string `json:"kd_jenis_regis"`
 	JenisNomorRegis            string `json:"jenis_no_regis"`
 	NomorRegis                 string `json:"no_regis"`
@@ -345,6 +358,10 @@ type DataPendidikanDetail struct {
 	KdPendidikanMasuk   string              `json:"kd_pendidikan_masuk"`
 	PendidikanMasuk     string              `json:"pendidikan_masuk"`
 	Data                []JenjangPendidikan `json:"data_pendidikan"`
+}
+
+func (pendidikanDetail DataPendidikanDetail) IsEmpty() bool {
+	return pendidikanDetail.KdPendidikanMasuk == "" && pendidikanDetail.PendidikanMasuk == ""
 }
 
 type JenjangPendidikan struct {
@@ -506,7 +523,7 @@ type PegawaiPNSUpdate struct {
 	TglUpdate             string  `form:"-" gorm:"-"`
 	UserUpdate            string  `form:"-"`
 	FlagAktif             uint64  `form:"-" gorm:"-"`
-	Uuid                  string  `form:"-"`
+	Uuid                  string  `form:"-" gorm:"-"`
 }
 
 func (*PegawaiPNSUpdate) TableName() string {
