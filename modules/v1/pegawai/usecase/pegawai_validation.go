@@ -380,6 +380,9 @@ func PrepareCreateSimpeg(a *app.App, c echo.Context) (model.PegawaiCreate, error
 	if err != nil {
 		return model.PegawaiCreate{}, fmt.Errorf("error search personal")
 	}
+	if personal == nil {
+		return model.PegawaiCreate{}, fmt.Errorf("personal tidak ditemukan")
+	}
 	if personal.Pegawai.PegawaiFungsional.StatusPegawaiAktif.IsActive() {
 		return model.PegawaiCreate{}, fmt.Errorf("tidak dapat menambah data dari pegawai yang sudah aktif")
 	}
@@ -416,8 +419,10 @@ func ValidateCreatePegawai(a *app.App, c echo.Context) (model.PegawaiCreate, err
 		return model.PegawaiCreate{}, fmt.Errorf("uuid_kelompok_pegawai tidak boleh kosong")
 	case pegawaiReq.UuidUnitKerja2 == "":
 		return model.PegawaiCreate{}, fmt.Errorf("uuid_unit_kerja tidak boleh kosong")
-	// case *pegawaiReq.PegawaiFungsional.TmtSkPertama == "":
-	// 	return model.PegawaiCreate{}, fmt.Errorf("tmt_sk_pertama tidak boleh kosong")
+	case pegawaiReq.PegawaiFungsional.TmtSkPertama == nil,
+		pegawaiReq.PegawaiFungsional.TmtSkPertama != nil &&
+			!helper.IsDateFormatValid("2006-01-02", *pegawaiReq.PegawaiFungsional.TmtSkPertama):
+		return model.PegawaiCreate{}, fmt.Errorf("tmt_sk_pertama wajib diisi dengan format yyyy-mm-dd")
 	case pegawaiReq.UuidLokasiKerja == "":
 		return model.PegawaiCreate{}, fmt.Errorf("uuid_lokasi_kerja tidak boleh kosong")
 	}
@@ -450,15 +455,17 @@ func ValidateCreatePegawai(a *app.App, c echo.Context) (model.PegawaiCreate, err
 	pegawaiReq.KdUnit1 = unitKerja.Unit1.KdUnit1
 
 	// Pengecekan Bagian Kerja
-	bagianKerja, err := indukKerjaRepo.GetBagianKerjaByUUID(a, c.Request().Context(), pegawaiReq.UuidUnitKerja3)
-	if err != nil {
-		return model.PegawaiCreate{}, fmt.Errorf("error from repo bagian kerja by uuid: %w", err)
+	if pegawaiReq.UuidUnitKerja3 != "" {
+		bagianKerja, err := indukKerjaRepo.GetBagianKerjaByUUID(a, c.Request().Context(), pegawaiReq.UuidUnitKerja3)
+		if err != nil {
+			return model.PegawaiCreate{}, fmt.Errorf("error from repo bagian kerja by uuid: %w", err)
+		}
+		if bagianKerja == nil {
+			return model.PegawaiCreate{}, fmt.Errorf("uuid_bagian_kerja tidak ditemukan")
+		}
+		pegawaiReq.IdUnitKerja3 = bagianKerja.ID
+		pegawaiReq.KdUnit3 = bagianKerja.KdUnit3
 	}
-	if bagianKerja == nil {
-		return model.PegawaiCreate{}, fmt.Errorf("uuid_bagian_kerja tidak ditemukan")
-	}
-	pegawaiReq.IdUnitKerja3 = bagianKerja.ID
-	pegawaiReq.KdUnit3 = bagianKerja.KdUnit3
 
 	// Pengecekan Lokasi Kerja
 	lokasiKerja, err := lokasiKerjaRepo.GetLokasiKerjaByUUID(a, c.Request().Context(), pegawaiReq.UuidLokasiKerja)
