@@ -416,8 +416,8 @@ func ValidateCreatePegawai(a *app.App, c echo.Context) (model.PegawaiCreate, err
 		return model.PegawaiCreate{}, fmt.Errorf("uuid_kelompok_pegawai tidak boleh kosong")
 	case pegawaiReq.UuidUnitKerja2 == "":
 		return model.PegawaiCreate{}, fmt.Errorf("uuid_unit_kerja tidak boleh kosong")
-	case pegawaiReq.UuidUnitKerja3 == "":
-		return model.PegawaiCreate{}, fmt.Errorf("uuid_bagian_kerja tidak boleh kosong")
+	// case *pegawaiReq.PegawaiFungsional.TmtSkPertama == "":
+	// 	return model.PegawaiCreate{}, fmt.Errorf("tmt_sk_pertama tidak boleh kosong")
 	case pegawaiReq.UuidLokasiKerja == "":
 		return model.PegawaiCreate{}, fmt.Errorf("uuid_lokasi_kerja tidak boleh kosong")
 	}
