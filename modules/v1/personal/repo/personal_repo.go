@@ -3,6 +3,7 @@ package repo
 import (
 	"context"
 	"errors"
+	"strings"
 	"svc-insani-go/app"
 	"svc-insani-go/app/helper"
 	"svc-insani-go/modules/v1/personal/model"
@@ -39,6 +40,9 @@ func GetPersonalByUuid(a *app.App, ctx context.Context, uuid string) (*model.Per
 	err := a.GormDB.
 		WithContext(ctx).
 		Preload("Pegawai.PegawaiFungsional.StatusPegawaiAktif").
+		Joins("Agama").
+		Joins("GolonganDarah").
+		Joins("StatusPernikahan").
 		Joins("Pegawai").
 		Where("personal_data_pribadi.flag_aktif = 1 AND personal_data_pribadi.uuid = ?", uuid).
 		First(&personal).
@@ -50,6 +54,10 @@ func GetPersonalByUuid(a *app.App, ctx context.Context, uuid string) (*model.Per
 
 	if err != nil {
 		return nil, err
+	}
+
+	if strings.ToLower(personal.GolonganDarah.GolonganDarah) == model.UnknownBloodType {
+		personal.GolonganDarah = model.GolonganDarah{}
 	}
 
 	return &personal, nil

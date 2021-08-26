@@ -1,6 +1,11 @@
 package model
 
-import "mime/multipart"
+import (
+	"fmt"
+	"mime/multipart"
+	"strings"
+	"time"
+)
 
 type PegawaiPendidikan struct {
 	UuidPendidikan          string                `form:"uuid_pendidikan" json:"uuid_pendidikan"`
@@ -135,3 +140,72 @@ func (list BerkasPendukungList) MapByIdPendidikan() map[string][]BerkasPendukung
 }
 
 type BerkasPendukungMap map[int]BerkasPendukung
+
+func (p *PegawaiPendidikan) SetTanggalIDN() {
+	p.TglSKPenyetaraanIDN = GetIndonesianDate(p.TglSKPenyetaraan)
+	p.TglKelulusanIDN = GetIndonesianDate(p.TglKelulusan)
+	p.TglIjazahIDN = GetIndonesianDate(p.TglIjazah)
+}
+
+func (p *PegawaiYayasan) SetTanggalIDN() {
+	p.TmtPangkatGolonganIdn = GetIndonesianDate(p.TmtPangkatGolongan)
+	p.TmtJabatanIdn = GetIndonesianDate(p.TmtJabatan)
+}
+
+func (p *UnitKerjaPegawai) SetTanggalIDN() {
+	p.TmtSkPertamaIdn = GetIndonesianDate(p.TmtSkPertama)
+}
+
+func (p *PegawaiPNSPTT) SetTanggalIDN() {
+	p.TmtPangkatGolonganIdn = GetIndonesianDate(p.TmtPangkatGolongan)
+	p.TmtJabatanPnsIdn = GetIndonesianDate(p.TmtJabatanPns)
+}
+
+func (p *PegawaiPendidikan) SetNamaFileIjazah() {
+	if p.PathIjazah == "" {
+		return
+	}
+	uploadedFileName := strings.Split(p.PathIjazah, "/")[2]
+	splittedPathIjazah := strings.Split(p.PathIjazah, ".")
+	fileExtensionIjazah := splittedPathIjazah[1]
+	p.NamaFileIjazah = fmt.Sprintf("%s.%s", uploadedFileName, fileExtensionIjazah)
+}
+
+func (p *PegawaiPendidikan) SetNamaFilePenyetaraan() {
+	if p.PathSKPenyetaraan == "" {
+		return
+	}
+	uploadedFileName := strings.Split(p.PathSKPenyetaraan, "/")[2]
+	splittedPathPenyetaraan := strings.Split(p.PathSKPenyetaraan, ".")
+	fileExtensionPenyetaraan := splittedPathPenyetaraan[1]
+	p.NamaFileSKPenyetaraan = fmt.Sprintf("%s.%s", uploadedFileName, fileExtensionPenyetaraan)
+}
+
+func (b *BerkasPendukung) SetDownloadFileName(loc *time.Location) {
+	if b.PathFile == "" {
+		return
+	}
+	now := time.Now().In(loc)
+	datetime := now.Format("2006-01-02 150405")
+	splittedPath := strings.Split(b.PathFile, ".")
+	fileExtension := splittedPath[1]
+	b.NamaFile = fmt.Sprintf("%s %s %s.%s", datetime, b.NamaPersonal, b.JenisFile, fileExtension)
+}
+
+func (b *PegawaiPendidikan) SetDownloadFileNamePendidikan(loc *time.Location) {
+	if b.PathIjazah == "" || b.PathSKPenyetaraan == "" {
+		return
+	}
+
+	// now := time.Now().In(loc)
+	// datetime := now.Format("2006-01-02 150405")
+	ijazah := "Ijazah"
+	splittedPathIjazah := strings.Split(b.PathIjazah, ".")
+	fileExtensionIjazah := splittedPathIjazah[1]
+	b.NamaFileIjazah = fmt.Sprintf("%s.%s", ijazah, fileExtensionIjazah)
+
+	penyetaraan := "SK Penyetaraan"
+	splittedPathPenyetaraan := strings.Split(b.PathSKPenyetaraan, ".")
+	fileExtensionPenyetaraan := splittedPathPenyetaraan[1]
+	b.NamaFileSKPenyetaraan = fmt.Sprintf("%s.%s", penyetaraan, fileExtensionPenyetaraan)
+}
