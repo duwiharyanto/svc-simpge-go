@@ -23,10 +23,11 @@ import (
 	personalRepo "svc-insani-go/modules/v1/personal/repo"
 
 	"github.com/labstack/echo/v4"
+
+	guuid "github.com/google/uuid"
 )
 
 func ValidateUpdatePegawaiByUUID(a *app.App, c echo.Context) (model.PegawaiUpdate, error) {
-
 	uuidPegawai := c.Param("uuidPegawai")
 	if uuidPegawai == "" {
 		return model.PegawaiUpdate{}, fmt.Errorf("uuid pegawai tidak boleh kosong")
@@ -56,7 +57,6 @@ func ValidateUpdatePegawaiByUUID(a *app.App, c echo.Context) (model.PegawaiUpdat
 
 	//Pengecekan Jenis Pegawai
 	if pegawaiReq.UuidJenisPegawai != "" {
-
 		jenisPegawai, err := jenisPegawaiRepo.GetJenisPegawaiByUUID(a, pegawaiReq.UuidJenisPegawai)
 		if err != nil {
 			return model.PegawaiUpdate{}, fmt.Errorf("error from repo jenis pegawai by uuid: %w", err)
@@ -95,25 +95,23 @@ func ValidateUpdatePegawaiByUUID(a *app.App, c echo.Context) (model.PegawaiUpdat
 	}
 
 	// Pengecekan Ijazah Pendidikan Masuk
-	// fmt.Println("DEBUG : ", pegawaiReq.UuidPendidikanMasuk)
 	if pegawaiReq.UuidPendidikanMasuk != "" {
 		pendidikanMasuk, err := jenjangPendidikan.GetJenjangPendidikanByUUID(a, c.Request().Context(), pegawaiReq.UuidPendidikanMasuk)
 		if err != nil {
 			return model.PegawaiUpdate{}, fmt.Errorf("error from repo jenis ijazah pendidikan masuk by uuid: %w", err)
 		}
 		pegawaiOld.IdPendidikanMasuk = pendidikanMasuk.ID
-		pegawaiOld.KdPendidikanMasuk = pendidikanMasuk.KdJenjang
+		pegawaiOld.KdPendidikanMasuk = pendidikanMasuk.KdPendidikanSimpeg
 	}
 
 	// Pengecekan Ijazah Pendidikan Terakhir
-	fmt.Println("DEBUG : ", pegawaiReq.UuidPendidikanTerakhir)
 	if pegawaiReq.UuidPendidikanTerakhir != "" {
 		pendidikanTerakhir, err := jenjangPendidikan.GetJenjangPendidikanByUUID(a, c.Request().Context(), pegawaiReq.UuidPendidikanTerakhir)
 		if err != nil {
 			return model.PegawaiUpdate{}, fmt.Errorf("error from repo jenis ijazah pendidikan terakhir by uuid: %w", err)
 		}
 		pegawaiOld.IdPendidikanTerakhir = pendidikanTerakhir.ID
-		pegawaiOld.KdPendidikanTerakhir = pendidikanTerakhir.KdJenjang
+		pegawaiOld.KdPendidikanTerakhir = pendidikanTerakhir.KdPendidikanSimpeg
 	}
 
 	// Pengecekan Pangkat Golongan Pegawai
@@ -401,6 +399,7 @@ func PrepareCreateSimpeg(a *app.App, c echo.Context) (model.PegawaiCreate, error
 	pegawai.KdStatusPerkawinan = personal.KdStatusPerkawinan
 	pegawai.GelarDepan = personal.GelarDepan
 	pegawai.GelarBelakang = personal.GelarBelakang
+	pegawai.Uuid = guuid.New().String()
 
 	return pegawai, nil
 }
