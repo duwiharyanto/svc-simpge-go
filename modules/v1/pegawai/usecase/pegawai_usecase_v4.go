@@ -27,7 +27,6 @@ func HandleCreatePegawaiV4(a *app.App, ctx context.Context, errChan chan error) 
 		// fmt.Printf("[DEBUG] req is nil: %t\n", req == nil)
 		fmt.Printf("[DEBUG] req is nil: %t\n", req == PegawaiCreateRequest{})
 		fmt.Printf("[DEBUG] req: %#v\n", req)
-		return c.JSON(200, "ok")
 
 		// Validasi Data
 		pegawaiCreate, err := PrepareCreateSimpeg(a, c)
@@ -72,7 +71,6 @@ func HandleCreatePegawaiV4(a *app.App, ctx context.Context, errChan chan error) 
 		}
 
 		go func(a *app.App, errChan chan error, uuidPegawai string) {
-			return
 			dur, err := time.ParseDuration(os.Getenv("RESPONSE_TIMEOUT_MS" + "ms"))
 			if err != nil {
 				dur = time.Second * 40
