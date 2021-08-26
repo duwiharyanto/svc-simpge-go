@@ -213,19 +213,14 @@ func HandleCreatePegawai(a *app.App, ctx context.Context, errChan chan error) ec
 			return c.JSON(http.StatusBadRequest, map[string]string{"message": err.Error()})
 		}
 
+		fmt.Printf("\n[DEBUG] pegawai before create: %+v\n", pegawaiCreate)
+
 		// Create Data
 		err = repo.CreatePegawai(a, c.Request().Context(), pegawaiCreate)
 		if err != nil {
 			fmt.Printf("[ERROR]: %s\n", err.Error())
 			return c.JSON(http.StatusBadRequest, map[string]string{"message": err.Error()})
 		}
-
-		// GET UUID
-		// pegawai, err := repo.GetPegawaiByNIK(a, c.Request().Context(), pegawaiCreate.Nik)
-		// if err != nil {
-		// 	fmt.Printf("[ERROR] repo get kepegawaian: %s\n", err.Error())
-		// 	return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
-		// }
 
 		// Set Flag Pendidikan
 		uuidPendidikanDiakui := c.FormValue("uuid_tingkat_pdd_diakui")

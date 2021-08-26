@@ -7,6 +7,7 @@ import (
 	"svc-insani-go/app"
 	"svc-insani-go/app/database"
 	pegawai "svc-insani-go/modules/v1/pegawai/model"
+	"svc-insani-go/modules/v1/personal/model"
 	"testing"
 )
 
@@ -58,7 +59,8 @@ func TestPersonal(t *testing.T) {
 		}
 	})
 	t.Run("personal_is_not_employee", func(t *testing.T) {
-		uuid := "d57ec3c4-1593-4592-9abf-60a2c10e48a8"
+		// uuid := "e421fc4e-4e8e-4dd3-8d0c-f41b7a38df5c"
+		uuid := "1a6c87ca-e39d-11eb-8820-000c2977b907"
 		v, err := GetPersonalByUuid(a, context.Background(), uuid)
 		if err != nil {
 			t.Fatal(err)
@@ -66,8 +68,9 @@ func TestPersonal(t *testing.T) {
 		if v == nil {
 			t.Fatal("should not be empty")
 		}
-		// if v.Pegawai != nil {
-		if (v.Pegawai == pegawai.Pegawai{}) {
+		fmt.Printf("[DEBUG] per: %+v\n", v)
+		fmt.Printf("[DEBUG] v.GolonganDarah == GolonganDarah{}: %t\n", v.GolonganDarah == model.GolonganDarah{})
+		if v.Pegawai.PegawaiFungsional.StatusPegawaiAktif.IsActive() {
 			t.Fatal("should not be employee")
 		}
 	})
