@@ -1,4 +1,4 @@
-package model
+package usecase
 
 import (
 	"fmt"
@@ -6,14 +6,12 @@ import (
 )
 
 type PegawaiCreateRequest struct {
-	Nik                 string `form:"nik"`
 	UuidKelompokPegawai string `form:"uuid_kelompok_pegawai"`
+	Nik                 string `form:"nik"`
 	UuidUnitKerja       string `form:"uuid_unit_kerja"`
-	UuidBagianKerja     string `form:"uuid_bagian_kerja"`
+	TmtSkPertama        string `form:"tmt_sk_pertama"`
 	UuidLokasiKerja     string `form:"uuid_lokasi_kerja"`
 	UuidPersonal        string `form:"uuid_personal"`
-	UserUpdate          string `form:"-"`
-	Uuid                string `form:"-"`
 }
 
 func (req PegawaiCreateRequest) Validate() error {
@@ -24,12 +22,10 @@ func (req PegawaiCreateRequest) Validate() error {
 		return fmt.Errorf("uuid_kelompok_pegawai tidak boleh kosong")
 	case req.UuidUnitKerja == "":
 		return fmt.Errorf("uuid_unit_kerja tidak boleh kosong")
-	case req.UuidBagianKerja == "":
-		return fmt.Errorf("uuid_bagian_kerja tidak boleh kosong")
+	case !helper.IsDateFormatValid("2006-01-02", req.TmtSkPertama):
+		return fmt.Errorf("tmt_sk_pertama wajib diisi dengan format yyyy-mm-dd")
 	case req.UuidLokasiKerja == "":
 		return fmt.Errorf("uuid_lokasi_kerja tidak boleh kosong")
-	case req.UuidPersonal == "":
-		return fmt.Errorf("uuid_personal tidak boleh kosong")
 	default:
 		return nil
 	}

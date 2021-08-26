@@ -2,6 +2,7 @@ package model
 
 type PegawaiCreate struct {
 	Id                      uint64                  `form:"id" gorm:"primaryKey"`
+	Uuid                    string                  `form:"-"`
 	IdPersonalDataPribadi   uint64                  `form:"id_personal_data_pribadi"`
 	FlagAktif               int                     `form:"flag_aktif" gorm:"->"`
 	Nik                     string                  `form:"nik" gorm:"uniqueIndex"`

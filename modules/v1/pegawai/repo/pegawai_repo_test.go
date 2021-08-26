@@ -15,7 +15,7 @@ func TestGetPegawaiPendidikan(t *testing.T) {
 	}
 	a := &app.App{DB: db}
 	uuid := "db3b4cea-1437-11eb-a014-7eb0d4a3c7a0"
-	jenjangPendidikan, err := GetPegawaiPendidikan(a, uuid)
+	jenjangPendidikan, err := GetPegawaiPendidikan(a, uuid, false)
 	if err != nil {
 		t.Fatal("failed get jenjang pendidikan:", err)
 	}

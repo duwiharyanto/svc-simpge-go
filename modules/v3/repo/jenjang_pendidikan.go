@@ -1,0 +1,5 @@
+package repo
+
+func GetJenjangPendidikanByUuid() {
+
+}
