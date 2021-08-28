@@ -3,7 +3,6 @@ module svc-insani-go
 go 1.13
 
 require (
-	github.com/cstockton/go-conv v0.0.0-20170524002450-66a2b2ba36e1
 	github.com/go-ini/ini v1.62.0 // indirect
 	github.com/go-sql-driver/mysql v1.6.0
 	github.com/google/uuid v1.3.0
@@ -11,6 +10,7 @@ require (
 	github.com/labstack/gommon v0.3.0
 	github.com/minio/minio-go v6.0.14+incompatible
 	github.com/mitchellh/go-homedir v1.1.0 // indirect
+	github.com/openlyinc/pointy v1.1.2
 	github.com/smartystreets/goconvey v1.6.4 // indirect
 	gopkg.in/ini.v1 v1.62.0 // indirect
 	gorm.io/driver/mysql v1.1.1

@@ -22,6 +22,8 @@ import (
 	statusPegawaiRepo "svc-insani-go/modules/v1/master-status-pegawai/repo"
 	personalRepo "svc-insani-go/modules/v1/personal/repo"
 
+	ptr "github.com/openlyinc/pointy"
+
 	"github.com/labstack/echo/v4"
 
 	guuid "github.com/google/uuid"
@@ -52,194 +54,194 @@ func ValidateUpdatePegawaiByUUID(a *app.App, c echo.Context) (model.PegawaiUpdat
 		fmt.Printf("[ERROR] binding requestpegawai , %s\n", err.Error())
 	}
 
-	pegawaiReq.Uuid = uuidPegawai
+	pegawaiReq.Uuid = ptr.String(uuidPegawai)
 	pegawaiReq.Id = pegawai.Id
 
 	//Pengecekan Jenis Pegawai
-	if pegawaiReq.UuidJenisPegawai != "" {
-		jenisPegawai, err := jenisPegawaiRepo.GetJenisPegawaiByUUID(a, pegawaiReq.UuidJenisPegawai)
+	if ptr.StringValue(pegawaiReq.UuidJenisPegawai, "") != "" {
+		jenisPegawai, err := jenisPegawaiRepo.GetJenisPegawaiByUUID(a, ptr.StringValue(pegawaiReq.UuidJenisPegawai, ""))
 		if err != nil {
 			return model.PegawaiUpdate{}, fmt.Errorf("error from repo jenis pegawai by uuid: %w", err)
 		}
-		pegawaiOld.IdJenisPegawai = jenisPegawai.ID
-		pegawaiOld.KdJenisPegawai = jenisPegawai.KDJenisPegawai
+		pegawaiOld.IdJenisPegawai = ptr.Uint64(jenisPegawai.ID)
+		pegawaiOld.KdJenisPegawai = ptr.String(jenisPegawai.KDJenisPegawai)
 	}
 
 	// Pengecekan Status Pegawai
-	if pegawaiReq.UuidStatusPegawai != "" {
-		statusPegawai, err := statusPegawaiRepo.GetStatusPegawaiByUUID(a, c.Request().Context(), pegawaiReq.UuidStatusPegawai)
+	if ptr.StringValue(pegawaiReq.UuidStatusPegawai, "") != "" {
+		statusPegawai, err := statusPegawaiRepo.GetStatusPegawaiByUUID(a, c.Request().Context(), ptr.StringValue(pegawaiReq.UuidStatusPegawai, ""))
 		if err != nil {
 			return model.PegawaiUpdate{}, fmt.Errorf("error from repo status pegawai by uuid: %w", err)
 		}
-		pegawaiOld.IdStatusPegawai = statusPegawai.ID
-		pegawaiOld.KdStatusPegawai = statusPegawai.KDStatusPegawai
+		pegawaiOld.IdStatusPegawai = ptr.Uint64(statusPegawai.ID)
+		pegawaiOld.KdStatusPegawai = ptr.String(statusPegawai.KDStatusPegawai)
 	}
 
 	// Pengecekan Kelompok Pegawai
-	if pegawaiReq.UuidKelompokPegawai != "" {
-		kelompokPegawai, err := kelompokPegawaiRepo.GetKelompokPegawaiByUUID(a, c.Request().Context(), pegawaiReq.UuidKelompokPegawai)
+	if ptr.StringValue(pegawaiReq.UuidKelompokPegawai, "") != "" {
+		kelompokPegawai, err := kelompokPegawaiRepo.GetKelompokPegawaiByUUID(a, c.Request().Context(), ptr.StringValue(pegawaiReq.UuidKelompokPegawai, ""))
 		if err != nil {
 			return model.PegawaiUpdate{}, fmt.Errorf("error from repo kelompok pegawai by uuid: %w", err)
 		}
-		pegawaiOld.IdKelompokPegawai = kelompokPegawai.ID
-		pegawaiOld.KdKelompokPegawai = kelompokPegawai.KdKelompokPegawai
+		pegawaiOld.IdKelompokPegawai = ptr.Uint64(kelompokPegawai.ID)
+		pegawaiOld.KdKelompokPegawai = ptr.String(kelompokPegawai.KdKelompokPegawai)
 	}
 
 	// Pengecekan Detail Profesi
-	if pegawaiReq.UuidDetailProfesi != "" {
-		detailProfesi, err := detailProfesiRepo.GetDetailProfesiByUUID(a, c.Request().Context(), pegawaiReq.UuidDetailProfesi)
+	if ptr.StringValue(pegawaiReq.UuidDetailProfesi, "") != "" {
+		detailProfesi, err := detailProfesiRepo.GetDetailProfesiByUUID(a, c.Request().Context(), ptr.StringValue(pegawaiReq.UuidDetailProfesi, ""))
 		if err != nil {
 			return model.PegawaiUpdate{}, fmt.Errorf("error from repo detail profesi by uuid: %w", err)
 		}
-		pegawaiOld.IdDetailProfesi = detailProfesi.ID
+		pegawaiOld.IdDetailProfesi = ptr.Uint64(detailProfesi.ID)
 	}
 
 	// Pengecekan Ijazah Pendidikan Masuk
-	if pegawaiReq.UuidPendidikanMasuk != "" {
-		pendidikanMasuk, err := jenjangPendidikan.GetJenjangPendidikanByUUID(a, c.Request().Context(), pegawaiReq.UuidPendidikanMasuk)
+	if ptr.StringValue(pegawaiReq.UuidPendidikanMasuk, "") != "" {
+		pendidikanMasuk, err := jenjangPendidikan.GetJenjangPendidikanByUUID(a, c.Request().Context(), ptr.StringValue(pegawaiReq.UuidPendidikanMasuk, ""))
 		if err != nil {
 			return model.PegawaiUpdate{}, fmt.Errorf("error from repo jenis ijazah pendidikan masuk by uuid: %w", err)
 		}
-		pegawaiOld.IdPendidikanMasuk = pendidikanMasuk.ID
-		pegawaiOld.KdPendidikanMasuk = pendidikanMasuk.KdPendidikanSimpeg
+		pegawaiOld.IdPendidikanMasuk = ptr.Uint64(pendidikanMasuk.ID)
+		pegawaiOld.KdPendidikanMasuk = ptr.String(pendidikanMasuk.KdPendidikanSimpeg)
 	}
 
 	// Pengecekan Ijazah Pendidikan Terakhir
-	if pegawaiReq.UuidPendidikanTerakhir != "" {
-		pendidikanTerakhir, err := jenjangPendidikan.GetJenjangPendidikanByUUID(a, c.Request().Context(), pegawaiReq.UuidPendidikanTerakhir)
+	if ptr.StringValue(pegawaiReq.UuidPendidikanTerakhir, "") != "" {
+		pendidikanTerakhir, err := jenjangPendidikan.GetJenjangPendidikanByUUID(a, c.Request().Context(), ptr.StringValue(pegawaiReq.UuidPendidikanTerakhir, ""))
 		if err != nil {
 			return model.PegawaiUpdate{}, fmt.Errorf("error from repo jenis ijazah pendidikan terakhir by uuid: %w", err)
 		}
-		pegawaiOld.IdPendidikanTerakhir = pendidikanTerakhir.ID
-		pegawaiOld.KdPendidikanTerakhir = pendidikanTerakhir.KdPendidikanSimpeg
+		pegawaiOld.IdPendidikanTerakhir = ptr.Uint64(pendidikanTerakhir.ID)
+		pegawaiOld.KdPendidikanTerakhir = ptr.String(pendidikanTerakhir.KdPendidikanSimpeg)
 	}
 
 	// Pengecekan Pangkat Golongan Pegawai
-	if pegawaiReq.UuidGolongan != "" {
-		pangkatPegawai, err := pangkatPegawaiRepo.GetPangkatGolonganPegawaiByUUID(a, pegawaiReq.UuidGolongan)
+	if ptr.StringValue(pegawaiReq.UuidGolongan, "") != "" {
+		pangkatPegawai, err := pangkatPegawaiRepo.GetPangkatGolonganPegawaiByUUID(a, ptr.StringValue(pegawaiReq.UuidGolongan, ""))
 		if err != nil {
 			return model.PegawaiUpdate{}, fmt.Errorf("error from repo pangkat golongan pegawai by uuid: %w", err)
 		}
-		pegawaiOld.PegawaiFungsional.IdPangkatGolongan = pangkatPegawai.ID
-		pegawaiOld.PegawaiFungsional.KdPangkatGolongan = pangkatPegawai.KdPangkat
+		pegawaiOld.PegawaiFungsional.IdPangkatGolongan = ptr.Uint64(pangkatPegawai.ID)
+		pegawaiOld.PegawaiFungsional.KdPangkatGolongan = ptr.String(pangkatPegawai.KdPangkat)
 	}
 
 	// Pengecekan Jabatan Fungsional Yayasan
-	if pegawaiReq.PegawaiFungsional.UuidJabatanFungsional != "" {
-		jabatanFungsional, err := jabatanFungsionalRepo.GetJabatanFungsionalByUUID(a, c.Request().Context(), pegawaiReq.PegawaiFungsional.UuidJabatanFungsional)
+	if ptr.StringValue(pegawaiReq.PegawaiFungsional.UuidJabatanFungsional, "") != "" {
+		jabatanFungsional, err := jabatanFungsionalRepo.GetJabatanFungsionalByUUID(a, c.Request().Context(), ptr.StringValue(pegawaiReq.PegawaiFungsional.UuidJabatanFungsional, ""))
 		if err != nil {
 			return model.PegawaiUpdate{}, fmt.Errorf("error from repo pangkat golongan pegawai by uuid: %w", err)
 		}
-		pegawaiOld.PegawaiFungsional.IdJabatanFungsional = jabatanFungsional.ID
-		pegawaiOld.PegawaiFungsional.KdJabatanFungsional = jabatanFungsional.KdJabatanFungsional
+		pegawaiOld.PegawaiFungsional.IdJabatanFungsional = ptr.Uint64(jabatanFungsional.ID)
+		pegawaiOld.PegawaiFungsional.KdJabatanFungsional = ptr.String(jabatanFungsional.KdJabatanFungsional)
 	}
 
 	// Pengecekan Jenis Nomor Resgistrasi
-	if pegawaiReq.PegawaiFungsional.UuidJenisNomorRegistrasi != "" {
-		jenisNoRegis, err := jenisNoRegisRepo.GetJenisNoRegisByUUID(a, c.Request().Context(), pegawaiReq.PegawaiFungsional.UuidJenisNomorRegistrasi)
+	if ptr.StringValue(pegawaiReq.PegawaiFungsional.UuidJenisNomorRegistrasi, "") != "" {
+		jenisNoRegis, err := jenisNoRegisRepo.GetJenisNoRegisByUUID(a, c.Request().Context(), ptr.StringValue(pegawaiReq.PegawaiFungsional.UuidJenisNomorRegistrasi, ""))
 		if err != nil {
 			return model.PegawaiUpdate{}, fmt.Errorf("error from repo jenis nomor registrasi by uuid: %w", err)
 		}
-		pegawaiOld.PegawaiFungsional.IdJenisNomorRegistrasi = jenisNoRegis.ID
-		pegawaiOld.PegawaiFungsional.KdJenisNomorRegistrasi = jenisNoRegis.KdJenisRegis
+		pegawaiOld.PegawaiFungsional.IdJenisNomorRegistrasi = ptr.Uint64(jenisNoRegis.ID)
+		pegawaiOld.PegawaiFungsional.KdJenisNomorRegistrasi = ptr.String(jenisNoRegis.KdJenisRegis)
 	}
 
 	// Pengecekan Induk Kerja
-	if pegawaiReq.UuidUnitKerja1 != "" {
-		indukKerja, err := indukKerjaRepo.GetIndukKerjaByUUID(a, c.Request().Context(), pegawaiReq.UuidUnitKerja1)
+	if ptr.StringValue(pegawaiReq.UuidUnitKerja1, "") != "" {
+		indukKerja, err := indukKerjaRepo.GetIndukKerjaByUUID(a, c.Request().Context(), ptr.StringValue(pegawaiReq.UuidUnitKerja1, ""))
 		if err != nil {
 			return model.PegawaiUpdate{}, fmt.Errorf("error from repo induk kerja by uuid: %w", err)
 		}
-		pegawaiOld.IdUnitKerja1 = indukKerja.ID
-		pegawaiOld.KdUnit1 = indukKerja.KdUnit1
+		pegawaiOld.IdUnitKerja1 = ptr.Uint64(indukKerja.ID)
+		pegawaiOld.KdUnit1 = ptr.String(indukKerja.KdUnit1)
 	}
 
 	// Pengecekan Unit Kerja
-	if pegawaiReq.UuidUnitKerja2 != "" {
-		unitKerja, err := indukKerjaRepo.GetUnitKerjaByUUID(a, c.Request().Context(), pegawaiReq.UuidUnitKerja2)
+	if ptr.StringValue(pegawaiReq.UuidUnitKerja2, "") != "" {
+		unitKerja, err := indukKerjaRepo.GetUnitKerjaByUUID(a, c.Request().Context(), ptr.StringValue(pegawaiReq.UuidUnitKerja2, ""))
 		if err != nil {
 			return model.PegawaiUpdate{}, fmt.Errorf("error from repo unit kerja by uuid: %w", err)
 		}
-		pegawaiOld.IdUnitKerja2 = unitKerja.ID
-		pegawaiOld.KdUnit2 = unitKerja.KdUnit2
+		pegawaiOld.IdUnitKerja2 = ptr.Uint64(unitKerja.ID)
+		pegawaiOld.KdUnit2 = ptr.String(unitKerja.KdUnit2)
 	}
 
 	// Pengecekan Bagian Kerja
-	if pegawaiReq.UuidUnitKerja3 != "" {
-		bagianKerja, err := indukKerjaRepo.GetBagianKerjaByUUID(a, c.Request().Context(), pegawaiReq.UuidUnitKerja3)
+	if ptr.StringValue(pegawaiReq.UuidUnitKerja3, "") != "" {
+		bagianKerja, err := indukKerjaRepo.GetBagianKerjaByUUID(a, c.Request().Context(), ptr.StringValue(pegawaiReq.UuidUnitKerja3, ""))
 		if err != nil {
 			return model.PegawaiUpdate{}, fmt.Errorf("error from repo bagian kerja by uuid: %w", err)
 		}
-		pegawaiOld.IdUnitKerja3 = bagianKerja.ID
-		pegawaiOld.KdUnit3 = bagianKerja.KdUnit3
+		pegawaiOld.IdUnitKerja3 = ptr.Uint64(bagianKerja.ID)
+		pegawaiOld.KdUnit3 = ptr.String(bagianKerja.KdUnit3)
 	}
 
 	// Pengecekan Lokasi Kerja
-	if pegawaiReq.UuidLokasiKerja != "" {
-		lokasiKerja, err := lokasiKerjaRepo.GetLokasiKerjaByUUID(a, c.Request().Context(), pegawaiReq.UuidLokasiKerja)
+	if ptr.StringValue(pegawaiReq.UuidLokasiKerja, "") != "" {
+		lokasiKerja, err := lokasiKerjaRepo.GetLokasiKerjaByUUID(a, c.Request().Context(), ptr.StringValue(pegawaiReq.UuidLokasiKerja, ""))
 		if err != nil {
 			return model.PegawaiUpdate{}, fmt.Errorf("error from repo lokasi kerja by uuid: %w", err)
 		}
-		pegawaiOld.IdUnitKerjaLokasi = lokasiKerja.ID
-		pegawaiOld.LokasiKerja = lokasiKerja.LokasiKerja
+		pegawaiOld.IdUnitKerjaLokasi = ptr.Uint64(lokasiKerja.ID)
+		pegawaiOld.LokasiKerja = ptr.String(lokasiKerja.LokasiKerja)
 	}
 
 	// Pengecekan Homebase Pddikti
-	if pegawaiReq.PegawaiFungsional.UuidHomebasePddikti != "" {
-		homebasePddikti, err := indukKerjaRepo.GetUnitKerjaByUUID(a, c.Request().Context(), pegawaiReq.PegawaiFungsional.UuidHomebasePddikti)
+	if ptr.StringValue(pegawaiReq.PegawaiFungsional.UuidHomebasePddikti, "") != "" {
+		homebasePddikti, err := indukKerjaRepo.GetUnitKerjaByUUID(a, c.Request().Context(), ptr.StringValue(pegawaiReq.PegawaiFungsional.UuidHomebasePddikti, ""))
 		if err != nil {
 			return model.PegawaiUpdate{}, fmt.Errorf("error from repo unit kerja by uuid: %w", err)
 		}
-		pegawaiOld.PegawaiFungsional.IdHomebasePddikti = homebasePddikti.ID
+		pegawaiOld.PegawaiFungsional.IdHomebasePddikti = ptr.Uint64(homebasePddikti.ID)
 	}
 
 	// Pengecekan Homebase UII
-	if pegawaiReq.PegawaiFungsional.UuidHomebaseUii != "" {
-		homebaseUUuidHomebaseUii, err := indukKerjaRepo.GetUnitKerjaByUUID(a, c.Request().Context(), pegawaiReq.PegawaiFungsional.UuidHomebaseUii)
+	if ptr.StringValue(pegawaiReq.PegawaiFungsional.UuidHomebaseUii, "") != "" {
+		homebaseUUuidHomebaseUii, err := indukKerjaRepo.GetUnitKerjaByUUID(a, c.Request().Context(), ptr.StringValue(pegawaiReq.PegawaiFungsional.UuidHomebaseUii, ""))
 		if err != nil {
 			return model.PegawaiUpdate{}, fmt.Errorf("error from repo unit kerja by uuid: %w", err)
 		}
-		pegawaiOld.PegawaiFungsional.IdHomebaseUii = homebaseUUuidHomebaseUii.ID
+		pegawaiOld.PegawaiFungsional.IdHomebaseUii = ptr.Uint64(homebaseUUuidHomebaseUii.ID)
 	}
 
 	// Pengecekan Pangkat Golongan Ruang PNS
-	if pegawaiReq.PegawaiPNS.UuidPangkatGolongan != "" {
-		pangkatPNS, err := pangkatPegawaiRepo.GetPangkatGolonganPegawaiByUUID(a, pegawaiReq.PegawaiPNS.UuidPangkatGolongan)
+	if ptr.StringValue(pegawaiReq.PegawaiPNS.UuidPangkatGolongan, "") != "" {
+		pangkatPNS, err := pangkatPegawaiRepo.GetPangkatGolonganPegawaiByUUID(a, ptr.StringValue(pegawaiReq.PegawaiPNS.UuidPangkatGolongan, ""))
 		if err != nil {
 			return model.PegawaiUpdate{}, fmt.Errorf("error from repo pangkat golongan pegawai by uuid: %w", err)
 		}
-		pegawaiOld.PegawaiPNS.IdPangkatGolongan = pangkatPNS.ID
-		pegawaiOld.PegawaiPNS.KdPangkatGolongan = pangkatPNS.KdPangkat
+		pegawaiOld.PegawaiPNS.IdPangkatGolongan = ptr.Uint64(pangkatPNS.ID)
+		pegawaiOld.PegawaiPNS.KdPangkatGolongan = ptr.String(pangkatPNS.KdPangkat)
 	}
 
 	// Pengecekan Jabatan Fungsional Yayasan
-	if pegawaiReq.PegawaiPNS.UuidJabatanFungsional != "" {
-		jabatanPNS, err := jabatanFungsionalRepo.GetJabatanFungsionalByUUID(a, c.Request().Context(), pegawaiReq.PegawaiPNS.UuidJabatanFungsional)
+	if ptr.StringValue(pegawaiReq.PegawaiPNS.UuidJabatanFungsional, "") != "" {
+		jabatanPNS, err := jabatanFungsionalRepo.GetJabatanFungsionalByUUID(a, c.Request().Context(), ptr.StringValue(pegawaiReq.PegawaiPNS.UuidJabatanFungsional, ""))
 		if err != nil {
 			return model.PegawaiUpdate{}, fmt.Errorf("error from repo pangkat golongan pegawai by uuid: %w", err)
 		}
-		pegawaiOld.PegawaiPNS.IdJabatanFungsional = jabatanPNS.ID
-		pegawaiOld.PegawaiPNS.KdJabatanFungsional = jabatanPNS.KdJabatanFungsional
+		pegawaiOld.PegawaiPNS.IdJabatanFungsional = ptr.Uint64(jabatanPNS.ID)
+		pegawaiOld.PegawaiPNS.KdJabatanFungsional = ptr.String(jabatanPNS.KdJabatanFungsional)
 	}
 
 	// Pengecekan Jenis PTT
-	if pegawaiReq.PegawaiPNS.UuidJenisPtt != "" {
-		jenisPTT, err := jenisPTTRepo.GetJenisPTTByUUID(a, c.Request().Context(), pegawaiReq.PegawaiPNS.UuidJenisPtt)
+	if ptr.StringValue(pegawaiReq.PegawaiPNS.UuidJenisPtt, "") != "" {
+		jenisPTT, err := jenisPTTRepo.GetJenisPTTByUUID(a, c.Request().Context(), ptr.StringValue(pegawaiReq.PegawaiPNS.UuidJenisPtt, ""))
 		if err != nil {
 			return model.PegawaiUpdate{}, fmt.Errorf("error from repo jenis pegawai tidak tetap by uuid: %w", err)
 		}
-		pegawaiOld.PegawaiPNS.IdJenisPtt = jenisPTT.ID
-		pegawaiOld.PegawaiPNS.KdJenisPtt = jenisPTT.KdJenisPTT
+		pegawaiOld.PegawaiPNS.IdJenisPtt = ptr.Uint64(jenisPTT.ID)
+		pegawaiOld.PegawaiPNS.KdJenisPtt = ptr.String(jenisPTT.KdJenisPTT)
 	}
 
 	// Pengecekan Status Pegawai
-	if pegawaiReq.PegawaiFungsional.UuidStatusPegawaiAktif != "" {
-		statusPegawaiAktif, err := statusPegawaiAktifRepo.GetStatusPegawaiAktifByUUID(a, c.Request().Context(), pegawaiReq.PegawaiFungsional.UuidStatusPegawaiAktif)
+	if ptr.StringValue(pegawaiReq.PegawaiFungsional.UuidStatusPegawaiAktif, "") != "" {
+		statusPegawaiAktif, err := statusPegawaiAktifRepo.GetStatusPegawaiAktifByUUID(a, c.Request().Context(), ptr.StringValue(pegawaiReq.PegawaiFungsional.UuidStatusPegawaiAktif, ""))
 		if err != nil {
 			return model.PegawaiUpdate{}, fmt.Errorf("error from repo status pegawai aktif by uuid: %w", err)
 		}
-		pegawaiOld.PegawaiFungsional.IdStatusPegawaiAktif = statusPegawaiAktif.ID
-		pegawaiOld.PegawaiFungsional.KdStatusPegawaiAktif = statusPegawaiAktif.KdStatusAktif
+		pegawaiOld.PegawaiFungsional.IdStatusPegawaiAktif = ptr.Uint64(statusPegawaiAktif.ID)
+		pegawaiOld.PegawaiFungsional.KdStatusPegawaiAktif = ptr.String(statusPegawaiAktif.KdStatusAktif)
 	}
 
 	// Binding nilai request ke struct
@@ -250,44 +252,44 @@ func ValidateUpdatePegawaiByUUID(a *app.App, c echo.Context) (model.PegawaiUpdat
 	if pegawaiReq.PegawaiFungsional.TmtJabatan != nil {
 		pegawaiOld.PegawaiFungsional.TmtJabatan = pegawaiReq.PegawaiFungsional.TmtJabatan
 	}
-	if pegawaiReq.PegawaiFungsional.MasaKerjaBawaanTahun != "" {
+	if ptr.StringValue(pegawaiReq.PegawaiFungsional.MasaKerjaBawaanTahun, "") != "" {
 		pegawaiOld.PegawaiFungsional.MasaKerjaBawaanTahun = pegawaiReq.PegawaiFungsional.MasaKerjaBawaanTahun
 	}
-	if pegawaiReq.PegawaiFungsional.MasaKerjaBawaanBulan != "" {
-		a, _ := strconv.Atoi(pegawaiReq.PegawaiFungsional.MasaKerjaBawaanBulan)
+	if ptr.StringValue(pegawaiReq.PegawaiFungsional.MasaKerjaBawaanBulan, "") != "" {
+		a, _ := strconv.Atoi(ptr.StringValue(pegawaiReq.PegawaiFungsional.MasaKerjaBawaanBulan, ""))
 		if a > 12 {
 			return model.PegawaiUpdate{}, fmt.Errorf("Bulan masa kerja bawaan maksimal 12")
 		}
 		pegawaiOld.PegawaiFungsional.MasaKerjaBawaanBulan = pegawaiReq.PegawaiFungsional.MasaKerjaBawaanBulan
 	}
-	if pegawaiReq.PegawaiFungsional.MasaKerjaGajiTahun != "" {
+	if ptr.StringValue(pegawaiReq.PegawaiFungsional.MasaKerjaGajiTahun, "") != "" {
 		pegawaiOld.PegawaiFungsional.MasaKerjaGajiTahun = pegawaiReq.PegawaiFungsional.MasaKerjaGajiTahun
 	}
-	if pegawaiReq.PegawaiFungsional.MasaKerjaGajiBulan != "" {
-		a, _ := strconv.Atoi(pegawaiReq.PegawaiFungsional.MasaKerjaGajiBulan)
+	if ptr.StringValue(pegawaiReq.PegawaiFungsional.MasaKerjaGajiBulan, "") != "" {
+		a, _ := strconv.Atoi(ptr.StringValue(pegawaiReq.PegawaiFungsional.MasaKerjaGajiBulan, ""))
 		if a > 12 {
 			return model.PegawaiUpdate{}, fmt.Errorf("Bulan masa kerja gaji maksimal 12")
 		}
 		pegawaiOld.PegawaiFungsional.MasaKerjaGajiBulan = pegawaiReq.PegawaiFungsional.MasaKerjaGajiBulan
 	}
 
-	if pegawaiReq.PegawaiFungsional.AngkaKredit != "" {
+	if ptr.StringValue(pegawaiReq.PegawaiFungsional.AngkaKredit, "") != "" {
 		pegawaiOld.PegawaiFungsional.AngkaKredit = pegawaiReq.PegawaiFungsional.AngkaKredit
 	}
-	if pegawaiReq.PegawaiFungsional.NomorSertifikasi != "" {
-		if len(pegawaiReq.PegawaiFungsional.NomorSertifikasi) > 20 {
+	if ptr.StringValue(pegawaiReq.PegawaiFungsional.NomorSertifikasi, "") != "" {
+		if len(ptr.StringValue(pegawaiReq.PegawaiFungsional.NomorSertifikasi, "")) > 20 {
 			return model.PegawaiUpdate{}, fmt.Errorf("Panjang karakter nomor sertifikasi maksimal 20")
 		}
 		pegawaiOld.PegawaiFungsional.NomorSertifikasi = pegawaiReq.PegawaiFungsional.NomorSertifikasi
 	}
-	if pegawaiReq.PegawaiFungsional.NomorRegistrasi != "" {
-		if len(pegawaiReq.PegawaiFungsional.NomorRegistrasi) > 10 {
+	if ptr.StringValue(pegawaiReq.PegawaiFungsional.NomorRegistrasi, "") != "" {
+		if len(ptr.StringValue(pegawaiReq.PegawaiFungsional.NomorRegistrasi, "")) > 10 {
 			return model.PegawaiUpdate{}, fmt.Errorf("Panjang karakter nomor registrasi maksimal 10")
 		}
 		pegawaiOld.PegawaiFungsional.NomorRegistrasi = pegawaiReq.PegawaiFungsional.NomorRegistrasi
 	}
-	if pegawaiReq.PegawaiFungsional.NomorSkPertama != "" {
-		if len(pegawaiReq.PegawaiFungsional.NomorSkPertama) > 30 {
+	if ptr.StringValue(pegawaiReq.PegawaiFungsional.NomorSkPertama, "") != "" {
+		if len(ptr.StringValue(pegawaiReq.PegawaiFungsional.NomorSkPertama, "")) > 30 {
 			return model.PegawaiUpdate{}, fmt.Errorf("Panjang karakter nomor sk pertama maksimal 30")
 		}
 		pegawaiOld.PegawaiFungsional.NomorSkPertama = pegawaiReq.PegawaiFungsional.NomorSkPertama
@@ -295,17 +297,17 @@ func ValidateUpdatePegawaiByUUID(a *app.App, c echo.Context) (model.PegawaiUpdat
 	if pegawaiReq.PegawaiFungsional.TmtSkPertama != nil {
 		pegawaiOld.PegawaiFungsional.TmtSkPertama = pegawaiReq.PegawaiFungsional.TmtSkPertama
 	}
-	if pegawaiReq.PegawaiPNS.InstansiAsal != "" {
+	if ptr.StringValue(pegawaiReq.PegawaiPNS.InstansiAsal, "") != "" {
 		pegawaiOld.PegawaiPNS.InstansiAsal = pegawaiReq.PegawaiPNS.InstansiAsal
 	}
-	if pegawaiReq.PegawaiPNS.NipPns != "" {
-		if len(pegawaiReq.PegawaiPNS.NipPns) != 18 {
+	if ptr.StringValue(pegawaiReq.PegawaiPNS.NipPns, "") != "" {
+		if len(ptr.StringValue(pegawaiReq.PegawaiPNS.NipPns, "")) != 18 {
 			return model.PegawaiUpdate{}, fmt.Errorf("Panjang karakter NIP PNS hanya boleh 18")
 		}
 		pegawaiOld.PegawaiPNS.NipPns = pegawaiReq.PegawaiPNS.NipPns
 	}
-	if pegawaiReq.PegawaiPNS.NoKartuPegawai != "" {
-		if len(pegawaiReq.PegawaiPNS.NoKartuPegawai) != 18 {
+	if ptr.StringValue(pegawaiReq.PegawaiPNS.NoKartuPegawai, "") != "" {
+		if len(ptr.StringValue(pegawaiReq.PegawaiPNS.NoKartuPegawai, "")) != 18 {
 			return model.PegawaiUpdate{}, fmt.Errorf("Panjang karakter nomor kartu pegawai hanya boleh 18")
 		}
 		pegawaiOld.PegawaiPNS.NoKartuPegawai = pegawaiReq.PegawaiPNS.NoKartuPegawai
@@ -316,26 +318,26 @@ func ValidateUpdatePegawaiByUUID(a *app.App, c echo.Context) (model.PegawaiUpdat
 	if pegawaiReq.PegawaiPNS.TmtJabatan != nil {
 		pegawaiOld.PegawaiPNS.TmtJabatan = pegawaiReq.PegawaiPNS.TmtJabatan
 	}
-	if pegawaiReq.PegawaiPNS.MasaKerjaTahun != "" {
+	if ptr.StringValue(pegawaiReq.PegawaiPNS.MasaKerjaTahun, "") != "" {
 		pegawaiOld.PegawaiPNS.MasaKerjaTahun = pegawaiReq.PegawaiPNS.MasaKerjaTahun
 	}
-	if pegawaiReq.PegawaiPNS.MasaKerjaBulan != "" {
-		a, _ := strconv.Atoi(pegawaiReq.PegawaiPNS.MasaKerjaBulan)
+	if ptr.StringValue(pegawaiReq.PegawaiPNS.MasaKerjaBulan, "") != "" {
+		a, _ := strconv.Atoi(ptr.StringValue(pegawaiReq.PegawaiPNS.MasaKerjaBulan, ""))
 		if a > 12 {
 			return model.PegawaiUpdate{}, fmt.Errorf("Masa kerja bulan maksimal 12")
 		}
 		pegawaiOld.PegawaiPNS.MasaKerjaBulan = pegawaiReq.PegawaiPNS.MasaKerjaBulan
 	}
-	if pegawaiReq.PegawaiPNS.AngkaKredit != "" {
+	if ptr.StringValue(pegawaiReq.PegawaiPNS.AngkaKredit, "") != "" {
 		pegawaiOld.PegawaiPNS.AngkaKredit = pegawaiReq.PegawaiPNS.AngkaKredit
 	}
-	if pegawaiReq.PegawaiPNS.Keterangan != "" {
+	if ptr.StringValue(pegawaiReq.PegawaiPNS.Keterangan, "") != "" {
 		pegawaiOld.PegawaiPNS.Keterangan = pegawaiReq.PegawaiPNS.Keterangan
 	}
 
-	pegawaiOld.UserUpdate = user
-	pegawaiOld.PegawaiFungsional.UserUpdate = user
-	pegawaiOld.PegawaiPNS.UserUpdate = user
+	pegawaiOld.UserUpdate = ptr.String(user)
+	pegawaiOld.PegawaiFungsional.UserUpdate = ptr.String(user)
+	pegawaiOld.PegawaiPNS.UserUpdate = ptr.String(user)
 	return pegawaiOld, nil
 }
 

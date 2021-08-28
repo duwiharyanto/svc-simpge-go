@@ -1,9 +1,9 @@
 package model
 
 import (
+	"fmt"
+	"strconv"
 	"time"
-
-	"github.com/cstockton/go-conv"
 )
 
 type PegawaiYayasan struct {
@@ -69,65 +69,21 @@ func (*PegawaiYayasan) TableName() string {
 }
 
 func (a *PegawaiYayasan) SetMasaKerjaTotal(b *UnitKerjaPegawai) {
-	now := time.Now()
-	yearNow, _ := conv.Int(now.Year())
-	monthNow, _ := conv.Int(now.Month())
-	dayNow, _ := conv.Int(now.Day())
-	maxMonth := 12
+	masaKerjaBawaanTahunInt, _ := strconv.Atoi(a.MasaKerjaBawaanTahun)
+	masaKerjaBawaanBulanInt, _ := strconv.Atoi(a.MasaKerjaBawaanBulan)
 
-	var yearSk int
-	var monthSk int
-	var daySk int
-
-	if b.TmtSkPertama != "" {
-		dateSk, err := time.Parse("2006-01-02", b.TmtSkPertama)
-		if err != nil {
-			return
-		}
-		yearSk, _ = conv.Int(dateSk.Year())
-		monthSk, _ = conv.Int(dateSk.Month())
-		daySk, _ = conv.Int(dateSk.Day())
+	tmtSkPertamaTime, err := time.Parse("2006-01-02", b.TmtSkPertama)
+	var tmtSkPertamaDuration time.Duration
+	if err == nil {
+		tmtSkPertamaDuration = time.Now().Sub(tmtSkPertamaTime)
 	}
+	tmtSkPertamaDurationDays := tmtSkPertamaDuration.Hours() / 24
+	// tmtSkPertamaDurationYears := int(tmtSkPertamaDurationDays / 365)
+	tmtSkPertamaDurationRealMonths := int(tmtSkPertamaDurationDays / 365 * 12)
+	// tmtSkPertamaDurationMonths := int(tmtSkPertamaDurationDays / 30 % 12)
 
-	yearSkNow := yearNow - yearSk
-	monthSkNow := monthNow - monthSk
+	masaKerjaTotalRealBulan := ((masaKerjaBawaanTahunInt * 12) + masaKerjaBawaanBulanInt) + tmtSkPertamaDurationRealMonths
+	a.MasaKerjaTotalTahun = fmt.Sprintf("%d", masaKerjaTotalRealBulan/12)
+	a.MasaKerjaTotalBulan = fmt.Sprintf("%d", masaKerjaTotalRealBulan%12)
 
-	if monthSkNow < 0 {
-		yearSkNow = yearSkNow - 1
-		monthSkNow = maxMonth + monthSkNow
-	}
-
-	daySkNow := dayNow - daySk
-
-	if daySkNow < 0 {
-		monthSkNow = monthSkNow - 1
-	}
-
-	// fmt.Println("Year Sk Now : ", yearSkNow)
-	// fmt.Println("Month Sk Now : ", monthSkNow)
-
-	var MasaBawaanBulan, _ = conv.Int(a.MasaKerjaBawaanBulan)
-	var MasaBawaanTahun, _ = conv.Int(a.MasaKerjaBawaanTahun)
-	var MasaTotalTahun = 0
-	var MasaTotalBulan = 0
-
-	// fmt.Println("Year Bawaan Tahun : ", MasaBawaanTahun)
-	// fmt.Println("Month Bawaan Tahun : ", MasaBawaanBulan)
-
-	if MasaBawaanTahun != 0 || yearSkNow != 0 {
-		MasaTotalTahun = MasaBawaanTahun + yearSkNow
-	}
-
-	if MasaBawaanBulan != 00 || monthSkNow != 0 {
-		MasaTotalBulan = MasaBawaanBulan + monthSkNow
-		if MasaTotalBulan >= 12 {
-			MasaTotalBulan = MasaTotalBulan - 12
-			MasaTotalTahun = MasaTotalTahun + 1
-		}
-	}
-	// fmt.Println("Year Total Tahun : ", MasaTotalTahun)
-	// fmt.Println("Month Total Tahun : ", MasaTotalBulan)
-
-	a.MasaKerjaTotalBulan, _ = conv.String(MasaTotalBulan)
-	a.MasaKerjaTotalTahun, _ = conv.String(MasaTotalTahun)
 }

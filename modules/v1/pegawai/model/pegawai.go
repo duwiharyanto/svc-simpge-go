@@ -189,69 +189,69 @@ func (pd PegawaiDetail) IsEmpty() bool {
 
 type PegawaiUpdate struct {
 	Id                      uint64                  `form:"id" gorm:"primaryKey;<-false"`
-	IdPersonalDataPribadi   uint64                  `form:"id_personal_data_pribadi" gorm:"<-:create"`
-	FlagAktif               int                     `form:"flag_aktif" gorm:"->"`
-	Nik                     string                  `form:"nik" gorm:"->;<-:create"`
-	NikKtp                  string                  `form:"nik_ktp" gorm:"->"`
-	Nama                    string                  `form:"nama" gorm:"->;<-:create"`
-	GelarDepan              string                  `form:"gelar_depan" gorm:"<-:create"`
-	GelarBelakang           string                  `form:"gelar_belakang" gorm:"<-:create"`
-	TempatLahir             string                  `form:"tempat_lahir" gorm:"<-:create"`
-	TglLahir                string                  `form:"tgl_lahir" gorm:"<-:create"`
-	JenisKelamin            string                  `form:"jenis_kelamin" gorm:"<-:create"`
-	IdAgama                 uint64                  `form:"id_agama" gorm:"<-:create"`
-	KdAgama                 string                  `form:"kd_agama" gorm:"<-:create"`
-	IdGolonganDarah         uint64                  `form:"id_golongan_darah" gorm:"<-:create"`
-	KdGolonganDarah         string                  `form:"kd_golongan_darah" gorm:"<-:create"`
-	IdStatusPerkawinan      uint64                  `form:"id_status_perkawinan" gorm:"<-:create"`
-	KdStatusPerkawinan      string                  `form:"kd_status_perkawinan" gorm:"<-:create"`
-	UuidPendidikanMasuk     string                  `form:"uuid_pendidikan_masuk" gorm:"-"`
-	IdPendidikanMasuk       uint64                  `form:"id_pendidikan_masuk"`
-	KdPendidikanMasuk       string                  `form:"kd_pendidikan_masuk"`
-	UuidPendidikanTerakhir  string                  `form:"uuid_pendidikan_terakhir" gorm:"-"`
-	IdPendidikanTerakhir    uint64                  `form:"id_pendidikan_terakhir"`
-	KdPendidikanTerakhir    string                  `form:"kd_pendidikan_terakhir"`
-	IdStatusPendidikanMasuk uint64                  `form:"id_status_pendidikan_masuk" gorm:"<-:create"`
-	KdStatusPendidikanMasuk string                  `form:"kd_status_pendidikan_masuk" gorm:"<-:create"`
-	IdJenisPendidikan       uint64                  `form:"id_jenis_pendidikan" gorm:"<-:create"`
-	kdJenisPendidikan       string                  `form:"kd_jenis_pendidikan" gorm:"<-:create"`
-	UuidJenisPegawai        string                  `form:"uuid_jenis_pegawai" gorm:"-"`
-	IdJenisPegawai          uint64                  `form:"id_jenis_pegawai"`
-	KdJenisPegawai          string                  `form:"kd_jenis_pegawai"`
-	UuidStatusPegawai       string                  `form:"uuid_status_pegawai" gorm:"-"`
-	IdStatusPegawai         uint64                  `form:"id_status_pegawai"`
-	KdStatusPegawai         string                  `form:"kd_status_pegawai"`
-	UuidKelompokPegawai     string                  `form:"uuid_kelompok_pegawai" gorm:"-"`
-	IdKelompokPegawai       uint64                  `form:"id_kelompok_pegawai"`
-	KdKelompokPegawai       string                  `form:"kd_kelompok_pegawai"`
-	UuidDetailProfesi       string                  `form:"uuid_detail_profesi"  gorm:"-"`
-	IdDetailProfesi         uint64                  `form:"id_detail_profesi"`
-	UuidGolongan            string                  `form:"uuid_golongan" gorm:"-"`
-	IdGolongan              uint64                  `form:"id_golongan"`
-	KdGolongan              string                  `form:"kd_golongan"`
-	UuidRuang               string                  `form:"uuid_ruang" gorm:"-"`
-	IdRuang                 uint64                  `form:"id_ruang"`
-	KdRuang                 string                  `form:"kd_ruang"`
-	UuidUnitKerja1          string                  `form:"uuid_induk_kerja" gorm:"-"` //Perubahan
-	IdUnitKerja1            uint64                  `form:"id_unit_kerja1"`
-	KdUnit1                 string                  `form:"kd_unit1"`
-	UuidUnitKerja2          string                  `form:"uuid_unit_kerja" gorm:"-"` //Perubahan
-	IdUnitKerja2            uint64                  `form:"id_unit_kerja2"`
-	KdUnit2                 string                  `form:"kd_unit2"`
-	UuidUnitKerja3          string                  `form:"uuid_bagian_kerja" gorm:"-"` //Perubahan
-	IdUnitKerja3            uint64                  `form:"id_unit_kerja3"`
-	KdUnit3                 string                  `form:"kd_unit3"`
-	IdUnitKerjaLokasi       uint64                  `form:"id_unit_kerja_lokasi"`
-	LokasiKerja             string                  `form:"lokasi_kerja"`
-	UuidLokasiKerja         string                  `form:"uuid_lokasi_kerja" gorm:"-"`
-	FlagPensiun             string                  `form:"flag_pensiun" gorm:"->"`
-	TglPensiun              string                  `form:"tgl_pensiun" gorm:"->"`
-	FlagMeninggal           string                  `form:"flag_meninggal" gorm:"->"`
-	TglInput                string                  `form:"tgl_input" gorm:"->"`
-	UserInput               string                  `form:"user_input" gorm:"->"`
-	TglUpdate               string                  `form:"tgl_update" gorm:"->"`
-	UserUpdate              string                  `form:"user_update"`
-	Uuid                    string                  `form:"uuid" gorm:"->;<-false"`
+	IdPersonalDataPribadi   *uint64                 `form:"id_personal_data_pribadi" gorm:"<-:create"`
+	FlagAktif               *int                    `form:"flag_aktif" gorm:"->"`
+	Nik                     *string                 `form:"nik" gorm:"->;<-:create"`
+	NikKtp                  *string                 `form:"nik_ktp" gorm:"->"`
+	Nama                    *string                 `form:"nama" gorm:"->;<-:create"`
+	GelarDepan              *string                 `form:"gelar_depan" gorm:"<-:create"`
+	GelarBelakang           *string                 `form:"gelar_belakang" gorm:"<-:create"`
+	TempatLahir             *string                 `form:"tempat_lahir" gorm:"<-:create"`
+	TglLahir                *string                 `form:"tgl_lahir" gorm:"<-:create"`
+	JenisKelamin            *string                 `form:"jenis_kelamin" gorm:"<-:create"`
+	IdAgama                 *uint64                 `form:"id_agama" gorm:"<-:create"`
+	KdAgama                 *string                 `form:"kd_agama" gorm:"<-:create"`
+	IdGolonganDarah         *uint64                 `form:"id_golongan_darah" gorm:"<-:create"`
+	KdGolonganDarah         *string                 `form:"kd_golongan_darah" gorm:"<-:create"`
+	IdStatusPerkawinan      *uint64                 `form:"id_status_perkawinan" gorm:"<-:create"`
+	KdStatusPerkawinan      *string                 `form:"kd_status_perkawinan" gorm:"<-:create"`
+	UuidPendidikanMasuk     *string                 `form:"uuid_pendidikan_masuk" gorm:"-"`
+	IdPendidikanMasuk       *uint64                 `form:"id_pendidikan_masuk" gorm:"default:null"`
+	KdPendidikanMasuk       *string                 `form:"kd_pendidikan_masuk" gorm:"default:null"`
+	UuidPendidikanTerakhir  *string                 `form:"uuid_pendidikan_terakhir" gorm:"-"`
+	IdPendidikanTerakhir    *uint64                 `form:"id_pendidikan_terakhir" gorm:"default:null"`
+	KdPendidikanTerakhir    *string                 `form:"kd_pendidikan_terakhir" gorm:"default:null"`
+	IdStatusPendidikanMasuk *uint64                 `form:"id_status_pendidikan_masuk" gorm:"<-:create"`
+	KdStatusPendidikanMasuk *string                 `form:"kd_status_pendidikan_masuk" gorm:"<-:create"`
+	IdJenisPendidikan       *uint64                 `form:"id_jenis_pendidikan" gorm:"<-:create"`
+	kdJenisPendidikan       *string                 `form:"kd_jenis_pendidikan" gorm:"<-:create"`
+	UuidJenisPegawai        *string                 `form:"uuid_jenis_pegawai" gorm:"-"`
+	IdJenisPegawai          *uint64                 `form:"id_jenis_pegawai" gorm:"default:null"`
+	KdJenisPegawai          *string                 `form:"kd_jenis_pegawai" gorm:"default:null"`
+	UuidStatusPegawai       *string                 `form:"uuid_status_pegawai" gorm:"-"`
+	IdStatusPegawai         *uint64                 `form:"id_status_pegawai" gorm:"default:null"`
+	KdStatusPegawai         *string                 `form:"kd_status_pegawai" gorm:"default:null"`
+	UuidKelompokPegawai     *string                 `form:"uuid_kelompok_pegawai" gorm:"-"`
+	IdKelompokPegawai       *uint64                 `form:"id_kelompok_pegawai" gorm:"default:null"`
+	KdKelompokPegawai       *string                 `form:"kd_kelompok_pegawai" gorm:"default:null"`
+	UuidDetailProfesi       *string                 `form:"uuid_detail_profesi"  gorm:"-"`
+	IdDetailProfesi         *uint64                 `form:"id_detail_profesi" gorm:"default:null"`
+	UuidGolongan            *string                 `form:"uuid_golongan" gorm:"-"`
+	KdGolongan              *string                 `form:"kd_golongan" gorm:"default:null"`
+	IdGolongan              *uint64                 `form:"id_golongan" gorm:"default:null"`
+	UuidRuang               *string                 `form:"uuid_ruang" gorm:"-"`
+	IdRuang                 *uint64                 `form:"id_ruang" gorm:"default:null"`
+	KdRuang                 *string                 `form:"kd_ruang" gorm:"default:null"`
+	UuidUnitKerja1          *string                 `form:"uuid_induk_kerja" gorm:"-"` //Perubahan
+	IdUnitKerja1            *uint64                 `form:"id_unit_kerja1" gorm:"default:null"`
+	KdUnit1                 *string                 `form:"kd_unit1" gorm:"default:null"`
+	UuidUnitKerja2          *string                 `form:"uuid_unit_kerja" gorm:"-"` //Perubahan
+	IdUnitKerja2            *uint64                 `form:"id_unit_kerja2" gorm:"default:null"`
+	KdUnit2                 *string                 `form:"kd_unit2" gorm:"default:null"`
+	UuidUnitKerja3          *string                 `form:"uuid_bagian_kerja" gorm:"-"` //Perubahan
+	IdUnitKerja3            *uint64                 `form:"id_unit_kerja3" gorm:"default:null"`
+	KdUnit3                 *string                 `form:"kd_unit3" gorm:"default:null"`
+	IdUnitKerjaLokasi       *uint64                 `form:"id_unit_kerja_lokasi" gorm:"default:null"`
+	LokasiKerja             *string                 `form:"lokasi_kerja" gorm:"default:null"`
+	UuidLokasiKerja         *string                 `form:"uuid_lokasi_kerja" gorm:"-"`
+	FlagPensiun             *string                 `form:"flag_pensiun" gorm:"->"`
+	TglPensiun              *string                 `form:"tgl_pensiun" gorm:"->"`
+	FlagMeninggal           *string                 `form:"flag_meninggal" gorm:"->"`
+	TglInput                *string                 `form:"tgl_input" gorm:"->"`
+	UserInput               *string                 `form:"user_input" gorm:"->"`
+	TglUpdate               *string                 `form:"tgl_update" gorm:"->"`
+	UserUpdate              *string                 `form:"user_update"`
+	Uuid                    *string                 `form:"uuid" gorm:"->;<-false"`
 	PegawaiFungsional       PegawaiFungsionalUpdate `gorm:"foreignkey:IdPegawai;references:Id"`
 	PegawaiPNS              PegawaiPNSUpdate        `gorm:"foreignkey:IdPegawai;references:Id"`
 }
