@@ -5,9 +5,6 @@ import (
 	"strconv"
 	"svc-insani-go/app"
 	"svc-insani-go/app/helper"
-	"svc-insani-go/modules/v1/pegawai/model"
-	"svc-insani-go/modules/v1/pegawai/repo"
-
 	detailProfesiRepo "svc-insani-go/modules/v1/master-detail-profesi/repo"
 	jabatanFungsionalRepo "svc-insani-go/modules/v1/master-jabatan-fungsional/repo"
 	jenisNoRegisRepo "svc-insani-go/modules/v1/master-jenis-nomor-registrasi/repo"
@@ -20,13 +17,13 @@ import (
 	pangkatPegawaiRepo "svc-insani-go/modules/v1/master-pangkat-golongan-pegawai/repo"
 	statusPegawaiAktifRepo "svc-insani-go/modules/v1/master-status-pegawai-aktif/repo"
 	statusPegawaiRepo "svc-insani-go/modules/v1/master-status-pegawai/repo"
+	"svc-insani-go/modules/v1/pegawai/model"
+	"svc-insani-go/modules/v1/pegawai/repo"
 	personalRepo "svc-insani-go/modules/v1/personal/repo"
 
-	ptr "github.com/openlyinc/pointy"
-
-	"github.com/labstack/echo/v4"
-
 	guuid "github.com/google/uuid"
+	"github.com/labstack/echo/v4"
+	ptr "github.com/openlyinc/pointy"
 )
 
 func ValidateUpdatePegawaiByUUID(a *app.App, c echo.Context) (model.PegawaiUpdate, error) {
@@ -136,7 +133,7 @@ func ValidateUpdatePegawaiByUUID(a *app.App, c echo.Context) (model.PegawaiUpdat
 		pegawaiOld.PegawaiFungsional.KdJabatanFungsional = ptr.String(jabatanFungsional.KdJabatanFungsional)
 	}
 
-	// Pengecekan Jenis Nomor Resgistrasi
+	// Pengecekan Jenis Nomor Registrasi
 	if ptr.StringValue(pegawaiReq.PegawaiFungsional.UuidJenisNomorRegistrasi, "") != "" {
 		jenisNoRegis, err := jenisNoRegisRepo.GetJenisNoRegisByUUID(a, c.Request().Context(), ptr.StringValue(pegawaiReq.PegawaiFungsional.UuidJenisNomorRegistrasi, ""))
 		if err != nil {
@@ -242,6 +239,23 @@ func ValidateUpdatePegawaiByUUID(a *app.App, c echo.Context) (model.PegawaiUpdat
 		}
 		pegawaiOld.PegawaiFungsional.IdStatusPegawaiAktif = ptr.Uint64(statusPegawaiAktif.ID)
 		pegawaiOld.PegawaiFungsional.KdStatusPegawaiAktif = ptr.String(statusPegawaiAktif.KdStatusAktif)
+
+		pegawaiOld.FlagMengajar = ptr.String("0")
+		if pegawaiOld.IsLecturer() && statusPegawaiAktif.IsActive() && !statusPegawaiAktif.IsOnStudyingPermission() {
+			pegawaiOld.FlagMengajar = ptr.String("1")
+		}
+		pegawaiOld.FlagSekolah = ptr.String("0")
+		if statusPegawaiAktif.IsOnStudyingPermission() {
+			pegawaiOld.FlagSekolah = ptr.String("1")
+		}
+		pegawaiOld.FlagPensiun = ptr.String("0")
+		if statusPegawaiAktif.IsRetired() {
+			pegawaiOld.FlagPensiun = ptr.String("1")
+		}
+		pegawaiOld.FlagMeninggal = ptr.String("0")
+		if statusPegawaiAktif.IsDied() {
+			pegawaiOld.FlagMeninggal = ptr.String("1")
+		}
 	}
 
 	// Binding nilai request ke struct

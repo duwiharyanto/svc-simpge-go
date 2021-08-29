@@ -5,10 +5,11 @@ import (
 	jenisPegawai "svc-insani-go/modules/v1/master-jenis-pegawai/model"
 	kelompokPegawai "svc-insani-go/modules/v1/master-kelompok-pegawai/model"
 	indukKerja "svc-insani-go/modules/v1/master-organisasi/model"
-
 	statusPegawai "svc-insani-go/modules/v1/master-status-pegawai/model"
 	unitKerja "svc-insani-go/modules/v1/master-unit-kerja/model"
 	"time"
+
+	ptr "github.com/openlyinc/pointy"
 )
 
 type Pegawai struct {
@@ -244,9 +245,11 @@ type PegawaiUpdate struct {
 	IdUnitKerjaLokasi       *uint64                 `form:"id_unit_kerja_lokasi" gorm:"default:null"`
 	LokasiKerja             *string                 `form:"lokasi_kerja" gorm:"default:null"`
 	UuidLokasiKerja         *string                 `form:"uuid_lokasi_kerja" gorm:"-"`
-	FlagPensiun             *string                 `form:"flag_pensiun" gorm:"->"`
+	FlagPensiun             *string                 `form:"flag_pensiun" gorm:"default:null"`
 	TglPensiun              *string                 `form:"tgl_pensiun" gorm:"->"`
-	FlagMeninggal           *string                 `form:"flag_meninggal" gorm:"->"`
+	FlagMeninggal           *string                 `form:"flag_meninggal" gorm:"default:null"`
+	FlagSekolah             *string                 `form:"-" gorm:"default:0"`
+	FlagMengajar            *string                 `form:"-" gorm:"default:0"`
 	TglInput                *string                 `form:"tgl_input" gorm:"->"`
 	UserInput               *string                 `form:"user_input" gorm:"->"`
 	TglUpdate               *string                 `form:"tgl_update" gorm:"->"`
@@ -258,6 +261,14 @@ type PegawaiUpdate struct {
 
 func (*PegawaiUpdate) TableName() string {
 	return "pegawai"
+}
+
+var (
+	kdJenisPegawaiDosen = "ED"
+)
+
+func (p PegawaiUpdate) IsLecturer() bool {
+	return ptr.StringValue(p.KdJenisPegawai, "") == kdJenisPegawaiDosen
 }
 
 var indonesianMonths = [...]string{
