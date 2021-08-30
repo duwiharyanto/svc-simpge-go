@@ -3,9 +3,12 @@ package repo
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"svc-insani-go/app"
 	"svc-insani-go/app/database"
 	"testing"
+
+	"github.com/openlyinc/pointy"
 )
 
 func TestGetPegawaiPendidikan(t *testing.T) {
@@ -117,4 +120,74 @@ func TestUpdatePendidikanPegawai(t *testing.T) {
 	if err != nil {
 		t.Fatal("failed update flag pendidikan pegawai:", err)
 	}
+}
+
+func TestModelUpdate(t *testing.T) {
+	db, err := database.Connect()
+	if err != nil {
+		t.Fatal("failed connect to db:", err)
+	}
+
+	type Pegawai struct {
+		Id              uint64  `json:"id,omitempty"`
+		IdGolonganDarah uint64  `json:"id_golongan_darah,omitempty"`
+		NikKtp          *string `json:"-,omitempty"`
+		UserUpdate      string  `json:"user_update,omitempty" gorm:"default:null"`
+		UserInput       string  `json:"user_input,omitempty"`
+	}
+
+	gormDB, err := database.InitGorm(db, true)
+	if err != nil {
+		t.Fatal("failed connect to gorm db:", err)
+	}
+
+	// s := Pegawai{19296139857813084, "ahmad", "haris"}
+	s := Pegawai{}
+	s.Id = 99221016355366834
+	s.IdGolonganDarah = 8745490293271215460
+	t.Logf("s.Id: %#v\n", s.Id)
+	s.UserUpdate = ""
+	s.UserInput = "hariszv"
+
+	var gp Pegawai
+	err = gormDB.Find(&gp, "id = ?", s.Id).Error
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Logf("gp: %#v", gp)
+	return
+	bs, err := json.Marshal(s)
+	if err != nil {
+		t.Fatal(err)
+	}
+	m := make(map[string]interface{})
+	err = json.Unmarshal(bs, &m)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Log(m)
+	t.Log("id_golongan_darah:", m["id_golongan_darah"])
+	// return
+
+	// res := gormDB.Model(&s).Updates(Pegawai{})
+	// res := gormDB.Save(&s)
+	res := gormDB.Model(&Pegawai{Id: s.Id}).Updates(m)
+	if res.Error != nil {
+		t.Fatal("err save:", res.Error)
+	}
+	t.Log("res aff:", res.RowsAffected)
+
+}
+
+func TestPointer(t *testing.T) {
+	foo := pointy.Uint64(8745490293271215460)
+	fmt.Println("foo is a pointer to:", *foo)
+
+	bar := pointy.String("point to me")
+	fmt.Println("bar is a pointer to:", *bar)
+
+	// get the value back out (new in v1.1.0)
+	bar = nil
+	barVal := pointy.StringValue(bar, "empty!")
+	fmt.Println("bar's value is:", barVal)
 }

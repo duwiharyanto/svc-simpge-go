@@ -7,8 +7,8 @@ import (
 	"svc-insani-go/modules/v1/pegawai/model"
 )
 
-func GetUnitKerjaPegawai(a *app.App, uuid string) (*model.UnitKerjaPegawai, error) {
-	sqlQuery := getUnitKerjaPegawaiQuery(uuid)
+func GetUnitKerjaPegawai(a *app.App, uuidPegawai string) (*model.UnitKerjaPegawai, error) {
+	sqlQuery := getUnitKerjaPegawaiQuery(uuidPegawai)
 	var unitKerjaPegawai model.UnitKerjaPegawai
 
 	err := a.DB.QueryRow(sqlQuery).Scan(

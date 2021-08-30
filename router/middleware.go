@@ -12,6 +12,7 @@ import (
 func SetResponseTimeout(ctx context.Context) echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
+			c.Request().Header.Set("X-Member", "ahmad")
 			dur, err := time.ParseDuration(os.Getenv("RESPONSE_TIMEOUT_MS") + "ms")
 			if err != nil {
 				dur = time.Second * 40 // default

@@ -17,6 +17,8 @@ import (
 	"svc-insani-go/modules/v1/pegawai/repo"
 	pengaturan "svc-insani-go/modules/v1/pengaturan-insani/usecase"
 
+	ptr "github.com/openlyinc/pointy"
+
 	"github.com/labstack/echo/v4"
 )
 
@@ -142,7 +144,7 @@ func HandleUpdatePegawai(a *app.App, ctx context.Context, errChan chan error) ec
 		idPersonalPegawai := pegawaiUpdate.IdPersonalDataPribadi
 
 		if uuidPendidikanDiakui != "" || uuidPendidikanTerakhir != "" {
-			err = repo.UpdatePendidikanPegawai(a, c.Request().Context(), uuidPendidikanDiakui, uuidPendidikanTerakhir, idPersonalPegawai)
+			err = repo.UpdatePendidikanPegawai(a, c.Request().Context(), uuidPendidikanDiakui, uuidPendidikanTerakhir, ptr.Uint64Value(idPersonalPegawai, 0))
 			if err != nil {
 				fmt.Printf("[ERROR]: %s\n", err.Error())
 				return c.JSON(http.StatusBadRequest, map[string]string{"message": err.Error()})
@@ -150,7 +152,7 @@ func HandleUpdatePegawai(a *app.App, ctx context.Context, errChan chan error) ec
 		}
 
 		// Menampilkan response
-		pegawaiDetail, err := PrepareGetSimpegPegawaiByUUID(a, pegawaiUpdate.Uuid)
+		pegawaiDetail, err := PrepareGetSimpegPegawaiByUUID(a, ptr.StringValue(pegawaiUpdate.Uuid, ""))
 		if err != nil {
 			fmt.Printf("[ERROR] repo get kepegawaian: %s\n", err.Error())
 			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})

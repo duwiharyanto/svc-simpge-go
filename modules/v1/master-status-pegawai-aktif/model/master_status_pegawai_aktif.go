@@ -1,7 +1,10 @@
 package model
 
 const (
-	statusActive = "AKT"
+	statusActive               = "AKT"
+	statusRetired              = "PEN"
+	statusDied                 = "MNG"
+	statusOnStudyingPermission = "IBL"
 )
 
 type StatusPegawaiAktif struct {
@@ -16,6 +19,18 @@ type StatusPegawaiAktif struct {
 
 func (s StatusPegawaiAktif) IsActive() bool {
 	return s.FlagStatusAktif == 1
+}
+
+func (s StatusPegawaiAktif) IsRetired() bool {
+	return s.KdStatusAktif == statusRetired
+}
+
+func (s StatusPegawaiAktif) IsDied() bool {
+	return s.KdStatusAktif == statusDied
+}
+
+func (s StatusPegawaiAktif) IsOnStudyingPermission() bool {
+	return s.KdStatusAktif == statusOnStudyingPermission
 }
 
 type StatusPegawaiAktifResponse struct {
