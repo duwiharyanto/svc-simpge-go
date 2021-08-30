@@ -155,7 +155,7 @@ func TestModelUpdate(t *testing.T) {
 		t.Fatal(err)
 	}
 	t.Logf("gp: %#v", gp)
-	return
+	// return
 	bs, err := json.Marshal(s)
 	if err != nil {
 		t.Fatal(err)
