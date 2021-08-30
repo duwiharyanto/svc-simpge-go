@@ -17,6 +17,8 @@ import (
 	"svc-insani-go/modules/v1/pegawai/repo"
 	pengaturan "svc-insani-go/modules/v1/pengaturan-insani/usecase"
 
+	ptr "github.com/openlyinc/pointy"
+
 	"github.com/labstack/echo/v4"
 )
 
@@ -101,7 +103,7 @@ func PrepareGetSimpegPegawaiByUUID(a *app.App, uuidPegawai string) (model.Pegawa
 		return model.PegawaiDetail{}, fmt.Errorf("error repo get status aktif pegawai by uuid, %w", err)
 	}
 
-	pegawaiPendidikan, err := repo.GetPegawaiPendidikan(a, uuidPegawai)
+	pegawaiPendidikan, err := repo.GetPegawaiPendidikan(a, uuidPegawai, true)
 	if err != nil {
 		return model.PegawaiDetail{}, fmt.Errorf("error repo get pendidikan pegawai by uuid, %w", err)
 	}
@@ -112,7 +114,7 @@ func PrepareGetSimpegPegawaiByUUID(a *app.App, uuidPegawai string) (model.Pegawa
 	pegawaiDetail.PegawaiPribadi = pegawaiPribadi
 	pegawaiDetail.JenjangPendidikan.Data = pegawaiPendidikan
 	pegawaiDetail.JenjangPendidikan.UuidPendidikanMasuk = kepegawaianYayasan.UuidPendidikanMasuk
-	pegawaiDetail.JenjangPendidikan.KdPendidikanMasuk = kepegawaianYayasan.KdPendidikanMasuk
+	pegawaiDetail.JenjangPendidikan.KdPendidikanMasuk = kepegawaianYayasan.KdPendidikanMasukSimpeg
 	pegawaiDetail.JenjangPendidikan.PendidikanMasuk = kepegawaianYayasan.PendidikanMasuk
 
 	pegawaiDetail.PegawaiPNSPTT = pegawaiPNS
@@ -122,7 +124,6 @@ func PrepareGetSimpegPegawaiByUUID(a *app.App, uuidPegawai string) (model.Pegawa
 
 func HandleUpdatePegawai(a *app.App, ctx context.Context, errChan chan error) echo.HandlerFunc {
 	h := func(c echo.Context) error {
-
 		// Validasi Data
 		pegawaiUpdate, err := ValidateUpdatePegawaiByUUID(a, c)
 		if err != nil {
@@ -141,11 +142,9 @@ func HandleUpdatePegawai(a *app.App, ctx context.Context, errChan chan error) ec
 		uuidPendidikanDiakui := c.FormValue("uuid_tingkat_pdd_diakui")
 		uuidPendidikanTerakhir := c.FormValue("uuid_tingkat_pdd_terakhir")
 		idPersonalPegawai := pegawaiUpdate.IdPersonalDataPribadi
-		// fmt.Println("[ERROR] Uuid Pendidikan Diakui : ", uuidPendidikanDiakui)
-		// fmt.Println("[ERROR] Uuid Pendidikan Terakhir : ", uuidPendidikanTerakhir)
 
 		if uuidPendidikanDiakui != "" || uuidPendidikanTerakhir != "" {
-			err = repo.UpdatePendidikanPegawai(a, c.Request().Context(), uuidPendidikanDiakui, uuidPendidikanTerakhir, idPersonalPegawai)
+			err = repo.UpdatePendidikanPegawai(a, c.Request().Context(), uuidPendidikanDiakui, uuidPendidikanTerakhir, ptr.Uint64Value(idPersonalPegawai, 0))
 			if err != nil {
 				fmt.Printf("[ERROR]: %s\n", err.Error())
 				return c.JSON(http.StatusBadRequest, map[string]string{"message": err.Error()})
@@ -153,7 +152,7 @@ func HandleUpdatePegawai(a *app.App, ctx context.Context, errChan chan error) ec
 		}
 
 		// Menampilkan response
-		pegawaiDetail, err := PrepareGetSimpegPegawaiByUUID(a, pegawaiUpdate.Uuid)
+		pegawaiDetail, err := PrepareGetSimpegPegawaiByUUID(a, ptr.StringValue(pegawaiUpdate.Uuid, ""))
 		if err != nil {
 			fmt.Printf("[ERROR] repo get kepegawaian: %s\n", err.Error())
 			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
@@ -216,18 +215,13 @@ func HandleCreatePegawai(a *app.App, ctx context.Context, errChan chan error) ec
 			return c.JSON(http.StatusBadRequest, map[string]string{"message": err.Error()})
 		}
 
+		fmt.Printf("\n[DEBUG] pegawai before create: %+v\n", pegawaiCreate)
+
 		// Create Data
 		err = repo.CreatePegawai(a, c.Request().Context(), pegawaiCreate)
 		if err != nil {
 			fmt.Printf("[ERROR]: %s\n", err.Error())
 			return c.JSON(http.StatusBadRequest, map[string]string{"message": err.Error()})
-		}
-
-		// GET UUID
-		pegawai, err := repo.GetPegawaiByNIK(a, c.Request().Context(), pegawaiCreate.Nik)
-		if err != nil {
-			fmt.Printf("[ERROR] repo get kepegawaian: %s\n", err.Error())
-			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
 		}
 
 		// Set Flag Pendidikan
@@ -242,7 +236,7 @@ func HandleCreatePegawai(a *app.App, ctx context.Context, errChan chan error) ec
 		}
 
 		// Menampilkan response
-		pegawaiDetail, err := PrepareGetSimpegPegawaiByUUID(a, pegawai.UUID)
+		pegawaiDetail, err := PrepareGetSimpegPegawaiByUUID(a, pegawaiCreate.Uuid)
 		if err != nil {
 			fmt.Printf("[ERROR] repo get kepegawaian: %s\n", err.Error())
 			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
@@ -261,7 +255,7 @@ func HandleCreatePegawai(a *app.App, ctx context.Context, errChan chan error) ec
 				errChan <- err
 				return
 			}
-		}(a, errChan, pegawai.UUID)
+		}(a, errChan, pegawaiCreate.Uuid)
 
 		return c.JSON(http.StatusOK, pegawaiDetail)
 	}

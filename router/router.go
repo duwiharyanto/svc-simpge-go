@@ -40,6 +40,7 @@ func InitRoute(a *app.App, appCtx context.Context, e *echo.Echo, slackErrChan ch
 	insaniGroupingPath.GET("/pegawai-simpeg/:uuidPegawai/detail", pegawai.HandleGetSimpegPegawaiByUUID(a))
 	insaniGroupingPath.PUT("/pegawai-simpeg/:uuidPegawai", pegawai.HandleUpdatePegawai(a, appCtx, slackErrChan))
 	insaniGroupingPath.POST("/pegawai-simpeg/:uuidPegawai", pegawai.HandleCreatePegawai(a, appCtx, slackErrChan))
+	insaniGroupingPath.POST("/pegawai-simpeg", pegawai.HandleCreatePegawai(a, appCtx, slackErrChan))
 	insaniGroupingPath.POST("/pegawai", pegawai.HandleCreatePegawai(a, appCtx, slackErrChan))
 	insaniGroupingPath.GET("/pegawai/personal", personal.HandleSearchPersonal(a))
 	insaniGroupingPath.GET("/pegawai/personal-pendidikan/:uuidPersonal", pegawai.HandleGetPendidikanByUUIDPersonal(a))

@@ -36,9 +36,34 @@ type PersonalDataPribadiId struct {
 	IdStatusPernikahan uint64 `json:"id_status_pernikahan"`
 	KdStatusPerkawinan string `json:"kd_status_perkawinan"`
 
-	Pegawai pegawai.Pegawai `json:"-" gorm:"foreignKey:IdPersonalDataPribadi"`
+	Pegawai          pegawai.Pegawai  `json:"-" gorm:"foreignKey:IdPersonalDataPribadi"`
+	Agama            Agama            `json:"-" gorm:"foreignKey:IdAgama"`
+	GolonganDarah    GolonganDarah    `json:"-" gorm:"foreignKey:IdGolonganDarah"`
+	StatusPernikahan StatusPernikahan `json:"-" gorm:"foreignKey:IdStatusPernikahan"`
 }
 
 func (*PersonalDataPribadiId) TableName() string {
 	return "personal_data_pribadi"
+}
+
+type Agama struct {
+	Id     uint64 `gorm:"primaryKey"`
+	KdItem string
+	Agama  string
+	Uuid   string
+}
+
+const UnknownBloodType = "belum diketahui"
+
+type GolonganDarah struct {
+	Id            uint64 `gorm:"primaryKey"`
+	GolonganDarah string
+	Uuid          string
+}
+
+type StatusPernikahan struct {
+	Id       uint64 `gorm:"primaryKey"`
+	KdStatus string
+	Status   string
+	Uuid     string
 }
