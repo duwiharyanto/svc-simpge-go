@@ -134,8 +134,8 @@ func HandleUpdatePegawai(a *app.App, ctx context.Context, errChan chan error) ec
 		// Update Data
 		err = repo.UpdatePegawai(a, c.Request().Context(), pegawaiUpdate)
 		if err != nil {
-			fmt.Printf("[ERROR]: %s\n", err.Error())
-			return c.JSON(http.StatusBadRequest, map[string]string{"message": err.Error()})
+			fmt.Printf("[ERROR] update pegawai: %s\n", err.Error())
+			return c.JSON(http.StatusInternalServerError, map[string]string{"message": err.Error()})
 		}
 
 		// Set Flag Pendidikan
@@ -146,8 +146,8 @@ func HandleUpdatePegawai(a *app.App, ctx context.Context, errChan chan error) ec
 		if uuidPendidikanDiakui != "" || uuidPendidikanTerakhir != "" {
 			err = repo.UpdatePendidikanPegawai(a, c.Request().Context(), uuidPendidikanDiakui, uuidPendidikanTerakhir, ptr.Uint64Value(idPersonalPegawai, 0))
 			if err != nil {
-				fmt.Printf("[ERROR]: %s\n", err.Error())
-				return c.JSON(http.StatusBadRequest, map[string]string{"message": err.Error()})
+				fmt.Printf("[ERROR] update pendidikan pegawai: %s\n", err.Error())
+				return c.JSON(http.StatusInternalServerError, map[string]string{"message": err.Error()})
 			}
 		}
 
@@ -218,8 +218,8 @@ func HandleCreatePegawai(a *app.App, ctx context.Context, errChan chan error) ec
 		// Create Data
 		err = repo.CreatePegawai(a, c.Request().Context(), pegawaiCreate)
 		if err != nil {
-			fmt.Printf("[ERROR]: %s\n", err.Error())
-			return c.JSON(http.StatusBadRequest, map[string]string{"message": err.Error()})
+			fmt.Printf("[ERROR] create pegawai: %s\n", err.Error())
+			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
 		}
 
 		// Set Flag Pendidikan
@@ -229,8 +229,8 @@ func HandleCreatePegawai(a *app.App, ctx context.Context, errChan chan error) ec
 
 		err = repo.UpdatePendidikanPegawai(a, c.Request().Context(), uuidPendidikanDiakui, uuidPendidikanTerakhir, idPersonalPegawai)
 		if err != nil {
-			fmt.Printf("[ERROR]: %s\n", err.Error())
-			return c.JSON(http.StatusBadRequest, map[string]string{"message": err.Error()})
+			fmt.Printf("[ERROR] update pendidikan pegawai: %s\n", err.Error())
+			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
 		}
 
 		// Menampilkan response
@@ -502,7 +502,7 @@ func HandleResyncOracle(a *app.App) echo.HandlerFunc {
 		pegawai, err := PrepareGetSimpegPegawaiByUUID(a, uuidPegawai)
 		if err != nil {
 			fmt.Printf("[ERROR] prepare get simpeg pegawai by uuid: %s\n", err.Error())
-			return c.JSON(http.StatusBadRequest, map[string]string{"message": "Layanan sedang bermasalah"})
+			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
 		}
 
 		if pegawai.IsEmpty() {
@@ -513,7 +513,7 @@ func HandleResyncOracle(a *app.App) echo.HandlerFunc {
 		pegawaiOra, err := pegawaiOraHttp.GetKepegawaianYayasan(ctx, a.HttpClient, pegawai.PegawaiPribadi.NIK)
 		if err != nil {
 			fmt.Printf("[ERROR] get kepegawaian yayasan: %s\n", err.Error())
-			return c.JSON(http.StatusBadRequest, map[string]string{"message": "Layanan sedang bermasalah"})
+			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
 		}
 
 		if pegawaiOra == nil {
@@ -536,14 +536,14 @@ func HandleResyncOracle(a *app.App) echo.HandlerFunc {
 			err = pegawaiOraHttp.CreateKepegawaianYayasan(ctx, a.HttpClient, pegawaiOraCreate)
 			if err != nil {
 				fmt.Printf("[ERROR] create kepegawaian yayasan: %s\n", err.Error())
-				return c.JSON(http.StatusBadRequest, map[string]string{"message": "Layanan sedang bermasalah"})
+				return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
 			}
 		} else {
 			pegawaiOraUpdate := newPegawaiOra(&pegawai)
 			err = pegawaiOraHttp.UpdateKepegawaianYayasan(ctx, &http.Client{}, pegawaiOraUpdate)
 			if err != nil {
 				fmt.Printf("[ERROR] repo update kepegawaian yayasan: %s\n", err.Error())
-				return c.JSON(http.StatusBadRequest, map[string]string{"message": "Layanan sedang bermasalah"})
+				return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
 			}
 
 		}
