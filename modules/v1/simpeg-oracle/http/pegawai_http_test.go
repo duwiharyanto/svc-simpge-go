@@ -1,13 +1,13 @@
-package pegawaihttp
+package http
 
 import (
 	"context"
 	"fmt"
 	"io/ioutil"
-	"net/http"
+	netHttp "net/http"
 	"os"
 	"svc-insani-go/app"
-	"svc-insani-go/modules/v1/pegawai-oracle/model"
+	"svc-insani-go/modules/v1/simpeg-oracle/model"
 	"testing"
 	"time"
 )
@@ -16,7 +16,7 @@ func TestKepegawaianYayasan(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
 	defer cancel()
 
-	client := &http.Client{Transport: app.DefaultHttpTransport()}
+	client := &netHttp.Client{Transport: app.DefaultHttpTransport()}
 	// nip := "864210102" // kd_golongan != kd_golongan_kopertis
 	// nip := "041002467" // kd_fungsional null
 	// nip := "200000112" // kd_golongan null
@@ -128,8 +128,8 @@ func TestSimpegOra(t *testing.T) {
 	header := map[string]string{"Authorization": authToken}
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
 	defer cancel()
-	client := &http.Client{Transport: app.DefaultHttpTransport()}
-	res, err := app.SendHttpRequest(ctx, client, http.MethodGet, endpoint, contentTypeJSON, header, nil)
+	client := &netHttp.Client{Transport: app.DefaultHttpTransport()}
+	res, err := app.SendHttpRequest(ctx, client, netHttp.MethodGet, endpoint, contentTypeJSON, header, nil)
 	if err != nil {
 		t.Fatalf("error send http request: %s", err.Error())
 	}
@@ -139,7 +139,7 @@ func TestSimpegOra(t *testing.T) {
 		t.Fatalf("error read response body: %s", err)
 	}
 
-	if res.StatusCode != http.StatusOK {
+	if res.StatusCode != netHttp.StatusOK {
 		t.Fatalf("error status not ok: %s", resBody)
 	}
 

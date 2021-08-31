@@ -1,15 +1,15 @@
-package pegawaihttp
+package http
 
 import (
 	"context"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"net/http"
+	netHttp "net/http"
 	"os"
 	"strings"
 	"svc-insani-go/app"
-	"svc-insani-go/modules/v1/pegawai-oracle/model"
+	"svc-insani-go/modules/v1/simpeg-oracle/model"
 )
 
 var pegawaiSimpegURL = fmt.Sprintf("%s/public/api/v1/pegawai", os.Getenv("URL_HCM_SIMPEG_SERVICE"))
@@ -20,9 +20,9 @@ const (
 	contentTypeJSON = "application/json"
 )
 
-func GetKepegawaianYayasan(ctx context.Context, client *http.Client, nip string) (*model.KepegawaianYayasanSimpeg, error) {
+func GetKepegawaianYayasan(ctx context.Context, client *netHttp.Client, nip string) (*model.KepegawaianYayasanSimpeg, error) {
 	endpoint := fmt.Sprintf(kepegawaianYayasanSimpegURL, nip)
-	res, err := app.SendHttpRequest(ctx, client, http.MethodGet, endpoint, "", nil, nil)
+	res, err := app.SendHttpRequest(ctx, client, netHttp.MethodGet, endpoint, "", nil, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error send http request: %w", err)
 	}
@@ -32,7 +32,7 @@ func GetKepegawaianYayasan(ctx context.Context, client *http.Client, nip string)
 		return nil, fmt.Errorf("error read response body: %w", err)
 	}
 
-	if res.StatusCode != http.StatusOK {
+	if res.StatusCode != netHttp.StatusOK {
 		return nil, fmt.Errorf("error status not ok: %s", strings.Trim(fmt.Sprintf("%q", resBody), `"`))
 	}
 
@@ -53,12 +53,12 @@ func GetKepegawaianYayasan(ctx context.Context, client *http.Client, nip string)
 	return &pegawai, nil
 }
 
-func UpdateKepegawaianYayasan(ctx context.Context, client *http.Client, pegawai *model.KepegawaianYayasanSimpeg) error {
+func UpdateKepegawaianYayasan(ctx context.Context, client *netHttp.Client, pegawai *model.KepegawaianYayasanSimpeg) error {
 	endpoint := fmt.Sprintf(kepegawaianYayasanSimpegURL, pegawai.NIP)
 	header := map[string]string{
 		"X-Member": pegawai.UserUpdate,
 	}
-	res, err := app.SendHttpRequest(ctx, client, http.MethodPut, endpoint, contentTypeJSON, header, pegawai)
+	res, err := app.SendHttpRequest(ctx, client, netHttp.MethodPut, endpoint, contentTypeJSON, header, pegawai)
 	if err != nil {
 		return fmt.Errorf("error send http request: %w", err)
 	}
@@ -68,7 +68,7 @@ func UpdateKepegawaianYayasan(ctx context.Context, client *http.Client, pegawai 
 		return fmt.Errorf("error read response body: %w", err)
 	}
 
-	if res.StatusCode != http.StatusOK {
+	if res.StatusCode != netHttp.StatusOK {
 		return fmt.Errorf("error status not ok: %s", resBody)
 	}
 
@@ -76,7 +76,7 @@ func UpdateKepegawaianYayasan(ctx context.Context, client *http.Client, pegawai 
 	return nil
 }
 
-func CreateKepegawaianYayasan(ctx context.Context, client *http.Client, pegawai *model.KepegawaianYayasanSimpeg) error {
+func CreateKepegawaianYayasan(ctx context.Context, client *netHttp.Client, pegawai *model.KepegawaianYayasanSimpeg) error {
 	endpoint := fmt.Sprintf(pegawaiSimpegURL)
 	header := map[string]string{
 		"X-Member": pegawai.UserInput,
@@ -85,7 +85,7 @@ func CreateKepegawaianYayasan(ctx context.Context, client *http.Client, pegawai 
 	j, _ := json.MarshalIndent(pegawai, "", "\t")
 	fmt.Printf("DEBUG reqbody pegawai : \n%s\n", j)
 
-	res, err := app.SendHttpRequest(ctx, client, http.MethodPost, endpoint, contentTypeJSON, header, pegawai)
+	res, err := app.SendHttpRequest(ctx, client, netHttp.MethodPost, endpoint, contentTypeJSON, header, pegawai)
 	if err != nil {
 		return fmt.Errorf("error send http request: %w", err)
 	}
@@ -95,7 +95,7 @@ func CreateKepegawaianYayasan(ctx context.Context, client *http.Client, pegawai 
 		return fmt.Errorf("error read response body: %w", err)
 	}
 
-	if res.StatusCode != http.StatusOK {
+	if res.StatusCode != netHttp.StatusOK {
 		return fmt.Errorf("error status not ok: %s", resBody)
 	}
 

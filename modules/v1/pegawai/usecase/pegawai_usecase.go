@@ -11,11 +11,11 @@ import (
 
 	"net/http"
 	"svc-insani-go/app"
-	pegawaiOraHttp "svc-insani-go/modules/v1/pegawai-oracle/http"
-	pegawaiOraModel "svc-insani-go/modules/v1/pegawai-oracle/model"
 	"svc-insani-go/modules/v1/pegawai/model"
 	"svc-insani-go/modules/v1/pegawai/repo"
 	pengaturan "svc-insani-go/modules/v1/pengaturan-insani/usecase"
+	pegawaiOraHttp "svc-insani-go/modules/v1/simpeg-oracle/http"
+	pegawaiOraModel "svc-insani-go/modules/v1/simpeg-oracle/model"
 
 	ptr "github.com/openlyinc/pointy"
 
@@ -214,8 +214,6 @@ func HandleCreatePegawai(a *app.App, ctx context.Context, errChan chan error) ec
 		if err != nil {
 			return c.JSON(http.StatusBadRequest, map[string]string{"message": err.Error()})
 		}
-
-		fmt.Printf("\n[DEBUG] pegawai before create: %+v\n", pegawaiCreate)
 
 		// Create Data
 		err = repo.CreatePegawai(a, c.Request().Context(), pegawaiCreate)
