@@ -101,6 +101,9 @@ type PegawaiCreate struct {
 	UuidPersonal            string                  `form:"uuid_personal" gorm:"-"`
 	PegawaiFungsional       PegawaiFungsionalCreate `gorm:"foreignKey:Id"`
 	PegawaiPNS              PegawaiPNSCreate        `gorm:"foreignKey:Id"`
+
+	UuidJenisPresensi string `form:"uuid_jenis_presensi" gorm:"-"`
+	KdJenisPresensi   string `form:"kd_jenis_presensi" gorm:"-"`
 }
 
 func (*PegawaiCreate) TableName() string {
