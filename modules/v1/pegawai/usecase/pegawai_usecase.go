@@ -140,7 +140,9 @@ func HandleUpdatePegawai(a *app.App, ctx context.Context, errChan chan error) ec
 
 		// Set Flag Pendidikan
 		uuidPendidikanDiakui := c.FormValue("uuid_tingkat_pdd_diakui")
+		fmt.Printf("[DEBUG] uuidPendidikanDiakui: %s\n", uuidPendidikanDiakui)
 		uuidPendidikanTerakhir := c.FormValue("uuid_tingkat_pdd_terakhir")
+		fmt.Printf("[DEBUG] uuidPendidikanTerakhir: %s\n", uuidPendidikanTerakhir)
 		idPersonalPegawai := pegawaiUpdate.IdPersonalDataPribadi
 
 		if uuidPendidikanDiakui != "" || uuidPendidikanTerakhir != "" {
