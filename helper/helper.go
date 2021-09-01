@@ -2,6 +2,8 @@ package helper
 
 import (
 	"fmt"
+	"io"
+	"mime/multipart"
 	"strconv"
 	"strings"
 	"time"
@@ -168,4 +170,19 @@ func IsYearRangeValid(startYearTime, endYearTime time.Time) bool {
 		return false
 	}
 	return true
+}
+
+func FillFormDataWriter(w *multipart.Writer, m map[string]string) error {
+	for k, v := range m {
+		formField, err := w.CreateFormField(k)
+		if err != nil {
+			return fmt.Errorf("failed create field %s: %w", k, err)
+		}
+		_, err = io.Copy(formField, strings.NewReader(v))
+		if err != nil {
+			return fmt.Errorf("failed copy %s value: %w", k, err)
+		}
+	}
+
+	return nil
 }

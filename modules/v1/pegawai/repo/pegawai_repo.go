@@ -4,10 +4,14 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"net/http"
 	"svc-insani-go/app"
 	"svc-insani-go/modules/v1/pegawai/model"
+	presensiHttp "svc-insani-go/modules/v1/presensi/http"
+	presensiModel "svc-insani-go/modules/v1/presensi/model"
 	"time"
 
+	ptr "github.com/openlyinc/pointy"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
@@ -203,7 +207,21 @@ func UpdatePegawai(a *app.App, ctx context.Context, pegawaiUpdate model.PegawaiU
 	return nil
 }
 
-func CreatePegawai(a *app.App, ctx context.Context, pegawaiCreate model.PegawaiCreate) error {
+func CreatePegawai(a *app.App, ctx context.Context, pegawai model.PegawaiCreate) error {
+	user := &presensiModel.UserPresensi{
+		Nip:             pegawai.Nik,
+		KdJenisPegawai:  pegawai.KdJenisPegawai,
+		KdUnitKerja:     pegawai.KdUnit2,
+		KdLokasiKerja:   pegawai.LokasiKerja,
+		Tmt:             ptr.StringValue(pegawai.PegawaiFungsional.TmtSkPertama, ""),
+		KdJenisPresensi: pegawai.KdJenisPresensi,
+		UserUpdate:      pegawai.UserUpdate,
+	}
+	err := presensiHttp.CreateUserPresensi(ctx, &http.Client{}, user)
+	if err != nil {
+		return fmt.Errorf("error create user presensi: %s", err.Error())
+	}
+
 	tx := a.GormDB.Session(&gorm.Session{
 		Context: ctx,
 		// FullSaveAssociations: true,
@@ -212,24 +230,24 @@ func CreatePegawai(a *app.App, ctx context.Context, pegawaiCreate model.PegawaiC
 	result := tx.Omit(clause.Associations).Clauses(clause.OnConflict{
 		Columns:   []clause.Column{{Name: "nik"}},
 		UpdateAll: true}).
-		Create(&pegawaiCreate)
+		Create(&pegawai)
 	if result.Error != nil {
 		return fmt.Errorf("error creating data simpeg : %w", result.Error)
 	}
 
-	result = tx.Find(&pegawaiCreate, "nik = ?", pegawaiCreate.Nik)
+	result = tx.Find(&pegawai, "nik = ?", pegawai.Nik)
 	if result.Error != nil {
 		tx.Rollback()
 		return fmt.Errorf("error find data simpeg nik : %w", result.Error)
 	}
 
-	pegawaiCreate.PegawaiFungsional.IdPegawai = pegawaiCreate.Id
-	pegawaiCreate.PegawaiPNS.IdPegawai = pegawaiCreate.Id
+	pegawai.PegawaiFungsional.IdPegawai = pegawai.Id
+	pegawai.PegawaiPNS.IdPegawai = pegawai.Id
 
 	result = tx.Omit(clause.Associations).Clauses(clause.OnConflict{
 		Columns:   []clause.Column{{Name: "id_pegawai"}},
 		UpdateAll: true}).
-		Create(&pegawaiCreate.PegawaiFungsional)
+		Create(&pegawai.PegawaiFungsional)
 	if result.Error != nil {
 		return fmt.Errorf("error creating data simpeg : %w", result.Error)
 	}
@@ -237,7 +255,7 @@ func CreatePegawai(a *app.App, ctx context.Context, pegawaiCreate model.PegawaiC
 	result = tx.Omit(clause.Associations).Clauses(clause.OnConflict{
 		Columns:   []clause.Column{{Name: "id_pegawai"}},
 		UpdateAll: true}).
-		Create(&pegawaiCreate.PegawaiPNS)
+		Create(&pegawai.PegawaiPNS)
 	if result.Error != nil {
 		return fmt.Errorf("error creating data simpeg : %w", result.Error)
 	}
