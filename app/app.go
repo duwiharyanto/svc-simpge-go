@@ -104,7 +104,6 @@ func SendHttpRequest(ctx context.Context, client *http.Client, method, baseURL, 
 	// ctx, cancel := context.WithTimeout(context.Background(), reqTimeoutDur)
 	// ctx, cancel := context.WithTimeout(ctx, reqTimeoutDur)
 	// defer cancel()
-	fmt.Printf("[DEBUG] ctn type in http req: %+v\n", contentType)
 	req, err := http.NewRequestWithContext(ctx, method, baseURL, reqBody)
 	// req, err := http.NewRequest(method, baseURL, reqBody)
 	if err != nil {
