@@ -7,6 +7,7 @@ import (
 	"log"
 	"os"
 	"strconv"
+	"strings"
 	"time"
 
 	"net/http"
@@ -140,9 +141,7 @@ func HandleUpdatePegawai(a *app.App, ctx context.Context, errChan chan error) ec
 
 		// Set Flag Pendidikan
 		uuidPendidikanDiakui := c.FormValue("uuid_tingkat_pdd_diakui")
-		fmt.Printf("[DEBUG] uuidPendidikanDiakui: %s\n", uuidPendidikanDiakui)
 		uuidPendidikanTerakhir := c.FormValue("uuid_tingkat_pdd_terakhir")
-		fmt.Printf("[DEBUG] uuidPendidikanTerakhir: %s\n", uuidPendidikanTerakhir)
 		idPersonalPegawai := pegawaiUpdate.IdPersonalDataPribadi
 
 		if uuidPendidikanDiakui != "" || uuidPendidikanTerakhir != "" {
@@ -219,6 +218,10 @@ func HandleCreatePegawai(a *app.App, ctx context.Context, errChan chan error) ec
 
 		// Create Data
 		err = repo.CreatePegawai(a, c.Request().Context(), pegawaiCreate)
+		if errors.Unwrap(err) != nil && strings.Contains(err.Error(), "presensi") {
+			fmt.Printf("[ERROR] prepare create simpeg: %s\n", err.Error())
+			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Gagal simpan user presensi pegawai"})
+		}
 		if err != nil {
 			fmt.Printf("[ERROR] create pegawai: %s\n", err.Error())
 			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
