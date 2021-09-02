@@ -12,7 +12,7 @@ type PegawaiFungsional struct {
 
 type PegawaiFungsionalCreate struct {
 	Id                       uint64  `form:"-" gorm:"primaryKey"`
-	IdKafka                  uint64  `form:"-"`
+	IdKafka                  uint64  `form:"-" gorm:"-"`
 	IdPegawai                uint64  `form:"-"`
 	UuidPangkatGolongan      string  `form:"uuid_pangkat_golongan" gorm:"-"`
 	IdPangkatGolongan        uint64  `form:"id_pangkat_golongan" gorm:"default:null"`
