@@ -181,7 +181,7 @@ func GetOldPegawai(a *app.App, ctx context.Context, uuidPegawai string) (model.P
 }
 
 func UpdatePegawai(a *app.App, ctx context.Context, pegawaiUpdate model.PegawaiUpdate) error {
-	db := a.GormDB.WithContext(ctx)
+	db := a.GormDB.WithContext(ctx).Session(&gorm.Session{FullSaveAssociations: true})
 
 	st := time.Now()
 	res := db.Save(&pegawaiUpdate)
@@ -189,20 +189,6 @@ func UpdatePegawai(a *app.App, ctx context.Context, pegawaiUpdate model.PegawaiU
 		return res.Error
 	}
 	fmt.Printf("[DEBUG] update pegawai: %v ms\n", time.Now().Sub(st).Milliseconds())
-
-	// st = time.Now()
-	// res = db.Save(&pegawaiUpdate.PegawaiPNS)
-	// if res.Error != nil {
-	// 	return res.Error
-	// }
-	// fmt.Printf("[DEBUG] update pegawai pns: %v ms\n", time.Now().Sub(st).Milliseconds())
-
-	// st = time.Now()
-	// res = db.Save(&pegawaiUpdate.PegawaiFungsional)
-	// if res.Error != nil {
-	// 	return res.Error
-	// }
-	// fmt.Printf("[DEBUG] update pegawai fung: %v ms\n", time.Now().Sub(st).Milliseconds())
 
 	return nil
 }
