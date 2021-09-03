@@ -10,7 +10,7 @@ import (
 	"svc-insani-go/modules/v1/pegawai/model"
 )
 
-func UpdatePendidikanPegawai(a *app.App, ctx context.Context, uuidPendidikanDiakui, uuidPendidikanTerakhir string, idPersonalPegawai uint64) error {
+func UpdatePendidikanPegawai(a *app.App, ctx context.Context, uuidPendidikanDiakui, uuidPendidikanTerakhir, jenjangPendidikanTertinggiDiakui string, idPersonalPegawai uint64) error {
 	db := a.GormDB.WithContext(ctx)
 	var pegawaiPendidikanUpdate model.PegawaiPendidikanUpdate
 
@@ -30,6 +30,14 @@ func UpdatePendidikanPegawai(a *app.App, ctx context.Context, uuidPendidikanDiak
 		if res.Error != nil {
 			return res.Error
 		}
+	} else if jenjangPendidikanTertinggiDiakui != "" {
+		res := db.Model(&pegawaiPendidikanUpdate).
+			Where("id_personal_data_pribadi = ? AND flag_aktif = 1", idPersonalPegawai).
+			Update("flag_ijazah_diakui", "0")
+		if res.Error != nil {
+			return res.Error
+		}
+
 	}
 
 	// Flag Ijazah Terakhir
