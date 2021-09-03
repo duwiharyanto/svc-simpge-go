@@ -126,14 +126,14 @@ func PrepareGetSimpegPegawaiByUUID(a *app.App, uuidPegawai string) (model.Pegawa
 func HandleUpdatePegawai(a *app.App, ctx context.Context, errChan chan error) echo.HandlerFunc {
 	h := func(c echo.Context) error {
 		// Validasi Data
-		pegawaiUpdate, err := ValidateUpdatePegawaiByUUID(a, c)
+		pegawai, err := ValidateUpdatePegawaiByUUID(a, c)
 		if err != nil {
 			fmt.Printf("[ERROR]: %s\n", err.Error())
 			return c.JSON(http.StatusBadRequest, map[string]string{"message": err.Error()})
 		}
 
 		// Update Data
-		err = repo.UpdatePegawai(a, c.Request().Context(), pegawaiUpdate)
+		err = repo.UpdatePegawai(a, c.Request().Context(), pegawai)
 		if err != nil {
 			fmt.Printf("[ERROR] update pegawai: %s\n", err.Error())
 			return c.JSON(http.StatusInternalServerError, map[string]string{"message": err.Error()})
@@ -142,18 +142,20 @@ func HandleUpdatePegawai(a *app.App, ctx context.Context, errChan chan error) ec
 		// Set Flag Pendidikan
 		uuidPendidikanDiakui := c.FormValue("uuid_tingkat_pdd_diakui")
 		uuidPendidikanTerakhir := c.FormValue("uuid_tingkat_pdd_terakhir")
-		idPersonalPegawai := pegawaiUpdate.IdPersonalDataPribadi
+		idPersonalPegawai := pegawai.IdPersonalDataPribadi
 
-		if uuidPendidikanDiakui != "" || uuidPendidikanTerakhir != "" {
-			err = repo.UpdatePendidikanPegawai(a, c.Request().Context(), uuidPendidikanDiakui, uuidPendidikanTerakhir, ptr.Uint64Value(idPersonalPegawai, 0))
-			if err != nil {
-				fmt.Printf("[ERROR] update pendidikan pegawai: %s\n", err.Error())
-				return c.JSON(http.StatusInternalServerError, map[string]string{"message": err.Error()})
-			}
+		err = repo.UpdatePendidikanPegawai(a, c.Request().Context(),
+			uuidPendidikanDiakui,
+			uuidPendidikanTerakhir,
+			ptr.StringValue(pegawai.KdPendidikanMasuk, ""),
+			ptr.Uint64Value(idPersonalPegawai, 0))
+		if err != nil {
+			fmt.Printf("[ERROR] update pendidikan pegawai: %s\n", err.Error())
+			return c.JSON(http.StatusInternalServerError, map[string]string{"message": err.Error()})
 		}
 
 		// Menampilkan response
-		pegawaiDetail, err := PrepareGetSimpegPegawaiByUUID(a, ptr.StringValue(pegawaiUpdate.Uuid, ""))
+		pegawaiDetail, err := PrepareGetSimpegPegawaiByUUID(a, ptr.StringValue(pegawai.Uuid, ""))
 		if err != nil {
 			fmt.Printf("[ERROR] repo get kepegawaian: %s\n", err.Error())
 			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
@@ -176,7 +178,8 @@ func HandleUpdatePegawai(a *app.App, ctx context.Context, errChan chan error) ec
 				return
 			}
 
-			if flagSinkronSimpeg != "1" {
+			disableSyncSimpegOracle, _ := strconv.ParseBool(os.Getenv("DISABLE_SYNC_SIMPEG_ORACLE"))
+			if flagSinkronSimpeg != "1" || disableSyncSimpegOracle {
 				log.Printf("[DEBUG] flag sinkron simpeg 0\n")
 				return
 			}
@@ -224,17 +227,6 @@ func HandleCreatePegawai(a *app.App, ctx context.Context, errChan chan error) ec
 		}
 		if err != nil {
 			fmt.Printf("[ERROR] create pegawai: %s\n", err.Error())
-			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
-		}
-
-		// Set Flag Pendidikan
-		uuidPendidikanDiakui := c.FormValue("uuid_tingkat_pdd_diakui")
-		uuidPendidikanTerakhir := c.FormValue("uuid_tingkat_pdd_terakhir")
-		idPersonalPegawai := pegawaiCreate.IdPersonalDataPribadi
-
-		err = repo.UpdatePendidikanPegawai(a, c.Request().Context(), uuidPendidikanDiakui, uuidPendidikanTerakhir, idPersonalPegawai)
-		if err != nil {
-			fmt.Printf("[ERROR] update pendidikan pegawai: %s\n", err.Error())
 			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
 		}
 
@@ -563,7 +555,8 @@ func SendPegawaiToOracle(a *app.App, ctx context.Context, uuid string) error {
 		return fmt.Errorf("error load pengaturan flag sinkron simpeg: %w", err)
 	}
 
-	if flagSinkronSimpeg != "1" {
+	disableSyncSimpegOracle, _ := strconv.ParseBool(os.Getenv("DISABLE_SYNC_SIMPEG_ORACLE"))
+	if flagSinkronSimpeg != "1" || disableSyncSimpegOracle {
 		log.Printf("[DEBUG] flag sinkron simpeg 0\n")
 		return nil
 	}

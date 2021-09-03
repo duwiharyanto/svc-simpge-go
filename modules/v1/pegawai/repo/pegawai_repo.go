@@ -5,6 +5,8 @@ import (
 	"database/sql"
 	"fmt"
 	"net/http"
+	"os"
+	"strconv"
 	"svc-insani-go/app"
 	"svc-insani-go/modules/v1/pegawai/model"
 	presensiHttp "svc-insani-go/modules/v1/presensi/http"
@@ -194,18 +196,21 @@ func UpdatePegawai(a *app.App, ctx context.Context, pegawaiUpdate model.PegawaiU
 }
 
 func CreatePegawai(a *app.App, ctx context.Context, pegawai model.PegawaiCreate) error {
-	user := &presensiModel.UserPresensi{
-		Nip:             pegawai.Nik,
-		KdJenisPegawai:  pegawai.KdJenisPegawai,
-		KdUnitKerja:     pegawai.KdUnit2,
-		KdLokasiKerja:   pegawai.LokasiKerja,
-		Tmt:             ptr.StringValue(pegawai.PegawaiFungsional.TmtSkPertama, ""),
-		KdJenisPresensi: pegawai.KdJenisPresensi,
-		UserUpdate:      pegawai.UserUpdate,
-	}
-	err := presensiHttp.CreateUserPresensi(ctx, &http.Client{}, user)
-	if err != nil {
-		return fmt.Errorf("error create user presensi: %s", err.Error())
+	disableSyncPresence, _ := strconv.ParseBool(os.Getenv("DISABLE_SYNC_PRESENCE"))
+	if !disableSyncPresence {
+		user := &presensiModel.UserPresensi{
+			Nip:             pegawai.Nik,
+			KdJenisPegawai:  pegawai.KdJenisPegawai,
+			KdUnitKerja:     pegawai.KdUnit2,
+			KdLokasiKerja:   pegawai.LokasiKerja,
+			Tmt:             ptr.StringValue(pegawai.PegawaiFungsional.TmtSkPertama, ""),
+			KdJenisPresensi: pegawai.KdJenisPresensi,
+			UserUpdate:      pegawai.UserUpdate,
+		}
+		err := presensiHttp.CreateUserPresensi(ctx, &http.Client{}, user)
+		if err != nil {
+			return fmt.Errorf("%w", fmt.Errorf("error create user presensi: %s", err.Error()))
+		}
 	}
 
 	tx := a.GormDB.Session(&gorm.Session{

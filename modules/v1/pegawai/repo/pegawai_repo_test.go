@@ -115,7 +115,7 @@ func TestUpdatePendidikanPegawai(t *testing.T) {
 	uuidPendidikanTerakhir := "822c2cd9-4d0f-47ac-91b8-80f4b5d42444"
 	var idPegawai uint64 = 1231231
 
-	err = UpdatePendidikanPegawai(ax, context.Background(), uuidPendidikanDiakui, uuidPendidikanTerakhir, idPegawai)
+	err = UpdatePendidikanPegawai(ax, context.Background(), uuidPendidikanDiakui, uuidPendidikanTerakhir, "", idPegawai)
 
 	if err != nil {
 		t.Fatal("failed update flag pendidikan pegawai:", err)
