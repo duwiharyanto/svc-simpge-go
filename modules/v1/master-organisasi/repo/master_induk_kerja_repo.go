@@ -169,7 +169,7 @@ func GetAllUnitKerja(a *app.App, ctx context.Context) ([]model.Unit2, error) {
 	var unitKerja []model.Unit2
 
 	tx := a.GormDB.WithContext(ctx)
-	res := tx.Find(&unitKerja)
+	res := tx.Find(&unitKerja, "flag_aktif = 1")
 	if res.Error != nil {
 		return nil, fmt.Errorf("error querying all unit kerja%s", res.Error)
 	}
