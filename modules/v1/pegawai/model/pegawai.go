@@ -94,6 +94,8 @@ type PegawaiCreate struct {
 	FlagPensiun             string                  `form:"flag_pensiun" gorm:"->"`
 	TglPensiun              string                  `form:"tgl_pensiun" gorm:"->"`
 	FlagMeninggal           string                  `form:"flag_meninggal" gorm:"->"`
+	FlagSekolah             string                  `form:"-" gorm:"default:0"`
+	FlagMengajar            string                  `form:"-" gorm:"default:0"`
 	TglInput                string                  `form:"tgl_input" gorm:"->"`
 	UserInput               string                  `form:"user_input"`
 	TglUpdate               string                  `form:"tgl_update" gorm:"->"`
@@ -108,6 +110,10 @@ type PegawaiCreate struct {
 
 func (*PegawaiCreate) TableName() string {
 	return "pegawai"
+}
+
+func (p PegawaiCreate) IsLecturer() bool {
+	return p.KdJenisPegawai == kdJenisPegawaiDosen
 }
 
 type CreatePegawai struct {
