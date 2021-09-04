@@ -79,8 +79,8 @@ func CountPegawai(a *app.App, req *model.PegawaiRequest) (int, error) {
 	}
 
 	return count, nil
-
 }
+
 func GetPegawaiByUUID(a *app.App, uuid string) (*model.Pegawai, error) {
 	sqlQuery := getPegawaiByUUID(uuid)
 	var pegawai model.Pegawai
@@ -109,7 +109,6 @@ func GetPegawaiByUUID(a *app.App, uuid string) (*model.Pegawai, error) {
 	}
 
 	return &pegawai, nil
-
 }
 
 func GetPegawaiPribadi(a *app.App, uuid string) (*model.PegawaiPribadi, error) {
@@ -168,18 +167,17 @@ func GetPegawaiByNIK(a *app.App, ctx context.Context, nik string) (*model.Create
 }
 
 func GetOldPegawai(a *app.App, ctx context.Context, uuidPegawai string) (model.PegawaiUpdate, error) {
-
-	var pegawaiOld model.PegawaiUpdate
+	var pegawai model.PegawaiUpdate
 
 	db := a.GormDB.WithContext(ctx)
 	res := db.Joins("PegawaiPNS").
 		Joins("PegawaiFungsional").
-		Find(&pegawaiOld, "pegawai.uuid = ?", uuidPegawai)
+		Find(&pegawai, "pegawai.uuid = ?", uuidPegawai)
 	if res.Error != nil {
 		return model.PegawaiUpdate{}, res.Error
 	}
 
-	return pegawaiOld, nil
+	return pegawai, nil
 }
 
 func UpdatePegawai(a *app.App, ctx context.Context, pegawaiUpdate model.PegawaiUpdate) error {
