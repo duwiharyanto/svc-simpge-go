@@ -6,11 +6,11 @@ import (
 	"net/http"
 	"svc-insani-go/app"
 
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 )
 
 // still dummy
-func HandleCreateSkPengangkatanDosen(a app.App) echo.HandlerFunc {
+func HandleCreateSkPengangkatanDosen(a *app.App) echo.HandlerFunc {
 	h := func(c echo.Context) error {
 		res := []byte(fmt.Sprintf(dummyUpdateSkPengangkatanDosen, "tambah"))
 
@@ -218,7 +218,7 @@ func HandleCreateSkPengangkatanDosen(a app.App) echo.HandlerFunc {
 }
 
 // still dummy
-func HandleUpdateSkPengangkatanDosen(a app.App) echo.HandlerFunc {
+func HandleUpdateSkPengangkatanDosen(a *app.App) echo.HandlerFunc {
 	h := func(c echo.Context) error {
 		type Req struct {
 			Tmt               string   `form:"tmt"`
@@ -246,7 +246,7 @@ func HandleUpdateSkPengangkatanDosen(a app.App) echo.HandlerFunc {
 }
 
 // still dummy
-func HandleGetSkPengangkatanDosen(a app.App) echo.HandlerFunc {
+func HandleGetSkPengangkatanDosen(a *app.App) echo.HandlerFunc {
 	h := func(c echo.Context) error {
 		return c.JSONBlob(http.StatusOK, []byte(dummyGetSkPengangkatanDosen))
 		// 	ctx := c.Request().Context()
@@ -302,7 +302,7 @@ func HandleGetSkPengangkatanDosen(a app.App) echo.HandlerFunc {
 }
 
 // still dummy
-func HandleDeleteSkPengangkatanDosen(a app.App) echo.HandlerFunc {
+func HandleDeleteSkPengangkatanDosen(a *app.App) echo.HandlerFunc {
 	h := func(c echo.Context) error {
 		res := []byte(fmt.Sprintf(dummyUpdateSkPengangkatanDosen, "hapus"))
 

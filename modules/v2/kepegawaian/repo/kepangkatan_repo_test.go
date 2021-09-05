@@ -17,7 +17,7 @@ func TestGetAllPangkatGolonganRuang(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	a := app.App{GormDB: db}
+	a := &app.App{GormDB: db}
 	pp := GetAllPangkatGolonganRuang(a, context.Background())
 	if len(pp) == 0 {
 		t.Fatal("should not be empty")
@@ -37,7 +37,7 @@ func TestGetAllJabatanFungsional(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	a := app.App{GormDB: db}
+	a := &app.App{GormDB: db}
 	jj, err := GetAllJabatanFungsional(a, context.Background())
 	if err != nil {
 		t.Fatal(err)

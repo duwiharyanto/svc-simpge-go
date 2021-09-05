@@ -7,14 +7,15 @@ import (
 	lg "log"
 	"net/http"
 	"os"
+	"strconv"
 	"strings"
 	"svc-insani-go/app"
 	"svc-insani-go/app/database"
 	"svc-insani-go/app/minio"
 	"svc-insani-go/router"
 
-	"github.com/labstack/echo"
-	"github.com/labstack/echo/middleware"
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 	"github.com/labstack/gommon/log"
 )
 
@@ -25,7 +26,11 @@ func main() {
 		lg.Println("Can't connect to db:", err.Error())
 	}
 
-	gormDB, err := database.InitGorm(db, true)
+	isDebug, err := strconv.ParseBool(os.Getenv("APP_DEBUG"))
+	if err != nil {
+		lg.Println("Error parse APP_DEBUG:", err.Error())
+	}
+	gormDB, err := database.InitGorm(db, isDebug)
 	if err != nil {
 		lg.Println("Can't connect to gorm db:", err.Error())
 	}
@@ -40,13 +45,13 @@ func main() {
 	// berisi koneksi database
 	// dan data lain yang memungkinkan untuk digunakan secara berulang
 
-	a := app.App{
+	a := &app.App{
 		DB:              db,
 		GormDB:          gormDB,
 		HttpClient:      &http.Client{},
 		MinioBucketName: os.Getenv("MINIO_BUCKETNAME"),
 		MinioClient:     minioClient,
-		Name:            "Personal Service",
+		Name:            os.Getenv("SERVICE_NAME"),
 		TimeLocation:    timeLocation,
 	}
 	if a.MinioBucketName == "" {
@@ -70,6 +75,7 @@ func main() {
 
 	slackErrChan := app.NewSlackLogger(appCtx, a.HttpClient)
 	// Memanggil fungsi yang mengelola routing
+	e.Use(router.SetResponseTimeout(appCtx))
 	router.InitRoute(a, appCtx, e, slackErrChan)
 
 	e.HTTPErrorHandler = func(err error, c echo.Context) {
@@ -95,10 +101,7 @@ func main() {
 	// e.Use(router.PostRequest(a))
 	// e.Use(router.HandleError)
 	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
-		Format: `{"status":${status},"method":"${method}","uri":"${uri}","time":"${time_rfc3339_nano}","x-member":"${header:X-Member}","id":"${id}","remote_ip":"${remote_ip}","host":"${host}",` +
-			`"error":"${error}","latency":${latency},` +
-			`"latency_human":"${latency_human}","bytes_in":${bytes_in},` +
-			`"bytes_out":${bytes_out}}` + "\n",
+		Format: `${status} ${method} ${uri} ${time_rfc3339_nano} ${header:X-Member} ${latency} ${latency_human} ${bytes_in} ${bytes_out} ${error}` + "\n",
 	}))
 
 	e.Use(middleware.Recover())

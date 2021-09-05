@@ -7,10 +7,10 @@ import (
 	"svc-insani-go/modules/v1/master-status-pegawai/model"
 	"svc-insani-go/modules/v1/master-status-pegawai/repo"
 
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 )
 
-func HandleGetAllStatusPegawai(a app.App) echo.HandlerFunc {
+func HandleGetAllStatusPegawai(a *app.App) echo.HandlerFunc {
 	h := func(c echo.Context) error {
 		StatusPegawai, err := repo.GetAllStatusPegawai(a)
 		if err != nil {
@@ -25,7 +25,7 @@ func HandleGetAllStatusPegawai(a app.App) echo.HandlerFunc {
 	return echo.HandlerFunc(h)
 }
 
-func HandleStatusPegawaiByUUID(a app.App) echo.HandlerFunc {
+func HandleStatusPegawaiByUUID(a *app.App) echo.HandlerFunc {
 	h := func(c echo.Context) error {
 		uuid := c.QueryParam("uuid")
 		pp, err := repo.GetStatusPegawaiByUUID(a, c.Request().Context(), uuid)

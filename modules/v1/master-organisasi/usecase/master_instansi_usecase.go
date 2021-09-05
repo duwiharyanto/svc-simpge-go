@@ -7,10 +7,10 @@ import (
 	"svc-insani-go/modules/v1/master-organisasi/model"
 	"svc-insani-go/modules/v1/master-organisasi/repo"
 
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 )
 
-func HandleSearchInstansi(a app.App) echo.HandlerFunc {
+func HandleSearchInstansi(a *app.App) echo.HandlerFunc {
 	h := func(c echo.Context) error {
 		// nama := c.QueryParam("nama_instansi")
 		pp, err := repo.SearchInstansi(a, c.Request().Context())

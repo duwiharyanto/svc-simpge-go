@@ -42,6 +42,12 @@ spec:
             - name: http-api
               containerPort: 80
           env:
+            - name: ENV
+              value: "staging"
+            - name: SERVICE_NAME
+              value: "svc-insani-go"
+            - name: APP_DEBUG
+              value: "true"
             - name: DBMS
               value: "mysql"
             - name: DB_USER
@@ -82,6 +88,8 @@ spec:
               value: "https://hooks.slack.com/services/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"
             - name: URL_HCM_SIMPEG_SERVICE
               value: "http://svc-simpeg-ora-lumen.hcm-stag.svc.cluster.local"
+            - name: URL_V2_PRESENCE_SERVICE
+              value: "http://svc-presence-lumen.hcm-stag.svc.cluster.local"
 
 ---
 apiVersion: v1

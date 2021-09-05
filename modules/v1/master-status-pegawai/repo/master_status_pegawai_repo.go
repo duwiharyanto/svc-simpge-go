@@ -7,7 +7,7 @@ import (
 	"svc-insani-go/modules/v1/master-status-pegawai/model"
 )
 
-func GetAllStatusPegawai(a app.App) ([]model.StatusPegawai, error) {
+func GetAllStatusPegawai(a *app.App) ([]model.StatusPegawai, error) {
 	sqlQuery := getAllStatusPegawaiQuery()
 	rows, err := a.DB.Query(sqlQuery)
 	if err != nil {
@@ -32,7 +32,7 @@ func GetAllStatusPegawai(a app.App) ([]model.StatusPegawai, error) {
 	return StatusPegawai, nil
 }
 
-func GetStatusPegawaiByUUID(a app.App, ctx context.Context, uuid string) (*model.StatusPegawai, error) {
+func GetStatusPegawaiByUUID(a *app.App, ctx context.Context, uuid string) (*model.StatusPegawai, error) {
 	var statusPegawai model.StatusPegawai
 
 	tx := a.GormDB.WithContext(ctx)

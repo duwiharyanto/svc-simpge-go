@@ -7,10 +7,10 @@ import (
 	"svc-insani-go/modules/v1/master-detail-profesi/model"
 	"svc-insani-go/modules/v1/master-detail-profesi/repo"
 
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 )
 
-func HandleGetDetailProfesi(a app.App) echo.HandlerFunc {
+func HandleGetDetailProfesi(a *app.App) echo.HandlerFunc {
 	h := func(c echo.Context) error {
 		JenjangPendidikan, err := repo.GetDetailProfesi(a, c.Request().Context())
 		if err != nil {
@@ -25,7 +25,7 @@ func HandleGetDetailProfesi(a app.App) echo.HandlerFunc {
 	return echo.HandlerFunc(h)
 }
 
-func HandleDetailProfesiByUUID(a app.App) echo.HandlerFunc {
+func HandleDetailProfesiByUUID(a *app.App) echo.HandlerFunc {
 	h := func(c echo.Context) error {
 		uuid := c.QueryParam("uuid")
 		pp, err := repo.GetDetailProfesiByUUID(a, c.Request().Context(), uuid)

@@ -10,7 +10,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func GetAllKelompokSkPengangkatan(a app.App, ctx context.Context) ([]model.KelompokSkPengangkatan, error) {
+func GetAllKelompokSkPengangkatan(a *app.App, ctx context.Context) ([]model.KelompokSkPengangkatan, error) {
 	var ksk []model.KelompokSkPengangkatan
 	err := a.GormDB.
 		WithContext(ctx).
@@ -25,7 +25,7 @@ func GetAllKelompokSkPengangkatan(a app.App, ctx context.Context) ([]model.Kelom
 	return ksk, nil
 }
 
-func GetKelompokSkPengangkatan(a app.App, ctx context.Context, uuid string) (*model.KelompokSkPengangkatan, error) {
+func GetKelompokSkPengangkatan(a *app.App, ctx context.Context, uuid string) (*model.KelompokSkPengangkatan, error) {
 	var k model.KelompokSkPengangkatan
 	err := a.GormDB.
 		WithContext(ctx).
@@ -47,7 +47,7 @@ func GetKelompokSkPengangkatan(a app.App, ctx context.Context, uuid string) (*mo
 	return &k, nil
 }
 
-func CreateSkPengangkatanTendik(a app.App, ctx context.Context, skpt *model.SkPengangkatanTendik) error {
+func CreateSkPengangkatanTendik(a *app.App, ctx context.Context, skpt *model.SkPengangkatanTendik) error {
 	tx := a.GormDB.Session(&gorm.Session{
 		Context:              ctx,
 		FullSaveAssociations: true,
@@ -61,7 +61,7 @@ func CreateSkPengangkatanTendik(a app.App, ctx context.Context, skpt *model.SkPe
 	return nil
 }
 
-func UpdateSkPengangkatanTendik(a app.App, ctx context.Context, skpt *model.SkPengangkatanTendik) error {
+func UpdateSkPengangkatanTendik(a *app.App, ctx context.Context, skpt *model.SkPengangkatanTendik) error {
 	tx := a.GormDB.Session(&gorm.Session{
 		Context:              ctx,
 		FullSaveAssociations: true,
@@ -75,7 +75,7 @@ func UpdateSkPengangkatanTendik(a app.App, ctx context.Context, skpt *model.SkPe
 	return nil
 }
 
-func GetSkPengangkatanTendik(a app.App, ctx context.Context, uuid string) (*model.SkPengangkatanTendik, error) {
+func GetSkPengangkatanTendik(a *app.App, ctx context.Context, uuid string) (*model.SkPengangkatanTendik, error) {
 	var skpt model.SkPengangkatanTendik
 	err := a.GormDB.
 		WithContext(ctx).
@@ -109,7 +109,7 @@ func GetSkPengangkatanTendik(a app.App, ctx context.Context, uuid string) (*mode
 	return &skpt, nil
 }
 
-func GetAllStatusPengangkatan(a app.App, ctx context.Context) ([]model.StatusPengangkatan, error) {
+func GetAllStatusPengangkatan(a *app.App, ctx context.Context) ([]model.StatusPengangkatan, error) {
 	var ss []model.StatusPengangkatan
 	err := a.GormDB.
 		WithContext(ctx).
@@ -124,7 +124,7 @@ func GetAllStatusPengangkatan(a app.App, ctx context.Context) ([]model.StatusPen
 	return ss, nil
 }
 
-func GetStatusPengangkatan(a app.App, ctx context.Context, uuid string) (*model.StatusPengangkatan, error) {
+func GetStatusPengangkatan(a *app.App, ctx context.Context, uuid string) (*model.StatusPengangkatan, error) {
 	var s model.StatusPengangkatan
 	err := a.GormDB.
 		WithContext(ctx).

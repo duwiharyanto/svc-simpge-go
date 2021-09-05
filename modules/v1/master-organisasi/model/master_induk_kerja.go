@@ -1,7 +1,7 @@
 package model
 
 type IndukKerja struct {
-	ID           string `json:"-"`
+	ID           uint64 `json:"-"`
 	KdUnit       string `json:"kd_unit,omitempty"`
 	Unit         string `json:"unit,omitempty"`
 	Keterangan   string `json:"keterangan"`
@@ -25,7 +25,7 @@ type BagianKerjaResponse struct {
 }
 
 type Unit1 struct {
-	ID          string `json:"-" gorm:"primaryKey"`
+	ID          uint64 `json:"-" gorm:"primaryKey"`
 	KdUnit1     string `json:"kd_unit"`
 	Unit1       string `json:"unit"`
 	Keterangan1 string `json:"-"`
@@ -35,18 +35,20 @@ type Unit1 struct {
 }
 
 type Unit2 struct {
-	ID          string `json:"-" gorm:"primaryKey"`
+	ID          uint64 `json:"-" gorm:"primaryKey"`
 	KdUnit2     string `json:"kd_unit"`
 	Unit2       string `json:"unit"`
-	Keterangan1 string `json:"-"`
 	Keterangan2 string `json:"-"`
 	UserInput   string `json:"-"`
 	UserUpdate  string `json:"-"`
 	UUID        string `json:"uuid"`
+
+	Keterangan1 string `json:"-"`
+	Unit1       Unit1  `json:"-" gorm:"foreignKey:Keterangan1;references:KdUnit1"`
 }
 
 type Unit3 struct {
-	ID          string `json:"-" gorm:"primaryKey"`
+	ID          uint64 `json:"-" gorm:"primaryKey"`
 	KdUnit3     string `json:"kd_unit"`
 	Unit3       string `json:"unit"`
 	Keterangan1 string `json:"-"`
@@ -56,7 +58,7 @@ type Unit3 struct {
 }
 
 type Homebase struct {
-	ID          string `json:"-" gorm:"primaryKey"`
+	ID          uint64 `json:"-" gorm:"primaryKey"`
 	KdUnit2     string `json:"kd_homebase_uii" json:"column:kd_unit2"`
 	Unit2       string `json:"unit2"`
 	Keterangan1 string `json:"keterangan1"`

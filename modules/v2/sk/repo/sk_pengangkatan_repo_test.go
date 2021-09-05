@@ -18,7 +18,7 @@ func TestGetAllKelompokSkPengangkatan(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	a := app.App{GormDB: db}
+	a := &app.App{GormDB: db}
 	ksk, err := GetAllKelompokSkPengangkatan(a, context.Background())
 	if err != nil {
 		t.Fatal(err)
@@ -41,7 +41,7 @@ func TestGetKelompokSkPengangkatan(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	a := app.App{GormDB: db}
+	a := &app.App{GormDB: db}
 	// uuid := "zzz"
 	uuid := "f9a2a6e4-ec0a-11ea-8c77-7eb0d4a3c7a0"
 	ksk, err := GetKelompokSkPengangkatan(a, context.Background(), uuid)
@@ -63,7 +63,7 @@ func TestUpdateSkPengangkatanTendik(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	a := app.App{GormDB: db}
+	a := &app.App{GormDB: db}
 
 	uuid := "dfef3d4d-2ffe-11eb-a014-7eb0d4a3c7a0"
 	ctx := context.Background()
@@ -106,7 +106,7 @@ func TestGetSkPengangkatanTendik(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	a := app.App{GormDB: db}
+	a := &app.App{GormDB: db}
 	uuid := "dfef3d4d-2ffe-11eb-a014-7eb0d4a3c7a0"
 	// uuid := "6215c058-1e3d-11eb-a014-7eb0d4a3c7a0"
 	ctx := context.Background()

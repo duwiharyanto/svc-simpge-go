@@ -14,14 +14,14 @@ import (
 
 	guuid "github.com/google/uuid"
 
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 )
 
 const (
 	kdJenisSkPengangkatan = "1"
 )
 
-func HandleCreateSkPengangkatanTendik(a app.App) echo.HandlerFunc {
+func HandleCreateSkPengangkatanTendik(a *app.App) echo.HandlerFunc {
 	h := func(c echo.Context) error {
 		ctx := c.Request().Context()
 		kdKelompokPegawai := c.QueryParam("kd_kelompok_pegawai")
@@ -225,7 +225,7 @@ func HandleCreateSkPengangkatanTendik(a app.App) echo.HandlerFunc {
 	return echo.HandlerFunc(h)
 }
 
-func HandleUpdateSkPengangkatanTendik(a app.App) echo.HandlerFunc {
+func HandleUpdateSkPengangkatanTendik(a *app.App) echo.HandlerFunc {
 	h := func(c echo.Context) error {
 		ctx := c.Request().Context()
 		uuid := c.QueryParam("uuid_sk_pengangkatan_tendik")
@@ -413,7 +413,7 @@ func HandleUpdateSkPengangkatanTendik(a app.App) echo.HandlerFunc {
 	return echo.HandlerFunc(h)
 }
 
-func HandleGetSkPengangkatanTendik(a app.App) echo.HandlerFunc {
+func HandleGetSkPengangkatanTendik(a *app.App) echo.HandlerFunc {
 	h := func(c echo.Context) error {
 		ctx := c.Request().Context()
 		uuidSkPengangkatanTendik := c.QueryParam("uuid_sk_pengangkatan_tendik")
@@ -467,7 +467,7 @@ func HandleGetSkPengangkatanTendik(a app.App) echo.HandlerFunc {
 
 }
 
-func HandleDeleteSKPengangkatanTendik(a app.App) echo.HandlerFunc {
+func HandleDeleteSKPengangkatanTendik(a *app.App) echo.HandlerFunc {
 	h := func(c echo.Context) error {
 		uuid := c.QueryParam("uuid_sk_pengangkatan_tendik")
 		if uuid == "" {

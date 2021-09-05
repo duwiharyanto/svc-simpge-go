@@ -10,7 +10,7 @@ import (
 	"svc-insani-go/modules/v1/pengaturan-insani/model"
 	"svc-insani-go/modules/v1/pengaturan-insani/repo"
 
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 )
 
 const (

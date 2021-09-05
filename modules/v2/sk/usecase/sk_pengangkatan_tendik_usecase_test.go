@@ -2,6 +2,7 @@ package usecase_test
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -20,7 +21,7 @@ import (
 	"svc-insani-go/router"
 	"testing"
 
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 )
 
 func FillFormDataFieldMap(w *multipart.Writer, m map[string]string) error {
@@ -55,7 +56,7 @@ func FillFormDataField(w *multipart.Writer, formField io.Writer, key, value stri
 func TestHandleCreateSkPengangkatanTendik(t *testing.T) {
 	// init server
 	e := echo.New()
-	e.Use(router.SetResponseTimeout)
+	e.Use(router.SetResponseTimeout(context.Background()))
 
 	db, err := database.Connect()
 	if err != nil {
@@ -72,7 +73,7 @@ func TestHandleCreateSkPengangkatanTendik(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	a := app.App{DB: db, GormDB: gormDb, MinioClient: mc, MinioBucketName: "insani"}
+	a := &app.App{DB: db, GormDB: gormDb, MinioClient: mc, MinioBucketName: "insani"}
 
 	fmt.Print(a) // router.InitRoute(a, e)
 	server := httptest.NewServer(e)
@@ -172,7 +173,7 @@ func TestHandleCreateSkPengangkatanTendik(t *testing.T) {
 func TestHandleUpdateSkPengangkatanTendik(t *testing.T) {
 	// init server
 	e := echo.New()
-	e.Use(router.SetResponseTimeout)
+	e.Use(router.SetResponseTimeout(context.Background()))
 
 	db, err := database.Connect()
 	if err != nil {
@@ -189,7 +190,7 @@ func TestHandleUpdateSkPengangkatanTendik(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	a := app.App{DB: db, GormDB: gormDb, MinioClient: mc, MinioBucketName: "insani"}
+	a := &app.App{DB: db, GormDB: gormDb, MinioClient: mc, MinioBucketName: "insani"}
 	fmt.Print(a)
 	// router.InitRoute(a, e)
 	server := httptest.NewServer(e)
@@ -293,7 +294,7 @@ func TestHandleUpdateSkPengangkatanTendik(t *testing.T) {
 func TestHandleGetSkPengangkatanTendik(t *testing.T) {
 	// init server
 	e := echo.New()
-	e.Use(router.SetResponseTimeout)
+	e.Use(router.SetResponseTimeout(context.Background()))
 
 	db, err := database.Connect()
 	if err != nil {
@@ -310,7 +311,7 @@ func TestHandleGetSkPengangkatanTendik(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	a := app.App{DB: db, GormDB: gormDb, MinioBucketName: "insani", MinioClient: mc}
+	a := &app.App{DB: db, GormDB: gormDb, MinioBucketName: "insani", MinioClient: mc}
 	fmt.Print(a)
 	// router.InitRoute(a, e)
 	server := httptest.NewServer(e)
@@ -362,7 +363,7 @@ func TestHandleGetSkPengangkatanTendik(t *testing.T) {
 func TestHandleDeleteSkPengangkatanTendik(t *testing.T) {
 	// init server
 	e := echo.New()
-	e.Use(router.SetResponseTimeout)
+	e.Use(router.SetResponseTimeout(context.Background()))
 
 	db, err := database.Connect()
 	if err != nil {
@@ -374,7 +375,7 @@ func TestHandleDeleteSkPengangkatanTendik(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	a := app.App{DB: db, GormDB: gormDb}
+	a := &app.App{DB: db, GormDB: gormDb}
 	fmt.Print(a)
 	// router.InitRoute(a, e)
 	server := httptest.NewServer(e)

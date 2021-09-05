@@ -57,23 +57,23 @@ func getListAllPegawaiQuery(req *model.PegawaiRequest) string {
 func countPegawaiQuery(req *model.PegawaiRequest) string {
 	var uuidJenisPegawaiFilterQuery string
 	if req.UuidJenisPegawai != "" {
-		uuidJenisPegawaiFilterQuery = fmt.Sprintf("AND d.uuid = '%s'", req.UuidJenisPegawai)
+		uuidJenisPegawaiFilterQuery = fmt.Sprintf("AND d.uuid = %q", req.UuidJenisPegawai)
 	}
 	var uuidKelompokFilterQuery string
 	if req.UuidKelompokPegawai != "" {
-		uuidKelompokFilterQuery = fmt.Sprintf("AND c.uuid = '%s'", req.UuidKelompokPegawai)
+		uuidKelompokFilterQuery = fmt.Sprintf("AND c.uuid = %q", req.UuidKelompokPegawai)
 	}
 	var uuidUnitKerjaFilterQuery string
 	if req.UuidUnitKerja != "" {
-		uuidUnitKerjaFilterQuery = fmt.Sprintf("AND b.uuid = '%s'", req.UuidUnitKerja)
+		uuidUnitKerjaFilterQuery = fmt.Sprintf("AND b.uuid = %q", req.UuidUnitKerja)
 	}
 	var kdStatusAktifFilterQuery string
 	if req.UuidStatusAktif != "" {
-		kdStatusAktifFilterQuery = fmt.Sprintf("AND e.uuid = '%s'", req.UuidStatusAktif)
+		kdStatusAktifFilterQuery = fmt.Sprintf("AND e.uuid = %q", req.UuidStatusAktif)
 	}
 	var namaFilterQuery string
 	if req.Cari != "" {
-		namaFilterQuery = fmt.Sprintf("AND (a.nama LIKE '%%%s%%' OR a.nik LIKE '%%%s%%')", req.Cari, req.Cari)
+		namaFilterQuery = fmt.Sprintf(`AND (a.nama LIKE "%%%s%%" OR a.nik LIKE "%%%s%%")`, req.Cari, req.Cari)
 	}
 	return fmt.Sprintf(`SELECT COUNT(*)
 	FROM pegawai a
@@ -119,21 +119,29 @@ func getPegawaiByUUID(uuid string) string {
 func getPegawaiYayasanQuery(uuid string) string {
 	q := fmt.Sprintf(`
 	SELECT
+		p.id,
 		COALESCE(jp.uuid,''),
+		COALESCE(jp.id, 0),
 		COALESCE(jp.kd_jenis_pegawai,''),
 		COALESCE(jp.nama_jenis_pegawai,''),
 		COALESCE(sp.uuid,''),
+		COALESCE(sp.id, 0),
 		COALESCE(sp.kd_status_pegawai,''),
 		COALESCE(sp.status_pegawai,''),
 		COALESCE(kp.uuid,''),
+		COALESCE(kp.id, 0),
 		COALESCE(kp.kd_kelompok_pegawai,''),
 		COALESCE(kp.kelompok_pegawai,''),
+		COALESCE(jp2.id, 0),
 		COALESCE(jp2.uuid,''),
 		COALESCE(jp2.kd_jenjang,''),
-		COALESCE(jp2.jenjang,''),
+		COALESCE(jp2.kd_pendidikan_simpeg,''),
+		COALESCE(jp2.nama_pendidikan_simpeg,''),
 		COALESCE(jp3.uuid,''),
+		COALESCE(jp3.id, 0),
 		COALESCE(jp3.kd_jenjang,''),
-		COALESCE(jp3.jenjang,''),
+		COALESCE(jp3.kd_pendidikan_simpeg,''),
+		COALESCE(jp3.nama_pendidikan_simpeg,''),
 		COALESCE(pgp.uuid,''),
 		COALESCE(pgp.kd_pangkat_gol,''),
 		COALESCE(pgp.pangkat,''),
@@ -152,6 +160,7 @@ func getPegawaiYayasanQuery(uuid string) string {
 		COALESCE(pf.angka_kredit,''),
 		COALESCE(pf.nomor_sertifikasi,''),
 		COALESCE(jnr.uuid,''),
+		COALESCE(jnr.id, 0),
 		COALESCE(jnr.kd_jenis_regis,''),
 		COALESCE(jnr.jenis_no_regis,''),
 		COALESCE(pf.nomor_registrasi,'')
@@ -288,14 +297,22 @@ func getStatusPegawaiAktifQuery(uuid string) string {
 func getPegawaiPribadiQuery(uuid string) string {
 	q := fmt.Sprintf(`
 	SELECT 
+		p.id,
 		COALESCE(p.nama,''),
 		COALESCE(p.nik,''),
+		COALESCE(p.id_agama,0),
 		COALESCE(p.kd_agama,''),
+		COALESCE(ag.kd_item,''),
+		COALESCE(p.id_golongan_darah,0),
 		COALESCE(p.kd_golongan_darah,''),
+		COALESCE(gd.golongan_darah,''),
 		COALESCE(p.jenis_kelamin,''),
+		COALESCE(p.id_status_perkawinan, 0),
+		COALESCE(sp.kd_status,''),
 		COALESCE(p.tempat_lahir,''),
 		COALESCE(pdp.tgl_lahir,''),
 		COALESCE(p.flag_pensiun,''),
+		COALESCE(p.gelar_depan ,''),
 		COALESCE(p.gelar_belakang ,''),
 		COALESCE(p.nik_ktp,''),
 		COALESCE(jp.nama_jenis_pegawai,''),
@@ -306,6 +323,12 @@ func getPegawaiPribadiQuery(uuid string) string {
 		COALESCE(p.uuid,'') 
 	FROM 
 		pegawai p
+	LEFT JOIN 
+		agama ag ON p.id_agama = ag.id 
+	LEFT JOIN 
+		golongan_darah gd ON p.id_golongan_darah = gd.id 
+	LEFT JOIN 
+		status_pernikahan sp ON p.id_status_perkawinan = sp.id 
 	LEFT JOIN 
 		jenis_pegawai jp ON p.id_jenis_pegawai = jp.id 
 	LEFT JOIN 

@@ -7,10 +7,10 @@ import (
 	"svc-insani-go/modules/v1/master-status-pegawai-aktif/model"
 	"svc-insani-go/modules/v1/master-status-pegawai-aktif/repo"
 
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 )
 
-func HandleGetStatusPegawaiAktif(a app.App) echo.HandlerFunc {
+func HandleGetStatusPegawaiAktif(a *app.App) echo.HandlerFunc {
 	h := func(c echo.Context) error {
 		FlagStatus := c.QueryParam("flag_status")
 		StatusAktif, err := repo.GetStatusPegawaiAktif(a, FlagStatus)
@@ -26,7 +26,7 @@ func HandleGetStatusPegawaiAktif(a app.App) echo.HandlerFunc {
 	return echo.HandlerFunc(h)
 }
 
-func HandleGetStatusPegawaiAktifByUUID(a app.App) echo.HandlerFunc {
+func HandleGetStatusPegawaiAktifByUUID(a *app.App) echo.HandlerFunc {
 	h := func(c echo.Context) error {
 		uuid := c.QueryParam("uuid")
 		pp, err := repo.GetStatusPegawaiAktifByUUID(a, c.Request().Context(), uuid)

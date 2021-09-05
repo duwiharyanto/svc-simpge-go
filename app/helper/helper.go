@@ -144,3 +144,19 @@ func FlatQuery(q string) string {
 	r := strings.NewReplacer("\n", " ", "\t", "")
 	return r.Replace(q)
 }
+
+func IsNumber(s string) bool {
+	_, err := strconv.Atoi(s)
+	if err != nil {
+		return false
+	}
+	return true
+}
+
+func IsDateFormatValid(dateFormat, date string) bool {
+	_, err := time.Parse(dateFormat, date)
+	if err != nil {
+		return false
+	}
+	return true
+}

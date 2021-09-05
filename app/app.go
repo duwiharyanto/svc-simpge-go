@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+	"mime/multipart"
 	"net"
 	"net/http"
 	"net/url"
@@ -16,6 +17,7 @@ import (
 	"strconv"
 	"strings"
 	"svc-insani-go/app/minio"
+	"svc-insani-go/helper"
 	"time"
 
 	"gorm.io/gorm"
@@ -54,27 +56,40 @@ func DefaultHttpTransport() *http.Transport {
 }
 
 const (
-	contentTypeJSON            = "application/json"
-	contentTypeAppilcationForm = "application/form"
+	ContentTypeJSON              = "application/json"
+	ContentTypeAppilcationForm   = "application/form"
+	ContentTypeMultipartFormData = "multipart/form-data"
 )
 
 func SendHttpRequest(ctx context.Context, client *http.Client, method, baseURL, contentType string, header map[string]string, body interface{}) (*http.Response, error) {
 	var reqBody io.Reader
-	// mengecek http request content type
-
-	fmt.Printf("DEBUG method : %+v \n", method)
-	fmt.Printf("DEBUG base URL : %+v \n", baseURL)
+	fmt.Printf("[DEBUG] endpoint: %s %s\n", method, baseURL)
 	switch contentType {
-	case contentTypeJSON:
+	case ContentTypeJSON:
 		jsonBody, err := json.Marshal(body)
 		if err != nil {
 			return nil, fmt.Errorf("error marshaling request body: %w", err)
 		}
 		// fmt.Printf("[DEBUG] req body in send http req: %s\n", jsonBody)
 		reqBody = bytes.NewBuffer(jsonBody)
-	case contentTypeAppilcationForm:
+	case ContentTypeAppilcationForm:
 		formValues := body.(url.Values)
 		reqBody = strings.NewReader(formValues.Encode())
+	case ContentTypeMultipartFormData:
+		body, ok := body.(map[string]string)
+		if !ok {
+			return nil, fmt.Errorf("error assert form data body")
+		}
+		formDataBuffer := &bytes.Buffer{}
+		formDataWriter := multipart.NewWriter(formDataBuffer)
+		err := helper.FillFormDataWriter(formDataWriter, body)
+		if err != nil {
+			return nil, fmt.Errorf("error fill form data writer: %w", err)
+		}
+		contentType = formDataWriter.FormDataContentType()
+		// reqBody = bytes.NewReader(formDataBuffer.Bytes())
+		reqBody = formDataBuffer
+		formDataWriter.Close()
 	default:
 		reqBody = nil
 	}
@@ -159,18 +174,15 @@ func sendErrorToSlack(ctx context.Context, client *http.Client, err error) error
 	// msg := fmt.Sprintf(slackMsgTemplate, strings.Trim(fmt.Sprintf("%q", err), `"`))
 	msg := strings.Trim(fmt.Sprintf("%q", err), `"`)
 	header := map[string]string{"Accept": "application/json"}
-	slackMsgTmpl := map[string]interface{}{
-		"blocks": []map[string]interface{}{
-			map[string]interface{}{
-				"type": "section",
-				"text": map[string]interface{}{
-					"type": "mrkdwn",
-					"text": fmt.Sprintf("Prod | svc-insani-go | 500\n```%s```", msg),
-				},
-			},
-		},
+	slackMsgTmpl := map[string]string{
+		"text": fmt.Sprintf(
+			"%s\n%s\n%s\n",
+			os.Getenv("SERVICE_NAME"),
+			os.Getenv("ENV"),
+			msg,
+		),
 	}
-	res, err := SendHttpRequest(ctx, client, http.MethodPost, slackHookEndpoint, contentTypeJSON, header, slackMsgTmpl)
+	res, err := SendHttpRequest(ctx, client, http.MethodPost, slackHookEndpoint, ContentTypeJSON, header, slackMsgTmpl)
 	if err != nil {
 		return fmt.Errorf("error send http request: %w", err)
 	}

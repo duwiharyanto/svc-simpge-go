@@ -3,12 +3,15 @@ package repo
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"fmt"
 	"svc-insani-go/app"
 	"svc-insani-go/modules/v1/master-organisasi/model"
+
+	"gorm.io/gorm"
 )
 
-func GetIndukKerja(a app.App) ([]model.IndukKerja, error) {
+func GetIndukKerja(a *app.App) ([]model.IndukKerja, error) {
 	sqlQuery := getIndukKerjaQuery()
 	rows, err := a.DB.Query(sqlQuery)
 	if err != nil {
@@ -39,7 +42,7 @@ func GetIndukKerja(a app.App) ([]model.IndukKerja, error) {
 	return pp, nil
 }
 
-func GetUnitKerja(a app.App, IndukKerja string) ([]model.IndukKerja, error) {
+func GetUnitKerja(a *app.App, IndukKerja string) ([]model.IndukKerja, error) {
 	sqlQuery := getUnitKerjaQuery(IndukKerja)
 	rows, err := a.DB.Query(sqlQuery)
 	if err != nil {
@@ -70,7 +73,7 @@ func GetUnitKerja(a app.App, IndukKerja string) ([]model.IndukKerja, error) {
 	return pp, nil
 }
 
-func GetBagianKerja(a app.App, UnitKerja string) ([]model.IndukKerja, error) {
+func GetBagianKerja(a *app.App, UnitKerja string) ([]model.IndukKerja, error) {
 	sqlQuery := getBagianKerjaQuery(UnitKerja)
 	rows, err := a.DB.Query(sqlQuery)
 	if err != nil {
@@ -101,7 +104,7 @@ func GetBagianKerja(a app.App, UnitKerja string) ([]model.IndukKerja, error) {
 	return pp, nil
 }
 
-func GetIndukKerjaByUUID(a app.App, ctx context.Context, uuid string) (*model.Unit1, error) {
+func GetIndukKerjaByUUID(a *app.App, ctx context.Context, uuid string) (*model.Unit1, error) {
 	var indukKerja model.Unit1
 
 	tx := a.GormDB.WithContext(ctx)
@@ -112,29 +115,46 @@ func GetIndukKerjaByUUID(a app.App, ctx context.Context, uuid string) (*model.Un
 	return &indukKerja, nil
 }
 
-func GetUnitKerjaByUUID(a app.App, ctx context.Context, uuid string) (*model.Unit2, error) {
+func GetUnitKerjaByUUID(a *app.App, ctx context.Context, uuid string) (*model.Unit2, error) {
 	var unitKerja model.Unit2
 
-	tx := a.GormDB.WithContext(ctx)
-	res := tx.First(&unitKerja, "uuid = ?", uuid)
-	if res.Error != nil {
-		return nil, fmt.Errorf("error querying unit kerja by uuid %s", res.Error)
+	err := a.GormDB.
+		WithContext(ctx).
+		Joins("Unit1").
+		Where("unit2.flag_aktif = 1 AND unit2.uuid = ?", uuid).
+		First(&unitKerja).
+		Error
+
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return nil, nil
 	}
+
+	if err != nil {
+		return nil, fmt.Errorf("error get unit kerja by uuid: %w", err)
+	}
+
 	return &unitKerja, nil
 }
 
-func GetBagianKerjaByUUID(a app.App, ctx context.Context, uuid string) (*model.Unit3, error) {
+func GetBagianKerjaByUUID(a *app.App, ctx context.Context, uuid string) (*model.Unit3, error) {
 	var bagianKerja model.Unit3
+	err := a.GormDB.
+		WithContext(ctx).
+		Where("flag_aktif = ? AND uuid = ?", "Y", uuid).
+		First(&bagianKerja).
+		Error
 
-	tx := a.GormDB.WithContext(ctx)
-	res := tx.First(&bagianKerja, "uuid = ?", uuid)
-	if res.Error != nil {
-		return nil, fmt.Errorf("error querying bagian kerja by uuid %s", res.Error)
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return nil, nil
+	}
+
+	if err != nil {
+		return nil, fmt.Errorf("error get bagian kerja by uuid %s", err)
 	}
 	return &bagianKerja, nil
 }
 
-func GetAllIndukKerja(a app.App, ctx context.Context) ([]model.Unit1, error) {
+func GetAllIndukKerja(a *app.App, ctx context.Context) ([]model.Unit1, error) {
 	var indukKerja []model.Unit1
 
 	tx := a.GormDB.WithContext(ctx)
@@ -145,18 +165,18 @@ func GetAllIndukKerja(a app.App, ctx context.Context) ([]model.Unit1, error) {
 	return indukKerja, nil
 }
 
-func GetAllUnitKerja(a app.App, ctx context.Context) ([]model.Unit2, error) {
+func GetAllUnitKerja(a *app.App, ctx context.Context) ([]model.Unit2, error) {
 	var unitKerja []model.Unit2
 
 	tx := a.GormDB.WithContext(ctx)
-	res := tx.Find(&unitKerja)
+	res := tx.Find(&unitKerja, "flag_aktif = 1")
 	if res.Error != nil {
 		return nil, fmt.Errorf("error querying all unit kerja%s", res.Error)
 	}
 	return unitKerja, nil
 }
 
-func GetAllBagianKerja(a app.App, ctx context.Context) ([]model.Unit3, error) {
+func GetAllBagianKerja(a *app.App, ctx context.Context) ([]model.Unit3, error) {
 	var bagianKerja []model.Unit3
 
 	tx := a.GormDB.WithContext(ctx)
@@ -167,7 +187,7 @@ func GetAllBagianKerja(a app.App, ctx context.Context) ([]model.Unit3, error) {
 	return bagianKerja, nil
 }
 
-func GetHomebase(a app.App, ctx context.Context) ([]model.Homebase, error) {
+func GetHomebase(a *app.App, ctx context.Context) ([]model.Homebase, error) {
 	var homebases []model.Homebase
 
 	tx := a.GormDB.WithContext(ctx)
@@ -179,7 +199,7 @@ func GetHomebase(a app.App, ctx context.Context) ([]model.Homebase, error) {
 	return homebases, nil
 }
 
-func GetHomebaseByUUID(a app.App, ctx context.Context, uuid string) (*model.Homebase, error) {
+func GetHomebaseByUUID(a *app.App, ctx context.Context, uuid string) (*model.Homebase, error) {
 	var homebase model.Homebase
 
 	tx := a.GormDB.WithContext(ctx)
@@ -189,7 +209,7 @@ func GetHomebaseByUUID(a app.App, ctx context.Context, uuid string) (*model.Home
 	}
 	return &homebase, nil
 }
-func GetIndukKerjaByUUIDx(a app.App, uuid string) (*model.IndukKerja, error) {
+func GetIndukKerjaByUUIDx(a *app.App, uuid string) (*model.IndukKerja, error) {
 	sqlQuery := getIndukKerjaQueryByUUID(uuid)
 	//fmt.Printf("log query induk kerja : %s\n", sqlQuery)
 	var indukKerja model.IndukKerja

@@ -7,10 +7,10 @@ import (
 	"svc-insani-go/modules/v1/master-organisasi/model"
 	"svc-insani-go/modules/v1/master-organisasi/repo"
 
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 )
 
-func HandleGetIndukKerja(a app.App) echo.HandlerFunc {
+func HandleGetIndukKerja(a *app.App) echo.HandlerFunc {
 	h := func(c echo.Context) error {
 
 		IndukKerja, err := repo.GetIndukKerja(a)
@@ -26,7 +26,7 @@ func HandleGetIndukKerja(a app.App) echo.HandlerFunc {
 	return echo.HandlerFunc(h)
 }
 
-func HandleGetUnitKerja(a app.App) echo.HandlerFunc {
+func HandleGetUnitKerja(a *app.App) echo.HandlerFunc {
 	h := func(c echo.Context) error {
 		KdIndukKerja := c.QueryParam("kd_induk_kerja")
 
@@ -54,7 +54,7 @@ func HandleGetUnitKerja(a app.App) echo.HandlerFunc {
 	return echo.HandlerFunc(h)
 }
 
-func HandleGetBagianKerja(a app.App) echo.HandlerFunc {
+func HandleGetBagianKerja(a *app.App) echo.HandlerFunc {
 	h := func(c echo.Context) error {
 		KdUnitKerja := c.QueryParam("kd_unit_kerja")
 
@@ -83,7 +83,7 @@ func HandleGetBagianKerja(a app.App) echo.HandlerFunc {
 	return echo.HandlerFunc(h)
 }
 
-func HandleIndukKerjaByUUID(a app.App) echo.HandlerFunc {
+func HandleIndukKerjaByUUID(a *app.App) echo.HandlerFunc {
 	h := func(c echo.Context) error {
 		uuid := c.QueryParam("uuid")
 		pp, err := repo.GetBagianKerjaByUUID(a, c.Request().Context(), uuid)
@@ -96,7 +96,7 @@ func HandleIndukKerjaByUUID(a app.App) echo.HandlerFunc {
 	return echo.HandlerFunc(h)
 }
 
-func HandleHomebase(a app.App) echo.HandlerFunc {
+func HandleHomebase(a *app.App) echo.HandlerFunc {
 	h := func(c echo.Context) error {
 		pp, err := repo.GetHomebase(a, c.Request().Context())
 		if err != nil {
@@ -110,7 +110,7 @@ func HandleHomebase(a app.App) echo.HandlerFunc {
 	return echo.HandlerFunc(h)
 }
 
-func HandleHomebaseByUUID(a app.App) echo.HandlerFunc {
+func HandleHomebaseByUUID(a *app.App) echo.HandlerFunc {
 	h := func(c echo.Context) error {
 		uuid := c.QueryParam("uuid")
 		pp, err := repo.GetHomebaseByUUID(a, c.Request().Context(), uuid)

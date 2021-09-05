@@ -28,10 +28,10 @@ import (
 	organisasiV2 "svc-insani-go/modules/v2/organisasi/usecase"
 	skV2 "svc-insani-go/modules/v2/sk/usecase"
 
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 )
 
-func InitRoute(a app.App, appCtx context.Context, e *echo.Echo, slackErrChan chan error) {
+func InitRoute(a *app.App, appCtx context.Context, e *echo.Echo, slackErrChan chan error) {
 	insaniGroupingPath := e.Group("/public/api/v1")
 	// Route di bawah akan dikelola oleh handler
 	insaniGroupingPath.GET("/pegawai", pegawai.HandleGetPegawai(a))
@@ -40,8 +40,12 @@ func InitRoute(a app.App, appCtx context.Context, e *echo.Echo, slackErrChan cha
 	insaniGroupingPath.GET("/pegawai-simpeg/:uuidPegawai/detail", pegawai.HandleGetSimpegPegawaiByUUID(a))
 	insaniGroupingPath.PUT("/pegawai-simpeg/:uuidPegawai", pegawai.HandleUpdatePegawai(a, appCtx, slackErrChan))
 	insaniGroupingPath.POST("/pegawai-simpeg/:uuidPegawai", pegawai.HandleCreatePegawai(a, appCtx, slackErrChan))
+	insaniGroupingPath.POST("/pegawai-simpeg", pegawai.HandleCreatePegawai(a, appCtx, slackErrChan))
+	insaniGroupingPath.POST("/pegawai", pegawai.HandleCreatePegawai(a, appCtx, slackErrChan))
 	insaniGroupingPath.GET("/pegawai/personal", personal.HandleSearchPersonal(a))
 	insaniGroupingPath.GET("/pegawai/personal-pendidikan/:uuidPersonal", pegawai.HandleGetPendidikanByUUIDPersonal(a))
+
+	insaniGroupingPath.POST("/oracle-sync/pegawai/:uuidPegawai", pegawai.HandleResyncOracle(a))
 
 	// Data Master
 	insaniGroupingPath.GET("/jabatan-struktural", organisasiV2.HandleGetAllJabatanStruktural(a))
@@ -103,8 +107,8 @@ func InitRoute(a app.App, appCtx context.Context, e *echo.Echo, slackErrChan cha
 	insaniGroupingPath.PUT("/sk-kgb/:uuidSk", sk.HandleUpdateSkKenaikanGaji(a))
 
 	// Pengaturan Personal
-	insaniGroupingPath.GET("/pengaturan", pengaturan.HandleGetPengaturan(&a, nil))
-	insaniGroupingPath.PUT("/pengaturan", pengaturan.HandleUpdatePengaturan(&a, nil))
+	insaniGroupingPath.GET("/pengaturan", pengaturan.HandleGetPengaturan(a, nil))
+	insaniGroupingPath.PUT("/pengaturan", pengaturan.HandleUpdatePengaturan(a, nil))
 
 	// Testing
 	// insaniGroupingPath.GET("/testing", detailProfesi.HandleDetailProfesiByUUID(a))

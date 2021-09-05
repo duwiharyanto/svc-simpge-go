@@ -1,8 +1,12 @@
 package model
 
+import (
+	pegawai "svc-insani-go/modules/v1/pegawai/model"
+)
+
 type PersonalDataPribadi struct {
 	Id            uint64 `json:"-" gorm:"primaryKey"`
-	IdKafka       int    `json:"-"`
+	IdKafka       uint64 `json:"-"`
 	NamaLengkap   string `json:"nama_lengkap"`
 	GelarDepan    string `json:"gelar_depan"`
 	GelarBelakang string `json:"gelar_belakang"`
@@ -16,20 +20,50 @@ type PersonalDataPribadiResponse struct {
 }
 
 type PersonalDataPribadiId struct {
-	Id                 int    `json:"id" gorm:"primaryKey"`
+	Id                 uint64 `json:"id" gorm:"primaryKey"`
 	NamaLengkap        string `json:"nama_lengkap"`
+	GelarDepan         string `json:"gelar_depan"`
+	GelarBelakang      string `json:"gelar_belakang"`
 	NikKtp             string `json:"nik_ktp"`
 	NikPegawai         string `json:"nik_pegawai"`
 	TglLahir           string `json:"tgl_lahir"`
 	TempatLahir        string `json:"tempat_lahir"`
-	IdAgama            int    `json:"id_agama"`
+	IdAgama            uint64 `json:"id_agama"`
 	KdAgama            string `json:"kd_agama"`
 	JenisKelamin       string `json:"jenis_kelamin"`
-	IdGolonganDarah    int    `json:"id_golongan_darah"`
+	IdGolonganDarah    uint64 `json:"id_golongan_darah"`
 	KdGolonganDarah    string `json:"kd_golongan_darah"`
-	IdStatusPernikahan int    `json:"id_status_pernikahan"`
+	IdStatusPernikahan uint64 `json:"id_status_pernikahan"`
+	KdStatusPerkawinan string `json:"kd_status_perkawinan"`
+
+	Pegawai          pegawai.Pegawai  `json:"-" gorm:"foreignKey:IdPersonalDataPribadi"`
+	Agama            Agama            `json:"-" gorm:"foreignKey:IdAgama"`
+	GolonganDarah    GolonganDarah    `json:"-" gorm:"foreignKey:IdGolonganDarah"`
+	StatusPernikahan StatusPernikahan `json:"-" gorm:"foreignKey:IdStatusPernikahan"`
 }
 
 func (*PersonalDataPribadiId) TableName() string {
 	return "personal_data_pribadi"
+}
+
+type Agama struct {
+	Id     uint64 `gorm:"primaryKey"`
+	KdItem string
+	Agama  string
+	Uuid   string
+}
+
+const UnknownBloodType = "belum diketahui"
+
+type GolonganDarah struct {
+	Id            uint64 `gorm:"primaryKey"`
+	GolonganDarah string
+	Uuid          string
+}
+
+type StatusPernikahan struct {
+	Id       uint64 `gorm:"primaryKey"`
+	KdStatus string
+	Status   string
+	Uuid     string
 }

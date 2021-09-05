@@ -1,7 +1,7 @@
 package model
 
 type PegawaiPengangkat struct {
-	ID                string `json:"-"`
+	ID                uint64 `json:"-"`
 	NIK               string `json:"nik"`
 	Nama              string `json:"nama"`
 	GelarDepan        string `json:"gelar_depan"`

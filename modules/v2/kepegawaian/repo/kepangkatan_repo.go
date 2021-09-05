@@ -11,7 +11,7 @@ import (
 )
 
 // TODO: tambah handle dan return error
-func GetAllPangkatGolonganRuang(a app.App, ctx context.Context) []model.PangkatGolonganRuang {
+func GetAllPangkatGolonganRuang(a *app.App, ctx context.Context) []model.PangkatGolonganRuang {
 	var pp []model.PangkatGolonganRuang
 	a.GormDB.
 		WithContext(ctx).
@@ -20,7 +20,7 @@ func GetAllPangkatGolonganRuang(a app.App, ctx context.Context) []model.PangkatG
 	return pp
 }
 
-func GetPangkatGolonganRuang(a app.App, ctx context.Context, uuid string) (*model.PangkatGolonganRuang, error) {
+func GetPangkatGolonganRuang(a *app.App, ctx context.Context, uuid string) (*model.PangkatGolonganRuang, error) {
 	var p model.PangkatGolonganRuang
 	err := a.GormDB.
 		WithContext(ctx).
@@ -42,7 +42,7 @@ func GetPangkatGolonganRuang(a app.App, ctx context.Context, uuid string) (*mode
 	return &p, nil
 }
 
-func GetAllJabatanFungsional(a app.App, ctx context.Context) ([]model.JabatanFungsional, error) {
+func GetAllJabatanFungsional(a *app.App, ctx context.Context) ([]model.JabatanFungsional, error) {
 	var jj []model.JabatanFungsional
 	err := a.GormDB.
 		WithContext(ctx).
@@ -57,7 +57,7 @@ func GetAllJabatanFungsional(a app.App, ctx context.Context) ([]model.JabatanFun
 	return jj, nil
 }
 
-func GetJabatanFungsional(a app.App, ctx context.Context, uuid string) (*model.JabatanFungsional, error) {
+func GetJabatanFungsional(a *app.App, ctx context.Context, uuid string) (*model.JabatanFungsional, error) {
 	var j model.JabatanFungsional
 	err := a.GormDB.
 		WithContext(ctx).
