@@ -72,7 +72,18 @@ func GetPangkatGolonganPegawai(a *app.App) ([]model.PangkatGolonganPegawai, erro
 func GetPangkatGolonganPegawaiByUUID(a *app.App, uuid string) (*model.PangkatGolonganPegawai, error) {
 	sqlQuery := getPangkatGolonganPegawaiQueryByUUID(uuid)
 	var pangkatGolonganPegawai model.PangkatGolonganPegawai
-	err := a.DB.QueryRow(sqlQuery).Scan(&pangkatGolonganPegawai.ID, &pangkatGolonganPegawai.KdPangkat, &pangkatGolonganPegawai.Pangkat, &pangkatGolonganPegawai.Golongan, &pangkatGolonganPegawai.UUID)
+	err := a.DB.QueryRow(sqlQuery).Scan(
+		&pangkatGolonganPegawai.ID,
+		&pangkatGolonganPegawai.KdPangkat,
+		&pangkatGolonganPegawai.Pangkat,
+		&pangkatGolonganPegawai.Golongan,
+		&pangkatGolonganPegawai.IdGolongan,
+		&pangkatGolonganPegawai.KdGolongan,
+		&pangkatGolonganPegawai.IdRuang,
+		&pangkatGolonganPegawai.KdRuang,
+		&pangkatGolonganPegawai.UUID,
+	)
+
 	if err == sql.ErrNoRows {
 		return nil, nil
 	}

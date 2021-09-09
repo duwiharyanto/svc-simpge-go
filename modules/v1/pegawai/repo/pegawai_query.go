@@ -281,7 +281,8 @@ func getStatusPegawaiAktifQuery(uuid string) string {
 		COALESCE(spa.flag_status_aktif,''),
 		COALESCE(spa.kd_status,''),
 		COALESCE(spa.status,''),
-		COALESCE(spa.uuid,'')
+		COALESCE(spa.uuid,''),
+		COALESCE(pf.tgl_status_pegawai_aktif,'')
 	FROM 
 		pegawai p
 	LEFT JOIN

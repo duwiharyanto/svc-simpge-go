@@ -39,6 +39,7 @@ type Unit2 struct {
 	KdUnit2     string `json:"kd_unit"`
 	Unit2       string `json:"unit"`
 	Keterangan2 string `json:"-"`
+	KdPddikti   string `json:"kd_pddikti"`
 	UserInput   string `json:"-"`
 	UserUpdate  string `json:"-"`
 	UUID        string `json:"uuid"`
