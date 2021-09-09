@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"svc-insani-go/app"
+	"svc-insani-go/app/helper"
 	"svc-insani-go/modules/v1/pegawai/model"
 )
 
@@ -16,6 +17,7 @@ func GetStatusPegawaiAktif(a *app.App, uuid string) (*model.StatusAktif, error) 
 		&statusAktif.KdStatusAktifPegawai,
 		&statusAktif.StatusAktifPegawai,
 		&statusAktif.UuidStatusAktifPegawai,
+		&statusAktif.TglStatusAktifPegawai,
 	)
 
 	if err == sql.ErrNoRows {
@@ -23,8 +25,10 @@ func GetStatusPegawaiAktif(a *app.App, uuid string) (*model.StatusAktif, error) 
 	}
 
 	if err != nil {
-		return nil, fmt.Errorf("error querying and scanning pegawai tidak tetap, %s", err.Error())
+		return nil, fmt.Errorf("error querying and scanning status pegawai aktif: %s", err.Error())
 	}
+
+	_, statusAktif.TglStatusAktifPegawaiIdn = helper.GetIndonesianDate("2006-01-02", statusAktif.TglStatusAktifPegawai)
 
 	return &statusAktif, nil
 }

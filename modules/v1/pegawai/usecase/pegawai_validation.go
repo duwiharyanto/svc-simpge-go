@@ -20,6 +20,7 @@ import (
 	"svc-insani-go/modules/v1/pegawai/model"
 	"svc-insani-go/modules/v1/pegawai/repo"
 	personalRepo "svc-insani-go/modules/v1/personal/repo"
+	"time"
 
 	guuid "github.com/google/uuid"
 	"github.com/labstack/echo/v4"
@@ -31,11 +32,6 @@ func ValidateUpdatePegawaiByUUID(a *app.App, c echo.Context) (model.PegawaiUpdat
 	if uuidPegawai == "" {
 		return model.PegawaiUpdate{}, fmt.Errorf("uuid pegawai tidak boleh kosong")
 	}
-
-	// pegawai, err := repo.GetPegawaiByUUID(a, uuidPegawai)
-	// if err != nil {
-	// 	return model.PegawaiUpdate{}, fmt.Errorf("error from repo get uuid pegawai: %w", err)
-	// }
 
 	pegawai, err := repo.GetOldPegawai(a, c.Request().Context(), uuidPegawai)
 	if err != nil {
@@ -121,6 +117,10 @@ func ValidateUpdatePegawaiByUUID(a *app.App, c echo.Context) (model.PegawaiUpdat
 		}
 		pegawai.PegawaiFungsional.IdPangkatGolongan = ptr.Uint64(pangkatPegawai.ID)
 		pegawai.PegawaiFungsional.KdPangkatGolongan = ptr.String(pangkatPegawai.KdPangkat)
+		pegawai.IdGolongan = ptr.Uint64(pangkatPegawai.IdGolongan)
+		pegawai.KdGolongan = ptr.String(pangkatPegawai.KdGolongan)
+		pegawai.IdRuang = ptr.Uint64(pangkatPegawai.IdRuang)
+		pegawai.KdRuang = ptr.String(pangkatPegawai.KdRuang)
 	}
 
 	// Pengecekan Jabatan Fungsional Yayasan
@@ -190,6 +190,7 @@ func ValidateUpdatePegawaiByUUID(a *app.App, c echo.Context) (model.PegawaiUpdat
 			return model.PegawaiUpdate{}, fmt.Errorf("error from repo unit kerja by uuid: %w", err)
 		}
 		pegawai.PegawaiFungsional.IdHomebasePddikti = ptr.Uint64(homebasePddikti.ID)
+		pegawai.PegawaiFungsional.KdHomebasePddikti = ptr.String(homebasePddikti.KdPddikti)
 	}
 
 	// Pengecekan Homebase UII
@@ -199,6 +200,7 @@ func ValidateUpdatePegawaiByUUID(a *app.App, c echo.Context) (model.PegawaiUpdat
 			return model.PegawaiUpdate{}, fmt.Errorf("error from repo unit kerja by uuid: %w", err)
 		}
 		pegawai.PegawaiFungsional.IdHomebaseUii = ptr.Uint64(homebaseUUuidHomebaseUii.ID)
+		pegawai.PegawaiFungsional.KdHomebaseUii = ptr.String(homebaseUUuidHomebaseUii.KdUnit2)
 	}
 
 	// Pengecekan Pangkat Golongan Ruang PNS
@@ -256,6 +258,16 @@ func ValidateUpdatePegawaiByUUID(a *app.App, c echo.Context) (model.PegawaiUpdat
 		if statusPegawaiAktif.IsDied() {
 			pegawai.FlagMeninggal = ptr.String("1")
 		}
+
+	}
+
+	tglStatusAktif := ptr.StringValue(pegawaiReq.PegawaiFungsional.TglStatusPegawaiAktif, "")
+	_, err = time.Parse("2006-01-02", tglStatusAktif)
+	if tglStatusAktif != "" {
+		if err != nil {
+			return model.PegawaiUpdate{}, fmt.Errorf("tgl_status_aktif harus sesuai format tanggal yyyy-mm-dd")
+		}
+		pegawai.PegawaiFungsional.TglStatusPegawaiAktif = ptr.String(tglStatusAktif)
 	}
 
 	// Binding nilai request ke struct

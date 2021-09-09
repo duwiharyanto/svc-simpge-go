@@ -31,19 +31,19 @@ type GetPegawaiStatusSimpegResult struct {
 type KepegawaianYayasanSimpeg struct {
 	NIP             string `json:"nip"`
 	Nama            string `json:"nama"`
-	KdAgama         string `json:"kd_agama"`
-	KdGolonganDarah string `json:"kd_gol_darah"`
-	KdKelamin       string `json:"kd_kelamin"`
-	KdNikah         string `json:"kd_nikah"`
-	TempatLahir     string `json:"lahir_tempat"`
-	TanggalLahir    string `json:"lahir_tgl"`
+	KdAgama         string `json:"kd_agama,omitempty"`
+	KdGolonganDarah string `json:"kd_gol_darah,omitempty"`
+	KdKelamin       string `json:"kd_kelamin,omitempty"`
+	KdNikah         string `json:"kd_nikah,omitempty"`
+	TempatLahir     string `json:"lahir_tempat,omitempty"`
+	TanggalLahir    string `json:"lahir_tgl,omitempty"`
 	FlagPensiun     string `json:"flag_pensiun"`
-	GelarDepan      string `json:"gelar_depan"`
-	GelarBelakang   string `json:"gelar_belakang"`
+	GelarDepan      string `json:"gelar_depan,omitempty"`
+	GelarBelakang   string `json:"gelar_belakang,omitempty"`
 	// JumlahAnak        string `json:"jml_anak"`
 	// JumlahDitanggung  string `json:"jml_ditanggung"`
 	// JumlahKeluarga    string `json:"jml_keluarga"`
-	NoKTP string `json:"no_ktp"`
+	NoKTP string `json:"no_ktp,omitempty"`
 	// NoTelepon         string `json:"telponhp"`
 	KdStatusHidup     string `json:"kd_status_hidup"`
 	UserInput         string `json:"user_input,omitempty"`

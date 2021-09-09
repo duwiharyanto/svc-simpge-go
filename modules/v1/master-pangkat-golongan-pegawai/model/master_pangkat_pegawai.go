@@ -8,11 +8,15 @@ type PangkatPegawai struct {
 }
 
 type PangkatGolonganPegawai struct {
-	KdPangkat string `json:"-"`
-	Pangkat   string `json:"pangkat"`
-	Golongan  string `json:"golongan"`
-	UUID      string `json:"uuid"`
-	ID        uint64 `json:"-"`
+	ID         uint64 `json:"-"`
+	KdPangkat  string `json:"-"`
+	Pangkat    string `json:"pangkat"`
+	Golongan   string `json:"golongan"`
+	IdGolongan uint64 `json:"-"`
+	KdGolongan string `json:"-"`
+	IdRuang    uint64 `json:"-"`
+	KdRuang    string `json:"-"`
+	UUID       string `json:"uuid"`
 }
 
 type PangkatPegawaiResponse struct {

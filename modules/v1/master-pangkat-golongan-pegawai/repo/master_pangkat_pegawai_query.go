@@ -12,5 +12,5 @@ func getPangkatGolonganPegawaiQuery() string {
 	return "SELECT pangkat, golongan, uuid FROM pangkat_golongan_pegawai WHERE flag_aktif=1"
 }
 func getPangkatGolonganPegawaiQueryByUUID(uuid string) string {
-	return fmt.Sprintf(`SELECT id, COALESCE(kd_pangkat_gol, ''), pangkat, golongan, uuid FROM pangkat_golongan_pegawai WHERE flag_aktif=1 AND uuid = %q`, uuid)
+	return fmt.Sprintf(`SELECT id, COALESCE(kd_pangkat_gol, ''), pangkat, golongan, id_golongan, kd_golongan, id_ruang, kd_ruang, uuid FROM pangkat_golongan_pegawai WHERE flag_aktif=1 AND uuid = %q`, uuid)
 }

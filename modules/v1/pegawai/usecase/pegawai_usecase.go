@@ -135,7 +135,7 @@ func HandleUpdatePegawai(a *app.App, ctx context.Context, errChan chan error) ec
 		err = repo.UpdatePegawai(a, c.Request().Context(), pegawai)
 		if err != nil {
 			fmt.Printf("[ERROR] update pegawai: %s\n", err.Error())
-			return c.JSON(http.StatusInternalServerError, map[string]string{"message": err.Error()})
+			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
 		}
 
 		// Set Flag Pendidikan
@@ -150,7 +150,7 @@ func HandleUpdatePegawai(a *app.App, ctx context.Context, errChan chan error) ec
 			ptr.Uint64Value(idPersonalPegawai, 0))
 		if err != nil {
 			fmt.Printf("[ERROR] update pendidikan pegawai: %s\n", err.Error())
-			return c.JSON(http.StatusInternalServerError, map[string]string{"message": err.Error()})
+			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
 		}
 
 		// Menampilkan response

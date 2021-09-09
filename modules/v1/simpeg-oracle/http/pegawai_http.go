@@ -82,7 +82,7 @@ func CreateKepegawaianYayasan(ctx context.Context, client *netHttp.Client, pegaw
 		"X-Member": pegawai.UserInput,
 	}
 
-	j, _ := json.MarshalIndent(pegawai, "", "\t")
+	j, _ := json.Marshal(pegawai)
 	fmt.Printf("DEBUG reqbody pegawai : \n%s\n", j)
 
 	res, err := app.SendHttpRequest(ctx, client, netHttp.MethodPost, endpoint, contentTypeJSON, header, pegawai)
