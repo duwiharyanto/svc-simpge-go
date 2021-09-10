@@ -273,33 +273,50 @@ func ValidateUpdatePegawaiByUUID(a *app.App, c echo.Context) (model.PegawaiUpdat
 	// Binding nilai request ke struct
 
 	if pegawaiReq.PegawaiFungsional.TmtPangkatGolongan != nil {
+		_, err = time.Parse("2006-01-02", ptr.StringValue(pegawaiReq.PegawaiFungsional.TmtPangkatGolongan, ""))
+		if err != nil {
+			return model.PegawaiUpdate{}, fmt.Errorf("tmt_pangkat_golongan harus sesuai format tanggal yyyy-mm-dd")
+		}
 		pegawai.PegawaiFungsional.TmtPangkatGolongan = pegawaiReq.PegawaiFungsional.TmtPangkatGolongan
 	}
 	if pegawaiReq.PegawaiFungsional.TmtJabatan != nil {
+		_, err = time.Parse("2006-01-02", ptr.StringValue(pegawaiReq.PegawaiFungsional.TmtJabatan, ""))
+		if err != nil {
+			return model.PegawaiUpdate{}, fmt.Errorf("tmt_jabatan harus sesuai format tanggal yyyy-mm-dd")
+		}
 		pegawai.PegawaiFungsional.TmtJabatan = pegawaiReq.PegawaiFungsional.TmtJabatan
 	}
 	if ptr.StringValue(pegawaiReq.PegawaiFungsional.MasaKerjaBawaanTahun, "") != "" {
+		tahun, _ := strconv.Atoi(ptr.StringValue(pegawaiReq.PegawaiFungsional.MasaKerjaBawaanTahun, ""))
+		if !(tahun >= 0 && tahun <= 500) {
+			return model.PegawaiUpdate{}, fmt.Errorf("masa kerja bawaan tahun hanya dapat diisi antara 0-500")
+		}
 		pegawai.PegawaiFungsional.MasaKerjaBawaanTahun = pegawaiReq.PegawaiFungsional.MasaKerjaBawaanTahun
 	}
 	if ptr.StringValue(pegawaiReq.PegawaiFungsional.MasaKerjaBawaanBulan, "") != "" {
-		a, _ := strconv.Atoi(ptr.StringValue(pegawaiReq.PegawaiFungsional.MasaKerjaBawaanBulan, ""))
-		if a > 12 {
-			return model.PegawaiUpdate{}, fmt.Errorf("Bulan masa kerja bawaan maksimal 12")
+		bulan, _ := strconv.Atoi(ptr.StringValue(pegawaiReq.PegawaiFungsional.MasaKerjaBawaanBulan, ""))
+		if !(bulan >= 0 && bulan <= 12) {
+			return model.PegawaiUpdate{}, fmt.Errorf("masa kerja bawaan bulan hanya dapat diisi antara 0-12")
 		}
 		pegawai.PegawaiFungsional.MasaKerjaBawaanBulan = pegawaiReq.PegawaiFungsional.MasaKerjaBawaanBulan
 	}
 	if ptr.StringValue(pegawaiReq.PegawaiFungsional.MasaKerjaGajiTahun, "") != "" {
+		tahun, _ := strconv.Atoi(ptr.StringValue(pegawaiReq.PegawaiFungsional.MasaKerjaGajiTahun, ""))
+		if !(tahun >= 0 && tahun <= 500) {
+			return model.PegawaiUpdate{}, fmt.Errorf("masa kerja gaji tahun hanya dapat diisi antara 0-500")
+		}
 		pegawai.PegawaiFungsional.MasaKerjaGajiTahun = pegawaiReq.PegawaiFungsional.MasaKerjaGajiTahun
 	}
 	if ptr.StringValue(pegawaiReq.PegawaiFungsional.MasaKerjaGajiBulan, "") != "" {
-		a, _ := strconv.Atoi(ptr.StringValue(pegawaiReq.PegawaiFungsional.MasaKerjaGajiBulan, ""))
-		if a > 12 {
-			return model.PegawaiUpdate{}, fmt.Errorf("Bulan masa kerja gaji maksimal 12")
+		bulan, _ := strconv.Atoi(ptr.StringValue(pegawaiReq.PegawaiFungsional.MasaKerjaGajiBulan, ""))
+		if !(bulan >= 0 && bulan <= 12) {
+			return model.PegawaiUpdate{}, fmt.Errorf("masa kerja gaji bulan hanya dapat diisi antara 0-12")
 		}
 		pegawai.PegawaiFungsional.MasaKerjaGajiBulan = pegawaiReq.PegawaiFungsional.MasaKerjaGajiBulan
 	}
 
-	if ptr.StringValue(pegawaiReq.PegawaiFungsional.AngkaKredit, "") != "" {
+	angkaKreditFungsional := ptr.StringValue(pegawaiReq.PegawaiFungsional.AngkaKredit, "")
+	if angkaKreditFungsional != "" {
 		pegawai.PegawaiFungsional.AngkaKredit = pegawaiReq.PegawaiFungsional.AngkaKredit
 	}
 	if ptr.StringValue(pegawaiReq.PegawaiFungsional.NomorSertifikasi, "") != "" {
