@@ -33,7 +33,7 @@ func HandleCreateSkPengangkatanTendik(a *app.App) echo.HandlerFunc {
 		err := c.Bind(skRequest)
 		if err != nil {
 			fmt.Printf("[DEBUG] err binding sk pakt: %s\n", err.Error())
-			return c.JSON(http.StatusInternalServerError, map[string]string{"message": err.Error()})
+			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
 		}
 
 		uuidPegawai := c.QueryParam("uuid_pegawai")
@@ -252,7 +252,7 @@ func HandleUpdateSkPengangkatanTendik(a *app.App) echo.HandlerFunc {
 		err = c.Bind(&skRequest)
 		if err != nil {
 			fmt.Printf("[DEBUG] err binding sk pakt: %s\n", err.Error())
-			return c.JSON(http.StatusInternalServerError, map[string]string{"message": err.Error()})
+			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
 		}
 
 		// fmt.Printf("\n[DEBUG] old sk: %+v\n", sk)
