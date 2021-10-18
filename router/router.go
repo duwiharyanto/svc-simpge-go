@@ -12,11 +12,11 @@ import (
 	jenisNoRegis "svc-insani-go/modules/v1/master-jenis-nomor-registrasi/usecase"
 	jenisPTT "svc-insani-go/modules/v1/master-jenis-pegawai-tidak-tetap/usecase"
 	jenisPegawai "svc-insani-go/modules/v1/master-jenis-pegawai/usecase"
-	jenjangPendidikan "svc-insani-go/modules/v1/master-jenjang-pendidikan/usecase"
 	kelompokPegawai "svc-insani-go/modules/v1/master-kelompok-pegawai/usecase"
 	lokasiKerja "svc-insani-go/modules/v1/master-lokasi-kerja/usecase"
 	indukKerja "svc-insani-go/modules/v1/master-organisasi/usecase"
 	pangkatPegawai "svc-insani-go/modules/v1/master-pangkat-golongan-pegawai/usecase"
+	jenjangPendidikan "svc-insani-go/modules/v1/master-pendidikan/usecase"
 	statusPegawaiAktif "svc-insani-go/modules/v1/master-status-pegawai-aktif/usecase"
 	statusPegawai "svc-insani-go/modules/v1/master-status-pegawai/usecase"
 	unitKerja "svc-insani-go/modules/v1/master-unit-kerja/usecase"
@@ -57,11 +57,14 @@ func InitRoute(a *app.App, appCtx context.Context, e *echo.Echo, slackErrChan ch
 	insaniGroupingPath.GET("/unit2", organisasiV2.HandleGetAllUnit2(a))
 
 	insaniGroupingPath.GET("/master-detail-profesi", detailProfesi.HandleGetDetailProfesi(a))
+	insaniGroupingPath.GET("/master-gelar-depan", jenjangPendidikan.HandleGetGelarDepan(a))
+	insaniGroupingPath.GET("/master-gelar-belakang", jenjangPendidikan.HandleGetGelarBelakang(a))
 	insaniGroupingPath.GET("/master-jenjang-pendidikan", jenjangPendidikan.HandleGetJenjangPendidikan(a))
 	insaniGroupingPath.GET("/master-ijazah-pegawai", sk.HandleGetAllJenisIjazah(a))
 	insaniGroupingPath.GET("/master-jabatan-fungsional", jabatanFungsional.HandleGetJabatanFungsional(a))
 	insaniGroupingPath.GET("/master-jabatan-penetap", sk.HandleGetJabatanPenetap(a))
 	insaniGroupingPath.GET("/master-jenis-nomor-registrasi", jenisNoRegis.HandleGetJenisNoRegis(a))
+	insaniGroupingPath.GET("/master-jenis-pendidikan", jenjangPendidikan.HandleGetJenisPendidikan(a))
 	insaniGroupingPath.GET("/master-jenis-pegawai", jenisPegawai.HandleGetAllJenisPegawai(a))
 	insaniGroupingPath.GET("/master-jenis-pegawai-tidak-tetap", jenisPTT.HandleGetJenisPTT(a))
 	insaniGroupingPath.GET("/master-jenis-sk", sk.HandleGetAllJenisSK(a))
