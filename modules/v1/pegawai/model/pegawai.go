@@ -176,12 +176,14 @@ type PegawaiPribadi struct {
 	// JumlahKeluarga   string `json:"-"`
 	NoKTP string `json:"-"`
 	// NoTelepon       string `json:"no_telpon"`
-	JenisPegawai    string `json:"jenis_pegawai"`
-	KelompokPegawai string `json:"kelompok_pegawai"`
-	UnitKerja       string `json:"unit_kerja"`
-	UserInput       string `json:"-"`
-	UserUpdate      string `json:"-"`
-	UUID            string `json:"uuid"`
+	JenisPegawai            string `json:"jenis_pegawai"`
+	KelompokPegawai         string `json:"kelompok_pegawai"`
+	UnitKerja               string `json:"unit_kerja"`
+	KdStatusPendidikanMasuk string `json:"kd_status_pendidikan_masuk"`
+	KdJenisPendidikan       string `json:"kd_jenis_pendidikan"`
+	UserInput               string `json:"-"`
+	UserUpdate              string `json:"-"`
+	UUID                    string `json:"uuid"`
 }
 
 type PegawaiDetail struct {

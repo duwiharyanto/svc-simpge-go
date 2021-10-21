@@ -33,6 +33,11 @@ func newPegawaiOra(pegawaiInsani *model.PegawaiDetail) *pegawaiOraModel.Kepegawa
 	pegawaiOra.PegawaiStatus.JabatanFungsional = &pegawaiOraModel.JabatanFungsional{}
 
 	pegawaiOra.NIP = pegawaiInsani.PegawaiPribadi.NIK
+	pegawaiOra.GelarDepan = pegawaiInsani.PegawaiPribadi.GelarDepan
+	pegawaiOra.GelarBelakang = pegawaiInsani.PegawaiPribadi.GelarBelakang
+	pegawaiOra.KdStatusPendidikanMasuk = pegawaiInsani.PegawaiPribadi.KdStatusPendidikanMasuk
+	pegawaiOra.KdJenisPendidikan = pegawaiInsani.PegawaiPribadi.KdJenisPendidikan
+
 	// Sinkron Kepegawaian Yayaysan - Status
 	if pegawaiInsani.PegawaiYayasan.KDJenisPegawai != "" {
 		// pegawaiOra.KdJenisPegawai = pegawaiInsani.PegawaiYayasan.KDJenisPegawai

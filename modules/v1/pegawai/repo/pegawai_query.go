@@ -319,25 +319,21 @@ func getPegawaiPribadiQuery(uuid string) string {
 		COALESCE(jp.nama_jenis_pegawai,''),
 		COALESCE(kp.kelompok_pegawai,''),
 		COALESCE(u2.unit2,''),
+		COALESCE(jd1.kd_detail,''),
+		COALESCE(jd2.kd_detail,''),
 		COALESCE(p.user_input,''), 
 		COALESCE(p.user_update,''), 
 		COALESCE(p.uuid,'') 
-	FROM 
-		pegawai p
-	LEFT JOIN 
-		agama ag ON p.id_agama = ag.id 
-	LEFT JOIN 
-		golongan_darah gd ON p.id_golongan_darah = gd.id 
-	LEFT JOIN 
-		status_pernikahan sp ON p.id_status_perkawinan = sp.id 
-	LEFT JOIN 
-		jenis_pegawai jp ON p.id_jenis_pegawai = jp.id 
-	LEFT JOIN 
-		kelompok_pegawai kp ON p.id_kelompok_pegawai = kp.id 
-	LEFT JOIN
-		unit2 u2 ON p.id_unit_kerja2 = u2.id 
-	LEFT JOIN
-		personal_data_pribadi pdp ON p.id_personal_data_pribadi = pdp.id 
+	FROM pegawai p
+	LEFT JOIN agama ag ON p.id_agama = ag.id 
+	LEFT JOIN golongan_darah gd ON p.id_golongan_darah = gd.id 
+	LEFT JOIN status_pernikahan sp ON p.id_status_perkawinan = sp.id 
+	LEFT JOIN jenjang_pendidikan_detail jd1 ON p.id_status_pendidikan_masuk = jd1.id 
+	LEFT JOIN jenjang_pendidikan_detail jd2 ON p.id_jenis_pendidikan = jd2.id 
+	LEFT JOIN jenis_pegawai jp ON p.id_jenis_pegawai = jp.id 
+	LEFT JOIN kelompok_pegawai kp ON p.id_kelompok_pegawai = kp.id 
+	LEFT JOIN unit2 u2 ON p.id_unit_kerja2 = u2.id 
+	LEFT JOIN personal_data_pribadi pdp ON p.id_personal_data_pribadi = pdp.id 
 	WHERE
 		p.uuid = %q AND p.flag_aktif = 1`, uuid)
 
