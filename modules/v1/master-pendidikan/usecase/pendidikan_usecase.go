@@ -70,7 +70,8 @@ func HandleJenjangPendidikanByUUID(a *app.App) echo.HandlerFunc {
 
 func HandleGetJenisPendidikan(a *app.App) echo.HandlerFunc {
 	h := func(c echo.Context) error {
-		temp, err := repo.GetJenjangPendidikanDetail(a, c.Request().Context())
+		param := c.QueryParam("kd_jenjang_pendidikan")
+		temp, err := repo.GetJenjangPendidikanDetail(a, c.Request().Context(), param)
 		if err != nil {
 			fmt.Printf("[ERROR] repo jenjang pendidikan detail: %s\n", err.Error())
 			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})

@@ -139,15 +139,20 @@ func HandleUpdatePegawai(a *app.App, ctx context.Context, errChan chan error) ec
 		}
 
 		// Set Flag Pendidikan
-		uuidPendidikanDiakui := c.FormValue("uuid_tingkat_pdd_diakui")
-		uuidPendidikanTerakhir := c.FormValue("uuid_tingkat_pdd_terakhir")
+		uuidPendidikanDiakui := c.FormValue("uuid_tingkat_pdd_diakui")     // uuid dari pendidikan yang dipilih sbg ijazah tertinggi diakui
+		uuidPendidikanTerakhir := c.FormValue("uuid_tingkat_pdd_terakhir") // uuid dari pendidikan yang dipilih sbg ijazah terakhir
 		idPersonalPegawai := pegawai.IdPersonalDataPribadi
 
 		err = repo.UpdatePendidikanPegawai(a, c.Request().Context(),
-			uuidPendidikanDiakui,
-			uuidPendidikanTerakhir,
-			ptr.StringValue(pegawai.KdPendidikanMasuk, ""),
-			ptr.Uint64Value(idPersonalPegawai, 0))
+			model.PegawaiPendidikanRequest{
+				UuidPendidikanDiakui:              uuidPendidikanDiakui,
+				UuidPendidikanTerakhir:            uuidPendidikanTerakhir,
+				IdJenjangPendidikanDetailDiakui:   pegawai.IdStatusPendidikanMasuk,
+				IdJenjangPendidikanDetailTerakhir: pegawai.IdJenisPendidikan,
+				JenjangPendidikanTertinggiDiakui:  ptr.StringValue(pegawai.KdPendidikanMasuk, ""),
+				IdPersonalPegawai:                 ptr.Uint64Value(idPersonalPegawai, 0),
+				UserUpdate:                        pegawai.UserUpdate,
+			})
 		if err != nil {
 			fmt.Printf("[ERROR] update pendidikan pegawai: %s\n", err.Error())
 			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
@@ -160,11 +165,7 @@ func HandleUpdatePegawai(a *app.App, ctx context.Context, errChan chan error) ec
 			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
 		}
 		fmt.Printf("[DEBUG] update response end\n")
-		go func(
-			a *app.App,
-			ctx context.Context,
-			errChan chan error,
-		) {
+		go func(a *app.App, ctx context.Context, errChan chan error) {
 			defer func(n time.Time) {
 				fmt.Printf("[DEBUG] send to simpeg: %v ms\n", time.Now().Sub(n).Milliseconds())
 			}(time.Now())

@@ -351,6 +351,14 @@ func getPegawaiPendidikanQuery(uuid string) string {
 		COALESCE(pp.id,''),
 		COALESCE(pp.kd_jenjang,''),
 		COALESCE(LPAD(pp.urutan_jenjang,2,"0"),''),
+		COALESCE(pp.id_jenjang_pdd_detail_diakui,''),
+		COALESCE(d1.kd_detail,''),
+		COALESCE(d1.nama_detail,''),
+		COALESCE(d1.uuid,''),
+		COALESCE(pp.id_jenjang_pdd_detail_terakhir,''),
+		COALESCE(d2.kd_detail,''),
+		COALESCE(d2.nama_detail,''),
+		COALESCE(d2.uuid,''),
 		COALESCE(pp.nama_institusi,''),
 		COALESCE(pp.jurusan,''),
 		COALESCE(pp.tgl_kelulusan,''),
@@ -373,12 +381,11 @@ func getPegawaiPendidikanQuery(uuid string) string {
 		COALESCE(pp.nomor_sk_penyetaraan,''),
 		COALESCE(pp.tgl_sk_penyetaraan,''),
 		COALESCE(pp.uuid_personal,'')
-	FROM 
-		pegawai_pendidikan pp
-	LEFT JOIN
-		pegawai p ON pp.id_personal_data_pribadi = p.id_personal_data_pribadi
-	WHERE
-		p.uuid = %q AND pp.flag_aktif = 1`, uuid)
+	FROM pegawai_pendidikan pp
+	LEFT JOIN pegawai p ON pp.id_personal_data_pribadi = p.id_personal_data_pribadi
+	LEFT JOIN jenjang_pendidikan_detail d1 ON pp.id_jenjang_pdd_detail_diakui = d1.id
+	LEFT JOIN jenjang_pendidikan_detail d2 ON pp.id_jenjang_pdd_detail_terakhir = d2.id
+	WHERE p.uuid = %q AND pp.flag_aktif = 1`, uuid)
 
 	return helper.FlatQuery(q)
 }
