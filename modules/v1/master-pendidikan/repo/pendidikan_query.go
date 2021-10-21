@@ -23,8 +23,14 @@ func getJenjangPendidikanQuery() string {
 	return helper.FlatQuery(q)
 }
 
-func getJenjangPendidikanDetailQuery() string {
+func getJenjangPendidikanDetailQuery(kdJenjangPendidikan string) string {
+	var kdJenjangPendidikanFilter string
+	if kdJenjangPendidikan != "" {
+		kdJenjangPendidikanFilter = fmt.Sprintf(`AND kd_jenjang_pendidikan = %q`, kdJenjangPendidikan)
+	}
 	q := fmt.Sprintf(`SELECT id, kd_jenjang_pendidikan, kd_detail, nama_detail, keterangan, uuid
-	FROM jenjang_pendidikan_detail WHERE flag_aktif = 1 -- AND kd_jenjang_pendidikan = `)
+	FROM jenjang_pendidikan_detail WHERE flag_aktif = 1 %s`,
+		kdJenjangPendidikanFilter,
+	)
 	return helper.FlatQuery(q)
 }

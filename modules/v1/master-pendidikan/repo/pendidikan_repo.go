@@ -90,8 +90,8 @@ func GetJenjangPendidikan(a *app.App, ctx context.Context) (model.JenjangPendidi
 	return pp, nil
 }
 
-func GetJenjangPendidikanDetail(a *app.App, ctx context.Context) ([]model.JenjangPendidikanDetail, error) {
-	sqlQuery := getJenjangPendidikanDetailQuery()
+func GetJenjangPendidikanDetail(a *app.App, ctx context.Context, kdJenjangPendidikan string) ([]model.JenjangPendidikanDetail, error) {
+	sqlQuery := getJenjangPendidikanDetailQuery(kdJenjangPendidikan)
 	rows, err := a.DB.Query(sqlQuery)
 	if err != nil {
 		return nil, fmt.Errorf("error querying get jenjang pendidikan detail: %w", err)
@@ -131,4 +131,15 @@ func GetJenjangPendidikanByUUID(a *app.App, ctx context.Context, uuid string) (*
 		return nil, fmt.Errorf("error querying jenjang pendidikan by uuid %s", res.Error)
 	}
 	return &jenjangPendidikan, nil
+}
+
+func GetJenjangPendidikanDetailByUUID(a *app.App, ctx context.Context, uuid string) (*model.JenjangPendidikanDetail, error) {
+	var data model.JenjangPendidikanDetail
+
+	tx := a.GormDB.WithContext(ctx)
+	res := tx.Where("flag_aktif = 1 AND uuid = ?", uuid).First(&data)
+	if res.Error != nil {
+		return nil, fmt.Errorf("error querying jenjang pendidikan detail by uuid %s", res.Error)
+	}
+	return &data, nil
 }
