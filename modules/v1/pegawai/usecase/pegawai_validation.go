@@ -50,6 +50,14 @@ func ValidateUpdatePegawaiByUUID(a *app.App, c echo.Context) (model.PegawaiUpdat
 	pegawaiReq.Uuid = ptr.String(uuidPegawai)
 	pegawaiReq.Id = pegawai.Id
 
+	if ptr.StringValue(pegawaiReq.GelarDepan, "") != "" {
+		pegawai.GelarDepan = pegawaiReq.GelarDepan
+	}
+
+	if ptr.StringValue(pegawaiReq.GelarBelakang, "") != "" {
+		pegawai.GelarBelakang = pegawaiReq.GelarBelakang
+	}
+
 	//Pengecekan Jenis Pegawai
 	if ptr.StringValue(pegawaiReq.UuidJenisPegawai, "") != "" {
 		jenisPegawai, err := jenisPegawaiRepo.GetJenisPegawaiByUUID(a, ptr.StringValue(pegawaiReq.UuidJenisPegawai, ""))
