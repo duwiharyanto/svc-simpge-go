@@ -61,7 +61,7 @@ type PegawaiCreate struct {
 	IdPendidikanTerakhir    uint64                  `form:"-" gorm:"default:null"`
 	KdPendidikanTerakhir    string                  `form:"kd_pendidikan_terakhir" gorm:"default:null"`
 	IdJenisPendidikan       uint64                  `form:"-" gorm:"default:null"`
-	kdJenisPendidikan       string                  `form:"kd_jenis_pendidikan" gorm:"default:null"`
+	KdJenisPendidikan       string                  `form:"kd_jenis_pendidikan" gorm:"default:null"`
 	UuidJenisPegawai        string                  `form:"uuid_jenis_pegawai" gorm:"-"`
 	IdJenisPegawai          uint64                  `form:"-" gorm:"default:null"`
 	KdJenisPegawai          string                  `form:"kd_jenis_pegawai" gorm:"default:null"`
@@ -204,8 +204,8 @@ type PegawaiUpdate struct {
 	Nik                       *string                 `form:"nik" gorm:"->;<-:create"`
 	NikKtp                    *string                 `form:"nik_ktp" gorm:"->"`
 	Nama                      *string                 `form:"nama" gorm:"->;<-:create"`
-	GelarDepan                *string                 `form:"gelar_depan" gorm:"<-:create"`
-	GelarBelakang             *string                 `form:"gelar_belakang" gorm:"<-:create"`
+	GelarDepan                *string                 `form:"gelar_depan" gorm:"default:null"`
+	GelarBelakang             *string                 `form:"gelar_belakang" gorm:"default:null"`
 	TempatLahir               *string                 `form:"tempat_lahir" gorm:"<-:create"`
 	TglLahir                  *string                 `form:"tgl_lahir" gorm:"<-:create"`
 	JenisKelamin              *string                 `form:"jenis_kelamin" gorm:"<-:create"`
