@@ -10,11 +10,11 @@ import (
 	jenisNoRegisRepo "svc-insani-go/modules/v1/master-jenis-nomor-registrasi/repo"
 	jenisPTTRepo "svc-insani-go/modules/v1/master-jenis-pegawai-tidak-tetap/repo"
 	jenisPegawaiRepo "svc-insani-go/modules/v1/master-jenis-pegawai/repo"
-	jenjangPendidikan "svc-insani-go/modules/v1/master-jenjang-pendidikan/repo"
 	kelompokPegawaiRepo "svc-insani-go/modules/v1/master-kelompok-pegawai/repo"
 	lokasiKerjaRepo "svc-insani-go/modules/v1/master-lokasi-kerja/repo"
 	indukKerjaRepo "svc-insani-go/modules/v1/master-organisasi/repo"
 	pangkatPegawaiRepo "svc-insani-go/modules/v1/master-pangkat-golongan-pegawai/repo"
+	masterPendidikan "svc-insani-go/modules/v1/master-pendidikan/repo"
 	statusPegawaiAktifRepo "svc-insani-go/modules/v1/master-status-pegawai-aktif/repo"
 	statusPegawaiRepo "svc-insani-go/modules/v1/master-status-pegawai/repo"
 	"svc-insani-go/modules/v1/pegawai/model"
@@ -49,6 +49,14 @@ func ValidateUpdatePegawaiByUUID(a *app.App, c echo.Context) (model.PegawaiUpdat
 
 	pegawaiReq.Uuid = ptr.String(uuidPegawai)
 	pegawaiReq.Id = pegawai.Id
+
+	if ptr.StringValue(pegawaiReq.GelarDepan, "") != "" {
+		pegawai.GelarDepan = pegawaiReq.GelarDepan
+	}
+
+	if ptr.StringValue(pegawaiReq.GelarBelakang, "") != "" {
+		pegawai.GelarBelakang = pegawaiReq.GelarBelakang
+	}
 
 	//Pengecekan Jenis Pegawai
 	if ptr.StringValue(pegawaiReq.UuidJenisPegawai, "") != "" {
@@ -91,7 +99,7 @@ func ValidateUpdatePegawaiByUUID(a *app.App, c echo.Context) (model.PegawaiUpdat
 
 	// Pengecekan Ijazah Pendidikan Masuk
 	if ptr.StringValue(pegawaiReq.UuidPendidikanMasuk, "") != "" {
-		pendidikanMasuk, err := jenjangPendidikan.GetJenjangPendidikanByUUID(a, c.Request().Context(), ptr.StringValue(pegawaiReq.UuidPendidikanMasuk, ""))
+		pendidikanMasuk, err := masterPendidikan.GetJenjangPendidikanByUUID(a, c.Request().Context(), ptr.StringValue(pegawaiReq.UuidPendidikanMasuk, ""))
 		if err != nil {
 			return model.PegawaiUpdate{}, fmt.Errorf("error from repo jenis ijazah pendidikan masuk by uuid: %w", err)
 		}
@@ -101,12 +109,32 @@ func ValidateUpdatePegawaiByUUID(a *app.App, c echo.Context) (model.PegawaiUpdat
 
 	// Pengecekan Ijazah Pendidikan Terakhir
 	if ptr.StringValue(pegawaiReq.UuidPendidikanTerakhir, "") != "" {
-		pendidikanTerakhir, err := jenjangPendidikan.GetJenjangPendidikanByUUID(a, c.Request().Context(), ptr.StringValue(pegawaiReq.UuidPendidikanTerakhir, ""))
+		pendidikanTerakhir, err := masterPendidikan.GetJenjangPendidikanByUUID(a, c.Request().Context(), ptr.StringValue(pegawaiReq.UuidPendidikanTerakhir, ""))
 		if err != nil {
 			return model.PegawaiUpdate{}, fmt.Errorf("error from repo jenis ijazah pendidikan terakhir by uuid: %w", err)
 		}
 		pegawai.IdPendidikanTerakhir = ptr.Uint64(pendidikanTerakhir.ID)
 		pegawai.KdPendidikanTerakhir = ptr.String(pendidikanTerakhir.KdPendidikanSimpeg)
+	}
+
+	// Pengecekan jenis pendidikan tertinggi diakui
+	if ptr.StringValue(pegawaiReq.UuidStatusPendidikanMasuk, "") != "" {
+		data, err := masterPendidikan.GetJenjangPendidikanDetailByUUID(a, c.Request().Context(), ptr.StringValue(pegawaiReq.UuidStatusPendidikanMasuk, ""))
+		if err != nil {
+			return model.PegawaiUpdate{}, fmt.Errorf("error from repo get jenjang pendidikan detail by uuid status pendidikan masuk: %w", err)
+		}
+		pegawai.IdStatusPendidikanMasuk = ptr.Uint64(data.ID)
+		pegawai.KdStatusPendidikanMasuk = ptr.String(data.KdDetail)
+	}
+
+	// Pengecekan jenis pendidikan terakhir
+	if ptr.StringValue(pegawaiReq.UuidJenisPendidikan, "") != "" {
+		data, err := masterPendidikan.GetJenjangPendidikanDetailByUUID(a, c.Request().Context(), ptr.StringValue(pegawaiReq.UuidJenisPendidikan, ""))
+		if err != nil {
+			return model.PegawaiUpdate{}, fmt.Errorf("error from repo get jenjang pendidikan detail by uuid jenis pendidikan: %w", err)
+		}
+		pegawai.IdJenisPendidikan = ptr.Uint64(data.ID)
+		pegawai.KdJenisPendidikan = ptr.String(data.KdDetail)
 	}
 
 	// Pengecekan Pangkat Golongan Pegawai

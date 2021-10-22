@@ -45,22 +45,24 @@ type KepegawaianYayasanSimpeg struct {
 	// JumlahKeluarga    string `json:"jml_keluarga"`
 	NoKTP string `json:"no_ktp,omitempty"`
 	// NoTelepon         string `json:"telponhp"`
-	KdStatusHidup     string `json:"kd_status_hidup"`
-	UserInput         string `json:"user_input,omitempty"`
-	UserUpdate        string `json:"user_update,omitempty"`
-	TglUpdate         string `json:"tgl_update,omitempty"`
-	NipKopertis       string `json:"nip_kopertis"`
-	KdPendidikanMasuk string `json:"kd_pendidikan_masuk"`
-	KdPendidikan      string `json:"kd_pendidikan"`
-	*InstansiAsalPtt  `json:"instansi_asal_ptt"`
-	*JenisPegawai     `json:"jenis_pegawai,omitempty"`
-	*KelompokPegawai  `json:"kelompok_pegawai,omitempty"`
-	*LokasiKerja      `json:"lokasi_kerja,omitempty"`
-	*StatusPegawai    `json:"status_pegawai,omitempty"`
-	*PegawaiStatus    `json:"pegawai_status,omitempty"`
-	*Unit1            `json:"unit1,omitempty"`
-	*Unit2            `json:"unit2,omitempty"`
-	*Unit3            `json:"unit3,omitempty"`
+	KdStatusHidup           string `json:"kd_status_hidup"`
+	UserInput               string `json:"user_input,omitempty"`
+	UserUpdate              string `json:"user_update,omitempty"`
+	TglUpdate               string `json:"tgl_update,omitempty"`
+	NipKopertis             string `json:"nip_kopertis"`
+	KdPendidikanMasuk       string `json:"kd_pendidikan_masuk"`
+	KdStatusPendidikanMasuk string `json:"kd_status_pendidikan_masuk"`
+	KdPendidikan            string `json:"kd_pendidikan"`
+	KdJenisPendidikan       string `json:"kd_jenis_pendidikan"`
+	*InstansiAsalPtt        `json:"instansi_asal_ptt"`
+	*JenisPegawai           `json:"jenis_pegawai,omitempty"`
+	*KelompokPegawai        `json:"kelompok_pegawai,omitempty"`
+	*LokasiKerja            `json:"lokasi_kerja,omitempty"`
+	*StatusPegawai          `json:"status_pegawai,omitempty"`
+	*PegawaiStatus          `json:"pegawai_status,omitempty"`
+	*Unit1                  `json:"unit1,omitempty"`
+	*Unit2                  `json:"unit2,omitempty"`
+	*Unit3                  `json:"unit3,omitempty"`
 }
 
 type InstansiAsalPtt struct {
