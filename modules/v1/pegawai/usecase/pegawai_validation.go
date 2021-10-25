@@ -10,16 +10,17 @@ import (
 	jenisNoRegisRepo "svc-insani-go/modules/v1/master-jenis-nomor-registrasi/repo"
 	jenisPTTRepo "svc-insani-go/modules/v1/master-jenis-pegawai-tidak-tetap/repo"
 	jenisPegawaiRepo "svc-insani-go/modules/v1/master-jenis-pegawai/repo"
-	jenjangPendidikan "svc-insani-go/modules/v1/master-jenjang-pendidikan/repo"
 	kelompokPegawaiRepo "svc-insani-go/modules/v1/master-kelompok-pegawai/repo"
 	lokasiKerjaRepo "svc-insani-go/modules/v1/master-lokasi-kerja/repo"
 	indukKerjaRepo "svc-insani-go/modules/v1/master-organisasi/repo"
 	pangkatPegawaiRepo "svc-insani-go/modules/v1/master-pangkat-golongan-pegawai/repo"
+	masterPendidikan "svc-insani-go/modules/v1/master-pendidikan/repo"
 	statusPegawaiAktifRepo "svc-insani-go/modules/v1/master-status-pegawai-aktif/repo"
 	statusPegawaiRepo "svc-insani-go/modules/v1/master-status-pegawai/repo"
 	"svc-insani-go/modules/v1/pegawai/model"
 	"svc-insani-go/modules/v1/pegawai/repo"
 	personalRepo "svc-insani-go/modules/v1/personal/repo"
+	"time"
 
 	guuid "github.com/google/uuid"
 	"github.com/labstack/echo/v4"
@@ -31,11 +32,6 @@ func ValidateUpdatePegawaiByUUID(a *app.App, c echo.Context) (model.PegawaiUpdat
 	if uuidPegawai == "" {
 		return model.PegawaiUpdate{}, fmt.Errorf("uuid pegawai tidak boleh kosong")
 	}
-
-	// pegawai, err := repo.GetPegawaiByUUID(a, uuidPegawai)
-	// if err != nil {
-	// 	return model.PegawaiUpdate{}, fmt.Errorf("error from repo get uuid pegawai: %w", err)
-	// }
 
 	pegawai, err := repo.GetOldPegawai(a, c.Request().Context(), uuidPegawai)
 	if err != nil {
@@ -53,6 +49,22 @@ func ValidateUpdatePegawaiByUUID(a *app.App, c echo.Context) (model.PegawaiUpdat
 
 	pegawaiReq.Uuid = ptr.String(uuidPegawai)
 	pegawaiReq.Id = pegawai.Id
+
+	if pegawaiReq.GelarDepan != nil {
+		if ptr.StringValue(pegawaiReq.GelarDepan, "") == "" {
+			pegawai.GelarDepan = nil
+		} else {
+			pegawai.GelarDepan = pegawaiReq.GelarDepan
+		}
+	}
+
+	if pegawaiReq.GelarBelakang != nil {
+		if ptr.StringValue(pegawaiReq.GelarBelakang, "") == "" {
+			pegawai.GelarBelakang = nil
+		} else {
+			pegawai.GelarBelakang = pegawaiReq.GelarBelakang
+		}
+	}
 
 	//Pengecekan Jenis Pegawai
 	if ptr.StringValue(pegawaiReq.UuidJenisPegawai, "") != "" {
@@ -95,7 +107,7 @@ func ValidateUpdatePegawaiByUUID(a *app.App, c echo.Context) (model.PegawaiUpdat
 
 	// Pengecekan Ijazah Pendidikan Masuk
 	if ptr.StringValue(pegawaiReq.UuidPendidikanMasuk, "") != "" {
-		pendidikanMasuk, err := jenjangPendidikan.GetJenjangPendidikanByUUID(a, c.Request().Context(), ptr.StringValue(pegawaiReq.UuidPendidikanMasuk, ""))
+		pendidikanMasuk, err := masterPendidikan.GetJenjangPendidikanByUUID(a, c.Request().Context(), ptr.StringValue(pegawaiReq.UuidPendidikanMasuk, ""))
 		if err != nil {
 			return model.PegawaiUpdate{}, fmt.Errorf("error from repo jenis ijazah pendidikan masuk by uuid: %w", err)
 		}
@@ -105,12 +117,32 @@ func ValidateUpdatePegawaiByUUID(a *app.App, c echo.Context) (model.PegawaiUpdat
 
 	// Pengecekan Ijazah Pendidikan Terakhir
 	if ptr.StringValue(pegawaiReq.UuidPendidikanTerakhir, "") != "" {
-		pendidikanTerakhir, err := jenjangPendidikan.GetJenjangPendidikanByUUID(a, c.Request().Context(), ptr.StringValue(pegawaiReq.UuidPendidikanTerakhir, ""))
+		pendidikanTerakhir, err := masterPendidikan.GetJenjangPendidikanByUUID(a, c.Request().Context(), ptr.StringValue(pegawaiReq.UuidPendidikanTerakhir, ""))
 		if err != nil {
 			return model.PegawaiUpdate{}, fmt.Errorf("error from repo jenis ijazah pendidikan terakhir by uuid: %w", err)
 		}
 		pegawai.IdPendidikanTerakhir = ptr.Uint64(pendidikanTerakhir.ID)
 		pegawai.KdPendidikanTerakhir = ptr.String(pendidikanTerakhir.KdPendidikanSimpeg)
+	}
+
+	// Pengecekan jenis pendidikan tertinggi diakui
+	if ptr.StringValue(pegawaiReq.UuidStatusPendidikanMasuk, "") != "" {
+		data, err := masterPendidikan.GetJenjangPendidikanDetailByUUID(a, c.Request().Context(), ptr.StringValue(pegawaiReq.UuidStatusPendidikanMasuk, ""))
+		if err != nil {
+			return model.PegawaiUpdate{}, fmt.Errorf("error from repo get jenjang pendidikan detail by uuid status pendidikan masuk: %w", err)
+		}
+		pegawai.IdStatusPendidikanMasuk = ptr.Uint64(data.ID)
+		pegawai.KdStatusPendidikanMasuk = ptr.String(data.KdDetail)
+	}
+
+	// Pengecekan jenis pendidikan terakhir
+	if ptr.StringValue(pegawaiReq.UuidJenisPendidikan, "") != "" {
+		data, err := masterPendidikan.GetJenjangPendidikanDetailByUUID(a, c.Request().Context(), ptr.StringValue(pegawaiReq.UuidJenisPendidikan, ""))
+		if err != nil {
+			return model.PegawaiUpdate{}, fmt.Errorf("error from repo get jenjang pendidikan detail by uuid jenis pendidikan: %w", err)
+		}
+		pegawai.IdJenisPendidikan = ptr.Uint64(data.ID)
+		pegawai.KdJenisPendidikan = ptr.String(data.KdDetail)
 	}
 
 	// Pengecekan Pangkat Golongan Pegawai
@@ -121,6 +153,10 @@ func ValidateUpdatePegawaiByUUID(a *app.App, c echo.Context) (model.PegawaiUpdat
 		}
 		pegawai.PegawaiFungsional.IdPangkatGolongan = ptr.Uint64(pangkatPegawai.ID)
 		pegawai.PegawaiFungsional.KdPangkatGolongan = ptr.String(pangkatPegawai.KdPangkat)
+		pegawai.IdGolongan = ptr.Uint64(pangkatPegawai.IdGolongan)
+		pegawai.KdGolongan = ptr.String(pangkatPegawai.KdGolongan)
+		pegawai.IdRuang = ptr.Uint64(pangkatPegawai.IdRuang)
+		pegawai.KdRuang = ptr.String(pangkatPegawai.KdRuang)
 	}
 
 	// Pengecekan Jabatan Fungsional Yayasan
@@ -190,6 +226,7 @@ func ValidateUpdatePegawaiByUUID(a *app.App, c echo.Context) (model.PegawaiUpdat
 			return model.PegawaiUpdate{}, fmt.Errorf("error from repo unit kerja by uuid: %w", err)
 		}
 		pegawai.PegawaiFungsional.IdHomebasePddikti = ptr.Uint64(homebasePddikti.ID)
+		pegawai.PegawaiFungsional.KdHomebasePddikti = ptr.String(homebasePddikti.KdPddikti)
 	}
 
 	// Pengecekan Homebase UII
@@ -199,6 +236,7 @@ func ValidateUpdatePegawaiByUUID(a *app.App, c echo.Context) (model.PegawaiUpdat
 			return model.PegawaiUpdate{}, fmt.Errorf("error from repo unit kerja by uuid: %w", err)
 		}
 		pegawai.PegawaiFungsional.IdHomebaseUii = ptr.Uint64(homebaseUUuidHomebaseUii.ID)
+		pegawai.PegawaiFungsional.KdHomebaseUii = ptr.String(homebaseUUuidHomebaseUii.KdUnit2)
 	}
 
 	// Pengecekan Pangkat Golongan Ruang PNS
@@ -256,38 +294,65 @@ func ValidateUpdatePegawaiByUUID(a *app.App, c echo.Context) (model.PegawaiUpdat
 		if statusPegawaiAktif.IsDied() {
 			pegawai.FlagMeninggal = ptr.String("1")
 		}
+
+	}
+
+	tglStatusAktif := ptr.StringValue(pegawaiReq.PegawaiFungsional.TglStatusPegawaiAktif, "")
+	_, err = time.Parse("2006-01-02", tglStatusAktif)
+	if tglStatusAktif != "" {
+		if err != nil {
+			return model.PegawaiUpdate{}, fmt.Errorf("tgl_status_aktif harus sesuai format tanggal yyyy-mm-dd")
+		}
+		pegawai.PegawaiFungsional.TglStatusPegawaiAktif = ptr.String(tglStatusAktif)
 	}
 
 	// Binding nilai request ke struct
 
 	if pegawaiReq.PegawaiFungsional.TmtPangkatGolongan != nil {
+		_, err = time.Parse("2006-01-02", ptr.StringValue(pegawaiReq.PegawaiFungsional.TmtPangkatGolongan, ""))
+		if err != nil {
+			return model.PegawaiUpdate{}, fmt.Errorf("tmt_pangkat_golongan harus sesuai format tanggal yyyy-mm-dd")
+		}
 		pegawai.PegawaiFungsional.TmtPangkatGolongan = pegawaiReq.PegawaiFungsional.TmtPangkatGolongan
 	}
 	if pegawaiReq.PegawaiFungsional.TmtJabatan != nil {
+		_, err = time.Parse("2006-01-02", ptr.StringValue(pegawaiReq.PegawaiFungsional.TmtJabatan, ""))
+		if err != nil {
+			return model.PegawaiUpdate{}, fmt.Errorf("tmt_jabatan harus sesuai format tanggal yyyy-mm-dd")
+		}
 		pegawai.PegawaiFungsional.TmtJabatan = pegawaiReq.PegawaiFungsional.TmtJabatan
 	}
 	if ptr.StringValue(pegawaiReq.PegawaiFungsional.MasaKerjaBawaanTahun, "") != "" {
+		tahun, _ := strconv.Atoi(ptr.StringValue(pegawaiReq.PegawaiFungsional.MasaKerjaBawaanTahun, ""))
+		if !(tahun >= 0 && tahun <= 500) {
+			return model.PegawaiUpdate{}, fmt.Errorf("masa kerja bawaan tahun hanya dapat diisi antara 0-500")
+		}
 		pegawai.PegawaiFungsional.MasaKerjaBawaanTahun = pegawaiReq.PegawaiFungsional.MasaKerjaBawaanTahun
 	}
 	if ptr.StringValue(pegawaiReq.PegawaiFungsional.MasaKerjaBawaanBulan, "") != "" {
-		a, _ := strconv.Atoi(ptr.StringValue(pegawaiReq.PegawaiFungsional.MasaKerjaBawaanBulan, ""))
-		if a > 12 {
-			return model.PegawaiUpdate{}, fmt.Errorf("Bulan masa kerja bawaan maksimal 12")
+		bulan, _ := strconv.Atoi(ptr.StringValue(pegawaiReq.PegawaiFungsional.MasaKerjaBawaanBulan, ""))
+		if !(bulan >= 0 && bulan <= 12) {
+			return model.PegawaiUpdate{}, fmt.Errorf("masa kerja bawaan bulan hanya dapat diisi antara 0-12")
 		}
 		pegawai.PegawaiFungsional.MasaKerjaBawaanBulan = pegawaiReq.PegawaiFungsional.MasaKerjaBawaanBulan
 	}
 	if ptr.StringValue(pegawaiReq.PegawaiFungsional.MasaKerjaGajiTahun, "") != "" {
+		tahun, _ := strconv.Atoi(ptr.StringValue(pegawaiReq.PegawaiFungsional.MasaKerjaGajiTahun, ""))
+		if !(tahun >= 0 && tahun <= 500) {
+			return model.PegawaiUpdate{}, fmt.Errorf("masa kerja gaji tahun hanya dapat diisi antara 0-500")
+		}
 		pegawai.PegawaiFungsional.MasaKerjaGajiTahun = pegawaiReq.PegawaiFungsional.MasaKerjaGajiTahun
 	}
 	if ptr.StringValue(pegawaiReq.PegawaiFungsional.MasaKerjaGajiBulan, "") != "" {
-		a, _ := strconv.Atoi(ptr.StringValue(pegawaiReq.PegawaiFungsional.MasaKerjaGajiBulan, ""))
-		if a > 12 {
-			return model.PegawaiUpdate{}, fmt.Errorf("Bulan masa kerja gaji maksimal 12")
+		bulan, _ := strconv.Atoi(ptr.StringValue(pegawaiReq.PegawaiFungsional.MasaKerjaGajiBulan, ""))
+		if !(bulan >= 0 && bulan <= 12) {
+			return model.PegawaiUpdate{}, fmt.Errorf("masa kerja gaji bulan hanya dapat diisi antara 0-12")
 		}
 		pegawai.PegawaiFungsional.MasaKerjaGajiBulan = pegawaiReq.PegawaiFungsional.MasaKerjaGajiBulan
 	}
 
-	if ptr.StringValue(pegawaiReq.PegawaiFungsional.AngkaKredit, "") != "" {
+	angkaKreditFungsional := ptr.StringValue(pegawaiReq.PegawaiFungsional.AngkaKredit, "")
+	if angkaKreditFungsional != "" {
 		pegawai.PegawaiFungsional.AngkaKredit = pegawaiReq.PegawaiFungsional.AngkaKredit
 	}
 	if ptr.StringValue(pegawaiReq.PegawaiFungsional.NomorSertifikasi, "") != "" {
