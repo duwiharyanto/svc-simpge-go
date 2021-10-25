@@ -50,12 +50,20 @@ func ValidateUpdatePegawaiByUUID(a *app.App, c echo.Context) (model.PegawaiUpdat
 	pegawaiReq.Uuid = ptr.String(uuidPegawai)
 	pegawaiReq.Id = pegawai.Id
 
-	if ptr.StringValue(pegawaiReq.GelarDepan, "") != "" {
-		pegawai.GelarDepan = pegawaiReq.GelarDepan
+	if pegawaiReq.GelarDepan != nil {
+		if ptr.StringValue(pegawaiReq.GelarDepan, "") == "" {
+			pegawai.GelarDepan = nil
+		} else {
+			pegawai.GelarDepan = pegawaiReq.GelarDepan
+		}
 	}
 
-	if ptr.StringValue(pegawaiReq.GelarBelakang, "") != "" {
-		pegawai.GelarBelakang = pegawaiReq.GelarBelakang
+	if pegawaiReq.GelarBelakang != nil {
+		if ptr.StringValue(pegawaiReq.GelarBelakang, "") == "" {
+			pegawai.GelarBelakang = nil
+		} else {
+			pegawai.GelarBelakang = pegawaiReq.GelarBelakang
+		}
 	}
 
 	//Pengecekan Jenis Pegawai
