@@ -38,8 +38,8 @@ type KepegawaianYayasanSimpeg struct {
 	TempatLahir     string `json:"lahir_tempat,omitempty"`
 	TanggalLahir    string `json:"lahir_tgl,omitempty"`
 	FlagPensiun     string `json:"flag_pensiun"`
-	GelarDepan      string `json:"gelar_depan,omitempty"`
-	GelarBelakang   string `json:"gelar_belakang,omitempty"`
+	GelarDepan      string `json:"gelar_depan"`
+	GelarBelakang   string `json:"gelar_belakang"`
 	// JumlahAnak        string `json:"jml_anak"`
 	// JumlahDitanggung  string `json:"jml_ditanggung"`
 	// JumlahKeluarga    string `json:"jml_keluarga"`
