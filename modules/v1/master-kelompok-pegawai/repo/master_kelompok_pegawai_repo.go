@@ -10,8 +10,8 @@ import (
 	"gorm.io/gorm"
 )
 
-func GetAllKelompokPegawai(a *app.App, kdJenisPegawai string) ([]model.KelompokPegawai, error) {
-	sqlQuery := getKelompokPegawaiQuery(kdJenisPegawai)
+func GetAllKelompokPegawai(a *app.App, kdJenisPegawai, kdStatusPegawai string) ([]model.KelompokPegawai, error) {
+	sqlQuery := getKelompokPegawaiQuery(kdJenisPegawai, kdStatusPegawai)
 	rows, err := a.DB.Query(sqlQuery)
 	if err != nil {
 		return nil, fmt.Errorf("error querying get kelompok pegawai, %s", err.Error())
