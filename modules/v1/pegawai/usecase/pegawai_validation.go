@@ -105,7 +105,7 @@ func ValidateUpdatePegawaiByUUID(a *app.App, c echo.Context) (model.PegawaiUpdat
 		pegawai.IdDetailProfesi = ptr.Uint64(detailProfesi.ID)
 	}
 
-	// Pengecekan Ijazah Pendidikan Masuk
+	// Pengecekan Jenjang dari pendidikan tertinggi diakui
 	if ptr.StringValue(pegawaiReq.UuidPendidikanMasuk, "") != "" {
 		pendidikanMasuk, err := masterPendidikan.GetJenjangPendidikanByUUID(a, c.Request().Context(), ptr.StringValue(pegawaiReq.UuidPendidikanMasuk, ""))
 		if err != nil {
@@ -113,9 +113,10 @@ func ValidateUpdatePegawaiByUUID(a *app.App, c echo.Context) (model.PegawaiUpdat
 		}
 		pegawai.IdPendidikanMasuk = ptr.Uint64(pendidikanMasuk.ID)
 		pegawai.KdPendidikanMasuk = ptr.String(pendidikanMasuk.KdPendidikanSimpeg)
+		pegawai.UuidPendidikanMasuk = pegawaiReq.UuidPendidikanMasuk
 	}
 
-	// Pengecekan Ijazah Pendidikan Terakhir
+	// Pengecekan jenjang dari Pendidikan Terakhir
 	if ptr.StringValue(pegawaiReq.UuidPendidikanTerakhir, "") != "" {
 		pendidikanTerakhir, err := masterPendidikan.GetJenjangPendidikanByUUID(a, c.Request().Context(), ptr.StringValue(pegawaiReq.UuidPendidikanTerakhir, ""))
 		if err != nil {
