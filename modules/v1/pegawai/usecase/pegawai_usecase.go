@@ -145,13 +145,13 @@ func HandleUpdatePegawai(a *app.App, ctx context.Context, errChan chan error) ec
 
 		err = repo.UpdatePendidikanPegawai(a, c.Request().Context(),
 			model.PegawaiPendidikanRequest{
-				UuidPendidikanDiakui:              uuidPendidikanDiakui,
-				UuidPendidikanTerakhir:            uuidPendidikanTerakhir,
-				IdJenjangPendidikanDetailDiakui:   pegawai.IdStatusPendidikanMasuk,
-				IdJenjangPendidikanDetailTerakhir: pegawai.IdJenisPendidikan,
-				JenjangPendidikanTertinggiDiakui:  ptr.StringValue(pegawai.KdPendidikanMasuk, ""),
-				IdPersonalPegawai:                 ptr.Uint64Value(idPersonalPegawai, 0),
-				UserUpdate:                        pegawai.UserUpdate,
+				UuidPendidikanDiakui:                 uuidPendidikanDiakui,
+				UuidPendidikanTerakhir:               uuidPendidikanTerakhir,
+				IdJenjangPendidikanDetailDiakui:      pegawai.IdStatusPendidikanMasuk,
+				IdJenjangPendidikanDetailTerakhir:    pegawai.IdJenisPendidikan,
+				UuidJenjangPendidikanTertinggiDiakui: ptr.StringValue(pegawai.UuidPendidikanMasuk, ""),
+				IdPersonalPegawai:                    ptr.Uint64Value(idPersonalPegawai, 0),
+				UserUpdate:                           pegawai.UserUpdate,
 			})
 		if err != nil {
 			fmt.Printf("[ERROR] update pendidikan pegawai: %s\n", err.Error())

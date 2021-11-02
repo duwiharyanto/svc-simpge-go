@@ -140,13 +140,13 @@ func (*PegawaiPendidikanUpdate) TableName() string {
 }
 
 type PegawaiPendidikanRequest struct {
-	UuidPendidikanDiakui              string // uuid dari pendidikan tertinggi diakui
-	UuidPendidikanTerakhir            string // uuid dari pendidikan terakhir
-	IdJenjangPendidikanDetailDiakui   *uint64
-	IdJenjangPendidikanDetailTerakhir *uint64
-	JenjangPendidikanTertinggiDiakui  string
-	IdPersonalPegawai                 uint64
-	UserUpdate                        *string
+	UuidPendidikanDiakui                 string // uuid dari pendidikan tertinggi diakui
+	UuidPendidikanTerakhir               string // uuid dari pendidikan terakhir
+	IdJenjangPendidikanDetailDiakui      *uint64
+	IdJenjangPendidikanDetailTerakhir    *uint64
+	UuidJenjangPendidikanTertinggiDiakui string
+	IdPersonalPegawai                    uint64
+	UserUpdate                           *string
 }
 
 type BerkasPendukungList []BerkasPendukung
