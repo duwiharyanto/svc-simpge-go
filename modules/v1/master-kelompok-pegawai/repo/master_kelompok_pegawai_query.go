@@ -2,14 +2,16 @@ package repo
 
 import "fmt"
 
-func getKelompokPegawaiQuery(kdJenisPegawai string) string {
+func getKelompokPegawaiQuery(kdJenisPegawai, kdStatusPegawai string) string {
 	var kdJenisPegawaiFilter string
-	if kdJenisPegawai == "ED" {
+	if kdJenisPegawai != "" {
 		kdJenisPegawaiFilter = fmt.Sprintf("AND kd_jenis_pegawai = '%s'", kdJenisPegawai)
-	} else if kdJenisPegawai == "TPA" || kdJenisPegawai == "AD" {
-		kdJenisPegawaiFilter = fmt.Sprintf("AND kd_jenis_pegawai != 'ED'")
 	}
-	return fmt.Sprintf("SELECT kd_status_pegawai,kd_jenis_pegawai, kd_kelompok_pegawai, kelompok_pegawai,uuid FROM kelompok_pegawai WHERE flag_aktif=1 %s ORDER BY kelompok_pegawai", kdJenisPegawaiFilter)
+	var kdStatusPegawaiFilter string
+	if kdStatusPegawai != "" {
+		kdStatusPegawaiFilter = fmt.Sprintf("AND kd_status_pegawai = '%s'", kdStatusPegawai)
+	}
+	return fmt.Sprintf("SELECT kd_status_pegawai,kd_jenis_pegawai, kd_kelompok_pegawai, kelompok_pegawai,uuid FROM kelompok_pegawai WHERE flag_aktif=1 %s %s ORDER BY kelompok_pegawai", kdJenisPegawaiFilter, kdStatusPegawaiFilter)
 }
 
 func getAllKelompokPegawaiByUUID(uuid string) string {
