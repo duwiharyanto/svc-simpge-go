@@ -47,7 +47,7 @@ func UpdatePendidikanPegawai(a *app.App, ctx context.Context, req model.PegawaiP
 				return res.Error
 			}
 		}
-	} else if req.JenjangPendidikanTertinggiDiakui != "" {
+	} else if req.UuidJenjangPendidikanTertinggiDiakui != "" {
 		res := db.Model(&pegawaiPendidikanUpdate).
 			Where("id_personal_data_pribadi = ? AND flag_aktif = 1", req.IdPersonalPegawai).
 			Updates(map[string]interface{}{"flag_ijazah_diakui": 0, "id_jenjang_pdd_detail_diakui": nil, "user_update": req.UserUpdate})
