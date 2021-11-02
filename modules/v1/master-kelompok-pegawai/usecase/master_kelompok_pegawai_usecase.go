@@ -16,7 +16,8 @@ import (
 func HandleGetKelompokPegawai(a *app.App) echo.HandlerFunc {
 	h := func(c echo.Context) error {
 		kdJenisPegawai := c.QueryParam("kd_jenis_pegawai")
-		kk, err := repo.GetAllKelompokPegawai(a, kdJenisPegawai)
+		kdStatusPegawai := c.QueryParam("kd_status_pegawai")
+		kk, err := repo.GetAllKelompokPegawai(a, kdJenisPegawai, kdStatusPegawai)
 		if err != nil {
 			fmt.Printf("[ERROR] repo get all kelompok pegawai, %s\n", err.Error())
 			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
