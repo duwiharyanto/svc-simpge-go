@@ -98,29 +98,29 @@ func TestGetPegawaiByUUID(t *testing.T) {
 
 }
 
-func TestUpdatePendidikanPegawai(t *testing.T) {
-	db, err := database.Connect()
-	if err != nil {
-		t.Fatal("failed connect to db:", err)
-	}
-	a := &app.App{DB: db}
+// func TestUpdatePendidikanPegawai(t *testing.T) {
+// 	db, err := database.Connect()
+// 	if err != nil {
+// 		t.Fatal("failed connect to db:", err)
+// 	}
+// 	a := &app.App{DB: db}
 
-	gormDB, err := database.InitGorm(a.DB, true)
-	if err != nil {
-		t.Fatal("failed connect to gorm db:", err)
-	}
-	ax := &app.App{GormDB: gormDB}
+// 	gormDB, err := database.InitGorm(a.DB, true)
+// 	if err != nil {
+// 		t.Fatal("failed connect to gorm db:", err)
+// 	}
+// 	ax := &app.App{GormDB: gormDB}
 
-	uuidPendidikanDiakui := "822c2cd9-4d0f-47ac-91b8-80f4b5d42444"
-	uuidPendidikanTerakhir := "822c2cd9-4d0f-47ac-91b8-80f4b5d42444"
-	var idPegawai uint64 = 1231231
+// 	uuidPendidikanDiakui := "822c2cd9-4d0f-47ac-91b8-80f4b5d42444"
+// 	uuidPendidikanTerakhir := "822c2cd9-4d0f-47ac-91b8-80f4b5d42444"
+// 	var idPegawai uint64 = 1231231
 
-	err = UpdatePendidikanPegawai(ax, context.Background(), uuidPendidikanDiakui, uuidPendidikanTerakhir, "", idPegawai)
+// 	err = UpdatePendidikanPegawai(ax, context.Background(), uuidPendidikanDiakui, uuidPendidikanTerakhir, "", idPegawai)
 
-	if err != nil {
-		t.Fatal("failed update flag pendidikan pegawai:", err)
-	}
-}
+// 	if err != nil {
+// 		t.Fatal("failed update flag pendidikan pegawai:", err)
+// 	}
+// }
 
 func TestModelUpdate(t *testing.T) {
 	db, err := database.Connect()
