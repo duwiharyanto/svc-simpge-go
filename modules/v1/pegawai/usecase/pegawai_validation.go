@@ -358,19 +358,19 @@ func ValidateUpdatePegawaiByUUID(a *app.App, c echo.Context) (model.PegawaiUpdat
 	}
 	if ptr.StringValue(pegawaiReq.PegawaiFungsional.NomorSertifikasi, "") != "" {
 		if len(ptr.StringValue(pegawaiReq.PegawaiFungsional.NomorSertifikasi, "")) > 20 {
-			return model.PegawaiUpdate{}, fmt.Errorf("Panjang karakter nomor sertifikasi maksimal 20")
+			return model.PegawaiUpdate{}, fmt.Errorf("panjang karakter nomor sertifikasi maksimal 20")
 		}
 		pegawai.PegawaiFungsional.NomorSertifikasi = pegawaiReq.PegawaiFungsional.NomorSertifikasi
 	}
 	if ptr.StringValue(pegawaiReq.PegawaiFungsional.NomorRegistrasi, "") != "" {
 		if len(ptr.StringValue(pegawaiReq.PegawaiFungsional.NomorRegistrasi, "")) > 10 {
-			return model.PegawaiUpdate{}, fmt.Errorf("Panjang karakter nomor registrasi maksimal 10")
+			return model.PegawaiUpdate{}, fmt.Errorf("panjang karakter nomor registrasi maksimal 10")
 		}
 		pegawai.PegawaiFungsional.NomorRegistrasi = pegawaiReq.PegawaiFungsional.NomorRegistrasi
 	}
 	if ptr.StringValue(pegawaiReq.PegawaiFungsional.NomorSkPertama, "") != "" {
 		if len(ptr.StringValue(pegawaiReq.PegawaiFungsional.NomorSkPertama, "")) > 30 {
-			return model.PegawaiUpdate{}, fmt.Errorf("Panjang karakter nomor sk pertama maksimal 30")
+			return model.PegawaiUpdate{}, fmt.Errorf("panjang karakter nomor sk pertama maksimal 30")
 		}
 		pegawai.PegawaiFungsional.NomorSkPertama = pegawaiReq.PegawaiFungsional.NomorSkPertama
 	}
@@ -382,13 +382,13 @@ func ValidateUpdatePegawaiByUUID(a *app.App, c echo.Context) (model.PegawaiUpdat
 	}
 	if ptr.StringValue(pegawaiReq.PegawaiPNS.NipPns, "") != "" {
 		if len(ptr.StringValue(pegawaiReq.PegawaiPNS.NipPns, "")) != 18 {
-			return model.PegawaiUpdate{}, fmt.Errorf("Panjang karakter NIP PNS hanya boleh 18")
+			return model.PegawaiUpdate{}, fmt.Errorf("panjang karakter NIP PNS hanya boleh 18")
 		}
 		pegawai.PegawaiPNS.NipPns = pegawaiReq.PegawaiPNS.NipPns
 	}
 	if ptr.StringValue(pegawaiReq.PegawaiPNS.NoKartuPegawai, "") != "" {
 		if len(ptr.StringValue(pegawaiReq.PegawaiPNS.NoKartuPegawai, "")) != 18 {
-			return model.PegawaiUpdate{}, fmt.Errorf("Panjang karakter nomor kartu pegawai hanya boleh 18")
+			return model.PegawaiUpdate{}, fmt.Errorf("panjang karakter nomor kartu pegawai hanya boleh 18")
 		}
 		pegawai.PegawaiPNS.NoKartuPegawai = pegawaiReq.PegawaiPNS.NoKartuPegawai
 	}
@@ -404,14 +404,18 @@ func ValidateUpdatePegawaiByUUID(a *app.App, c echo.Context) (model.PegawaiUpdat
 	if ptr.StringValue(pegawaiReq.PegawaiPNS.MasaKerjaBulan, "") != "" {
 		a, _ := strconv.Atoi(ptr.StringValue(pegawaiReq.PegawaiPNS.MasaKerjaBulan, ""))
 		if a > 12 {
-			return model.PegawaiUpdate{}, fmt.Errorf("Masa kerja bulan maksimal 12")
+			return model.PegawaiUpdate{}, fmt.Errorf("masa kerja bulan maksimal 12")
 		}
 		pegawai.PegawaiPNS.MasaKerjaBulan = pegawaiReq.PegawaiPNS.MasaKerjaBulan
 	}
 	if ptr.StringValue(pegawaiReq.PegawaiPNS.AngkaKredit, "") != "" {
 		pegawai.PegawaiPNS.AngkaKredit = pegawaiReq.PegawaiPNS.AngkaKredit
 	}
-	if ptr.StringValue(pegawaiReq.PegawaiPNS.Keterangan, "") != "" {
+	keterangan := ptr.StringValue(pegawaiReq.PegawaiPNS.Keterangan, "")
+	if len(keterangan) > 400 {
+		return model.PegawaiUpdate{}, fmt.Errorf("panjang keterangan maksimal 400 karakter")
+	}
+	if keterangan != "" {
 		pegawai.PegawaiPNS.Keterangan = pegawaiReq.PegawaiPNS.Keterangan
 	}
 
