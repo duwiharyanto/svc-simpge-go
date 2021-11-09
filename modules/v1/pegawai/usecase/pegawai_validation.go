@@ -96,6 +96,16 @@ func ValidateUpdatePegawaiByUUID(a *app.App, c echo.Context) (model.PegawaiUpdat
 		pegawai.KdKelompokPegawai = ptr.String(kelompokPegawai.KdKelompokPegawai)
 	}
 
+	// Pengecekan Kelompok Pegawai Payroll
+	if ptr.StringValue(pegawaiReq.UuidKelompokPegawaiPayroll, "") != "" {
+		kelompokPegawai, err := kelompokPegawaiRepo.GetKelompokPegawaiByUUID(a, c.Request().Context(), ptr.StringValue(pegawaiReq.UuidKelompokPegawaiPayroll, ""))
+		if err != nil {
+			return model.PegawaiUpdate{}, fmt.Errorf("error from repo kelompok pegawai by uuid: %w", err)
+		}
+		pegawai.IdKelompokPegawaiPayroll = ptr.Uint64(kelompokPegawai.ID)
+		pegawai.KdKelompokPegawaiPayroll = ptr.String(kelompokPegawai.KdKelompokPegawai)
+	}
+
 	// Pengecekan Detail Profesi
 	if ptr.StringValue(pegawaiReq.UuidDetailProfesi, "") != "" {
 		detailProfesi, err := detailProfesiRepo.GetDetailProfesiByUUID(a, c.Request().Context(), ptr.StringValue(pegawaiReq.UuidDetailProfesi, ""))
