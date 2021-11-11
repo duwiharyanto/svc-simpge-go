@@ -396,6 +396,18 @@ func ValidateUpdatePegawaiByUUID(a *app.App, c echo.Context) (model.PegawaiUpdat
 		}
 		pegawai.PegawaiPNS.NipPns = pegawaiReq.PegawaiPNS.NipPns
 	}
+
+	Nira := ptr.StringValue(pegawaiReq.PegawaiPNS.Nira, "")
+	if Nira != "" {
+		if len(Nira) > 23 {
+			return model.PegawaiUpdate{}, fmt.Errorf("panjang karakter NIRA maksimal 23")
+		} else if _, err = strconv.ParseComplex(Nira, 128); err != nil {
+			return model.PegawaiUpdate{}, fmt.Errorf("kolom NIRA hanya dapat diisi dengan angka")
+		} else {
+			pegawai.PegawaiPNS.Nira = pegawaiReq.PegawaiPNS.Nira
+		}
+	}
+
 	if ptr.StringValue(pegawaiReq.PegawaiPNS.NoKartuPegawai, "") != "" {
 		if len(ptr.StringValue(pegawaiReq.PegawaiPNS.NoKartuPegawai, "")) != 18 {
 			return model.PegawaiUpdate{}, fmt.Errorf("panjang karakter nomor kartu pegawai hanya boleh 18")

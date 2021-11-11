@@ -23,6 +23,7 @@ type PegawaiPNSUpdate struct {
 	MasaKerjaBulan        *string `form:"masa_kerja_pns_bulan" gorm:"column:masa_kerja_bulan;default:null"` //Perubahan
 	AngkaKredit           *string `form:"angka_kredit_pns" gorm:"column:angka_kredit;default:null"`         //Perubahan
 	Keterangan            *string `form:"keterangan_pns" gorm:"column:keterangan;default:null"`             //Perubahan
+	Nira                  *string `form:"nira" gorm:"column:nira;default:null"`                             //Perubahan
 	TglInput              *string `form:"-" gorm:"-"`
 	UserInput             *string `form:"-" gorm:"-"`
 	TglUpdate             *string `form:"-" gorm:"-"`
