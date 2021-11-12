@@ -35,6 +35,7 @@ func GetPegawaiPNS(a *app.App, uuid string) (*model.PegawaiPNSPTT, error) {
 		&pegawaiPNSPTT.MasaKerjaPnsBulan,
 		&pegawaiPNSPTT.AngkaKreditPns,
 		&pegawaiPNSPTT.KeteranganPNS,
+		&pegawaiPNSPTT.Nira,
 	)
 
 	if err == sql.ErrNoRows {

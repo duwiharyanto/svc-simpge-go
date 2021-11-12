@@ -56,8 +56,8 @@ func newPegawaiOra(pegawaiInsani *model.PegawaiDetail) *pegawaiOraModel.Kepegawa
 		pegawaiOra.KdPendidikan = pegawaiInsani.PegawaiYayasan.KdPendidikanTerakhirSimpeg
 	}
 
-	if pegawaiInsani.PegawaiYayasan.KdKelompokPegawai != "" {
-		pegawaiOra.KelompokPegawai.KdKelompokPegawai = pegawaiInsani.PegawaiYayasan.KdKelompokPegawai
+	if pegawaiInsani.PegawaiYayasan.KdKelompokPegawaiPayroll != "" {
+		pegawaiOra.KelompokPegawai.KdKelompokPegawai = pegawaiInsani.PegawaiYayasan.KdKelompokPegawaiPayroll
 	}
 
 	// Sinkron Kepegawaian Yayaysan - Pangkat / Jabatan
