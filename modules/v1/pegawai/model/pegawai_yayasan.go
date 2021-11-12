@@ -16,6 +16,10 @@ type PegawaiYayasan struct {
 	IdKelompokPegawai          uint64 `json:"-"`
 	KdKelompokPegawai          string `json:"kd_kelompok_pegawai"`
 	KelompokPegawai            string `json:"kelompok_pegawai"`
+	UuidKelompokPegawaiPayroll string `json:"uuid_kelompok_pegawai_payroll"`
+	IdKelompokPegawaiPayroll   uint64 `json:"-"`
+	KdKelompokPegawaiPayroll   string `json:"kd_kelompok_pegawai_payroll"`
+	KelompokPegawaiPayroll     string `json:"kelompok_pegawai_payroll"`
 	UuidPendidikanMasuk        string `json:"-" form:"uuid_pendidikan_masuk"`
 	IdPendidikanMasuk          uint64 `json:"-"`
 	KdPendidikanMasuk          string `json:"-"`

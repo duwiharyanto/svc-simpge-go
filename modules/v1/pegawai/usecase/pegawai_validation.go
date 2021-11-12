@@ -96,6 +96,16 @@ func ValidateUpdatePegawaiByUUID(a *app.App, c echo.Context) (model.PegawaiUpdat
 		pegawai.KdKelompokPegawai = ptr.String(kelompokPegawai.KdKelompokPegawai)
 	}
 
+	// Pengecekan Kelompok Pegawai Payroll
+	if ptr.StringValue(pegawaiReq.UuidKelompokPegawaiPayroll, "") != "" {
+		kelompokPegawai, err := kelompokPegawaiRepo.GetKelompokPegawaiByUUID(a, c.Request().Context(), ptr.StringValue(pegawaiReq.UuidKelompokPegawaiPayroll, ""))
+		if err != nil {
+			return model.PegawaiUpdate{}, fmt.Errorf("error from repo kelompok pegawai by uuid: %w", err)
+		}
+		pegawai.IdKelompokPegawaiPayroll = ptr.Uint64(kelompokPegawai.ID)
+		pegawai.KdKelompokPegawaiPayroll = ptr.String(kelompokPegawai.KdKelompokPegawai)
+	}
+
 	// Pengecekan Detail Profesi
 	if ptr.StringValue(pegawaiReq.UuidDetailProfesi, "") != "" {
 		detailProfesi, err := detailProfesiRepo.GetDetailProfesiByUUID(a, c.Request().Context(), ptr.StringValue(pegawaiReq.UuidDetailProfesi, ""))
@@ -386,6 +396,18 @@ func ValidateUpdatePegawaiByUUID(a *app.App, c echo.Context) (model.PegawaiUpdat
 		}
 		pegawai.PegawaiPNS.NipPns = pegawaiReq.PegawaiPNS.NipPns
 	}
+
+	Nira := ptr.StringValue(pegawaiReq.PegawaiPNS.Nira, "")
+	if Nira != "" {
+		if len(Nira) > 23 {
+			return model.PegawaiUpdate{}, fmt.Errorf("panjang karakter NIRA maksimal 23")
+		} else if _, err = strconv.ParseComplex(Nira, 128); err != nil {
+			return model.PegawaiUpdate{}, fmt.Errorf("kolom NIRA hanya dapat diisi dengan angka")
+		} else {
+			pegawai.PegawaiPNS.Nira = pegawaiReq.PegawaiPNS.Nira
+		}
+	}
+
 	if ptr.StringValue(pegawaiReq.PegawaiPNS.NoKartuPegawai, "") != "" {
 		if len(ptr.StringValue(pegawaiReq.PegawaiPNS.NoKartuPegawai, "")) != 18 {
 			return model.PegawaiUpdate{}, fmt.Errorf("panjang karakter nomor kartu pegawai hanya boleh 18")
@@ -541,6 +563,8 @@ func ValidateCreatePegawai(a *app.App, c echo.Context) (model.PegawaiCreate, err
 	}
 	pegawaiReq.IdKelompokPegawai = kelompokPegawai.ID
 	pegawaiReq.KdKelompokPegawai = kelompokPegawai.KdKelompokPegawai
+	pegawaiReq.IdKelompokPegawaiPayroll = kelompokPegawai.ID                //
+	pegawaiReq.KdKelompokPegawaiPayroll = kelompokPegawai.KdKelompokPegawai //
 	pegawaiReq.IdJenisPegawai = kelompokPegawai.JenisPegawai.ID
 	pegawaiReq.KdJenisPegawai = kelompokPegawai.JenisPegawai.KDJenisPegawai
 	pegawaiReq.IdStatusPegawai = kelompokPegawai.StatusPegawai.ID

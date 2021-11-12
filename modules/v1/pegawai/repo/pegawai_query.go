@@ -132,6 +132,10 @@ func getPegawaiYayasanQuery(uuid string) string {
 		COALESCE(kp.id, 0),
 		COALESCE(kp.kd_kelompok_pegawai,''),
 		COALESCE(kp.kelompok_pegawai,''),
+		COALESCE(kp2.uuid,''),
+		COALESCE(kp2.id, 0),
+		COALESCE(kp2.kd_kelompok_pegawai,''),
+		COALESCE(kp2.kelompok_pegawai,''),
 		COALESCE(jp2.id, 0),
 		COALESCE(jp2.uuid,''),
 		COALESCE(jp2.kd_jenjang,''),
@@ -174,6 +178,8 @@ func getPegawaiYayasanQuery(uuid string) string {
 		status_pegawai sp ON p.id_status_pegawai = sp.id 
 	LEFT JOIN
 		kelompok_pegawai kp ON p.id_kelompok_pegawai = kp.id 
+	LEFT JOIN
+		kelompok_pegawai kp2 ON p.id_kelompok_pegawai_payroll = kp2.id
 	LEFT JOIN
 		pangkat_golongan_pegawai pgp ON pf.id_pangkat_golongan = pgp.id 
 	LEFT JOIN 
@@ -256,7 +262,8 @@ func getPegawaiPNSQuery(uuid string) string {
 		COALESCE(pp.masa_kerja_tahun,''),
 		COALESCE(pp.masa_kerja_bulan,''),
 		COALESCE(pp.angka_kredit,''),
-		COALESCE(pp.keterangan,'')
+		COALESCE(pp.keterangan,''),
+		COALESCE(pp.nira,'')
 	FROM 
 		pegawai p
 	LEFT JOIN
