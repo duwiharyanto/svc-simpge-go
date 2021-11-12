@@ -563,6 +563,8 @@ func ValidateCreatePegawai(a *app.App, c echo.Context) (model.PegawaiCreate, err
 	}
 	pegawaiReq.IdKelompokPegawai = kelompokPegawai.ID
 	pegawaiReq.KdKelompokPegawai = kelompokPegawai.KdKelompokPegawai
+	pegawaiReq.IdKelompokPegawaiPayroll = kelompokPegawai.ID                //
+	pegawaiReq.KdKelompokPegawaiPayroll = kelompokPegawai.KdKelompokPegawai //
 	pegawaiReq.IdJenisPegawai = kelompokPegawai.JenisPegawai.ID
 	pegawaiReq.KdJenisPegawai = kelompokPegawai.JenisPegawai.KDJenisPegawai
 	pegawaiReq.IdStatusPegawai = kelompokPegawai.StatusPegawai.ID
