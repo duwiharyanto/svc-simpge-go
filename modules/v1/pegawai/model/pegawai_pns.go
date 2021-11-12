@@ -59,6 +59,7 @@ type PegawaiPNSPTT struct {
 	MasaKerjaPnsBulan     string `json:"masa_kerja_pns_bulan"`
 	AngkaKreditPns        string `json:"angka_kredit_pns"`
 	KeteranganPNS         string `json:"keterangan_pns"`
+	Nira                  string `json:"nira"`
 	UuidJenisPTT          string `json:"uuid_jenis_ptt"`
 	KdJenisPTT            string `json:"kd_jenis_ptt"`
 	JenisPTT              string `json:"jenis_ptt"`
