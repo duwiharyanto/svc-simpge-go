@@ -361,6 +361,34 @@ func ValidateUpdatePegawaiByUUID(a *app.App, c echo.Context) (model.PegawaiUpdat
 		}
 		pegawai.PegawaiFungsional.MasaKerjaGajiBulan = pegawaiReq.PegawaiFungsional.MasaKerjaGajiBulan
 	}
+	if ptr.StringValue(pegawaiReq.PegawaiFungsional.MasaKerjaAwalKepegawaianTahun, "") != "" {
+		tahun, _ := strconv.Atoi(ptr.StringValue(pegawaiReq.PegawaiFungsional.MasaKerjaAwalKepegawaianTahun, ""))
+		if !(tahun >= 0 && tahun <= 500) {
+			return model.PegawaiUpdate{}, fmt.Errorf("masa kerja awal kepegawaian tahun hanya dapat diisi antara 0-500")
+		}
+		pegawai.PegawaiFungsional.MasaKerjaAwalKepegawaianTahun = pegawaiReq.PegawaiFungsional.MasaKerjaAwalKepegawaianTahun
+	}
+	if ptr.StringValue(pegawaiReq.PegawaiFungsional.MasaKerjaAwalKepegawaianBulan, "") != "" {
+		tahun, _ := strconv.Atoi(ptr.StringValue(pegawaiReq.PegawaiFungsional.MasaKerjaAwalKepegawaianBulan, ""))
+		if !(tahun >= 0 && tahun <= 500) {
+			return model.PegawaiUpdate{}, fmt.Errorf("masa kerja awal kepegawaian bulan hanya dapat diisi antara 0-500")
+		}
+		pegawai.PegawaiFungsional.MasaKerjaAwalKepegawaianBulan = pegawaiReq.PegawaiFungsional.MasaKerjaAwalKepegawaianBulan
+	}
+	if ptr.StringValue(pegawaiReq.PegawaiFungsional.MasaKerjaAwalPensiunTahun, "") != "" {
+		tahun, _ := strconv.Atoi(ptr.StringValue(pegawaiReq.PegawaiFungsional.MasaKerjaAwalPensiunTahun, ""))
+		if !(tahun >= 0 && tahun <= 500) {
+			return model.PegawaiUpdate{}, fmt.Errorf("masa kerja awal pensiun tahun hanya dapat diisi antara 0-500")
+		}
+		pegawai.PegawaiFungsional.MasaKerjaAwalPensiunTahun = pegawaiReq.PegawaiFungsional.MasaKerjaAwalPensiunTahun
+	}
+	if ptr.StringValue(pegawaiReq.PegawaiFungsional.MasaKerjaAwalPensiunBulan, "") != "" {
+		tahun, _ := strconv.Atoi(ptr.StringValue(pegawaiReq.PegawaiFungsional.MasaKerjaAwalPensiunBulan, ""))
+		if !(tahun >= 0 && tahun <= 500) {
+			return model.PegawaiUpdate{}, fmt.Errorf("masa kerja awal pensiun bulan hanya dapat diisi antara 0-500")
+		}
+		pegawai.PegawaiFungsional.MasaKerjaAwalPensiunBulan = pegawaiReq.PegawaiFungsional.MasaKerjaAwalPensiunBulan
+	}
 
 	angkaKreditFungsional := ptr.StringValue(pegawaiReq.PegawaiFungsional.AngkaKredit, "")
 	if angkaKreditFungsional != "" {
