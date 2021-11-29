@@ -93,6 +93,10 @@ func newPegawaiOra(pegawaiInsani *model.PegawaiDetail) *pegawaiOraModel.Kepegawa
 		pegawaiOra.PegawaiStatus.AngkaKreditFungsional, _ = strconv.ParseFloat(pegawaiInsani.PegawaiYayasan.AngkaKredit, 64)
 	}
 
+	if pegawaiInsani.PegawaiYayasan.IsHasNIDN() {
+		pegawaiOra.Nidn = pegawaiInsani.PegawaiYayasan.NomorRegis
+	}
+
 	// Sinkron Unit Kerja
 	if pegawaiInsani.UnitKerjaPegawai.KdIndukKerja != "" {
 		pegawaiOra.Unit1.KdUnit1 = pegawaiInsani.UnitKerjaPegawai.KdIndukKerja

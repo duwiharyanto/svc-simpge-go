@@ -80,6 +80,10 @@ func (*PegawaiYayasan) TableName() string {
 	return "pegawai"
 }
 
+func (p *PegawaiYayasan) IsHasNIDN() bool {
+	return p.KdJenisRegis == "NIDN"
+}
+
 func (a *PegawaiYayasan) SetMasaKerjaTotal(b *UnitKerjaPegawai) {
 	masaKerjaBawaanTahunInt, _ := strconv.Atoi(a.MasaKerjaBawaanTahun)
 	masaKerjaBawaanBulanInt, _ := strconv.Atoi(a.MasaKerjaBawaanBulan)
