@@ -94,12 +94,23 @@ func (a *PegawaiYayasan) SetMasaKerjaTotal(b *UnitKerjaPegawai) {
 	tmtSkPertamaDurationRealMonths := int(tmtSkPertamaDurationDays / 365 * 12)
 	// tmtSkPertamaDurationMonths := int(tmtSkPertamaDurationDays / 30 % 12)
 
+	// masa kerja gaji total
 	masaKerjaTotalRealBulan := ((masaKerjaBawaanTahunInt * 12) + masaKerjaBawaanBulanInt) + tmtSkPertamaDurationRealMonths
 	a.MasaKerjaTotalTahun = fmt.Sprintf("%d", masaKerjaTotalRealBulan/12)
 	a.MasaKerjaTotalBulan = fmt.Sprintf("%d", masaKerjaTotalRealBulan%12)
-	a.MasaKerjaAKepegawaianTotalTahun = "0"
-	a.MasaKerjaAKepegawaianTotalBulan = "1"
-	a.MasaKerjaAPensiunTotalTahun = "0"
-	a.MasaKerjaAPensiunTotalBulan = "1"
+
+	// masa kerja kepegawaian total
+	masaKerjaKepegawaianTahunInt, _ := strconv.Atoi(a.MasaKerjaAwalKepegawaianTahun)
+	masaKerjaKepegawaianBulanInt, _ := strconv.Atoi(a.MasaKerjaAwalKepegawaianBulan)
+	masaKerjaTotalKepegawaianRealBulan := ((masaKerjaKepegawaianTahunInt * 12) + masaKerjaKepegawaianBulanInt) + tmtSkPertamaDurationRealMonths
+	a.MasaKerjaAKepegawaianTotalTahun = fmt.Sprintf("%d", masaKerjaTotalKepegawaianRealBulan/12)
+	a.MasaKerjaAKepegawaianTotalBulan = fmt.Sprintf("%d", masaKerjaTotalKepegawaianRealBulan%12)
+
+	// masa kerja pensiun total
+	masaKerjaPensiunTahunInt, _ := strconv.Atoi(a.MasaKerjaAwalPensiunTahun)
+	masaKerjaPensiunBulanInt, _ := strconv.Atoi(a.MasaKerjaAwalPensiunBulan)
+	masaKerjaTotalPensiunRealBulan := ((masaKerjaPensiunTahunInt * 12) + masaKerjaPensiunBulanInt) + tmtSkPertamaDurationRealMonths
+	a.MasaKerjaAPensiunTotalTahun = fmt.Sprintf("%d", masaKerjaTotalPensiunRealBulan/12)
+	a.MasaKerjaAPensiunTotalBulan = fmt.Sprintf("%d", masaKerjaTotalPensiunRealBulan%12)
 
 }
