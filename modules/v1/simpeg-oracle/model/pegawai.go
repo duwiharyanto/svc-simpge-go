@@ -54,7 +54,6 @@ type KepegawaianYayasanSimpeg struct {
 	KdStatusPendidikanMasuk string `json:"kd_status_pendidikan_masuk"`
 	KdPendidikan            string `json:"kd_pendidikan"`
 	KdJenisPendidikan       string `json:"kd_jenis_pendidikan"`
-	Nidn                    string `json:"nidn"`
 	*InstansiAsalPtt        `json:"instansi_asal_ptt"`
 	*JenisPegawai           `json:"jenis_pegawai,omitempty"`
 	*KelompokPegawai        `json:"kelompok_pegawai,omitempty"`
@@ -122,7 +121,7 @@ type PegawaiStatus struct {
 	NoKarpeg                  string             `json:"no_karpeg"`
 	NoSkPertama               string             `json:"no_sk_pertama,omitempty"`
 	TglSkPertama              string             `json:"tgl_sk_pertama,omitempty"`
-	Nidn                      string             `json:"nidn,omitempty"`
+	Nidn                      *string            `json:"nidn,omitempty"`
 	PangkatKopertis           *Pangkat           `json:"pangkat_kopertis,omitempty"`
 	PangkatYayasan            *Pangkat           `json:"pangkat_yayasan,omitempty"`
 	JabatanFungsionalKopertis *JabatanFungsional `json:"jabatan_fungsional_kopertis,omitempty"`
