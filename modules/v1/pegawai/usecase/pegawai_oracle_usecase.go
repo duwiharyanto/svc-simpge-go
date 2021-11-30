@@ -94,7 +94,7 @@ func newPegawaiOra(pegawaiInsani *model.PegawaiDetail) *pegawaiOraModel.Kepegawa
 	}
 
 	if pegawaiInsani.PegawaiYayasan.IsHasNIDN() {
-		pegawaiOra.Nidn = &pegawaiInsani.PegawaiYayasan.NomorRegis
+		pegawaiOra.PegawaiStatus.Nidn = &pegawaiInsani.PegawaiYayasan.NomorRegis
 	}
 
 	// Sinkron Unit Kerja
