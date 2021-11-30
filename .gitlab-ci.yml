@@ -15,8 +15,6 @@ variables:
   STAG_IMAGE: ${CI_PROJECT_NAME}:stag
   PROD_IMAGE: ${CI_PROJECT_NAME}:prod
   # Sonarqube
-  SONAR_HOST_URL: "http://sonarqube-sonarqube.sonarqube"
-  SONAR_TOKEN: "0f52224e1e5fb6928b0cf4927fd8e5c3074d82c8"
   SONAR_SOURCES: "."
   GIT_SSL_NO_VERIFY: "true"
 
