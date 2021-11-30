@@ -73,6 +73,10 @@ func UpdateKepegawaianYayasan(ctx context.Context, client *netHttp.Client, pegaw
 	}
 
 	fmt.Printf("[DEBUG] response from update kepegawaian yayasan simpeg: %s\n", resBody)
+
+	// log variable pegawai
+	b, _ := json.MarshalIndent(pegawai, "", "\t")
+	fmt.Println(string(b))
 	return nil
 }
 
