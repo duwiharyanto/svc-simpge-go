@@ -87,6 +87,7 @@ type PegawaiFungsionalUpdate struct {
 	// MasaKerjaTotalBulan      string  `form:"masa_kerja_total_bulan"`
 	AngkaKredit              *string `form:"angka_kredit" gorm:"default:null"`
 	NomorSertifikasi         *string `form:"nomor_sertifikasi" gorm:"default:null"`
+	Nidn                     *string `form:"nidn" gorm:"default:null"`
 	UuidJenisNomorRegistrasi *string `form:"uuid_jenis_nomor_registrasi" gorm:"-"`
 	IdJenisNomorRegistrasi   *uint64 `form:"-" gorm:"default:null"`
 	KdJenisNomorRegistrasi   *string `form:"kd_jenis_nomor_registrasi" gorm:"default:null"`
