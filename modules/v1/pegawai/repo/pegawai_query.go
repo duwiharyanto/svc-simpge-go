@@ -167,6 +167,7 @@ func getPegawaiYayasanQuery(uuid string) string {
 		COALESCE(pf.masa_kerja_awal_pensiun_bulan,''),
 		COALESCE(pf.angka_kredit,''),
 		COALESCE(pf.nomor_sertifikasi,''),
+		COALESCE(pf.nidn,''),
 		COALESCE(jnr.uuid,''),
 		COALESCE(jnr.id, 0),
 		COALESCE(jnr.kd_jenis_regis,''),

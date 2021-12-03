@@ -406,6 +406,10 @@ func ValidateUpdatePegawaiByUUID(a *app.App, c echo.Context) (model.PegawaiUpdat
 		}
 		pegawai.PegawaiFungsional.NomorRegistrasi = pegawaiReq.PegawaiFungsional.NomorRegistrasi
 	}
+	if ptr.StringValue(pegawai.PegawaiFungsional.KdJenisNomorRegistrasi, "") == "NIDN" {
+		pegawai.PegawaiFungsional.Nidn = pegawai.PegawaiFungsional.NomorRegistrasi
+
+	}
 	if ptr.StringValue(pegawaiReq.PegawaiFungsional.NomorSkPertama, "") != "" {
 		if len(ptr.StringValue(pegawaiReq.PegawaiFungsional.NomorSkPertama, "")) > 30 {
 			return model.PegawaiUpdate{}, fmt.Errorf("panjang karakter nomor sk pertama maksimal 30")

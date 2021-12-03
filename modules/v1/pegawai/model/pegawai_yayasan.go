@@ -69,6 +69,7 @@ type PegawaiYayasan struct {
 	MasaKerjaAPensiunTotalBulan     string `json:"masa_kerja_total_pensiun_bulan"`
 	AngkaKredit                     string `json:"angka_kredit"`
 	NoSertifikasi                   string `json:"nomor_sertifikasi_pegawai"`
+	Nidn                            string `json:"nidn"`
 	UuidJenisRegis                  string `json:"uuid_jenis_regis"`
 	IdJenisRegis                    uint64 `json:"-"`
 	KdJenisRegis                    string `json:"kd_jenis_regis"`

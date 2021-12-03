@@ -60,6 +60,7 @@ func GetKepegawaianYayasan(a *app.App, uuid string) (*model.PegawaiYayasan, erro
 		&pegawaiYayasan.MasaKerjaAwalPensiunBulan,
 		&pegawaiYayasan.AngkaKredit,
 		&pegawaiYayasan.NoSertifikasi,
+		&pegawaiYayasan.Nidn,
 		&pegawaiYayasan.UuidJenisRegis,
 		&pegawaiYayasan.IdJenisRegis,
 		&pegawaiYayasan.KdJenisRegis,
