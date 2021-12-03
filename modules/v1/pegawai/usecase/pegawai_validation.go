@@ -188,19 +188,6 @@ func ValidateUpdatePegawaiByUUID(a *app.App, c echo.Context) (model.PegawaiUpdat
 		}
 		pegawai.PegawaiFungsional.IdJenisNomorRegistrasi = ptr.Uint64(jenisNoRegis.ID)
 		pegawai.PegawaiFungsional.KdJenisNomorRegistrasi = ptr.String(jenisNoRegis.KdJenisRegis)
-
-		// pengecekan isi dari kolom jenis nomor registrasi dan nomor registrasi , berlanjut ke block: "BLOCK 001 NIDN"
-		if ptr.StringValue(pegawaiReq.PegawaiFungsional.KdJenisNomorRegistrasi, "") == "NIDN" {
-			if ptr.StringValue(pegawaiReq.PegawaiFungsional.NomorRegistrasi, "") != "" {
-				pegawai.PegawaiFungsional.Nidn = pegawaiReq.PegawaiFungsional.NomorRegistrasi
-			}
-			if ptr.StringValue(pegawaiReq.PegawaiFungsional.NomorRegistrasi, "") == "" {
-				// pegawaiYayasan, _ := repo.GetKepegawaianYayasan(a, uuidPegawai)
-				// pegawai.PegawaiFungsional.Nidn = &pegawaiYayasan.NomorRegis
-				pegawai.PegawaiFungsional.Nidn = pegawai.PegawaiFungsional.NomorRegistrasi
-
-			}
-		}
 	}
 
 	// Pengecekan Induk Kerja
@@ -418,11 +405,10 @@ func ValidateUpdatePegawaiByUUID(a *app.App, c echo.Context) (model.PegawaiUpdat
 			return model.PegawaiUpdate{}, fmt.Errorf("panjang karakter nomor registrasi maksimal 10")
 		}
 		pegawai.PegawaiFungsional.NomorRegistrasi = pegawaiReq.PegawaiFungsional.NomorRegistrasi
+	}
+	if ptr.StringValue(pegawai.PegawaiFungsional.KdJenisNomorRegistrasi, "") == "NIDN" {
+		pegawai.PegawaiFungsional.Nidn = pegawai.PegawaiFungsional.NomorRegistrasi
 
-		// "BLOCK 001 NIDN"
-		if ptr.StringValue(pegawai.PegawaiFungsional.KdJenisNomorRegistrasi, "") == "NIDN" {
-			pegawai.PegawaiFungsional.Nidn = pegawaiReq.PegawaiFungsional.NomorRegistrasi
-		}
 	}
 	if ptr.StringValue(pegawaiReq.PegawaiFungsional.NomorSkPertama, "") != "" {
 		if len(ptr.StringValue(pegawaiReq.PegawaiFungsional.NomorSkPertama, "")) > 30 {
