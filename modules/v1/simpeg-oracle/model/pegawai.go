@@ -121,6 +121,7 @@ type PegawaiStatus struct {
 	NoKarpeg                  string             `json:"no_karpeg"`
 	NoSkPertama               string             `json:"no_sk_pertama,omitempty"`
 	TglSkPertama              string             `json:"tgl_sk_pertama,omitempty"`
+	Nidn                      *string            `json:"nidn,omitempty"`
 	PangkatKopertis           *Pangkat           `json:"pangkat_kopertis,omitempty"`
 	PangkatYayasan            *Pangkat           `json:"pangkat_yayasan,omitempty"`
 	JabatanFungsionalKopertis *JabatanFungsional `json:"jabatan_fungsional_kopertis,omitempty"`

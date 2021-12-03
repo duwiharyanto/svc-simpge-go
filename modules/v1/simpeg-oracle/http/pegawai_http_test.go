@@ -23,7 +23,7 @@ func TestKepegawaianYayasan(t *testing.T) {
 	// nip := "974200410"
 	// nip := "985240101" // tmt_jabatan null
 	// nip := "785110201"
-	nip := "145230403ß"
+	nip := "145230403"
 	// nip := "051002465"
 	var pegawai *model.KepegawaianYayasanSimpeg
 	var err error
@@ -123,7 +123,7 @@ func TestKepegawaianYayasan(t *testing.T) {
 }
 
 func TestSimpegOra(t *testing.T) {
-	endpoint := "https://saladin-dev.uii.ac.id/v1/simpeg-ora/test"
+	endpoint := getPegawaiSimpegUrl() + "/200000101"
 	authToken := os.Getenv("AUTH_TOKEN")
 	header := map[string]string{"Authorization": authToken}
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
