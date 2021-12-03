@@ -195,8 +195,10 @@ func ValidateUpdatePegawaiByUUID(a *app.App, c echo.Context) (model.PegawaiUpdat
 				pegawai.PegawaiFungsional.Nidn = pegawaiReq.PegawaiFungsional.NomorRegistrasi
 			}
 			if ptr.StringValue(pegawaiReq.PegawaiFungsional.NomorRegistrasi, "") == "" {
-				pegawaiYayasan, _ := repo.GetKepegawaianYayasan(a, uuidPegawai)
-				pegawai.PegawaiFungsional.Nidn = &pegawaiYayasan.NomorRegis
+				// pegawaiYayasan, _ := repo.GetKepegawaianYayasan(a, uuidPegawai)
+				// pegawai.PegawaiFungsional.Nidn = &pegawaiYayasan.NomorRegis
+				pegawai.PegawaiFungsional.Nidn = pegawai.PegawaiFungsional.NomorRegistrasi
+
 			}
 		}
 	}
