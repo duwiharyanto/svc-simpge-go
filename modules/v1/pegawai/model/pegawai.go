@@ -184,6 +184,7 @@ type PegawaiPribadi struct {
 	UnitKerja               string `json:"unit_kerja"`
 	KdStatusPendidikanMasuk string `json:"kd_status_pendidikan_masuk"`
 	KdJenisPendidikan       string `json:"kd_jenis_pendidikan"`
+	UrlFileFoto             string `json:"url_foto_personal"`
 	UserInput               string `json:"-"`
 	UserUpdate              string `json:"-"`
 	UUID                    string `json:"uuid"`
