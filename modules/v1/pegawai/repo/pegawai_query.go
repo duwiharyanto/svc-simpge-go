@@ -333,6 +333,7 @@ func getPegawaiPribadiQuery(uuid string) string {
 		COALESCE(u2.unit2,''),
 		COALESCE(jd1.kd_detail,''),
 		COALESCE(jd2.kd_detail,''),
+		COALESCE(pdp.path_file_foto_personal,''),
 		COALESCE(p.user_input,''), 
 		COALESCE(p.user_update,''), 
 		COALESCE(p.uuid,'') 
