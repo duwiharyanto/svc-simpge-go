@@ -98,16 +98,40 @@ func newPegawaiOra(pegawaiInsani *model.PegawaiDetail) *pegawaiOraModel.Kepegawa
 	}
 
 	// Sinkron Unit Kerja
-	if pegawaiInsani.UnitKerjaPegawai.KdIndukKerja != "" {
-		pegawaiOra.Unit1.KdUnit1 = pegawaiInsani.UnitKerjaPegawai.KdIndukKerja
+	// if pegawaiInsani.UnitKerjaPegawai.KdIndukKerja != "" {
+	// 	pegawaiOra.Unit1.KdUnit1 = pegawaiInsani.UnitKerjaPegawai.KdIndukKerja
+	// }
+
+	// if pegawaiInsani.UnitKerjaPegawai.KdUnitKerja != "" {
+	// 	pegawaiOra.Unit2.KdUnit2 = pegawaiInsani.UnitKerjaPegawai.KdUnitKerja
+	// }
+
+	// if pegawaiInsani.UnitKerjaPegawai.KdBagianKerja != "" {
+	// 	pegawaiOra.Unit3.KdUnit3 = pegawaiInsani.UnitKerjaPegawai.KdBagianKerja
+	// }
+
+	kdIndukKerja := pegawaiInsani.UnitKerjaPegawai.KdIndukKerja
+	if kdIndukKerja != "" {
+		pegawaiOra.Unit1.KdUnit1 = kdIndukKerja
+		if pegawaiInsani.UnitKerjaPegawai.IsOnlyTwoCharacter("kd_induk_kerja") {
+			pegawaiOra.Unit1.KdUnit1 = pegawaiInsani.UnitKerjaPegawai.AddingNewCharacter(kdIndukKerja)
+		}
 	}
 
-	if pegawaiInsani.UnitKerjaPegawai.KdUnitKerja != "" {
-		pegawaiOra.Unit2.KdUnit2 = pegawaiInsani.UnitKerjaPegawai.KdUnitKerja
+	KdUnitKerja := pegawaiInsani.UnitKerjaPegawai.KdUnitKerja
+	if KdUnitKerja != "" {
+		pegawaiOra.Unit2.KdUnit2 = KdUnitKerja
+		if pegawaiInsani.UnitKerjaPegawai.IsOnlyTwoCharacter("kd_unit_kerja") {
+			pegawaiOra.Unit2.KdUnit2 = pegawaiInsani.UnitKerjaPegawai.AddingNewCharacter(KdUnitKerja)
+		}
 	}
 
-	if pegawaiInsani.UnitKerjaPegawai.KdBagianKerja != "" {
-		pegawaiOra.Unit3.KdUnit3 = pegawaiInsani.UnitKerjaPegawai.KdBagianKerja
+	KdBagianKerja := pegawaiInsani.UnitKerjaPegawai.KdBagianKerja
+	if KdBagianKerja != "" {
+		pegawaiOra.Unit3.KdUnit3 = KdBagianKerja
+		if pegawaiInsani.UnitKerjaPegawai.IsOnlyTwoCharacter("kd_bagian_kerja") {
+			pegawaiOra.Unit3.KdUnit3 = pegawaiInsani.UnitKerjaPegawai.AddingNewCharacter(KdBagianKerja)
+		}
 	}
 
 	if pegawaiInsani.UnitKerjaPegawai.LokasiKerja != "" {

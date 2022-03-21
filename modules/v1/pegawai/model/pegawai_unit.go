@@ -1,5 +1,7 @@
 package model
 
+import "encoding/json"
+
 type UnitKerjaPegawai struct {
 	UuidIndukKerja      string `json:"uuid_induk_kerja"`
 	KdIndukKerja        string `json:"kd_induk_kerja"`
@@ -20,4 +22,15 @@ type UnitKerjaPegawai struct {
 	UuidHomebasePddikti string `json:"uuid_homebase_pddikti"`
 	KdHomebaseUii       string `json:"kd_homebase_uii"`
 	UuidHomebaseUii     string `json:"uuid_homebase_uii"`
+}
+
+func (u *UnitKerjaPegawai) IsOnlyTwoCharacter(property string) bool {
+	var x map[string]interface{}
+	m, _ := json.Marshal(u)
+	json.Unmarshal(m, &x)
+	return len(x[property].(string)) == 2
+}
+
+func (u *UnitKerjaPegawai) AddingNewCharacter(kdUnit string) string {
+	return kdUnit + "0"
 }
