@@ -139,6 +139,7 @@ func GetPegawaiPribadi(a *app.App, uuid string) (*model.PegawaiPribadi, error) {
 		&pegawaiPribadi.UnitKerja,
 		&pegawaiPribadi.KdStatusPendidikanMasuk,
 		&pegawaiPribadi.KdJenisPendidikan,
+		&pegawaiPribadi.UrlFileFoto,
 		&pegawaiPribadi.UserInput,
 		&pegawaiPribadi.UserUpdate,
 		&pegawaiPribadi.UUID,
@@ -271,4 +272,15 @@ func CheckNikPegawai(a *app.App, ctx context.Context, nik string) (*model.Pegawa
 	}
 
 	return &pegawaiOld, flagCheck, nil
+}
+
+func GetPresignUrlFotoPegawai(a *app.App, pathFoto string) (string, error) {
+	minioBucketNamePersonalFoto := "personal-foto"
+	urlFileFoto, err := a.MinioClient.GetDownloadURL(minioBucketNamePersonalFoto, pathFoto, "")
+	if err != nil {
+		fmt.Printf("error get url file foto, %s", err.Error())
+		urlFileFoto = ""
+	}
+
+	return urlFileFoto, nil
 }

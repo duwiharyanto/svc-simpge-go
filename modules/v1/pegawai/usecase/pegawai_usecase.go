@@ -82,6 +82,11 @@ func PrepareGetSimpegPegawaiByUUID(a *app.App, uuidPegawai string) (model.Pegawa
 	if err != nil {
 		return model.PegawaiDetail{}, fmt.Errorf("error repo get pribadi pegawai uuid, %w", err)
 	}
+	// Get presign URL file foto
+	pegawaiPribadi.UrlFileFoto, err = repo.GetPresignUrlFotoPegawai(a, pegawaiPribadi.UrlFileFoto)
+	if err != nil {
+		return model.PegawaiDetail{}, fmt.Errorf("error repo get persign url foto pegawai, %w", err)
+	}
 
 	kepegawaianYayasan, err := repo.GetKepegawaianYayasan(a, uuidPegawai)
 	if err != nil {
