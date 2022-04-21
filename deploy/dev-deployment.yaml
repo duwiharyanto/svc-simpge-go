@@ -92,6 +92,8 @@ spec:
               value: "http://svc-simpeg-ora-lumen.hcm-dev.svc.cluster.local"
             - name: URL_V2_PRESENCE_SERVICE
               value: "http://svc-presence-lumen.hcm-dev.svc.cluster.local"
+            - name: URL_ACTIVATION_PERSONAL
+              value: "http://svc-personal-go.hcm-dev.svc.cluster.local"
 ---
 apiVersion: v1
 kind: Service

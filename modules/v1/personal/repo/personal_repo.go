@@ -2,7 +2,11 @@ package repo
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
+	"fmt"
+	"net/http"
+	"os"
 	"strings"
 	"svc-insani-go/app"
 	"svc-insani-go/app/helper"
@@ -61,4 +65,36 @@ func GetPersonalByUuid(a *app.App, ctx context.Context, uuid string) (*model.Per
 	}
 
 	return &personal, nil
+}
+
+func PersonalActivation(uuidPersonal string) error {
+	var client = &http.Client{}
+	var data model.PersonalActivationResponse
+
+	baseURL := os.Getenv("URL_ACTIVATION_PERSONAL")
+	destinationURL := baseURL + "/" + uuidPersonal
+	request, err := http.NewRequest("PUT", destinationURL, nil)
+	if err != nil {
+		fmt.Printf("[ERROR] error created http request - %s - at modules/v1/personal/repo/personal_repo.go - PersonalActivation()\n", err)
+		return err
+	}
+	response, err := client.Do(request)
+	if err != nil {
+		fmt.Printf("[ERROR] error sending http request - %s - at modules/v1/personal/repo/personal_repo.go - PersonalActivation()\n", err)
+		return err
+	}
+	defer response.Body.Close()
+
+	err = json.NewDecoder(response.Body).Decode(&data)
+	if err != nil {
+		fmt.Printf("[ERROR] %s - at modules/v1/personal/repo/personal_repo.go - PersonalActivation()\n", err)
+		return err
+	}
+
+	statusCodeOK := 200
+	if response.StatusCode != statusCodeOK {
+		fmt.Println("error status not OK ", data)
+		return fmt.Errorf("error status not ok: %s", response.Body)
+	}
+	return nil
 }
