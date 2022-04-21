@@ -78,6 +78,7 @@ func PersonalActivation(uuidPersonal string) error {
 		fmt.Printf("[ERROR] error created http request - %s - at modules/v1/personal/repo/personal_repo.go - PersonalActivation()\n", err)
 		return err
 	}
+	fmt.Println("[DEBUG] send request to personal, ", destinationURL)
 	response, err := client.Do(request)
 	if err != nil {
 		fmt.Printf("[ERROR] error sending http request - %s - at modules/v1/personal/repo/personal_repo.go - PersonalActivation()\n", err)
@@ -96,5 +97,6 @@ func PersonalActivation(uuidPersonal string) error {
 		fmt.Println("error status not OK ", data)
 		return fmt.Errorf("error status not ok: %s", response.Body)
 	}
+	fmt.Println("[DEBUG] berhasil aktivasi personal: ", response.Body)
 	return nil
 }
