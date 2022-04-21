@@ -72,7 +72,7 @@ func PersonalActivation(uuidPersonal string) error {
 	var data model.PersonalActivationResponse
 
 	baseURL := os.Getenv("URL_ACTIVATION_PERSONAL")
-	destinationURL := baseURL + "/" + uuidPersonal
+	destinationURL := baseURL + "/public/api/v1/" + uuidPersonal
 	request, err := http.NewRequest("PUT", destinationURL, nil)
 	if err != nil {
 		fmt.Printf("[ERROR] error created http request - %s - at modules/v1/personal/repo/personal_repo.go - PersonalActivation()\n", err)
