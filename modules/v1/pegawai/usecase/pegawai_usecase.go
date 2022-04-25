@@ -256,12 +256,16 @@ func HandleCreatePegawai(a *app.App, ctx context.Context, errChan chan error) ec
 				errChan <- err
 				return
 			}
-			err = personalRepo.PersonalActivation(c.FormValue("uuid_personal"))
-			if err != nil {
-				errChan <- err
-				return
-			}
+			// err = personalRepo.PersonalActivation(c.FormValue("uuid_personal"))
+			// if err != nil {
+			// 	errChan <- err
+			// 	return
+			// }
 		}(a, errChan, pegawai.Uuid)
+
+		go func(uuidPersonal string) {
+			err = personalRepo.PersonalActivation(c.FormValue("uuid_personal"))
+		}(c.FormValue("uuid_personal"))
 
 		return c.JSON(http.StatusOK, pegawaiDetail)
 	}
