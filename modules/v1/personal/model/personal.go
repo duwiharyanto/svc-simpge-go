@@ -67,3 +67,7 @@ type StatusPernikahan struct {
 	Status   string
 	Uuid     string
 }
+
+type PersonalActivationResponse struct {
+	Message string `form:"-" json:""`
+}

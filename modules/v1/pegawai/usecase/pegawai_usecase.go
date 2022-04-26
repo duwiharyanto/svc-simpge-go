@@ -15,6 +15,7 @@ import (
 	"svc-insani-go/modules/v1/pegawai/model"
 	"svc-insani-go/modules/v1/pegawai/repo"
 	pengaturan "svc-insani-go/modules/v1/pengaturan-insani/usecase"
+	personalRepo "svc-insani-go/modules/v1/personal/repo"
 	pegawaiOraHttp "svc-insani-go/modules/v1/simpeg-oracle/http"
 
 	ptr "github.com/openlyinc/pointy"
@@ -255,7 +256,16 @@ func HandleCreatePegawai(a *app.App, ctx context.Context, errChan chan error) ec
 				errChan <- err
 				return
 			}
+			// err = personalRepo.PersonalActivation(c.FormValue("uuid_personal"))
+			// if err != nil {
+			// 	errChan <- err
+			// 	return
+			// }
 		}(a, errChan, pegawai.Uuid)
+
+		go func(uuidPersonal string) {
+			err = personalRepo.PersonalActivation(c.FormValue("uuid_personal"))
+		}(c.FormValue("uuid_personal"))
 
 		return c.JSON(http.StatusOK, pegawaiDetail)
 	}
