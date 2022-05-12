@@ -14,14 +14,6 @@ LABEL MAINTAINER="Ari Satrio<ari.satrio@uii.ac.id>"
 
 ADD main /
 
-# Download necessary Go modules
-# COPY go.mod ./
-# COPY go.sum ./
-# RUN go mod download
-
-# Install library auto-reload
-# RUN go install github.com/cosmtrek/air@latest
-
 EXPOSE 80
 
 CMD ["/main"]
