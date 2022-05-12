@@ -20,6 +20,8 @@ WORKDIR /app
 # RUN go mod download
 
 # Install library auto-reload
-RUN go install github.com/cosmtrek/air@latest
+# RUN go install github.com/cosmtrek/air@latest
 
-CMD [ "air" ]
+EXPOSE 80
+
+CMD ["/main"]
