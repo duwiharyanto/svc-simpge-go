@@ -5,7 +5,7 @@ services:
       context: .
       dockerfile: local.Dockerfile
     ports:
-      - 80:80
+      - 81:80
     environment:
       DBMS: mysql
       DB_USER: dev
@@ -25,3 +25,5 @@ services:
       MINIO_CONN_TIMEOUT: 10s
       MINIO_EXPIRATION_SECOND: 36000
       RESPONSE_TIMEOUT_MS: 13000 
+    volumes:
+      - .:/app
