@@ -36,7 +36,7 @@ sonarqube_scan:
 
 compile_main:
   stage: compile
-  image: asia.gcr.io/uii-cloud-project/hcm/docker/golang:latest
+  image: asia.gcr.io/uii-cloud-project/hcm/go/golang:1.17-ubuntu
   before_script:
     - export GOPATH=$(dirname $CI_PROJECT_DIR)/go
       && mkdir -p $GOPATH/src
