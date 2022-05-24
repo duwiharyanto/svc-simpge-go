@@ -116,6 +116,10 @@ func InitRoute(a *app.App, appCtx context.Context, e *echo.Echo, slackErrChan ch
 	// Testing
 	// insaniGroupingPath.GET("/testing", detailProfesi.HandleDetailProfesiByUUID(a))
 
+	e.GET("/test", func(c echo.Context) error {
+		return c.JSON(200, "OK guys")
+	})
+
 }
 
 func healthCheck(db *sql.DB) echo.HandlerFunc {
