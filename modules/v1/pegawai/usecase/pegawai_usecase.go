@@ -134,32 +134,32 @@ func HandleUpdatePegawai(a *app.App, ctx context.Context, errChan chan error) ec
 			return c.JSON(http.StatusBadRequest, map[string]string{"message": err.Error()})
 		}
 
-		// Update Data
-		err = repo.UpdatePegawai(a, c.Request().Context(), pegawai)
-		if err != nil {
-			fmt.Printf("[ERROR] update pegawai: %s\n", err.Error())
-			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
-		}
+		// // Update Data
+		// err = repo.UpdatePegawai(a, c.Request().Context(), pegawai)
+		// if err != nil {
+		// 	fmt.Printf("[ERROR] update pegawai: %s\n", err.Error())
+		// 	return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
+		// }
 
-		// Set Flag Pendidikan
-		uuidPendidikanDiakui := c.FormValue("uuid_tingkat_pdd_diakui")     // uuid dari pendidikan yang dipilih sbg ijazah tertinggi diakui
-		uuidPendidikanTerakhir := c.FormValue("uuid_tingkat_pdd_terakhir") // uuid dari pendidikan yang dipilih sbg ijazah terakhir
-		idPersonalPegawai := pegawai.IdPersonalDataPribadi
+		// // Set Flag Pendidikan
+		// uuidPendidikanDiakui := c.FormValue("uuid_tingkat_pdd_diakui")     // uuid dari pendidikan yang dipilih sbg ijazah tertinggi diakui
+		// uuidPendidikanTerakhir := c.FormValue("uuid_tingkat_pdd_terakhir") // uuid dari pendidikan yang dipilih sbg ijazah terakhir
+		// idPersonalPegawai := pegawai.IdPersonalDataPribadi
 
-		err = repo.UpdatePendidikanPegawai(a, c.Request().Context(),
-			model.PegawaiPendidikanRequest{
-				UuidPendidikanDiakui:                 uuidPendidikanDiakui,
-				UuidPendidikanTerakhir:               uuidPendidikanTerakhir,
-				IdJenjangPendidikanDetailDiakui:      pegawai.IdStatusPendidikanMasuk,
-				IdJenjangPendidikanDetailTerakhir:    pegawai.IdJenisPendidikan,
-				UuidJenjangPendidikanTertinggiDiakui: ptr.StringValue(pegawai.UuidPendidikanMasuk, ""),
-				IdPersonalPegawai:                    ptr.Uint64Value(idPersonalPegawai, 0),
-				UserUpdate:                           pegawai.UserUpdate,
-			})
-		if err != nil {
-			fmt.Printf("[ERROR] update pendidikan pegawai: %s\n", err.Error())
-			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
-		}
+		// err = repo.UpdatePendidikanPegawai(a, c.Request().Context(),
+		// 	model.PegawaiPendidikanRequest{
+		// 		UuidPendidikanDiakui:                 uuidPendidikanDiakui,
+		// 		UuidPendidikanTerakhir:               uuidPendidikanTerakhir,
+		// 		IdJenjangPendidikanDetailDiakui:      pegawai.IdStatusPendidikanMasuk,
+		// 		IdJenjangPendidikanDetailTerakhir:    pegawai.IdJenisPendidikan,
+		// 		UuidJenjangPendidikanTertinggiDiakui: ptr.StringValue(pegawai.UuidPendidikanMasuk, ""),
+		// 		IdPersonalPegawai:                    ptr.Uint64Value(idPersonalPegawai, 0),
+		// 		UserUpdate:                           pegawai.UserUpdate,
+		// 	})
+		// if err != nil {
+		// 	fmt.Printf("[ERROR] update pendidikan pegawai: %s\n", err.Error())
+		// 	return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
+		// }
 
 		// Menampilkan response
 		pegawaiDetail, err := PrepareGetSimpegPegawaiByUUID(a, ptr.StringValue(pegawai.Uuid, ""))
