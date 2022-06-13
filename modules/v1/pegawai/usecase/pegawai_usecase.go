@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 
@@ -13,7 +14,9 @@ import (
 	"svc-insani-go/app"
 	"svc-insani-go/modules/v1/pegawai/model"
 	"svc-insani-go/modules/v1/pegawai/repo"
+	pengaturan "svc-insani-go/modules/v1/pengaturan-insani/usecase"
 	personalRepo "svc-insani-go/modules/v1/personal/repo"
+	pegawaiOraHttp "svc-insani-go/modules/v1/simpeg-oracle/http"
 
 	ptr "github.com/openlyinc/pointy"
 
@@ -134,32 +137,38 @@ func HandleUpdatePegawai(a *app.App, ctx context.Context, errChan chan error) ec
 			return c.JSON(http.StatusBadRequest, map[string]string{"message": err.Error()})
 		}
 
-		// // Update Data
-		// err = repo.UpdatePegawai(a, c.Request().Context(), pegawai)
-		// if err != nil {
-		// 	fmt.Printf("[ERROR] update pegawai: %s\n", err.Error())
-		// 	return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
-		// }
+		fmt.Println("OK 1")
 
-		// // Set Flag Pendidikan
-		// uuidPendidikanDiakui := c.FormValue("uuid_tingkat_pdd_diakui")     // uuid dari pendidikan yang dipilih sbg ijazah tertinggi diakui
-		// uuidPendidikanTerakhir := c.FormValue("uuid_tingkat_pdd_terakhir") // uuid dari pendidikan yang dipilih sbg ijazah terakhir
-		// idPersonalPegawai := pegawai.IdPersonalDataPribadi
+		// Update Data
+		err = repo.UpdatePegawai(a, c.Request().Context(), pegawai)
+		if err != nil {
+			fmt.Printf("[ERROR] update pegawai: %s\n", err.Error())
+			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
+		}
 
-		// err = repo.UpdatePendidikanPegawai(a, c.Request().Context(),
-		// 	model.PegawaiPendidikanRequest{
-		// 		UuidPendidikanDiakui:                 uuidPendidikanDiakui,
-		// 		UuidPendidikanTerakhir:               uuidPendidikanTerakhir,
-		// 		IdJenjangPendidikanDetailDiakui:      pegawai.IdStatusPendidikanMasuk,
-		// 		IdJenjangPendidikanDetailTerakhir:    pegawai.IdJenisPendidikan,
-		// 		UuidJenjangPendidikanTertinggiDiakui: ptr.StringValue(pegawai.UuidPendidikanMasuk, ""),
-		// 		IdPersonalPegawai:                    ptr.Uint64Value(idPersonalPegawai, 0),
-		// 		UserUpdate:                           pegawai.UserUpdate,
-		// 	})
-		// if err != nil {
-		// 	fmt.Printf("[ERROR] update pendidikan pegawai: %s\n", err.Error())
-		// 	return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
-		// }
+		fmt.Println("OK 2")
+
+		// Set Flag Pendidikan
+		uuidPendidikanDiakui := c.FormValue("uuid_tingkat_pdd_diakui")     // uuid dari pendidikan yang dipilih sbg ijazah tertinggi diakui
+		uuidPendidikanTerakhir := c.FormValue("uuid_tingkat_pdd_terakhir") // uuid dari pendidikan yang dipilih sbg ijazah terakhir
+		idPersonalPegawai := pegawai.IdPersonalDataPribadi
+
+		err = repo.UpdatePendidikanPegawai(a, c.Request().Context(),
+			model.PegawaiPendidikanRequest{
+				UuidPendidikanDiakui:                 uuidPendidikanDiakui,
+				UuidPendidikanTerakhir:               uuidPendidikanTerakhir,
+				IdJenjangPendidikanDetailDiakui:      pegawai.IdStatusPendidikanMasuk,
+				IdJenjangPendidikanDetailTerakhir:    pegawai.IdJenisPendidikan,
+				UuidJenjangPendidikanTertinggiDiakui: ptr.StringValue(pegawai.UuidPendidikanMasuk, ""),
+				IdPersonalPegawai:                    ptr.Uint64Value(idPersonalPegawai, 0),
+				UserUpdate:                           pegawai.UserUpdate,
+			})
+		if err != nil {
+			fmt.Printf("[ERROR] update pendidikan pegawai: %s\n", err.Error())
+			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
+		}
+
+		fmt.Println("OK 3")
 
 		// Menampilkan response
 		pegawaiDetail, err := PrepareGetSimpegPegawaiByUUID(a, ptr.StringValue(pegawai.Uuid, ""))
@@ -168,41 +177,46 @@ func HandleUpdatePegawai(a *app.App, ctx context.Context, errChan chan error) ec
 			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
 		}
 		fmt.Printf("[DEBUG] update response end\n")
-		// go func(a *app.App, ctx context.Context, errChan chan error) {
-		// 	defer func(n time.Time) {
-		// 		fmt.Printf("[DEBUG] send to simpeg: %v ms\n", time.Now().Sub(n).Milliseconds())
-		// 	}(time.Now())
-		// 	fmt.Println("[DEBUG] Go routine start after update")
 
-		// 	flagSinkronSimpeg, err := pengaturan.LoadPengaturan(a, ctx, nil, pengaturanAtributFlagSinkronSimpeg)
-		// 	if err != nil {
-		// 		log.Println("error load pengaturan flag sinkron simpeg: %w", err)
-		// 		errChan <- err
-		// 		return
-		// 	}
+		fmt.Println("OK 4")
 
-		// 	disableSyncSimpegOracle, _ := strconv.ParseBool(os.Getenv("DISABLE_SYNC_SIMPEG_ORACLE"))
-		// 	if flagSinkronSimpeg != "1" || disableSyncSimpegOracle {
-		// 		log.Printf("[DEBUG] flag sinkron simpeg 0\n")
-		// 		return
-		// 	}
+		go func(a *app.App, ctx context.Context, errChan chan error) {
+			defer func(n time.Time) {
+				fmt.Printf("[DEBUG] send to simpeg: %v ms\n", time.Now().Sub(n).Milliseconds())
+			}(time.Now())
+			fmt.Println("[DEBUG] Go routine start after update")
 
-		// 	dur, err := time.ParseDuration(os.Getenv("RESPONSE_TIMEOUT_MS" + "ms"))
-		// 	if err != nil {
-		// 		dur = time.Second * 40
-		// 	}
-		// 	ctx, cancel := context.WithTimeout(ctx, dur)
-		// 	// ctx, cancel := context.WithTimeout(context.Background(), dur) // kalau ke cancel pake yang ini
-		// 	defer cancel()
+			flagSinkronSimpeg, err := pengaturan.LoadPengaturan(a, ctx, nil, pengaturanAtributFlagSinkronSimpeg)
+			if err != nil {
+				log.Println("error load pengaturan flag sinkron simpeg: %w", err)
+				errChan <- err
+				return
+			}
 
-		// 	// fmt.Println("DEBUG : Go routin before sinkron simpeg")
-		// 	pegawaiOra := newPegawaiOra(&pegawaiDetail)
-		// 	err = pegawaiOraHttp.UpdateKepegawaianYayasan(ctx, &http.Client{}, pegawaiOra)
-		// 	if err != nil {
-		// 		errChan <- fmt.Errorf("[ERROR] repo update kepegawaian yayasan: %w\n", err)
-		// 		return
-		// 	}
-		// }(a, ctx, errChan)
+			disableSyncSimpegOracle, _ := strconv.ParseBool(os.Getenv("DISABLE_SYNC_SIMPEG_ORACLE"))
+			if flagSinkronSimpeg != "1" || disableSyncSimpegOracle {
+				log.Printf("[DEBUG] flag sinkron simpeg 0\n")
+				return
+			}
+
+			dur, err := time.ParseDuration(os.Getenv("RESPONSE_TIMEOUT_MS" + "ms"))
+			if err != nil {
+				dur = time.Second * 40
+			}
+			ctx, cancel := context.WithTimeout(ctx, dur)
+			// ctx, cancel := context.WithTimeout(context.Background(), dur) // kalau ke cancel pake yang ini
+			defer cancel()
+
+			// fmt.Println("DEBUG : Go routin before sinkron simpeg")
+			pegawaiOra := newPegawaiOra(&pegawaiDetail)
+			err = pegawaiOraHttp.UpdateKepegawaianYayasan(ctx, &http.Client{}, pegawaiOra)
+			if err != nil {
+				errChan <- fmt.Errorf("[ERROR] repo update kepegawaian yayasan: %w\n", err)
+				return
+			}
+		}(a, ctx, errChan)
+
+		fmt.Println("OK 5")
 
 		return c.JSON(http.StatusOK, pegawaiDetail)
 	}
