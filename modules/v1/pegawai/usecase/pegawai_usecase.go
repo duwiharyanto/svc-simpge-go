@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"strconv"
 	"strings"
 	"time"
 
@@ -14,9 +13,7 @@ import (
 	"svc-insani-go/app"
 	"svc-insani-go/modules/v1/pegawai/model"
 	"svc-insani-go/modules/v1/pegawai/repo"
-	pengaturan "svc-insani-go/modules/v1/pengaturan-insani/usecase"
 	personalRepo "svc-insani-go/modules/v1/personal/repo"
-	pegawaiOraHttp "svc-insani-go/modules/v1/simpeg-oracle/http"
 
 	ptr "github.com/openlyinc/pointy"
 
@@ -171,41 +168,41 @@ func HandleUpdatePegawai(a *app.App, ctx context.Context, errChan chan error) ec
 			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
 		}
 		fmt.Printf("[DEBUG] update response end\n")
-		go func(a *app.App, ctx context.Context, errChan chan error) {
-			defer func(n time.Time) {
-				fmt.Printf("[DEBUG] send to simpeg: %v ms\n", time.Now().Sub(n).Milliseconds())
-			}(time.Now())
-			fmt.Println("[DEBUG] Go routine start after update")
+		// go func(a *app.App, ctx context.Context, errChan chan error) {
+		// 	defer func(n time.Time) {
+		// 		fmt.Printf("[DEBUG] send to simpeg: %v ms\n", time.Now().Sub(n).Milliseconds())
+		// 	}(time.Now())
+		// 	fmt.Println("[DEBUG] Go routine start after update")
 
-			flagSinkronSimpeg, err := pengaturan.LoadPengaturan(a, ctx, nil, pengaturanAtributFlagSinkronSimpeg)
-			if err != nil {
-				log.Println("error load pengaturan flag sinkron simpeg: %w", err)
-				errChan <- err
-				return
-			}
+		// 	flagSinkronSimpeg, err := pengaturan.LoadPengaturan(a, ctx, nil, pengaturanAtributFlagSinkronSimpeg)
+		// 	if err != nil {
+		// 		log.Println("error load pengaturan flag sinkron simpeg: %w", err)
+		// 		errChan <- err
+		// 		return
+		// 	}
 
-			disableSyncSimpegOracle, _ := strconv.ParseBool(os.Getenv("DISABLE_SYNC_SIMPEG_ORACLE"))
-			if flagSinkronSimpeg != "1" || disableSyncSimpegOracle {
-				log.Printf("[DEBUG] flag sinkron simpeg 0\n")
-				return
-			}
+		// 	disableSyncSimpegOracle, _ := strconv.ParseBool(os.Getenv("DISABLE_SYNC_SIMPEG_ORACLE"))
+		// 	if flagSinkronSimpeg != "1" || disableSyncSimpegOracle {
+		// 		log.Printf("[DEBUG] flag sinkron simpeg 0\n")
+		// 		return
+		// 	}
 
-			dur, err := time.ParseDuration(os.Getenv("RESPONSE_TIMEOUT_MS" + "ms"))
-			if err != nil {
-				dur = time.Second * 40
-			}
-			ctx, cancel := context.WithTimeout(ctx, dur)
-			// ctx, cancel := context.WithTimeout(context.Background(), dur) // kalau ke cancel pake yang ini
-			defer cancel()
+		// 	dur, err := time.ParseDuration(os.Getenv("RESPONSE_TIMEOUT_MS" + "ms"))
+		// 	if err != nil {
+		// 		dur = time.Second * 40
+		// 	}
+		// 	ctx, cancel := context.WithTimeout(ctx, dur)
+		// 	// ctx, cancel := context.WithTimeout(context.Background(), dur) // kalau ke cancel pake yang ini
+		// 	defer cancel()
 
-			// fmt.Println("DEBUG : Go routin before sinkron simpeg")
-			pegawaiOra := newPegawaiOra(&pegawaiDetail)
-			err = pegawaiOraHttp.UpdateKepegawaianYayasan(ctx, &http.Client{}, pegawaiOra)
-			if err != nil {
-				errChan <- fmt.Errorf("[ERROR] repo update kepegawaian yayasan: %w\n", err)
-				return
-			}
-		}(a, ctx, errChan)
+		// 	// fmt.Println("DEBUG : Go routin before sinkron simpeg")
+		// 	pegawaiOra := newPegawaiOra(&pegawaiDetail)
+		// 	err = pegawaiOraHttp.UpdateKepegawaianYayasan(ctx, &http.Client{}, pegawaiOra)
+		// 	if err != nil {
+		// 		errChan <- fmt.Errorf("[ERROR] repo update kepegawaian yayasan: %w\n", err)
+		// 		return
+		// 	}
+		// }(a, ctx, errChan)
 
 		return c.JSON(http.StatusOK, pegawaiDetail)
 	}
