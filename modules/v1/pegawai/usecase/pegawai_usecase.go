@@ -137,16 +137,12 @@ func HandleUpdatePegawai(a *app.App, ctx context.Context, errChan chan error) ec
 			return c.JSON(http.StatusBadRequest, map[string]string{"message": err.Error()})
 		}
 
-		fmt.Println("OK 1")
-
 		// Update Data
 		err = repo.UpdatePegawai(a, c.Request().Context(), pegawai)
 		if err != nil {
 			fmt.Printf("[ERROR] update pegawai: %s\n", err.Error())
 			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
 		}
-
-		fmt.Println("OK 2")
 
 		// Set Flag Pendidikan
 		uuidPendidikanDiakui := c.FormValue("uuid_tingkat_pdd_diakui")     // uuid dari pendidikan yang dipilih sbg ijazah tertinggi diakui
@@ -168,8 +164,6 @@ func HandleUpdatePegawai(a *app.App, ctx context.Context, errChan chan error) ec
 			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
 		}
 
-		fmt.Println("OK 3")
-
 		// Menampilkan response
 		pegawaiDetail, err := PrepareGetSimpegPegawaiByUUID(a, ptr.StringValue(pegawai.Uuid, ""))
 		if err != nil {
@@ -177,8 +171,6 @@ func HandleUpdatePegawai(a *app.App, ctx context.Context, errChan chan error) ec
 			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
 		}
 		fmt.Printf("[DEBUG] update response end\n")
-
-		fmt.Println("OK 4")
 
 		go func(a *app.App, ctx context.Context, errChan chan error) {
 			defer func(n time.Time) {
@@ -215,8 +207,6 @@ func HandleUpdatePegawai(a *app.App, ctx context.Context, errChan chan error) ec
 				return
 			}
 		}(a, ctx, errChan)
-
-		fmt.Println("OK 5")
 
 		return c.JSON(http.StatusOK, pegawaiDetail)
 	}
