@@ -14,6 +14,7 @@ import (
 	"svc-insani-go/app"
 	"svc-insani-go/modules/v1/pegawai/model"
 	"svc-insani-go/modules/v1/pegawai/repo"
+	pegawaiRepo "svc-insani-go/modules/v1/pegawai/repo"
 	pengaturan "svc-insani-go/modules/v1/pengaturan-insani/usecase"
 	personalRepo "svc-insani-go/modules/v1/personal/repo"
 	pegawaiOraHttp "svc-insani-go/modules/v1/simpeg-oracle/http"
@@ -67,6 +68,30 @@ func HandleGetSimpegPegawaiByUUID(a *app.App) echo.HandlerFunc {
 		}
 
 		pegawaiDetail, err := PrepareGetSimpegPegawaiByUUID(a, uuidPegawai)
+		if err != nil {
+			log.Printf("[ERROR] repo get kepegawaian: %s\n", err.Error())
+			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
+		}
+		return c.JSON(http.StatusOK, pegawaiDetail)
+	}
+	return echo.HandlerFunc(h)
+}
+
+func HandleGetSimpegPegawaiDetail(a *app.App) echo.HandlerFunc {
+	h := func(c echo.Context) error {
+		user := c.Request().Header.Get("X-Member")
+		if user == "" {
+			return c.JSON(http.StatusBadRequest, map[string]string{"message": "pengguna tidak valid"})
+		}
+
+		appCtx := context.Background()
+		pegawai, err := pegawaiRepo.GetPegawaiByNIK(a, appCtx, user)
+		if err != nil {
+			log.Printf("[ERROR] repo get kepegawaian: %s\n", err.Error())
+			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
+		}
+
+		pegawaiDetail, err := PrepareGetSimpegPegawaiByUUID(a, pegawai.UUID)
 		if err != nil {
 			log.Printf("[ERROR] repo get kepegawaian: %s\n", err.Error())
 			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
