@@ -4,6 +4,8 @@ services:
     build:
       context: .
       dockerfile: local.Dockerfile
+    image: svc-insani-go:dev
+    container_name: insani-dev
     ports:
       - 81:80
     environment:
