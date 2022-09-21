@@ -472,6 +472,14 @@ func ValidateUpdatePegawaiByUUID(a *app.App, c echo.Context) (model.PegawaiUpdat
 	if keterangan != "" {
 		pegawai.PegawaiPNS.Keterangan = pegawaiReq.PegawaiPNS.Keterangan
 	}
+	// add for update nomor jabatan fungsional negara
+	if ptr.StringValue(pegawaiReq.PegawaiPNS.NomorJabatanFungsional, "") != "" {
+		pegawai.PegawaiPNS.NomorJabatanFungsional = pegawaiReq.PegawaiPNS.NomorJabatanFungsional
+	}
+	// add for update nomor pangkat negara
+	if ptr.StringValue(pegawaiReq.PegawaiPNS.NomorPangkatGolongan, "") != "" {
+		pegawai.PegawaiPNS.NomorPangkatGolongan = pegawaiReq.PegawaiPNS.NomorPangkatGolongan
+	}
 
 	pegawai.UserUpdate = ptr.String(user)
 	pegawai.PegawaiFungsional.UserUpdate = ptr.String(user)
