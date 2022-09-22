@@ -284,3 +284,45 @@ func GetPresignUrlFotoPegawai(a *app.App, pathFoto string) (string, error) {
 
 	return urlFileFoto, nil
 }
+
+func GetPegawaiByNikPrivate(a *app.App, nik string) (*model.PegawaiByNik, error) {
+	sqlQuery := getPegawaiByNik(nik)
+	var pegawai model.PegawaiByNik
+	err := a.DB.QueryRow(sqlQuery).Scan(
+		&pegawai.Nama,
+		&pegawai.GelarDepan,
+		&pegawai.GelarBelakang,
+		&pegawai.Nik,
+		&pegawai.TempatLahir,
+		&pegawai.TglLahir,
+		&pegawai.JenisKelamin,
+		&pegawai.KdPendidikanTerakhir,
+		&pegawai.KdStatusPegawai,
+		&pegawai.StatusPegawai,
+		&pegawai.KdKelompokPegawai,
+		&pegawai.KelompokPegawai,
+		&pegawai.KdPangkatGolongan,
+		&pegawai.Pangkat,
+		&pegawai.KdGolongan,
+		&pegawai.Golongan,
+		&pegawai.KdRuang,
+		&pegawai.TmtPangkatGolongan,
+		// &pegawai.TmtPangkatGolonganIDN,
+		&pegawai.KdJabatanFungsional,
+		&pegawai.Fungsional,
+		&pegawai.TmtJabatan,
+		// &pegawai.TmtJabatanIDN,
+		&pegawai.KdUnit1,
+		&pegawai.Unit1,
+		&pegawai.KdUnit2,
+		&pegawai.Unit2,
+	)
+	if err == sql.ErrNoRows {
+		return nil, nil
+	}
+	if err != nil {
+		return nil, fmt.Errorf("error querying get pegawai by nik, %s", err.Error())
+	}
+
+	return &pegawai, nil
+}

@@ -33,6 +33,8 @@ import (
 
 func InitRoute(a *app.App, appCtx context.Context, e *echo.Echo, slackErrChan chan error) {
 	insaniGroupingPath := e.Group("/public/api/v1")
+	insaniPrivateGroupingPath := e.Group("/private/api/v1")
+
 	// Route di bawah akan dikelola oleh handler
 	insaniGroupingPath.GET("/pegawai", pegawai.HandleGetPegawai(a))
 	insaniGroupingPath.GET("/pegawai-nik", pegawai.HandleCheckNikPegawai(a))
@@ -113,6 +115,9 @@ func InitRoute(a *app.App, appCtx context.Context, e *echo.Echo, slackErrChan ch
 	// Pengaturan Personal
 	insaniGroupingPath.GET("/pengaturan", pengaturan.HandleGetPengaturan(a, nil))
 	insaniGroupingPath.PUT("/pengaturan", pengaturan.HandleUpdatePengaturan(a, nil))
+
+	// private endpoint
+	insaniPrivateGroupingPath.GET("/pegawai-by-nik/:nik", pegawai.HandleGetPegawaiByNik(a))
 
 	// Testing
 	// insaniGroupingPath.GET("/testing", detailProfesi.HandleDetailProfesiByUUID(a))

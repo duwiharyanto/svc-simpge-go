@@ -110,6 +110,38 @@ type PegawaiCreate struct {
 	UuidJenisPresensi string `form:"uuid_jenis_presensi" gorm:"-"`
 	KdJenisPresensi   string `form:"kd_jenis_presensi" gorm:"-"`
 }
+type PegawaiByNik struct {
+	Nama                 string  `form:"nama"`
+	GelarDepan           string  `form:"gelar_depan" gorm:"default:null"`
+	GelarBelakang        string  `form:"gelar_belakang" gorm:"default:null"`
+	Nik                  string  `form:"nik" gorm:"uniqueIndex"`
+	TempatLahir          string  `form:"tempat_lahir" gorm:"default:null"`
+	JenisKelamin         string  `form:"jenis_kelamin" gorm:"default:null"`
+	TglLahir             string  `form:"tgl_lahir" gorm:"default:null"`
+	KdPendidikanTerakhir string  `form:"kd_pendidikan_terakhir" gorm:"default:null"`
+	KdStatusPegawai      string  `form:"kd_status_pegawai" gorm:"default:null"`
+	StatusPegawai        string  `form:"status_pegawai" gorm:"default:null"`
+	KdKelompokPegawai    string  `form:"kd_kelompok_pegawai" gorm:"default:null"`
+	KelompokPegawai      string  `form:"kelompok_pegawai" gorm:"default:null"`
+	KdPangkatGolongan    string  `form:"kd_pangkat_gol" gorm:"default:null"`
+	Pangkat              string  `form:"pangkat" gorm:"default:null"`
+	KdGolongan           string  `form:"kd_golongan" gorm:"default:null"`
+	Golongan             string  `form:"golongan" gorm:"default:null"`
+	KdRuang              string  `form:"kd_ruang" gorm:"default:null"`
+	TmtPangkatGolongan   *string `form:"tmt_pangkat_golongan" gorm:"default:null"`
+	KdJabatanFungsional  string  `form:"kd_fungsional" gorm:"default:null"`
+	Fungsional           string  `form:"fungsional" gorm:"default:null"`
+	TmtJabatan           *string `form:"tmt_jabatan" gorm:"default:null"`
+	KdUnit1              *string `form:"kd_unit1" gorm:"default:null"`
+	Unit1                *string `form:"unit1" gorm:"-"`
+	KdUnit2              *string `form:"kd_unit2" gorm:"default:null"`
+	Unit2                *string `form:"unit2" gorm:"-"`
+}
+
+type PegawaiByNikResponse struct {
+	Status  int           `json:"status"`
+	Pegawai *PegawaiByNik `json:"data"`
+}
 
 func (*PegawaiCreate) TableName() string {
 	return "pegawai"
