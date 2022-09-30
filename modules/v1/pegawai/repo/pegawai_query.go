@@ -260,10 +260,12 @@ func getPegawaiPNSQuery(uuid string) string {
 		COALESCE(pgp.kd_golongan,''),
 		COALESCE(pgp.kd_ruang,''),
 		COALESCE(pp.tmt_pangkat_golongan,''),
+		COALESCE(pp.nomor_pangkat_golongan,''),
 		COALESCE(jf.uuid,''),
 		COALESCE(jf.kd_fungsional,''),
 		COALESCE(jf.fungsional,''),
 		COALESCE(pp.tmt_jabatan,''),
+		COALESCE(pp.nomor_jabatan_fungsional,''),
 		COALESCE(pp.masa_kerja_tahun,''),
 		COALESCE(pp.masa_kerja_bulan,''),
 		COALESCE(pp.angka_kredit,''),
@@ -456,4 +458,53 @@ func getPegawaiFilePendidikanQuery(idList ...string) string {
 
 func updatePegawaiQuery(pegwaiUpdate model.PegawaiUpdate) string {
 	return fmt.Sprintf(``)
+}
+
+func getPegawaiByNik(nik string) string {
+	q := fmt.Sprintf(`SELECT
+	p.nama,
+	COALESCE(p.gelar_depan,''),
+	COALESCE(p.gelar_belakang,''),
+	p.nik,
+	p.tempat_lahir,
+	p.tgl_lahir,
+	p.jenis_kelamin,
+	COALESCE(jp.kd_pendidikan_simpeg,''),
+	COALESCE(sp.kd_status_pegawai,''),
+	COALESCE(sp.status_pegawai,''),
+	COALESCE(kp.kd_kelompok_pegawai,''),
+	COALESCE(kp.kelompok_pegawai,''),
+	COALESCE(pgp.kd_pangkat_gol,''),
+	COALESCE(pgp.pangkat,''),
+	COALESCE(pgp.kd_golongan,''),
+	COALESCE(pgp.golongan,''),
+	COALESCE(pgp.kd_ruang,''),
+	COALESCE(pf.tmt_pangkat_golongan,''),
+	COALESCE(jf.kd_fungsional,''),
+	COALESCE(jf.fungsional,''),
+	COALESCE(pf.tmt_jabatan,''),
+	COALESCE(u1.kd_unit1,''),
+	COALESCE(u1.unit1,''),
+	COALESCE(u2.kd_unit2,''),
+	COALESCE(u2.unit2,'')
+	from
+	pegawai p
+	LEFT JOIN 
+		jenjang_pendidikan jp ON p.id_pendidikan_terakhir = jp.id
+	LEFT JOIN 
+		status_pegawai sp ON p.id_status_pegawai = sp.id 
+	LEFT JOIN
+		kelompok_pegawai kp ON p.id_kelompok_pegawai = kp.id 
+	LEFT JOIN
+		pegawai_fungsional pf ON p.id = pf.id_pegawai 
+	LEFT JOIN
+		pangkat_golongan_pegawai pgp ON pf.id_pangkat_golongan = pgp.id 
+	LEFT JOIN 
+		jabatan_fungsional jf ON pf.id_jabatan_fungsional = jf.id 
+	LEFT JOIN
+		unit1 u1 ON p.id_unit_kerja1 = u1.id 
+	LEFT JOIN
+		unit2 u2 ON p.id_unit_kerja2 = u2.id 
+	WHERE p.flag_aktif=1 AND p.nik = %q`, nik)
+	return helper.FlatQuery(q)
 }

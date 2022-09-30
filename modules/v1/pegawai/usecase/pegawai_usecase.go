@@ -344,3 +344,26 @@ func HandleCheckNikPegawai(a *app.App) echo.HandlerFunc {
 	}
 	return echo.HandlerFunc(h)
 }
+
+func HandleGetPegawaiByNik(a *app.App) echo.HandlerFunc {
+	h := func(c echo.Context) error {
+		nik := c.Param("nik")
+		if nik == "" {
+			return c.JSON(http.StatusBadRequest, map[string]string{"message": "parameter nik wajib diisi"})
+		}
+
+		pegawai, err := pegawaiRepo.GetPegawaiByNikPrivate(a, nik)
+		if err != nil {
+			log.Printf("[ERROR] repo get kepegawaian: %s\n", err.Error())
+			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
+		}
+
+		data := model.PegawaiByNikResponse{
+			Status:  200,
+			Pegawai: pegawai,
+		}
+
+		return c.JSON(http.StatusOK, data)
+	}
+	return echo.HandlerFunc(h)
+}
