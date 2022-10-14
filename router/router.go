@@ -116,6 +116,8 @@ func InitRoute(a *app.App, appCtx context.Context, e *echo.Echo, slackErrChan ch
 	insaniGroupingPath.GET("/pengaturan", pengaturan.HandleGetPengaturan(a, nil))
 	insaniGroupingPath.PUT("/pengaturan", pengaturan.HandleUpdatePengaturan(a, nil))
 
+	// untuk pak
+	insaniGroupingPath.GET("/pegawai-by-nik/:nik", pegawai.HandleGetPegawaiByNik(a))
 	// private endpoint
 	insaniPrivateGroupingPath.GET("/pegawai-by-nik/:nik", pegawai.HandleGetPegawaiByNik(a))
 
