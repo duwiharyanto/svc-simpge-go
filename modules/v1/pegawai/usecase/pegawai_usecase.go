@@ -18,6 +18,9 @@ import (
 	pengaturan "svc-insani-go/modules/v1/pengaturan-insani/usecase"
 	personalRepo "svc-insani-go/modules/v1/personal/repo"
 	pegawaiOraHttp "svc-insani-go/modules/v1/simpeg-oracle/http"
+	_ "svc-insani-go/modules/v2/organisasi/model"
+	organisaiPrivate "svc-insani-go/modules/v2/organisasi/model"
+	_ "svc-insani-go/modules/v2/organisasi/repo"
 
 	ptr "github.com/openlyinc/pointy"
 
@@ -364,6 +367,103 @@ func HandleGetPegawaiByNik(a *app.App) echo.HandlerFunc {
 		}
 
 		return c.JSON(http.StatusOK, data)
+	}
+	return echo.HandlerFunc(h)
+}
+
+func HandleGetPegawaiPrivate(a *app.App) echo.HandlerFunc {
+	h := func(c echo.Context) error {
+		reqNik := c.QueryParam("nik")
+
+		var nik string
+		if len(reqNik) > 0 {
+			nik = reqNik[:len(reqNik)-1]
+			nik = nik[1:]
+		}
+
+		req := &model.PegawaiPrivateRequest{}
+		err := c.Bind(req)
+		if err != nil {
+			fmt.Printf("[WARNING] binding pegawai request: %s\n", err.Error())
+		}
+
+		res := model.PegawaiPrivateResponse{
+			Data: []model.PegawaiPrivate{},
+		}
+		req.Nik = nik
+
+		pp, err := repo.GetAllPegawaiPrivate(a, req)
+		if err != nil {
+			fmt.Printf("[ERROR] repo get all pegawai: %s\n", err.Error())
+			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
+		}
+		res.Data = pp
+
+		stmt, err := a.DB.Prepare(`SELECT p.id, COALESCE(so.id_jenis_jabatan,''),
+		COALESCE(so.id_unit,''),
+		COALESCE(u.id_jenis_unit,'')
+		FROM pegawai p
+		JOIN pejabat_struktural ps ON p.id = ps.id_pegawai
+		JOIN hcm_organisasi.struktur_organisasi so ON ps.id_struktur_organisasi = so.id
+		JOIN hcm_organisasi.unit u ON u.id = so.id_unit`)
+
+		var pejabat []organisaiPrivate.PejabatStrukturalPrivate
+		rows, err := stmt.Query()
+		if err != nil {
+			fmt.Println(err)
+			return c.JSON(500, nil)
+		}
+		defer rows.Close()
+		// // Loop through rows, using Scan to assign column data to struct fields.
+		for rows.Next() {
+			var ps organisaiPrivate.PejabatStrukturalPrivate
+			if err := rows.Scan(&ps.IdPegawai, &ps.IdJenisUnit, &ps.IdJenisJabatan, &ps.IdUnit); err != nil {
+				fmt.Println(err)
+				return c.JSON(500, nil)
+			}
+			pejabat = append(pejabat, ps)
+		}
+		if err := rows.Err(); err != nil {
+			fmt.Println(err)
+			return c.JSON(500, nil)
+		}
+
+		var newData []model.PegawaiPrivate
+
+		pejabatNew := organisaiPrivate.PejabatStrukturalPrivate{}
+		a := 0
+		for _, data := range res.Data {
+			a++
+			data.JabatanStruktural = append(data.JabatanStruktural, pejabatNew)
+			// fmt.Println(data.IdPegawai)
+
+			tmtSkPertamaTime, err := time.Parse("2006-01-02", data.TmtSkPertama)
+			var tmtSkPertamaDuration time.Duration
+			if err == nil {
+				tmtSkPertamaDuration = time.Now().Sub(tmtSkPertamaTime)
+			}
+			tmtSkPertamaDurationDays := tmtSkPertamaDuration.Hours() / 24
+			// tmtSkPertamaDurationDays := tmtSkPertamaDuration.Hours() / 24
+			tmtSkPertamaDurationRealMonths := int(tmtSkPertamaDurationDays / 365 * 12)
+			masaKerjaKepegawaianTahunInt, _ := strconv.Atoi(data.MasaKerjaTahun)
+			masaKerjaKepegawaianBulanInt, _ := strconv.Atoi(data.MasaKerjaBulan)
+			masaKerjaTotalKepegawaianRealBulan := ((masaKerjaKepegawaianTahunInt * 12) + masaKerjaKepegawaianBulanInt) + tmtSkPertamaDurationRealMonths
+			data.MasaKerjaTahun = fmt.Sprintf("%d", masaKerjaTotalKepegawaianRealBulan/12)
+			data.MasaKerjaBulan = fmt.Sprintf("%d", masaKerjaTotalKepegawaianRealBulan%12)
+
+			for _, pejabat := range pejabat {
+				a++
+				if data.IdPegawai == pejabat.IdPegawai {
+					// fmt.Println("oke")
+					data.JabatanStruktural = append(data.JabatanStruktural, pejabat)
+				}
+			}
+			newData = append(newData, data)
+		}
+		// fmt.Println("jumlah perulangan: ", a)
+
+		res.Data = newData
+		return c.JSON(http.StatusOK, res)
 	}
 	return echo.HandlerFunc(h)
 }

@@ -54,6 +54,120 @@ func getListAllPegawaiQuery(req *model.PegawaiRequest) string {
 	)
 }
 
+func getListAllPegawaiPrivateQuery(req *model.PegawaiPrivateRequest) string {
+	var nikFilterQuery string
+	if req.Nik != "" {
+		nikFilterQuery = fmt.Sprintf("AND p.nik IN (%s) ", req.Nik)
+	}
+	var namaFilterQuery string
+	if req.Nama != "" {
+		namaFilterQuery = fmt.Sprintf("AND p.nama like '%%%s%%' ", req.Nama)
+	}
+	var kdJenisPegawaiFilterQuery string
+	if req.KdJenisPegawai != "" {
+		kdJenisPegawaiFilterQuery = fmt.Sprintf("AND jpeg.kd_jenis_pegawai = '%s'", req.KdJenisPegawai)
+	}
+	var kdKelompokFilterQuery string
+	if req.KdKelompokPegawai != "" {
+		kdKelompokFilterQuery = fmt.Sprintf("AND kp.kd_kelompok_pegawai = '%s'", req.KdKelompokPegawai)
+	}
+	var kdIndukKerjaFilterQuery string
+	if req.KdIndukKerja != "" {
+		kdIndukKerjaFilterQuery = fmt.Sprintf("AND p.kd_unit1 = '%s'", req.KdIndukKerja)
+	}
+	return fmt.Sprintf(`SELECT
+	p.id id_pegawai,
+	p.nama,
+	p.nik,
+	COALESCE(jpeg.nama_jenis_pegawai,'') jenis_pegawai,
+	COALESCE(jpeg.id,'') id_jenis_pegawai,
+	COALESCE(jpeg.kd_jenis_pegawai,''),
+	COALESCE(kp.kelompok_pegawai,''),
+	COALESCE(kp.id,'') id_kelompok_pegawai,
+	COALESCE(kp.kd_kelompok_pegawai,''),
+	COALESCE(kp.id_kategori_kelompok_pegawai,''),
+	COALESCE(kkp.kd_kategori_kelompok_pegawai,''),
+	COALESCE(g.golongan,''),
+	COALESCE(pgp.id_golongan,'') id_golongan,
+	COALESCE(pgp.kd_golongan,'') kd_golongan,
+	COALESCE(g1.golongan,'') golongan_negara,
+	COALESCE(pgppns.id_golongan,'') id_golongan_negara,
+	COALESCE(pgppns.kd_golongan,'') kd_golongan_negara,
+	COALESCE(r.nama_ruang,'') ruang,
+	COALESCE(r.id,'') id_ruang,
+	COALESCE(r.kd_ruang,'') kd_ruang,
+	COALESCE(r_ngr.nama_ruang,'') ruang_negara,
+	COALESCE(r_ngr.id,'') id_ruang_negara,
+	COALESCE(r_ngr.kd_ruang,'') kd_ruang_negara,
+	COALESCE(u2.unit2,'') unit_kerja,
+	COALESCE(u2.id,'') id_unit,
+	COALESCE(u2.kd_unit2,'') kd_unit,
+	COALESCE(u1.unit1,'') induk_kerja,
+	COALESCE(u1.id,'') id_induk_kerja,
+	COALESCE(u1.kd_unit1,'') kd_induk_kerja,
+	COALESCE(pf.id_status_pegawai_aktif,''),
+	COALESCE(spa.status,'') status_pegawai_aktif,
+	COALESCE(spa.kd_status,'') kd_status_pegawai_aktif,
+	COALESCE(sp.status_pegawai,'') status_pegawai,
+	COALESCE(p.id_status_pegawai,''),
+	COALESCE(p.kd_status_pegawai,''),
+	COALESCE(p.jenis_kelamin,''),
+	COALESCE(jf.fungsional,'') jabatan_fungsional,
+	COALESCE(jf.id,'') id_jabatan_fungsional,
+	COALESCE(jf.kd_fungsional,'') kd_jabatan_fungsional,
+	COALESCE(jp.id,'') id_jenjang_pendidikan,
+	COALESCE(jp.kd_jenjang,'') kd_jenjang_pendidikan,
+	COALESCE(jp.jenjang,'') jenjang_pendidikan,
+	COALESCE(pf.tmt_sk_pertama,'') tmt_sk_pertama,
+	COALESCE(pf.masa_kerja_awal_kepegawaian_tahun,'') masa_kerja_tahun,
+	COALESCE(pf.masa_kerja_awal_kepegawaian_bulan,'') masa_kerja_bulan,
+	COALESCE((SELECT COUNT(*) from hcm_personal.personal_hubungan_keluarga phk WHERE phk.id_personal_data_pribadi = p.id_personal_data_pribadi AND phk.kd_hubungan_keluarga IN ('AAK','AT','AN')),'') jumlah_anak,
+	COALESCE((SELECT pi.npwp from hcm_personal.personal_identitas pi WHERE pi.id_personal_data_pribadi = p.id_personal_data_pribadi AND pi.flag_aktif = 1),'') npwp,
+	COALESCE(spn.status,'') status_nikah,
+	COALESCE(p.nik_suami_istri,''),
+	COALESCE(p.nik_ktp,'') nik_ktp
+	from
+	pegawai p
+	LEFT JOIN
+		jenis_pegawai jpeg ON p.id_jenis_pegawai = jpeg.id
+	LEFT JOIN
+		kelompok_pegawai kp ON p.id_kelompok_pegawai = kp.id
+	LEFT JOIN
+		kategori_kelompok_pegawai kkp on kp.id_kategori_kelompok_pegawai = kkp.id
+	LEFT JOIN
+		pegawai_pns pp on pp.id_pegawai = p.id
+	LEFT JOIN
+		pegawai_fungsional pf ON p.id = pf.id_pegawai
+	LEFT JOIN
+		pangkat_golongan_pegawai pgp ON pf.id_pangkat_golongan = pgp.id
+	LEFT JOIN
+		pangkat_golongan_pegawai pgppns ON pp.id_pangkat_golongan = pgppns.id
+	LEFT JOIN
+		golongan g on pgp.id_golongan = g.id
+	LEFT JOIN
+		golongan g1 on pgppns.id_golongan = g1.id
+	LEFT JOIN
+		ruang r on pgp.id_ruang = r.id
+	LEFT JOIN
+		ruang r_ngr on pgppns.id_ruang = r_ngr.id
+	LEFT JOIN
+		unit1 u1 ON p.id_unit_kerja1 = u1.id
+	LEFT JOIN
+		unit2 u2 ON p.id_unit_kerja2 = u2.id
+	LEFT JOIN
+		status_pegawai_aktif spa ON spa.id = pf.id_status_pegawai_aktif
+	LEFT JOIN
+		status_pegawai sp ON p.id_status_pegawai = sp.id
+	LEFT JOIN
+		jabatan_fungsional jf ON pf.id_jabatan_fungsional = jf.id
+	LEFT JOIN
+		jenjang_pendidikan jp ON p.id_pendidikan_terakhir = jp.id
+	LEFT JOIN
+		status_pernikahan spn ON p.kd_status_perkawinan = spn.kd_status
+	WHERE p.flag_aktif=1 %s %s %s %s %s`, nikFilterQuery, namaFilterQuery, kdJenisPegawaiFilterQuery, kdKelompokFilterQuery, kdIndukKerjaFilterQuery)
+
+}
+
 func countPegawaiQuery(req *model.PegawaiRequest) string {
 	var uuidJenisPegawaiFilterQuery string
 	if req.UuidJenisPegawai != "" {
