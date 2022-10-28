@@ -399,6 +399,49 @@ func HandleGetPegawaiPrivate(a *app.App) echo.HandlerFunc {
 		}
 		res.Data = pp
 
+		stmt2, err := a.DB.Prepare(`SELECT p.id, COALESCE(jf.fungsional,''),
+		COALESCE(jf.id,''),
+		COALESCE(jf.kd_fungsional,'')
+		FROM pegawai p
+		JOIN pegawai_fungsional pf ON p.id = pf.id_pegawai
+		JOIN jabatan_fungsional jf ON pf.id_jabatan_fungsional = jf.id`)
+
+		var pegawaiFungsional []model.PegawaiFungsionalPrivate
+		rows2, err := stmt2.Query()
+		if err != nil {
+			fmt.Println(err)
+			return c.JSON(500, nil)
+		}
+		defer rows2.Close()
+		// // Loop through rows, using Scan to assign column data to struct fields.
+		for rows2.Next() {
+			var pf model.PegawaiFungsionalPrivate
+			if err := rows2.Scan(&pf.IdPegawai, &pf.JabatanFungsional, &pf.IdJabatanFungsional, &pf.KdJabatanFungsional); err != nil {
+				fmt.Println(err)
+				return c.JSON(500, nil)
+			}
+			pegawaiFungsional = append(pegawaiFungsional, pf)
+		}
+		if err := rows2.Err(); err != nil {
+			fmt.Println(err)
+			return c.JSON(500, nil)
+		}
+
+		var pegawaiAndFungsional []model.PegawaiPrivate
+		IsNotFungsional := true
+		for _, data := range res.Data {
+			for _, pegFung := range pegawaiFungsional {
+				if data.IdPegawai == pegFung.IdPegawai {
+					data.JabatanFungsional = append(data.JabatanFungsional, pegFung)
+					IsNotFungsional = false
+				}
+			}
+			if IsNotFungsional {
+				data.JabatanFungsional = append(data.JabatanFungsional, model.PegawaiFungsionalPrivate{})
+			}
+			pegawaiAndFungsional = append(pegawaiAndFungsional, data)
+		}
+
 		stmt, err := a.DB.Prepare(`SELECT p.id, COALESCE(so.id_jenis_jabatan,''),
 		COALESCE(so.id_unit,''),
 		COALESCE(u.id_jenis_unit,'')
@@ -428,14 +471,10 @@ func HandleGetPegawaiPrivate(a *app.App) echo.HandlerFunc {
 			return c.JSON(500, nil)
 		}
 
-		var newData []model.PegawaiPrivate
+		IsNotStruktural := true
 
-		pejabatNew := organisaiPrivate.PejabatStrukturalPrivate{}
-		a := 0
-		for _, data := range res.Data {
-			a++
-			data.JabatanStruktural = append(data.JabatanStruktural, pejabatNew)
-			// fmt.Println(data.IdPegawai)
+		var pegawaiAndFungsionalAndStruktural []model.PegawaiPrivate
+		for _, data := range pegawaiAndFungsional {
 
 			tmtSkPertamaTime, err := time.Parse("2006-01-02", data.TmtSkPertama)
 			var tmtSkPertamaDuration time.Duration
@@ -452,17 +491,19 @@ func HandleGetPegawaiPrivate(a *app.App) echo.HandlerFunc {
 			data.MasaKerjaBulan = fmt.Sprintf("%d", masaKerjaTotalKepegawaianRealBulan%12)
 
 			for _, pejabat := range pejabat {
-				a++
 				if data.IdPegawai == pejabat.IdPegawai {
-					// fmt.Println("oke")
 					data.JabatanStruktural = append(data.JabatanStruktural, pejabat)
+					IsNotStruktural = false
 				}
 			}
-			newData = append(newData, data)
-		}
-		// fmt.Println("jumlah perulangan: ", a)
 
-		res.Data = newData
+			if IsNotStruktural {
+				data.JabatanStruktural = append(data.JabatanStruktural, organisaiPrivate.PejabatStrukturalPrivate{})
+			}
+
+			pegawaiAndFungsionalAndStruktural = append(pegawaiAndFungsionalAndStruktural, data)
+		}
+		res.Data = pegawaiAndFungsionalAndStruktural
 		return c.JSON(http.StatusOK, res)
 	}
 	return echo.HandlerFunc(h)

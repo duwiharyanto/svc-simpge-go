@@ -112,9 +112,6 @@ func getListAllPegawaiPrivateQuery(req *model.PegawaiPrivateRequest) string {
 	COALESCE(p.id_status_pegawai,''),
 	COALESCE(p.kd_status_pegawai,''),
 	COALESCE(p.jenis_kelamin,''),
-	COALESCE(jf.fungsional,'') jabatan_fungsional,
-	COALESCE(jf.id,'') id_jabatan_fungsional,
-	COALESCE(jf.kd_fungsional,'') kd_jabatan_fungsional,
 	COALESCE(jp.id,'') id_jenjang_pendidikan,
 	COALESCE(jp.kd_jenjang,'') kd_jenjang_pendidikan,
 	COALESCE(jp.jenjang,'') jenjang_pendidikan,
@@ -125,13 +122,16 @@ func getListAllPegawaiPrivateQuery(req *model.PegawaiPrivateRequest) string {
 	COALESCE((SELECT pi.npwp from hcm_personal.personal_identitas pi WHERE pi.id_personal_data_pribadi = p.id_personal_data_pribadi AND pi.flag_aktif = 1),'') npwp,
 	COALESCE(spn.status,'') status_nikah,
 	COALESCE(p.nik_suami_istri,''),
-	COALESCE(p.nik_ktp,'') nik_ktp
+	COALESCE(p.nik_ktp,'') nik_ktp,
+	COALESCE(p.flag_pensiun,''),
+	COALESCE(p.flag_meninggal,''),
+	COALESCE((SELECT phk.flag_sekantor from hcm_personal.personal_hubungan_keluarga phk WHERE phk.id_personal_data_pribadi = p.id_personal_data_pribadi AND phk.kd_hubungan_keluarga in ('SUA','IST') AND phk.flag_aktif = 1),'') flag_suami_istri_sekantor
 	from
 	pegawai p
 	LEFT JOIN
-		jenis_pegawai jpeg ON p.id_jenis_pegawai = jpeg.id
+		jenis_pegawai jpeg ON p.kd_jenis_pegawai = jpeg.kd_jenis_pegawai
 	LEFT JOIN
-		kelompok_pegawai kp ON p.id_kelompok_pegawai = kp.id
+		kelompok_pegawai kp ON p.kd_kelompok_pegawai = kp.kd_kelompok_pegawai
 	LEFT JOIN
 		kategori_kelompok_pegawai kkp on kp.id_kategori_kelompok_pegawai = kkp.id
 	LEFT JOIN
@@ -151,13 +151,13 @@ func getListAllPegawaiPrivateQuery(req *model.PegawaiPrivateRequest) string {
 	LEFT JOIN
 		ruang r_ngr on pgppns.id_ruang = r_ngr.id
 	LEFT JOIN
-		unit1 u1 ON p.id_unit_kerja1 = u1.id
+		unit1 u1 ON p.kd_unit1 = u1.kd_unit1
 	LEFT JOIN
-		unit2 u2 ON p.id_unit_kerja2 = u2.id
+		unit2 u2 ON p.kd_unit2  = u2.kd_unit2
 	LEFT JOIN
 		status_pegawai_aktif spa ON spa.id = pf.id_status_pegawai_aktif
 	LEFT JOIN
-		status_pegawai sp ON p.id_status_pegawai = sp.id
+		status_pegawai sp ON p.kd_status_pegawai = sp.kd_status_pegawai
 	LEFT JOIN
 		jabatan_fungsional jf ON pf.id_jabatan_fungsional = jf.id
 	LEFT JOIN

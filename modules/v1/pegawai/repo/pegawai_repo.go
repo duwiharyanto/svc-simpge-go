@@ -116,9 +116,9 @@ func GetAllPegawaiPrivate(a *app.App, req *model.PegawaiPrivateRequest) ([]model
 			&p.IdStatusPegawai,
 			&p.KdStatusPegawai,
 			&p.JenisKelamin,
-			&p.JabatanFungsionalPrivate.JabatanFungsional,
-			&p.JabatanFungsionalPrivate.ID,
-			&p.JabatanFungsionalPrivate.KdJabatanFungsional,
+			// &p.JabatanFungsionalPrivate.JabatanFungsional,
+			// &p.JabatanFungsionalPrivate.ID,
+			// &p.JabatanFungsionalPrivate.KdJabatanFungsional,
 			// &p.PegawaiKontrakPrivate.TmtSkPertama,
 			// &p.PegawaiKontrakPrivate.NomorSkPertama,
 			&p.IdJenjangPendidikan,
@@ -132,6 +132,9 @@ func GetAllPegawaiPrivate(a *app.App, req *model.PegawaiPrivateRequest) ([]model
 			&p.StatusPernikahan,
 			&p.NikSuamiIstri,
 			&p.NikKtp,
+			&p.FlagPensiun,
+			&p.FlagMeninggal,
+			&p.FlagSuamiIstriSekantor,
 		)
 		if err != nil {
 			return nil, fmt.Errorf("error scan pegawai row, %s", err.Error())
