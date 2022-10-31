@@ -87,6 +87,9 @@ type PegawaiPrivate struct {
 	StatusPernikahan       string `json:"status_nikah" gorm:"type:varchar"`
 	NikSuamiIstri          string `json:"nik_suami_istri" gorm:"type:varchar"`
 	NikKtp                 string `json:"nik_ktp" gorm:"type:varchar"`
+	JumlahTanggungan       string `json:"jumlah_tanggungan" gorm:"type:varchar"`
+	JumlahTanggunganPtkp   string `json:"jumlah_tanggungan_ptkp" gorm:"type:varchar"`
+	FlagKlaimTanggungan    string `json:"flag_klaim_tanggungan" gorm:"type:varchar"`
 	FlagPensiun            string `json:"flag_pensiun" gorm:"type:varchar"`
 	FlagMeninggal          string `json:"flag_meninggal" gorm:"type:varchar"`
 	FlagSuamiIstriSekantor string `json:"flag_suami_istri_sekantor" gorm:"type:varchar"`
