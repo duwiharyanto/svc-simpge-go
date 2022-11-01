@@ -347,6 +347,20 @@ func ValidateUpdatePegawaiByUUID(a *app.App, c echo.Context) (model.PegawaiUpdat
 		}
 		pegawai.PegawaiFungsional.MasaKerjaBawaanBulan = pegawaiReq.PegawaiFungsional.MasaKerjaBawaanBulan
 	}
+	if ptr.StringValue(pegawaiReq.PegawaiFungsional.MasaKerjaGolonganTahun, "") != "" {
+		tahun, _ := strconv.Atoi(ptr.StringValue(pegawaiReq.PegawaiFungsional.MasaKerjaGolonganTahun, ""))
+		if !(tahun >= 0 && tahun <= 99) {
+			return model.PegawaiUpdate{}, fmt.Errorf("masa kerja golongan tahun hanya dapat diisi antara 0-99")
+		}
+		pegawai.PegawaiFungsional.MasaKerjaGolonganTahun = pegawaiReq.PegawaiFungsional.MasaKerjaGolonganTahun
+	}
+	if ptr.StringValue(pegawaiReq.PegawaiFungsional.MasaKerjaGolonganBulan, "") != "" {
+		bulan, _ := strconv.Atoi(ptr.StringValue(pegawaiReq.PegawaiFungsional.MasaKerjaGolonganBulan, ""))
+		if !(bulan >= 0 && bulan <= 11) {
+			return model.PegawaiUpdate{}, fmt.Errorf("masa kerja golongan bulan hanya dapat diisi antara 0-11")
+		}
+		pegawai.PegawaiFungsional.MasaKerjaGolonganBulan = pegawaiReq.PegawaiFungsional.MasaKerjaGolonganBulan
+	}
 	if ptr.StringValue(pegawaiReq.PegawaiFungsional.MasaKerjaGajiTahun, "") != "" {
 		tahun, _ := strconv.Atoi(ptr.StringValue(pegawaiReq.PegawaiFungsional.MasaKerjaGajiTahun, ""))
 		if !(tahun >= 0 && tahun <= 99) {
@@ -461,6 +475,16 @@ func ValidateUpdatePegawaiByUUID(a *app.App, c echo.Context) (model.PegawaiUpdat
 			return model.PegawaiUpdate{}, fmt.Errorf("masa kerja bulan maksimal 12")
 		}
 		pegawai.PegawaiPNS.MasaKerjaBulan = pegawaiReq.PegawaiPNS.MasaKerjaBulan
+	}
+	if ptr.StringValue(pegawaiReq.PegawaiPNS.MasaKerjaGolonganTahun, "") != "" {
+		pegawai.PegawaiPNS.MasaKerjaGolonganTahun = pegawaiReq.PegawaiPNS.MasaKerjaGolonganTahun
+	}
+	if ptr.StringValue(pegawaiReq.PegawaiPNS.MasaKerjaGolonganBulan, "") != "" {
+		a, _ := strconv.Atoi(ptr.StringValue(pegawaiReq.PegawaiPNS.MasaKerjaGolonganBulan, ""))
+		if a > 12 {
+			return model.PegawaiUpdate{}, fmt.Errorf("masa kerja bulan maksimal 12")
+		}
+		pegawai.PegawaiPNS.MasaKerjaGolonganBulan = pegawaiReq.PegawaiPNS.MasaKerjaGolonganBulan
 	}
 	if ptr.StringValue(pegawaiReq.PegawaiPNS.AngkaKredit, "") != "" {
 		pegawai.PegawaiPNS.AngkaKredit = pegawaiReq.PegawaiPNS.AngkaKredit

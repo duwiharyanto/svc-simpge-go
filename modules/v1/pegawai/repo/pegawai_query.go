@@ -385,6 +385,8 @@ func getPegawaiPNSQuery(uuid string) string {
 		COALESCE(pp.nomor_jabatan_fungsional,''),
 		COALESCE(pp.masa_kerja_tahun,''),
 		COALESCE(pp.masa_kerja_bulan,''),
+		COALESCE(pp.masa_kerja_golongan_tahun,''),
+		COALESCE(pp.masa_kerja_golongan_bulan,''),
 		COALESCE(pp.angka_kredit,''),
 		COALESCE(pp.keterangan,''),
 		COALESCE(pp.nira,'')

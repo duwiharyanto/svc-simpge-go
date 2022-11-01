@@ -77,6 +77,8 @@ type PegawaiFungsionalUpdate struct {
 	TmtJabatanIDN                 *string `form:"tmt_jabatan_idn" gorm:"-"`
 	MasaKerjaBawaanTahun          *string `form:"masa_kerja_bawaan_tahun" gorm:"default:null"`
 	MasaKerjaBawaanBulan          *string `form:"masa_kerja_bawaan_bulan" gorm:"default:null"`
+	MasaKerjaGolonganTahun        *string `form:"masa_kerja_golongan_tahun" gorm:"default:null"`
+	MasaKerjaGolonganBulan        *string `form:"masa_kerja_golongan_bulan" gorm:"default:null"`
 	MasaKerjaGajiTahun            *string `form:"masa_kerja_gaji_tahun" gorm:"default:null"`
 	MasaKerjaGajiBulan            *string `form:"masa_kerja_gaji_bulan" gorm:"default:null"`
 	MasaKerjaAwalKepegawaianTahun *string `form:"masa_kerja_awal_kepegawaian_tahun" gorm:"default:null"`
