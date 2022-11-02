@@ -26,6 +26,8 @@ type PegawaiPNSUpdate struct {
 	MasaKerjaGolonganTahun *string `form:"masa_kerja_golongan_tahun" gorm:"column:masa_kerja_golongan_tahun;default:null"` //Tambahan
 	MasaKerjaGolonganBulan *string `form:"masa_kerja_golongan_bulan" gorm:"column:masa_kerja_golongan_bulan;default:null"` //Tambahan
 	AngkaKredit            *string `form:"angka_kredit_pns" gorm:"column:angka_kredit;default:null"`                       //Perubahan
+	NomorPak               *string `form:"nomor_pak" gorm:"column:nomor_pak;default:null"`                                 //Tambahan
+	TmtPak                 *string `form:"tmt_pak" gorm:"tmt_pak;default:null"`                                            //Tambahan
 	Keterangan             *string `form:"keterangan_pns" gorm:"column:keterangan;default:null"`                           //Perubahan
 	Nira                   *string `form:"nira" gorm:"column:nira;default:null"`                                           //Perubahan
 	TglInput               *string `form:"-" gorm:"-"`

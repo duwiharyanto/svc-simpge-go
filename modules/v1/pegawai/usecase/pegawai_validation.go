@@ -489,6 +489,13 @@ func ValidateUpdatePegawaiByUUID(a *app.App, c echo.Context) (model.PegawaiUpdat
 	if ptr.StringValue(pegawaiReq.PegawaiPNS.AngkaKredit, "") != "" {
 		pegawai.PegawaiPNS.AngkaKredit = pegawaiReq.PegawaiPNS.AngkaKredit
 	}
+	// add for update nomor pak negara
+	if ptr.StringValue(pegawaiReq.PegawaiPNS.NomorPak, "") != "" {
+		pegawai.PegawaiPNS.NomorPak = pegawaiReq.PegawaiPNS.NomorPak
+	}
+	if pegawaiReq.PegawaiPNS.TmtPak != nil {
+		pegawai.PegawaiPNS.TmtPak = pegawaiReq.PegawaiPNS.TmtPak
+	}
 	keterangan := ptr.StringValue(pegawaiReq.PegawaiPNS.Keterangan, "")
 	if len(keterangan) > 400 {
 		return model.PegawaiUpdate{}, fmt.Errorf("panjang keterangan maksimal 400 karakter")
