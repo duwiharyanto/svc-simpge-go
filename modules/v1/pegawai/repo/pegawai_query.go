@@ -388,6 +388,10 @@ func getPegawaiPNSQuery(uuid string) string {
 		COALESCE(pp.masa_kerja_golongan_tahun,''),
 		COALESCE(pp.masa_kerja_golongan_bulan,''),
 		COALESCE(pp.angka_kredit,''),
+		COALESCE(pp.nomor_pak,''),
+		COALESCE(pp.tmt_pak,''),
+		COALESCE(pp.nomor_sk_pensiun,''),
+		COALESCE(pp.tmt_sk_pensiun,''),
 		COALESCE(pp.keterangan,''),
 		COALESCE(pp.nira,'')
 	FROM 
