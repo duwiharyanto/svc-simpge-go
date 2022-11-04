@@ -42,6 +42,8 @@ func GetPegawaiPNS(a *app.App, uuid string) (*model.PegawaiPNSPTT, error) {
 		&pegawaiPNSPTT.TmtPak,
 		&pegawaiPNSPTT.NomorSkPensiun,
 		&pegawaiPNSPTT.TmtSkPensiun,
+		&pegawaiPNSPTT.MasaKerjaPensiunTahun,
+		&pegawaiPNSPTT.MasaKerjaPensiunBulan,
 		&pegawaiPNSPTT.KeteranganPNS,
 		&pegawaiPNSPTT.Nira,
 	)

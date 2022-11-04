@@ -30,6 +30,8 @@ type PegawaiPNSUpdate struct {
 	TmtPak                 *string `form:"tmt_pak" gorm:"tmt_pak;default:null"`                                            //Tambahan
 	NomorSkPensiun         *string `form:"nomor_sk_pensiun" gorm:"column:nomor_sk_pensiun;default:null"`                   //Tambahan
 	TmtSkPensiun           *string `form:"tmt_sk_pensiun" gorm:"tmt_sk_pensiun;default:null"`                              //Tambahan
+	MasaKerjaPensiunTahun  *string `form:"masa_kerja_pensiun_tahun" gorm:"masa_kerja_pensiun_tahun;default:null"`          //Tambahan
+	MasaKerjaPensiunBulan  *string `form:"masa_kerja_pensiun_bulan" gorm:"masa_kerja_pensiun_bulan;default:null"`          //Tambahan
 	Keterangan             *string `form:"keterangan_pns" gorm:"column:keterangan;default:null"`                           //Perubahan
 	Nira                   *string `form:"nira" gorm:"column:nira;default:null"`                                           //Perubahan
 	TglInput               *string `form:"-" gorm:"-"`
@@ -74,6 +76,8 @@ type PegawaiPNSPTT struct {
 	TmtPak                 string `json:"tmt_pak"`
 	NomorSkPensiun         string `json:"nomor_sk_pensiun"`
 	TmtSkPensiun           string `json:"tmt_sk_pensiun"`
+	MasaKerjaPensiunTahun  string `json:"masa_kerja_pensiun_tahun"`
+	MasaKerjaPensiunBulan  string `json:"masa_kerja_pensiun_bulan"`
 	KeteranganPNS          string `json:"keterangan_pns"`
 	Nira                   string `json:"nira"`
 	UuidJenisPTT           string `json:"uuid_jenis_ptt"`

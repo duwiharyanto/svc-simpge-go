@@ -392,6 +392,8 @@ func getPegawaiPNSQuery(uuid string) string {
 		COALESCE(pp.tmt_pak,''),
 		COALESCE(pp.nomor_sk_pensiun,''),
 		COALESCE(pp.tmt_sk_pensiun,''),
+		COALESCE(pp.masa_kerja_pensiun_tahun,''),
+		COALESCE(pp.masa_kerja_pensiun_bulan,''),
 		COALESCE(pp.keterangan,''),
 		COALESCE(pp.nira,'')
 	FROM 

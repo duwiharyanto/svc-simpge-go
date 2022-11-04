@@ -482,7 +482,7 @@ func ValidateUpdatePegawaiByUUID(a *app.App, c echo.Context) (model.PegawaiUpdat
 	if ptr.StringValue(pegawaiReq.PegawaiPNS.MasaKerjaGolonganBulan, "") != "" {
 		a, _ := strconv.Atoi(ptr.StringValue(pegawaiReq.PegawaiPNS.MasaKerjaGolonganBulan, ""))
 		if a > 12 {
-			return model.PegawaiUpdate{}, fmt.Errorf("masa kerja bulan maksimal 12")
+			return model.PegawaiUpdate{}, fmt.Errorf("masa kerja golongan bulan maksimal 12")
 		}
 		pegawai.PegawaiPNS.MasaKerjaGolonganBulan = pegawaiReq.PegawaiPNS.MasaKerjaGolonganBulan
 	}
@@ -502,6 +502,16 @@ func ValidateUpdatePegawaiByUUID(a *app.App, c echo.Context) (model.PegawaiUpdat
 	}
 	if pegawaiReq.PegawaiPNS.TmtSkPensiun != nil {
 		pegawai.PegawaiPNS.TmtSkPensiun = pegawaiReq.PegawaiPNS.TmtSkPensiun
+	}
+	if ptr.StringValue(pegawaiReq.PegawaiPNS.MasaKerjaPensiunTahun, "") != "" {
+		pegawai.PegawaiPNS.MasaKerjaPensiunTahun = pegawaiReq.PegawaiPNS.MasaKerjaPensiunTahun
+	}
+	if ptr.StringValue(pegawaiReq.PegawaiPNS.MasaKerjaPensiunBulan, "") != "" {
+		a, _ := strconv.Atoi(ptr.StringValue(pegawaiReq.PegawaiPNS.MasaKerjaPensiunBulan, ""))
+		if a > 12 {
+			return model.PegawaiUpdate{}, fmt.Errorf("masa kerja pensiun bulan maksimal 12")
+		}
+		pegawai.PegawaiPNS.MasaKerjaPensiunBulan = pegawaiReq.PegawaiPNS.MasaKerjaPensiunBulan
 	}
 	keterangan := ptr.StringValue(pegawaiReq.PegawaiPNS.Keterangan, "")
 	if len(keterangan) > 400 {
