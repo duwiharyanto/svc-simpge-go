@@ -413,7 +413,7 @@ func HandleGetPegawaiPrivate(a *app.App) echo.HandlerFunc {
 			return c.JSON(500, nil)
 		}
 		defer rows2.Close()
-		// // Loop through rows, using Scan to assign column data to struct fields.
+		// Loop through rows, using Scan to assign column data to struct fields.
 		for rows2.Next() {
 			var pf model.PegawaiFungsionalPrivate
 			if err := rows2.Scan(&pf.IdPegawai, &pf.JabatanFungsional, &pf.IdJabatanFungsional, &pf.KdJabatanFungsional); err != nil {
@@ -436,8 +436,10 @@ func HandleGetPegawaiPrivate(a *app.App) echo.HandlerFunc {
 					IsNotFungsional = false
 				}
 			}
+
 			if IsNotFungsional {
-				data.JabatanFungsional = append(data.JabatanFungsional, model.PegawaiFungsionalPrivate{})
+				// data.JabatanFungsional = append(data.JabatanFungsional, model.PegawaiFungsionalPrivate{})
+				data.JabatanFungsional = make([]model.PegawaiFungsionalPrivate, 0)
 			}
 			pegawaiAndFungsional = append(pegawaiAndFungsional, data)
 		}
@@ -457,7 +459,7 @@ func HandleGetPegawaiPrivate(a *app.App) echo.HandlerFunc {
 			return c.JSON(500, nil)
 		}
 		defer rows.Close()
-		// // Loop through rows, using Scan to assign column data to struct fields.
+		// Loop through rows, using Scan to assign column data to struct fields.
 		for rows.Next() {
 			var ps organisaiPrivate.PejabatStrukturalPrivate
 			if err := rows.Scan(&ps.IdPegawai, &ps.IdJenisUnit, &ps.IdJenisJabatan, &ps.IdUnit); err != nil {
@@ -498,7 +500,8 @@ func HandleGetPegawaiPrivate(a *app.App) echo.HandlerFunc {
 			}
 
 			if IsNotStruktural {
-				data.JabatanStruktural = append(data.JabatanStruktural, organisaiPrivate.PejabatStrukturalPrivate{})
+				// data.JabatanStruktural = append(data.JabatanStruktural, organisaiPrivate.PejabatStrukturalPrivate{})
+				data.JabatanStruktural = make([]organisaiPrivate.PejabatStrukturalPrivate, 0)
 			}
 
 			pegawaiAndFungsionalAndStruktural = append(pegawaiAndFungsionalAndStruktural, data)
