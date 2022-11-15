@@ -130,6 +130,7 @@ func GetAllPegawaiPrivate(a *app.App, req *model.PegawaiPrivateRequest) ([]model
 			&p.JumlahAnak,
 			&p.Npwp,
 			&p.StatusPernikahan,
+			&p.StatusPernikahanPtkp,
 			&p.NikSuamiIstri,
 			&p.NikKtp,
 			&p.JumlahTanggungan,

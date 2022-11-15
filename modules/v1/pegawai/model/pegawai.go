@@ -75,29 +75,31 @@ type PegawaiPrivate struct {
 	// JabatanFungsional     []privateJabatanFungsional.JabatanFungsionalPrivate `json:"jabatan_fungsional" gorm:"type:varchar"`
 	JabatanFungsional      []PegawaiFungsionalPrivate                          `json:"jabatan_fungsional" gorm:"type:varchar"`
 	JabatanStruktural      []privatePejabatStruktural.PejabatStrukturalPrivate `json:"jabatan_struktural" gorm:"type:varchar"`
-	PegawaiKontrakPrivate  `json:"kontrak" gorm:"type:varchar"`
-	IdJenjangPendidikan    string `json:"id_jenjang_pendidikan" gorm:"type:varchar"`
-	KdJenjangPendidikan    string `json:"kd_jenjang_pendidikan" gorm:"type:varchar"`
-	JenjangPendidikan      string `json:"jenjang_pendidikan" gorm:"type:varchar"`
-	TmtSkPertama           string `json:"tmt_sk_pertama" gorm:"type:varchar"`
-	MasaKerjaTahun         string `json:"masa_kerja_tahun" gorm:"type:varchar"`
-	MasaKerjaBulan         string `json:"masa_kerja_bulan" gorm:"type:varchar"`
-	JumlahAnak             string `json:"jumlah_anak" gorm:"type:varchar"`
-	Npwp                   string `json:"npwp" gorm:"type:varchar"`
-	StatusPernikahan       string `json:"status_nikah" gorm:"type:varchar"`
-	NikSuamiIstri          string `json:"nik_suami_istri" gorm:"type:varchar"`
-	NikKtp                 string `json:"nik_ktp" gorm:"type:varchar"`
-	JumlahTanggungan       string `json:"jumlah_tanggungan" gorm:"type:varchar"`
-	JumlahTanggunganPtkp   string `json:"jumlah_tanggungan_ptkp" gorm:"type:varchar"`
-	FlagKlaimTanggungan    string `json:"flag_klaim_tanggungan" gorm:"type:varchar"`
-	FlagPensiun            string `json:"flag_pensiun" gorm:"type:varchar"`
-	FlagMeninggal          string `json:"flag_meninggal" gorm:"type:varchar"`
-	FlagSuamiIstriSekantor string `json:"flag_suami_istri_sekantor" gorm:"type:varchar"`
+	PegawaiKontrakPrivate  []PegawaiKontrakPrivate                             `json:"kontrak" gorm:"type:varchar"`
+	IdJenjangPendidikan    string                                              `json:"id_jenjang_pendidikan" gorm:"type:varchar"`
+	KdJenjangPendidikan    string                                              `json:"kd_jenjang_pendidikan" gorm:"type:varchar"`
+	JenjangPendidikan      string                                              `json:"jenjang_pendidikan" gorm:"type:varchar"`
+	TmtSkPertama           string                                              `json:"tmt_sk_pertama" gorm:"type:varchar"`
+	MasaKerjaTahun         string                                              `json:"masa_kerja_tahun" gorm:"type:varchar"`
+	MasaKerjaBulan         string                                              `json:"masa_kerja_bulan" gorm:"type:varchar"`
+	JumlahAnak             string                                              `json:"jumlah_anak" gorm:"type:varchar"`
+	Npwp                   string                                              `json:"npwp" gorm:"type:varchar"`
+	StatusPernikahan       string                                              `json:"status_nikah" gorm:"type:varchar"`
+	StatusPernikahanPtkp   string                                              `json:"status_nikah_ptkp" gorm:"type:varchar"`
+	NikSuamiIstri          string                                              `json:"nik_suami_istri" gorm:"type:varchar"`
+	NikKtp                 string                                              `json:"nik_ktp" gorm:"type:varchar"`
+	JumlahTanggungan       string                                              `json:"jumlah_tanggungan" gorm:"type:varchar"`
+	JumlahTanggunganPtkp   string                                              `json:"jumlah_tanggungan_ptkp" gorm:"type:varchar"`
+	FlagKlaimTanggungan    string                                              `json:"flag_klaim_tanggungan" gorm:"type:varchar"`
+	FlagPensiun            string                                              `json:"flag_pensiun" gorm:"type:varchar"`
+	FlagMeninggal          string                                              `json:"flag_meninggal" gorm:"type:varchar"`
+	FlagSuamiIstriSekantor string                                              `json:"flag_suami_istri_sekantor" gorm:"type:varchar"`
 }
 
 type PegawaiKontrakPrivate struct {
-	TglMulai     string `json:"tanggal_mulai"`
+	IdPegawai    string `json:"id_pegawai"`
 	NoSurat      string `json:"no_surat"`
+	TglMulai     string `json:"tanggal_mulai"`
 	TglSurat     string `json:"tanggal_surat"`
 	AwalKontrak  string `json:"awal_kontrak"`
 	AkhirKontrak string `json:"akhir_kontrak"`

@@ -5,6 +5,7 @@ import (
 	"strings"
 	"svc-insani-go/helper"
 	"svc-insani-go/modules/v1/pegawai/model"
+	"time"
 )
 
 func getListAllPegawaiQuery(req *model.PegawaiRequest) string {
@@ -75,6 +76,8 @@ func getListAllPegawaiPrivateQuery(req *model.PegawaiPrivateRequest) string {
 	if req.KdIndukKerja != "" {
 		kdIndukKerjaFilterQuery = fmt.Sprintf("AND p.kd_unit1 = '%s'", req.KdIndukKerja)
 	}
+	t := time.Now()
+	year := t.Year()
 	return fmt.Sprintf(`SELECT
 	p.id id_pegawai,
 	p.nama,
@@ -121,10 +124,21 @@ func getListAllPegawaiPrivateQuery(req *model.PegawaiPrivateRequest) string {
 	COALESCE((SELECT COUNT(*) from hcm_personal.personal_hubungan_keluarga phk WHERE phk.id_personal_data_pribadi = p.id_personal_data_pribadi AND phk.kd_hubungan_keluarga IN ('AAK','AT','AN')),'') jumlah_anak,
 	COALESCE((SELECT pi.npwp from hcm_personal.personal_identitas pi WHERE pi.id_personal_data_pribadi = p.id_personal_data_pribadi AND pi.flag_aktif = 1),'') npwp,
 	COALESCE(spn.status,'') status_nikah,
+	COALESCE(spp.status,'') status_nikah_ptkp,
 	COALESCE(p.nik_suami_istri,''),
 	COALESCE(p.nik_ktp,'') nik_ktp,
-	COALESCE('') jumlah_tanggungan,
-	COALESCE('') jumlah_tanggungan_ptkp,
+	COALESCE((SELECT COUNT(*) FROM hcm_tanggungan_proses.tanggungan t 
+	join hcm_tanggungan_proses.status s on t.id_status = s.id 
+	join hcm_tanggungan_proses.jenis_tanggungan jt on jt.id = t.id_jenis_tanggungan 
+	JOIN hcm_tanggungan_proses.personal_hubungan_keluarga phk on phk.id = t.id_personal_hubungan_keluarga 
+	left join hcm_tanggungan_proses.personal_data_pribadi pdp on phk.id_personal_data_pribadi = pdp.id 
+	where s.kd_status = 'DST' and jt.kd_jenis_tanggungan = 'KLG' and  t.flag_aktif = TRUE and t.tahun = %d and pdp.id = p.id_personal_data_pribadi),'') jumlah_tanggungan,
+	COALESCE((SELECT COUNT(*) FROM hcm_tanggungan_proses.tanggungan t 
+	join hcm_tanggungan_proses.status s on t.id_status = s.id 
+	join hcm_tanggungan_proses.jenis_tanggungan jt on jt.id = t.id_jenis_tanggungan 
+	JOIN hcm_tanggungan_proses.personal_hubungan_keluarga phk on phk.id = t.id_personal_hubungan_keluarga 
+	left join hcm_tanggungan_proses.personal_data_pribadi pdp on phk.id_personal_data_pribadi = pdp.id 
+	where s.kd_status = 'DST' and jt.kd_jenis_tanggungan = 'PTKP' and  t.flag_aktif = TRUE and t.tahun = %d and pdp.id = p.id_personal_data_pribadi),'') jumlah_tanggungan_ptkp,
 	COALESCE('') flag_klaim_tanggungan,
 	COALESCE(p.flag_pensiun,''),
 	COALESCE(p.flag_meninggal,''),
@@ -167,7 +181,11 @@ func getListAllPegawaiPrivateQuery(req *model.PegawaiPrivateRequest) string {
 		jenjang_pendidikan jp ON p.id_pendidikan_terakhir = jp.id
 	LEFT JOIN
 		status_pernikahan spn ON p.kd_status_perkawinan = spn.kd_status
-	WHERE p.flag_aktif=1 %s %s %s %s %s`, nikFilterQuery, namaFilterQuery, kdJenisPegawaiFilterQuery, kdKelompokFilterQuery, kdIndukKerjaFilterQuery)
+	LEFT JOIN
+		personal_data_pribadi pdp on p.id_personal_data_pribadi = pdp.id 
+	LEFT JOIN
+		status_pernikahan_ptkp spp on pdp.kd_status_perkawinan_ptkp = spp.kd_status
+	WHERE p.flag_aktif=1 %s %s %s %s %s`, year, year, nikFilterQuery, namaFilterQuery, kdJenisPegawaiFilterQuery, kdKelompokFilterQuery, kdIndukKerjaFilterQuery)
 
 }
 
