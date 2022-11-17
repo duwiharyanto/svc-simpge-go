@@ -695,7 +695,39 @@ func HandleGetPegawaiPrivate(a *app.App) echo.HandlerFunc {
 		}
 
 		// res.Data = pegawaiAndFungsionalAndStruktural
-		res.Data = pegawaiJabfungJabstrukAndKontrak
+		// res.Data = pegawaiJabfungJabstrukAndKontrak
+
+		// tanggungan keluarga = hasil dari api
+		var dataTanggungan []model.TanggunganKeluarga
+		tanggunganKeluarga1 := model.TanggunganKeluarga{
+			IdPersonalDataPribadi:   "12053096",
+			StatusPernikahanPtkp:    "Menikah PTKP",
+			JumlahTangunganKeluarga: 10,
+			JumlahTanggunganPtkp:    1,
+		}
+		tanggunganKeluarga2 := model.TanggunganKeluarga{
+			IdPersonalDataPribadi:   "819299855453754385",
+			StatusPernikahanPtkp:    "Menikah PTKP",
+			JumlahTangunganKeluarga: 10,
+			JumlahTanggunganPtkp:    1,
+		}
+
+		dataTanggungan = append(dataTanggungan, tanggunganKeluarga1)
+		dataTanggungan = append(dataTanggungan, tanggunganKeluarga2)
+
+		var pegawaiJabfungJabstrukAndKontrakAndTangungan []model.PegawaiPrivate
+		for _, data := range pegawaiJabfungJabstrukAndKontrak {
+			for _, tanggungan := range dataTanggungan {
+				if data.IdPersonal == tanggungan.IdPersonalDataPribadi {
+					data.StatusPernikahanPtkp = tanggungan.StatusPernikahanPtkp
+					data.JumlahTanggungan = tanggungan.JumlahTangunganKeluarga
+					data.JumlahTanggunganPtkp = tanggungan.JumlahTanggunganPtkp
+				}
+			}
+			pegawaiJabfungJabstrukAndKontrakAndTangungan = append(pegawaiJabfungJabstrukAndKontrakAndTangungan, data)
+		}
+
+		res.Data = pegawaiJabfungJabstrukAndKontrakAndTangungan
 		return c.JSON(http.StatusOK, res)
 	}
 	return echo.HandlerFunc(h)
