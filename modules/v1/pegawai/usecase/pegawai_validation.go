@@ -433,6 +433,31 @@ func ValidateUpdatePegawaiByUUID(a *app.App, c echo.Context) (model.PegawaiUpdat
 	if pegawaiReq.PegawaiFungsional.TmtSkPertama != nil {
 		pegawai.PegawaiFungsional.TmtSkPertama = pegawaiReq.PegawaiFungsional.TmtSkPertama
 	}
+	if ptr.StringValue(pegawaiReq.PegawaiFungsional.NomorSk, "") != "" {
+		if len(ptr.StringValue(pegawaiReq.PegawaiFungsional.NomorSk, "")) > 30 {
+			return model.PegawaiUpdate{}, fmt.Errorf("panjang karakter nomor sk maksimal 30")
+		}
+		pegawai.PegawaiFungsional.NomorSk = pegawaiReq.PegawaiFungsional.NomorSk
+	}
+	if pegawaiReq.PegawaiFungsional.TmtSk != nil {
+		pegawai.PegawaiFungsional.TmtSk = pegawaiReq.PegawaiFungsional.TmtSk
+	}
+
+	tglSk := ptr.StringValue(pegawaiReq.PegawaiFungsional.TglSk, "")
+	_, err = time.Parse("2006-01-02", tglSk)
+	if tglSk != "" {
+		if err != nil {
+			return model.PegawaiUpdate{}, fmt.Errorf("tgl_sk harus sesuai format tanggal yyyy-mm-dd")
+		}
+		pegawai.PegawaiFungsional.TglSk = ptr.String(tglSk)
+	}
+	if pegawaiReq.PegawaiFungsional.TmtAwalKontrak != nil {
+		pegawai.PegawaiFungsional.TmtAwalKontrak = pegawaiReq.PegawaiFungsional.TmtAwalKontrak
+	}
+	if pegawaiReq.PegawaiFungsional.TmtAkhirKontrak != nil {
+		pegawai.PegawaiFungsional.TmtAkhirKontrak = pegawaiReq.PegawaiFungsional.TmtAkhirKontrak
+	}
+
 	if ptr.StringValue(pegawaiReq.PegawaiPNS.InstansiAsal, "") != "" {
 		pegawai.PegawaiPNS.InstansiAsal = pegawaiReq.PegawaiPNS.InstansiAsal
 	}
