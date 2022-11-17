@@ -128,7 +128,7 @@ func getListAllPegawaiPrivateQuery(req *model.PegawaiPrivateRequest) string {
 	COALESCE('') flag_klaim_tanggungan,
 	COALESCE(p.flag_pensiun,''),
 	COALESCE(p.flag_meninggal,''),
-	COALESCE((SELECT phk.flag_sekantor from hcm_personal.personal_hubungan_keluarga phk WHERE phk.id_personal_data_pribadi = p.id_personal_data_pribadi AND phk.kd_hubungan_keluarga in ('SUA','IST') AND phk.flag_aktif = 1),'') flag_suami_istri_sekantor
+	COALESCE((SELECT DISTINCT phk.flag_sekantor from hcm_personal.personal_hubungan_keluarga phk WHERE phk.id_personal_data_pribadi = p.id_personal_data_pribadi AND phk.kd_hubungan_keluarga in ('SUA','IST') AND phk.flag_aktif = 1),'') flag_suami_istri_sekantor
 	from
 	pegawai p
 	LEFT JOIN
