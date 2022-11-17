@@ -36,6 +36,7 @@ type Pegawai struct {
 
 type PegawaiPrivate struct {
 	IdPegawai                 string `json:"id_pegawai" gorm:"type:varchar;not null"`
+	IdPersonal                string `json:"id_personal_data_pribadi" gorm:"type:varchar;"`
 	Nama                      string `json:"nama" gorm:"type:varchar;not null"`
 	NIK                       string `json:"nik" gorm:"type:varchar;not null"`
 	JenisPegawai              string `json:"jenis_pegawai" gorm:"type:varchar"`
@@ -88,8 +89,8 @@ type PegawaiPrivate struct {
 	StatusPernikahanPtkp   string                                              `json:"status_nikah_ptkp" gorm:"type:varchar"`
 	NikSuamiIstri          string                                              `json:"nik_suami_istri" gorm:"type:varchar"`
 	NikKtp                 string                                              `json:"nik_ktp" gorm:"type:varchar"`
-	JumlahTanggungan       string                                              `json:"jumlah_tanggungan" gorm:"type:varchar"`
-	JumlahTanggunganPtkp   string                                              `json:"jumlah_tanggungan_ptkp" gorm:"type:varchar"`
+	JumlahTanggungan       int                                                 `json:"jumlah_tanggungan" gorm:"type:varchar"`
+	JumlahTanggunganPtkp   int                                                 `json:"jumlah_tanggungan_ptkp" gorm:"type:varchar"`
 	FlagKlaimTanggungan    string                                              `json:"flag_klaim_tanggungan" gorm:"type:varchar"`
 	FlagPensiun            string                                              `json:"flag_pensiun" gorm:"type:varchar"`
 	FlagMeninggal          string                                              `json:"flag_meninggal" gorm:"type:varchar"`
@@ -104,6 +105,13 @@ type PegawaiKontrakPrivate struct {
 	AwalKontrak  string `json:"awal_kontrak"`
 	AkhirKontrak string `json:"akhir_kontrak"`
 }
+type TanggunganKeluarga struct {
+	IdPersonalDataPribadi   string
+	StatusPernikahanPtkp    string
+	JumlahTangunganKeluarga int
+	JumlahTanggunganPtkp    int
+}
+
 type PegawaiCreate struct {
 	Id                         uint64                  `form:"-" gorm:"primaryKey"`
 	Uuid                       string                  `form:"-"`
