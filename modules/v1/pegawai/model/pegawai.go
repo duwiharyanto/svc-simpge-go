@@ -105,11 +105,16 @@ type PegawaiKontrakPrivate struct {
 	AwalKontrak  string `json:"awal_kontrak"`
 	AkhirKontrak string `json:"akhir_kontrak"`
 }
-type TanggunganKeluarga struct {
-	IdPersonalDataPribadi   string
-	StatusPernikahanPtkp    string
-	JumlahTangunganKeluarga int
-	JumlahTanggunganPtkp    int
+type Tanggungan struct {
+	IdPersonal           string `json:"id_personal"`
+	StatusPernikahanPtkp string `json:"status_pernikahan_ptkp"`
+	JumlahTanggungan     int    `json:"jumlah_tanggungan"`
+	JumlahTanggunganPtkp int    `json:"jumlah_tanggungan_ptkp"`
+}
+
+type TanggunganResponseBody struct {
+	Message string `json:"message"`
+	Data    []Tanggungan
 }
 
 type PegawaiCreate struct {

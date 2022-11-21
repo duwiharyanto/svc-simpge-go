@@ -2,8 +2,10 @@ package usecase
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"log"
 	"os"
 	"strconv"
@@ -697,30 +699,15 @@ func HandleGetPegawaiPrivate(a *app.App) echo.HandlerFunc {
 		// res.Data = pegawaiAndFungsionalAndStruktural
 		// res.Data = pegawaiJabfungJabstrukAndKontrak
 
-		// tanggungan keluarga = hasil dari api
-		var dataTanggungan []model.TanggunganKeluarga
-		tanggunganKeluarga1 := model.TanggunganKeluarga{
-			IdPersonalDataPribadi:   "12053096",
-			StatusPernikahanPtkp:    "Menikah PTKP",
-			JumlahTangunganKeluarga: 10,
-			JumlahTanggunganPtkp:    1,
-		}
-		tanggunganKeluarga2 := model.TanggunganKeluarga{
-			IdPersonalDataPribadi:   "819299855453754385",
-			StatusPernikahanPtkp:    "Menikah PTKP",
-			JumlahTangunganKeluarga: 10,
-			JumlahTanggunganPtkp:    1,
-		}
-
-		dataTanggungan = append(dataTanggungan, tanggunganKeluarga1)
-		dataTanggungan = append(dataTanggungan, tanggunganKeluarga2)
+		// fmt.Println(GetDataTanggungan())
+		tanggunganResponse := GetDataTanggungan()
 
 		var pegawaiJabfungJabstrukAndKontrakAndTangungan []model.PegawaiPrivate
 		for _, data := range pegawaiJabfungJabstrukAndKontrak {
-			for _, tanggungan := range dataTanggungan {
-				if data.IdPersonal == tanggungan.IdPersonalDataPribadi {
+			for _, tanggungan := range tanggunganResponse.Data {
+				if data.IdPersonal == tanggungan.IdPersonal {
 					data.StatusPernikahanPtkp = tanggungan.StatusPernikahanPtkp
-					data.JumlahTanggungan = tanggungan.JumlahTangunganKeluarga
+					data.JumlahTanggungan = tanggungan.JumlahTanggungan
 					data.JumlahTanggunganPtkp = tanggungan.JumlahTanggunganPtkp
 				}
 			}
@@ -731,4 +718,33 @@ func HandleGetPegawaiPrivate(a *app.App) echo.HandlerFunc {
 		return c.JSON(http.StatusOK, res)
 	}
 	return echo.HandlerFunc(h)
+}
+
+func GetDataTanggungan() *model.TanggunganResponseBody {
+	// baseURL := "http://localhost:81/public/api/v1/tanggungan-private"
+	baseURL := os.Getenv("URL_HCM_TANGGUNGAN")
+	var client = &http.Client{}
+	request, err := http.NewRequest(http.MethodGet, baseURL, nil)
+	if err != nil {
+		fmt.Println(err)
+		return nil
+	}
+	response, err := client.Do(request)
+	if err != nil {
+		fmt.Println(err)
+		return nil
+	}
+	defer response.Body.Close()
+	b, err := io.ReadAll(response.Body)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	data := &model.TanggunganResponseBody{}
+	err = json.Unmarshal(b, data)
+	if err != nil {
+		fmt.Println(err.Error())
+		return nil
+	}
+	return data
 }
