@@ -707,6 +707,8 @@ func HandleGetPegawaiPrivate(a *app.App) echo.HandlerFunc {
 		for _, data := range pegawaiJabfungJabstrukAndKontrak {
 			for _, tanggungan := range tanggunganResponse.Data {
 				if data.IdPersonal == tanggungan.IdPersonal {
+					data.IdStatusPernikahanPtkp = tanggungan.IdStatusPernikahanPtkp
+					data.KdStatusPernikahanPtkp = tanggungan.KdStatusPernikahanPtkp
 					data.StatusPernikahanPtkp = tanggungan.StatusPernikahanPtkp
 					data.JumlahTanggungan = tanggungan.JumlahTanggungan
 					data.JumlahTanggunganPtkp = tanggungan.JumlahTanggunganPtkp

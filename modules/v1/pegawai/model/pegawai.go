@@ -85,7 +85,11 @@ type PegawaiPrivate struct {
 	MasaKerjaBulan         string                                              `json:"masa_kerja_bulan" gorm:"type:varchar"`
 	JumlahAnak             string                                              `json:"jumlah_anak" gorm:"type:varchar"`
 	Npwp                   string                                              `json:"npwp" gorm:"type:varchar"`
-	StatusPernikahan       string                                              `json:"status_nikah" gorm:"type:varchar"`
+	IdStatusPernikahan     uint64                                              `json:"id_status_nikah" gorm:"type:varchar"`
+	KdStatusPernikahan     string                                              `json:"status_nikah" gorm:"type:varchar"`
+	StatusPernikahan       string                                              `json:"kd_status_nikah" gorm:"type:varchar"`
+	IdStatusPernikahanPtkp uint64                                              `json:"id_status_pernikahan_ptkp" gorm:"type:varchar"`
+	KdStatusPernikahanPtkp string                                              `json:"kd_status_pernikahan_ptkp" gorm:"type:varchar"`
 	StatusPernikahanPtkp   string                                              `json:"status_nikah_ptkp" gorm:"type:varchar"`
 	NikSuamiIstri          string                                              `json:"nik_suami_istri" gorm:"type:varchar"`
 	NikKtp                 string                                              `json:"nik_ktp" gorm:"type:varchar"`
@@ -106,10 +110,12 @@ type PegawaiKontrakPrivate struct {
 	AkhirKontrak string `json:"akhir_kontrak"`
 }
 type Tanggungan struct {
-	IdPersonal           string `json:"id_personal"`
-	StatusPernikahanPtkp string `json:"status_pernikahan_ptkp"`
-	JumlahTanggungan     int    `json:"jumlah_tanggungan"`
-	JumlahTanggunganPtkp int    `json:"jumlah_tanggungan_ptkp"`
+	IdPersonal             string `json:"id_personal"`
+	IdStatusPernikahanPtkp uint64 `json:"id_status_pernikahan_ptkp"`
+	KdStatusPernikahanPtkp string `json:"kd_status_pernikahan_ptkp"`
+	StatusPernikahanPtkp   string `json:"status_pernikahan_ptkp"`
+	JumlahTanggungan       int    `json:"jumlah_tanggungan"`
+	JumlahTanggunganPtkp   int    `json:"jumlah_tanggungan_ptkp"`
 }
 
 type TanggunganResponseBody struct {
