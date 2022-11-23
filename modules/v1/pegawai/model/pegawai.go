@@ -90,7 +90,7 @@ type PegawaiPrivate struct {
 	StatusPernikahan       string                                              `json:"kd_status_nikah" gorm:"type:varchar"`
 	IdStatusPernikahanPtkp uint64                                              `json:"id_status_pernikahan_ptkp" gorm:"type:varchar"`
 	KdStatusPernikahanPtkp string                                              `json:"kd_status_pernikahan_ptkp" gorm:"type:varchar"`
-	StatusPernikahanPtkp   string                                              `json:"status_nikah_ptkp" gorm:"type:varchar"`
+	StatusPernikahanPtkp   string                                              `json:"status_pernikahan_ptkp" gorm:"type:varchar"`
 	NikSuamiIstri          string                                              `json:"nik_suami_istri" gorm:"type:varchar"`
 	NikKtp                 string                                              `json:"nik_ktp" gorm:"type:varchar"`
 	JumlahTanggungan       int                                                 `json:"jumlah_tanggungan" gorm:"type:varchar"`

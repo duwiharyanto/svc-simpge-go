@@ -675,7 +675,6 @@ func HandleGetPegawaiPrivate(a *app.App) echo.HandlerFunc {
 				return c.JSON(500, nil)
 			}
 			kontrakPegawai = append(kontrakPegawai, pk)
-			// pegawaiJabfungJabstrukAndKontrak = append(kontrakPegawai, pk)
 		}
 		if err := rows3.Err(); err != nil {
 			fmt.Println(err)
@@ -684,8 +683,6 @@ func HandleGetPegawaiPrivate(a *app.App) echo.HandlerFunc {
 
 		var pegawaiJabfungJabstrukAndKontrak []model.PegawaiPrivate
 		IsNotKontrak := true
-		// var nilSlice []string
-		// fmt.Println(len(pegawaiAndFungsionalAndStruktural))
 		for _, data := range pegawaiAndFungsionalAndStruktural {
 			for _, kontrak := range kontrakPegawai {
 				if data.IdPegawai == kontrak.IdPegawai {
@@ -709,7 +706,6 @@ func HandleGetPegawaiPrivate(a *app.App) echo.HandlerFunc {
 		// res.Data = pegawaiAndFungsionalAndStruktural
 		// res.Data = pegawaiJabfungJabstrukAndKontrak
 
-		// fmt.Println(GetDataTanggungan())
 		tanggunganResponse := GetDataTanggungan()
 
 		var pegawaiJabfungJabstrukAndKontrakAndTangungan []model.PegawaiPrivate
