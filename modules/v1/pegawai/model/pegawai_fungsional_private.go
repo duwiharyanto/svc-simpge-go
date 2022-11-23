@@ -1,8 +1,8 @@
 package model
 
 type PegawaiFungsionalPrivate struct {
-	IdPegawai           string `json:"id_pegawai"`
+	IdPegawai           uint64 `json:"id_pegawai,omitempty"`
 	JabatanFungsional   string `json:"jabatan_fungsional"`
-	IdJabatanFungsional string `json:"id_jabatan_fungsional"`
+	IdJabatanFungsional uint64 `json:"id_jabatan_fungsional"`
 	KdJabatanFungsional string `json:"kd_jabatan_fungsional"`
 }

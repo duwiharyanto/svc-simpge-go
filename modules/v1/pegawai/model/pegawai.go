@@ -35,8 +35,8 @@ type Pegawai struct {
 }
 
 type PegawaiPrivate struct {
-	IdPegawai                 string `json:"id_pegawai" gorm:"type:varchar;not null"`
-	IdPersonal                string `json:"id_personal_data_pribadi" gorm:"type:varchar;"`
+	IdPegawai                 uint64 `json:"id_pegawai" gorm:"type:varchar;not null"`
+	IdPersonal                uint64 `json:"id_personal_data_pribadi" gorm:"type:varchar;"`
 	Nama                      string `json:"nama" gorm:"type:varchar;not null"`
 	NIK                       string `json:"nik" gorm:"type:varchar;not null"`
 	JenisPegawai              string `json:"jenis_pegawai" gorm:"type:varchar"`
@@ -76,7 +76,7 @@ type PegawaiPrivate struct {
 	// JabatanFungsional     []privateJabatanFungsional.JabatanFungsionalPrivate `json:"jabatan_fungsional" gorm:"type:varchar"`
 	JabatanFungsional      []PegawaiFungsionalPrivate                          `json:"jabatan_fungsional" gorm:"type:varchar"`
 	JabatanStruktural      []privatePejabatStruktural.PejabatStrukturalPrivate `json:"jabatan_struktural" gorm:"type:varchar"`
-	PegawaiKontrakPrivate  []PegawaiKontrakPrivate                             `json:"kontrak" gorm:"type:varchar"`
+	PegawaiKontrakPrivate  PegawaiKontrakPrivate                               `json:"kontrak" gorm:"type:varchar"`
 	IdJenjangPendidikan    uint64                                              `json:"id_jenjang_pendidikan" gorm:"type:varchar"`
 	KdJenjangPendidikan    string                                              `json:"kd_jenjang_pendidikan" gorm:"type:varchar"`
 	JenjangPendidikan      string                                              `json:"jenjang_pendidikan" gorm:"type:varchar"`
@@ -102,7 +102,7 @@ type PegawaiPrivate struct {
 }
 
 type PegawaiKontrakPrivate struct {
-	IdPegawai    string `json:"id_pegawai"`
+	IdPegawai    uint64 `json:"id_pegawai,omitempty"`
 	NoSurat      string `json:"no_surat"`
 	TglMulai     string `json:"tanggal_mulai"`
 	TglSurat     string `json:"tanggal_surat"`

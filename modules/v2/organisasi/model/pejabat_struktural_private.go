@@ -1,8 +1,8 @@
 package model
 
 type PejabatStrukturalPrivate struct {
-	IdPegawai      string `json:"id_pegawai"`
-	IdJenisUnit    string `json:"id_jenis_unit"`
-	IdJenisJabatan string `json:"id_jenis_jabatan"`
-	IdUnit         string `json:"id_unit"`
+	IdPegawai      uint64 `json:"id_pegawai,omitempty"`
+	IdJenisUnit    uint64 `json:"id_jenis_unit"`
+	IdJenisJabatan uint64 `json:"id_jenis_jabatan"`
+	IdUnit         uint64 `json:"id_unit"`
 }

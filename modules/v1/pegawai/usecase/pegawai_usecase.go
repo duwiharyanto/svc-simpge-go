@@ -543,8 +543,8 @@ func HandleGetPegawaiPrivate(a *app.App) echo.HandlerFunc {
 		res.Data = pp
 
 		// get data jabatan fungsional
-		stmt2, err := a.DB.Prepare(`SELECT p.id, COALESCE(jf.fungsional,''),
-		COALESCE(jf.id,''),
+		stmt2, err := a.DB.Prepare(`SELECT COALESCE(p.id,0), COALESCE(jf.fungsional,''),
+		COALESCE(jf.id,0),
 		COALESCE(jf.kd_fungsional,'')
 		FROM pegawai p
 		JOIN pegawai_fungsional pf ON p.id = pf.id_pegawai
@@ -576,7 +576,8 @@ func HandleGetPegawaiPrivate(a *app.App) echo.HandlerFunc {
 		for _, data := range res.Data {
 			for _, pegFung := range pegawaiFungsional {
 				if data.IdPegawai == pegFung.IdPegawai {
-					data.JabatanFungsional = append(data.JabatanFungsional, pegFung)
+					newPegfung := model.PegawaiFungsionalPrivate{JabatanFungsional: pegFung.JabatanFungsional, IdJabatanFungsional: pegFung.IdJabatanFungsional, KdJabatanFungsional: pegFung.KdJabatanFungsional}
+					data.JabatanFungsional = append(data.JabatanFungsional, newPegfung)
 					IsNotFungsional = false
 				}
 			}
@@ -589,9 +590,9 @@ func HandleGetPegawaiPrivate(a *app.App) echo.HandlerFunc {
 		}
 
 		// get data jabatan struktural
-		stmt, err := a.DB.Prepare(`SELECT p.id, COALESCE(so.id_jenis_jabatan,''),
-		COALESCE(so.id_unit,''),
-		COALESCE(u.id_jenis_unit,'')
+		stmt, err := a.DB.Prepare(`SELECT COALESCE(p.id,0), COALESCE(so.id_jenis_jabatan,0),
+		COALESCE(so.id_unit,0),
+		COALESCE(u.id_jenis_unit,0)
 		FROM pegawai p
 		JOIN pejabat_struktural ps ON p.id = ps.id_pegawai
 		JOIN hcm_organisasi.struktur_organisasi so ON ps.id_struktur_organisasi = so.id
@@ -674,6 +675,7 @@ func HandleGetPegawaiPrivate(a *app.App) echo.HandlerFunc {
 				return c.JSON(500, nil)
 			}
 			kontrakPegawai = append(kontrakPegawai, pk)
+			// pegawaiJabfungJabstrukAndKontrak = append(kontrakPegawai, pk)
 		}
 		if err := rows3.Err(); err != nil {
 			fmt.Println(err)
@@ -682,16 +684,23 @@ func HandleGetPegawaiPrivate(a *app.App) echo.HandlerFunc {
 
 		var pegawaiJabfungJabstrukAndKontrak []model.PegawaiPrivate
 		IsNotKontrak := true
+		// var nilSlice []string
+		// fmt.Println(len(pegawaiAndFungsionalAndStruktural))
 		for _, data := range pegawaiAndFungsionalAndStruktural {
 			for _, kontrak := range kontrakPegawai {
 				if data.IdPegawai == kontrak.IdPegawai {
-					data.PegawaiKontrakPrivate = append(data.PegawaiKontrakPrivate, kontrak)
+					fmt.Println(kontrak)
+					// data.PegawaiKontrakPrivate = append(data.PegawaiKontrakPrivate, kontrak)
+					// data.PegawaiKontrakPrivate = kontrak
+					data.PegawaiKontrakPrivate = model.PegawaiKontrakPrivate{NoSurat: kontrak.NoSurat, TglMulai: kontrak.TglMulai, TglSurat: kontrak.TglSurat, AwalKontrak: kontrak.AwalKontrak, AkhirKontrak: kontrak.AkhirKontrak}
 					IsNotKontrak = false
+					fmt.Println("cek")
 				}
 			}
 			if IsNotKontrak {
 				// data.PegawaiKontrakPrivate = make([]model.PegawaiKontrakPrivate, 0)
-				data.PegawaiKontrakPrivate = append(data.PegawaiKontrakPrivate, model.PegawaiKontrakPrivate{})
+				// data.PegawaiKontrakPrivate =
+				// data.PegawaiKontrakPrivate = append(data.PegawaiKontrakPrivate, model.PegawaiKontrakPrivate{})
 			}
 
 			pegawaiJabfungJabstrukAndKontrak = append(pegawaiJabfungJabstrukAndKontrak, data)
@@ -706,7 +715,8 @@ func HandleGetPegawaiPrivate(a *app.App) echo.HandlerFunc {
 		var pegawaiJabfungJabstrukAndKontrakAndTangungan []model.PegawaiPrivate
 		for _, data := range pegawaiJabfungJabstrukAndKontrak {
 			for _, tanggungan := range tanggunganResponse.Data {
-				if data.IdPersonal == tanggungan.IdPersonal {
+				// if data.IdPersonal == tanggungan.IdPersonal {
+				if strconv.FormatInt(int64(data.IdPegawai), 10) == tanggungan.IdPersonal {
 					data.IdStatusPernikahanPtkp = tanggungan.IdStatusPernikahanPtkp
 					data.KdStatusPernikahanPtkp = tanggungan.KdStatusPernikahanPtkp
 					data.StatusPernikahanPtkp = tanggungan.StatusPernikahanPtkp
@@ -724,8 +734,8 @@ func HandleGetPegawaiPrivate(a *app.App) echo.HandlerFunc {
 }
 
 func GetDataTanggungan() *model.TanggunganResponseBody {
-	// baseURL := "http://localhost:81/public/api/v1/tanggungan-private"
-	baseURL := os.Getenv("URL_HCM_TANGGUNGAN")
+	baseURL := "http://localhost:81/public/api/v1/tanggungan-private"
+	// baseURL := os.Getenv("URL_HCM_TANGGUNGAN")
 	var client = &http.Client{}
 	request, err := http.NewRequest(http.MethodGet, baseURL, nil)
 	if err != nil {
