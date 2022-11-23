@@ -734,8 +734,8 @@ func HandleGetPegawaiPrivate(a *app.App) echo.HandlerFunc {
 }
 
 func GetDataTanggungan() *model.TanggunganResponseBody {
-	baseURL := "http://localhost:81/public/api/v1/tanggungan-private"
-	// baseURL := os.Getenv("URL_HCM_TANGGUNGAN")
+	// baseURL := "http://localhost:81/public/api/v1/tanggungan-private"
+	baseURL := os.Getenv("URL_HCM_TANGGUNGAN")
 	var client = &http.Client{}
 	request, err := http.NewRequest(http.MethodGet, baseURL, nil)
 	if err != nil {
