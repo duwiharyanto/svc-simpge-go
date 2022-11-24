@@ -127,7 +127,7 @@ func getListAllPegawaiPrivateQuery(req *model.PegawaiPrivateRequest) string {
 	COALESCE(spn.status,'') status_nikah,
 	COALESCE(p.nik_suami_istri,''),
 	COALESCE(p.nik_ktp,'') nik_ktp,
-	COALESCE(0) flag_klaim_tanggungan,
+	COALESCE((SELECT pdp.flag_ptkp from hcm_tanggungan.personal_data_pribadi pdp WHERE pdp.id = p.id_personal_data_pribadi AND pdp.flag_aktif = 1),0) flag_klaim_tanggungan,
 	COALESCE(p.flag_pensiun,0),
 	COALESCE(p.flag_meninggal,0),
 	COALESCE((SELECT DISTINCT phk.flag_sekantor from hcm_personal.personal_hubungan_keluarga phk WHERE phk.id_personal_data_pribadi = p.id_personal_data_pribadi AND phk.kd_hubungan_keluarga in ('SUA','IST') AND phk.flag_aktif = 1),0) flag_suami_istri_sekantor
