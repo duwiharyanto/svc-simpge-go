@@ -46,6 +46,10 @@ func GetUnitKerjaPegawai(a *app.App, uuidPegawai string) (*model.UnitKerjaPegawa
 	}
 
 	unitKerjaPegawai.SetTanggalIDN()
+	unitKerjaPegawai.SetTmtSkIDN()
+	unitKerjaPegawai.SetTanggalSkIDN()
+	unitKerjaPegawai.SetTmtAwalKontrakIDN()
+	unitKerjaPegawai.SetTmtAkhirKontrakIDN()
 
 	return &unitKerjaPegawai, nil
 }

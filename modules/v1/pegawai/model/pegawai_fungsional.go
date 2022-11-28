@@ -51,10 +51,14 @@ type PegawaiFungsionalCreate struct {
 	IdHomebaseUii                 uint64  `form:"-" gorm:"default:null"`
 	KdHomebaseUii                 string  `form:"-" gorm:"default:null"`
 	NomorSk                       string  `form:"nomor_sk" gorm:"default:null"`
-	TmtSk                         string  `form:"tmt_sk" gorm:"default:null"`
+	TmtSk                         string  `form:"tmt_sk_idn" gorm:"-"`
+	TmtSkIDN                      string  `form:"tmt_sk_idn" gorm:"default:null"`
 	TglSk                         string  `form:"tgl_sk" gorm:"default:null"`
+	TglSkIDN                      string  `form:"tgl_sk_idn" gorm:"default:null"`
 	TmtAwalKontrak                string  `form:"tmt_awal_kontrak" gorm:"default:null"`
+	TmtAwalKontrakIDN             string  `form:"tmt_awal_kontrak_idn" gorm:"default:null"`
 	TmtAkhirKontrak               string  `form:"tmt_akhir_kontrak" gorm:"default:null"`
+	TmtAkhirKontrakIDN            string  `form:"tmt_akhir_kontrak_idn" gorm:"default:null"`
 	TglInput                      string  `form:"-" gorm:"-"`
 	UserInput                     string  `form:"-"`
 	TglUpdate                     string  `form:"-" gorm:"-"`
@@ -114,7 +118,9 @@ type PegawaiFungsionalUpdate struct {
 	KdHomebaseUii            *string `form:"-" gorm:"default:null"`
 	NomorSk                  *string `form:"nomor_sk" gorm:"default:null"`
 	TmtSk                    *string `form:"tmt_sk" gorm:"default:null"`
+	TmtSkIDN                 *string `form:"tmt_sk_idn" gorm:"-"`
 	TglSk                    *string `form:"tgl_sk" gorm:"default:null"`
+	TglSkIDN                 *string `form:"tgl_sk_idn" gorm:"-"`
 	TmtAwalKontrak           *string `form:"tmt_awal_kontrak" gorm:"default:null"`
 	TmtAkhirKontrak          *string `form:"tmt_akhir_kontrak" gorm:"default:null"`
 	TglInput                 *string `form:"-" gorm:"-"`
