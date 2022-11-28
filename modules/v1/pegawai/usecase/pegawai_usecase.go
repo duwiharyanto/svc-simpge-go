@@ -600,7 +600,8 @@ func GetDataTanggungan(public bool) *model.TanggunganResponseBody {
 	var baseURL string
 	baseURL = os.Getenv("URL_HCM_TANGGUNGAN")
 	if public {
-		baseURL = "http://localhost:81/public/api/v1/tanggungan-private"
+		// baseURL = "http://localhost:81/public/api/v1/tanggungan-private"
+		baseURL = "http://svc-dependents-go.hcm-dev.svc.cluster.local/public/api/v1/tanggungan-private"
 	}
 	var client = &http.Client{}
 	request, err := http.NewRequest(http.MethodGet, baseURL, nil)
