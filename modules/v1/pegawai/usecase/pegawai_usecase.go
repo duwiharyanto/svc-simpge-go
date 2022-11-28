@@ -373,10 +373,17 @@ func HandleGetPegawaiByNik(a *app.App) echo.HandlerFunc {
 	return echo.HandlerFunc(h)
 }
 
-func HandleGetPegawaiPrivate(a *app.App) echo.HandlerFunc {
+func HandleGetPegawaiPrivate(a *app.App, public bool) echo.HandlerFunc {
 	h := func(c echo.Context) error {
-		reqNik := c.QueryParam("nik")
+		env := os.Getenv("ENV")
+		fmt.Println(env)
+		if public {
+			if env == "staging" || env == "production" {
+				return c.JSON(404, "layanan tidak ditemukan")
+			}
+		}
 
+		reqNik := c.QueryParam("nik")
 		var nik string
 		if len(reqNik) > 0 {
 			nik = reqNik[:len(reqNik)-1]
@@ -545,12 +552,12 @@ func HandleGetPegawaiPrivate(a *app.App) echo.HandlerFunc {
 		for _, data := range pegawaiAndFungsionalAndStruktural {
 			for _, kontrak := range kontrakPegawai {
 				if data.IdPegawai == kontrak.IdPegawai {
-					fmt.Println(kontrak)
+					// fmt.Println(kontrak)
 					// data.PegawaiKontrakPrivate = append(data.PegawaiKontrakPrivate, kontrak)
 					// data.PegawaiKontrakPrivate = kontrak
 					data.PegawaiKontrakPrivate = model.PegawaiKontrakPrivate{NoSurat: kontrak.NoSurat, TglMulai: kontrak.TglMulai, TglSurat: kontrak.TglSurat, AwalKontrak: kontrak.AwalKontrak, AkhirKontrak: kontrak.AkhirKontrak}
 					IsNotKontrak = false
-					fmt.Println("cek")
+					// fmt.Println("cek")
 				}
 			}
 			if IsNotKontrak {
@@ -565,7 +572,7 @@ func HandleGetPegawaiPrivate(a *app.App) echo.HandlerFunc {
 		// res.Data = pegawaiAndFungsionalAndStruktural
 		// res.Data = pegawaiJabfungJabstrukAndKontrak
 
-		tanggunganResponse := GetDataTanggungan()
+		tanggunganResponse := GetDataTanggungan(public)
 
 		var pegawaiJabfungJabstrukAndKontrakAndTangungan []model.PegawaiPrivate
 		for _, data := range pegawaiJabfungJabstrukAndKontrak {
@@ -588,9 +595,13 @@ func HandleGetPegawaiPrivate(a *app.App) echo.HandlerFunc {
 	return echo.HandlerFunc(h)
 }
 
-func GetDataTanggungan() *model.TanggunganResponseBody {
-	// baseURL := "http://localhost:81/public/api/v1/tanggungan-private"
-	baseURL := os.Getenv("URL_HCM_TANGGUNGAN")
+func GetDataTanggungan(public bool) *model.TanggunganResponseBody {
+	// fmt.Println(env)
+	var baseURL string
+	baseURL = os.Getenv("URL_HCM_TANGGUNGAN")
+	if public {
+		baseURL = "http://localhost:81/public/api/v1/tanggungan-private"
+	}
 	var client = &http.Client{}
 	request, err := http.NewRequest(http.MethodGet, baseURL, nil)
 	if err != nil {
