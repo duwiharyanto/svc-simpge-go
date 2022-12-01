@@ -7,6 +7,7 @@ import (
 	indukKerja "svc-insani-go/modules/v1/master-organisasi/model"
 	statusPegawai "svc-insani-go/modules/v1/master-status-pegawai/model"
 	unitKerja "svc-insani-go/modules/v1/master-unit-kerja/model"
+	privatePejabatStruktural "svc-insani-go/modules/v2/organisasi/model"
 	"time"
 
 	ptr "github.com/openlyinc/pointy"
@@ -31,6 +32,95 @@ type Pegawai struct {
 	IndukKerja                      indukKerja.IndukKerja `json:"induk_kerja" gorm:"-"`
 
 	PegawaiFungsional PegawaiFungsional `json:"-" gorm:"foreignKey:IdPegawai"`
+}
+
+type PegawaiPrivate struct {
+	IdPegawai                 uint64 `json:"id_pegawai" gorm:"type:varchar;not null"`
+	IdPersonal                uint64 `json:"id_personal_data_pribadi" gorm:"type:varchar;"`
+	Nama                      string `json:"nama" gorm:"type:varchar;not null"`
+	NIK                       string `json:"nik" gorm:"type:varchar;not null"`
+	JenisPegawai              string `json:"jenis_pegawai" gorm:"type:varchar"`
+	IdJenisPegawai            uint64 `json:"id_jenis_pegawai" gorm:"type:varchar"`
+	KdJenisPegawai            string `json:"kd_jenis_pegawai" gorm:"type:varchar"`
+	KelompokPegawai           string `json:"kelompok_pegawai" gorm:"type:varchar"`
+	IdKelompokPegawai         uint64 `json:"id_kelompok_pegawai" gorm:"type:varchar"`
+	KdKelompokPegawai         string `json:"kd_kelompok_pegawai" gorm:"type:varchar"`
+	IdKategoriKelompokPegawai uint64 `json:"id_kategori_kelompok_pegawai" gorm:"type:varchar"`
+	KdKategoriKelompokPegawai string `json:"kd_kategori_kelompok_pegawai" gorm:"type:varchar"`
+	Golongan                  string `json:"golongan" gorm:"type:varchar"`
+	IdGolongan                uint64 `json:"id_golongan" gorm:"type:varchar"`
+	KdGolongan                string `json:"kd_golongan" gorm:"type:varchar"`
+	GolonganNegara            string `json:"golongan_negara" gorm:"type:varchar"`
+	IdGolonganNegara          uint64 `json:"id_golongan_negara" gorm:"type:varchar"`
+	KdGolonganNegara          string `json:"kd_golongan_negara" gorm:"type:varchar"`
+	Ruang                     string `json:"ruang" gorm:"type:varchar"`
+	IdRuang                   uint64 `json:"id_ruang" gorm:"type:varchar"`
+	KdRuang                   string `json:"kd_ruang" gorm:"type:varchar"`
+	RuangNegara               string `json:"ruang_negara" gorm:"type:varchar"`
+	IdRuangNegara             uint64 `json:"id_ruang_negara" gorm:"type:varchar"`
+	KdRuangNegara             string `json:"kd_ruang_negara" gorm:"type:varchar"`
+	UnitKerja                 string `json:"unit_kerja" gorm:"type:varchar"`
+	IdUnit                    uint64 `json:"id_unit" gorm:"type:varchar"`
+	KdUnit                    string `json:"kd_unit" gorm:"type:varchar"`
+	IndukKerja                string `json:"induk_kerja" gorm:"type:varchar"`
+	IdIndukKerja              uint64 `json:"id_induk_kerja" gorm:"type:varchar"`
+	KdIndukKerja              string `json:"kd_induk_kerja" gorm:"type:varchar"`
+	IdStatusPegawaiAktif      uint64 `json:"id_status_pegawai_aktif" gorm:"type:varchar"`
+	StatusPegawaiAktif        string `json:"status_pegawai_aktif" gorm:"type:varchar"`
+	KdStatusPegawaiAktif      string `json:"kd_status_pegawai_aktif" gorm:"type:varchar"`
+	StatusPegawai             string `json:"status_pegawai" gorm:"type:varchar"`
+	IdStatusPegawai           uint64 `json:"id_status_pegawai" gorm:"type:varchar"`
+	KdStatusPegawai           string `json:"kd_status_pegawai" gorm:"type:varchar"`
+	JenisKelamin              string `json:"jenis_kelamin" gorm:"type:varchar"`
+	// privateJabatanFungsional.JabatanFungsionalPrivate `json:"jabatan_fungsional" gorm:"type:varchar"`
+	// JabatanFungsional     []privateJabatanFungsional.JabatanFungsionalPrivate `json:"jabatan_fungsional" gorm:"type:varchar"`
+	JabatanFungsional      []PegawaiFungsionalPrivate                          `json:"jabatan_fungsional" gorm:"type:varchar"`
+	JabatanStruktural      []privatePejabatStruktural.PejabatStrukturalPrivate `json:"jabatan_struktural" gorm:"type:varchar"`
+	PegawaiKontrakPrivate  PegawaiKontrakPrivate                               `json:"kontrak" gorm:"type:varchar"`
+	IdJenjangPendidikan    uint64                                              `json:"id_jenjang_pendidikan" gorm:"type:varchar"`
+	KdJenjangPendidikan    string                                              `json:"kd_jenjang_pendidikan" gorm:"type:varchar"`
+	JenjangPendidikan      string                                              `json:"jenjang_pendidikan" gorm:"type:varchar"`
+	TmtSkPertama           string                                              `json:"tmt_sk_pertama" gorm:"type:varchar"`
+	MasaKerjaTahun         string                                              `json:"masa_kerja_tahun" gorm:"type:varchar"`
+	MasaKerjaBulan         string                                              `json:"masa_kerja_bulan" gorm:"type:varchar"`
+	JumlahAnak             string                                              `json:"jumlah_anak" gorm:"type:varchar"`
+	Npwp                   string                                              `json:"npwp" gorm:"type:varchar"`
+	IdStatusPernikahan     uint64                                              `json:"id_status_nikah" gorm:"type:varchar"`
+	KdStatusPernikahan     string                                              `json:"status_nikah" gorm:"type:varchar"`
+	StatusPernikahan       string                                              `json:"kd_status_nikah" gorm:"type:varchar"`
+	IdStatusPernikahanPtkp uint64                                              `json:"id_status_pernikahan_ptkp" gorm:"type:varchar"`
+	KdStatusPernikahanPtkp string                                              `json:"kd_status_pernikahan_ptkp" gorm:"type:varchar"`
+	StatusPernikahanPtkp   string                                              `json:"status_pernikahan_ptkp" gorm:"type:varchar"`
+	NikSuamiIstri          string                                              `json:"nik_suami_istri" gorm:"type:varchar"`
+	NikKtp                 string                                              `json:"nik_ktp" gorm:"type:varchar"`
+	JumlahTanggungan       int                                                 `json:"jumlah_tanggungan" gorm:"type:varchar"`
+	JumlahTanggunganPtkp   int                                                 `json:"jumlah_tanggungan_ptkp" gorm:"type:varchar"`
+	FlagKlaimTanggungan    int                                                 `json:"flag_klaim_tanggungan" gorm:"type:varchar"`
+	FlagPensiun            int                                                 `json:"flag_pensiun" gorm:"type:varchar"`
+	FlagMeninggal          int                                                 `json:"flag_meninggal" gorm:"type:varchar"`
+	FlagSuamiIstriSekantor int                                                 `json:"flag_suami_istri_sekantor" gorm:"type:varchar"`
+}
+
+type PegawaiKontrakPrivate struct {
+	IdPegawai    uint64 `json:"id_pegawai,omitempty"`
+	NoSurat      string `json:"no_surat"`
+	TglMulai     string `json:"tanggal_mulai"`
+	TglSurat     string `json:"tanggal_surat"`
+	AwalKontrak  string `json:"awal_kontrak"`
+	AkhirKontrak string `json:"akhir_kontrak"`
+}
+type Tanggungan struct {
+	IdPersonal             string `json:"id_personal"`
+	IdStatusPernikahanPtkp uint64 `json:"id_status_pernikahan_ptkp"`
+	KdStatusPernikahanPtkp string `json:"kd_status_pernikahan_ptkp"`
+	StatusPernikahanPtkp   string `json:"status_pernikahan_ptkp"`
+	JumlahTanggungan       int    `json:"jumlah_tanggungan"`
+	JumlahTanggunganPtkp   int    `json:"jumlah_tanggungan_ptkp"`
+}
+
+type TanggunganResponseBody struct {
+	Message string `json:"message"`
+	Data    []Tanggungan
 }
 
 type PegawaiCreate struct {
@@ -181,11 +271,23 @@ type PegawaiRequest struct {
 	Cari   string `query:"cari"`
 }
 
+type PegawaiPrivateRequest struct {
+	Nik               string `query:"nik"`
+	Nama              string `query:"nama"`
+	KdJenisPegawai    string `query:"kd_jenis_pegawai"`
+	KdKelompokPegawai string `query:"kd_kelompok_pegawai"`
+	KdIndukKerja      string `query:"kd_induk_kerja"`
+}
+
 type PegawaiResponse struct {
 	Count  int       `json:"count"`
 	Data   []Pegawai `json:"data"`
 	Limit  int       `json:"limit"`
 	Offset int       `json:"offset"`
+}
+
+type PegawaiPrivateResponse struct {
+	Data []PegawaiPrivate `json:"data"`
 }
 
 type PegawaiPribadi struct {

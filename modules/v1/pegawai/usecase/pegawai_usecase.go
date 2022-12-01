@@ -2,8 +2,10 @@ package usecase
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"log"
 	"os"
 	"strconv"
@@ -18,6 +20,9 @@ import (
 	pengaturan "svc-insani-go/modules/v1/pengaturan-insani/usecase"
 	personalRepo "svc-insani-go/modules/v1/personal/repo"
 	pegawaiOraHttp "svc-insani-go/modules/v1/simpeg-oracle/http"
+	_ "svc-insani-go/modules/v2/organisasi/model"
+	organisaiPrivate "svc-insani-go/modules/v2/organisasi/model"
+	_ "svc-insani-go/modules/v2/organisasi/repo"
 
 	ptr "github.com/openlyinc/pointy"
 
@@ -366,4 +371,260 @@ func HandleGetPegawaiByNik(a *app.App) echo.HandlerFunc {
 		return c.JSON(http.StatusOK, data)
 	}
 	return echo.HandlerFunc(h)
+}
+
+func HandleGetPegawaiPrivate(a *app.App, public bool) echo.HandlerFunc {
+	h := func(c echo.Context) error {
+		env := os.Getenv("ENV")
+		fmt.Println(env)
+		if public {
+			if env == "staging" || env == "production" {
+				return c.JSON(404, "layanan tidak ditemukan")
+			}
+		}
+
+		reqNik := c.QueryParam("nik")
+		var nik string
+		if len(reqNik) > 0 {
+			nik = reqNik[:len(reqNik)-1]
+			nik = nik[1:]
+		}
+
+		req := &model.PegawaiPrivateRequest{}
+		err := c.Bind(req)
+		if err != nil {
+			fmt.Printf("[WARNING] binding pegawai request: %s\n", err.Error())
+		}
+
+		res := model.PegawaiPrivateResponse{
+			Data: []model.PegawaiPrivate{},
+		}
+		req.Nik = nik
+
+		pp, err := repo.GetAllPegawaiPrivate(a, req)
+		if err != nil {
+			fmt.Printf("[ERROR] repo get all pegawai: %s\n", err.Error())
+			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
+		}
+		res.Data = pp
+
+		// get data jabatan fungsional
+		stmt2, err := a.DB.Prepare(`SELECT COALESCE(p.id,0), COALESCE(jf.fungsional,''),
+		COALESCE(jf.id,0),
+		COALESCE(jf.kd_fungsional,'')
+		FROM pegawai p
+		JOIN pegawai_fungsional pf ON p.id = pf.id_pegawai
+		JOIN jabatan_fungsional jf ON pf.id_jabatan_fungsional = jf.id`)
+
+		var pegawaiFungsional []model.PegawaiFungsionalPrivate
+		rows2, err := stmt2.Query()
+		if err != nil {
+			fmt.Println(err)
+			return c.JSON(500, nil)
+		}
+		defer rows2.Close()
+		// Loop through rows, using Scan to assign column data to struct fields.
+		for rows2.Next() {
+			var pf model.PegawaiFungsionalPrivate
+			if err := rows2.Scan(&pf.IdPegawai, &pf.JabatanFungsional, &pf.IdJabatanFungsional, &pf.KdJabatanFungsional); err != nil {
+				fmt.Println(err)
+				return c.JSON(500, nil)
+			}
+			pegawaiFungsional = append(pegawaiFungsional, pf)
+		}
+		if err := rows2.Err(); err != nil {
+			fmt.Println(err)
+			return c.JSON(500, nil)
+		}
+
+		var pegawaiAndFungsional []model.PegawaiPrivate
+		IsNotFungsional := true
+		for _, data := range res.Data {
+			for _, pegFung := range pegawaiFungsional {
+				if data.IdPegawai == pegFung.IdPegawai {
+					newPegfung := model.PegawaiFungsionalPrivate{JabatanFungsional: pegFung.JabatanFungsional, IdJabatanFungsional: pegFung.IdJabatanFungsional, KdJabatanFungsional: pegFung.KdJabatanFungsional}
+					data.JabatanFungsional = append(data.JabatanFungsional, newPegfung)
+					IsNotFungsional = false
+				}
+			}
+
+			if IsNotFungsional {
+				// data.JabatanFungsional = append(data.JabatanFungsional, model.PegawaiFungsionalPrivate{})
+				data.JabatanFungsional = make([]model.PegawaiFungsionalPrivate, 0)
+			}
+			pegawaiAndFungsional = append(pegawaiAndFungsional, data)
+		}
+
+		// get data jabatan struktural
+		stmt, err := a.DB.Prepare(`SELECT COALESCE(p.id,0), COALESCE(so.id_jenis_jabatan,0),
+		COALESCE(so.id_unit,0),
+		COALESCE(u.id_jenis_unit,0)
+		FROM pegawai p
+		JOIN pejabat_struktural ps ON p.id = ps.id_pegawai
+		JOIN hcm_organisasi.struktur_organisasi so ON ps.id_struktur_organisasi = so.id
+		JOIN hcm_organisasi.unit u ON u.id = so.id_unit`)
+
+		var pejabat []organisaiPrivate.PejabatStrukturalPrivate
+		rows, err := stmt.Query()
+		if err != nil {
+			fmt.Println(err)
+			return c.JSON(500, nil)
+		}
+		defer rows.Close()
+		// Loop through rows, using Scan to assign column data to struct fields.
+		for rows.Next() {
+			var ps organisaiPrivate.PejabatStrukturalPrivate
+			if err := rows.Scan(&ps.IdPegawai, &ps.IdJenisUnit, &ps.IdJenisJabatan, &ps.IdUnit); err != nil {
+				fmt.Println(err)
+				return c.JSON(500, nil)
+			}
+			pejabat = append(pejabat, ps)
+		}
+		if err := rows.Err(); err != nil {
+			fmt.Println(err)
+			return c.JSON(500, nil)
+		}
+
+		var pegawaiAndFungsionalAndStruktural []model.PegawaiPrivate
+		IsNotStruktural := true
+		for _, data := range pegawaiAndFungsional {
+
+			tmtSkPertamaTime, err := time.Parse("2006-01-02", data.TmtSkPertama)
+			var tmtSkPertamaDuration time.Duration
+			if err == nil {
+				tmtSkPertamaDuration = time.Now().Sub(tmtSkPertamaTime)
+			}
+			tmtSkPertamaDurationDays := tmtSkPertamaDuration.Hours() / 24
+			// tmtSkPertamaDurationDays := tmtSkPertamaDuration.Hours() / 24
+			tmtSkPertamaDurationRealMonths := int(tmtSkPertamaDurationDays / 365 * 12)
+			masaKerjaKepegawaianTahunInt, _ := strconv.Atoi(data.MasaKerjaTahun)
+			masaKerjaKepegawaianBulanInt, _ := strconv.Atoi(data.MasaKerjaBulan)
+			masaKerjaTotalKepegawaianRealBulan := ((masaKerjaKepegawaianTahunInt * 12) + masaKerjaKepegawaianBulanInt) + tmtSkPertamaDurationRealMonths
+			data.MasaKerjaTahun = fmt.Sprintf("%d", masaKerjaTotalKepegawaianRealBulan/12)
+			data.MasaKerjaBulan = fmt.Sprintf("%d", masaKerjaTotalKepegawaianRealBulan%12)
+
+			for _, pejabat := range pejabat {
+				if data.IdPegawai == pejabat.IdPegawai {
+					data.JabatanStruktural = append(data.JabatanStruktural, pejabat)
+					IsNotStruktural = false
+				}
+			}
+
+			if IsNotStruktural {
+				// data.JabatanStruktural = append(data.JabatanStruktural, organisaiPrivate.PejabatStrukturalPrivate{})
+				data.JabatanStruktural = make([]organisaiPrivate.PejabatStrukturalPrivate, 0)
+			}
+
+			pegawaiAndFungsionalAndStruktural = append(pegawaiAndFungsionalAndStruktural, data)
+		}
+
+		// get data kontrak
+		stmt3, err := a.DB.Prepare(`SELECT p.id, COALESCE(pf.nomor_sk,'') no_surat,
+		COALESCE(pf.tmt_sk,'') tanggal_mulai,
+		COALESCE(pf.tgl_sk,'') tanggal_surat,
+		COALESCE(pf.tmt_awal_kontrak,'') awal_kontrak,
+		COALESCE(pf.tmt_akhir_kontrak,'') akhir_kontrak
+		FROM pegawai p
+		JOIN pegawai_fungsional pf ON p.id = pf.id_pegawai`)
+
+		var kontrakPegawai []model.PegawaiKontrakPrivate
+		rows3, err := stmt3.Query()
+		if err != nil {
+			fmt.Println(err)
+			return c.JSON(500, nil)
+		}
+		defer rows3.Close()
+		for rows3.Next() {
+			var pk model.PegawaiKontrakPrivate
+			if err := rows3.Scan(&pk.IdPegawai, &pk.NoSurat, &pk.TglMulai, &pk.TglSurat, &pk.AwalKontrak, &pk.AkhirKontrak); err != nil {
+				fmt.Println(err)
+				return c.JSON(500, nil)
+			}
+			kontrakPegawai = append(kontrakPegawai, pk)
+		}
+		if err := rows3.Err(); err != nil {
+			fmt.Println(err)
+			return c.JSON(500, nil)
+		}
+
+		var pegawaiJabfungJabstrukAndKontrak []model.PegawaiPrivate
+		IsNotKontrak := true
+		for _, data := range pegawaiAndFungsionalAndStruktural {
+			for _, kontrak := range kontrakPegawai {
+				if data.IdPegawai == kontrak.IdPegawai {
+					// fmt.Println(kontrak)
+					// data.PegawaiKontrakPrivate = append(data.PegawaiKontrakPrivate, kontrak)
+					// data.PegawaiKontrakPrivate = kontrak
+					data.PegawaiKontrakPrivate = model.PegawaiKontrakPrivate{NoSurat: kontrak.NoSurat, TglMulai: kontrak.TglMulai, TglSurat: kontrak.TglSurat, AwalKontrak: kontrak.AwalKontrak, AkhirKontrak: kontrak.AkhirKontrak}
+					IsNotKontrak = false
+					// fmt.Println("cek")
+				}
+			}
+			if IsNotKontrak {
+				// data.PegawaiKontrakPrivate = make([]model.PegawaiKontrakPrivate, 0)
+				// data.PegawaiKontrakPrivate =
+				// data.PegawaiKontrakPrivate = append(data.PegawaiKontrakPrivate, model.PegawaiKontrakPrivate{})
+			}
+
+			pegawaiJabfungJabstrukAndKontrak = append(pegawaiJabfungJabstrukAndKontrak, data)
+		}
+
+		// res.Data = pegawaiAndFungsionalAndStruktural
+		// res.Data = pegawaiJabfungJabstrukAndKontrak
+
+		tanggunganResponse := GetDataTanggungan(public)
+
+		var pegawaiJabfungJabstrukAndKontrakAndTangungan []model.PegawaiPrivate
+		for _, data := range pegawaiJabfungJabstrukAndKontrak {
+			for _, tanggungan := range tanggunganResponse.Data {
+				// if data.IdPersonal == tanggungan.IdPersonal {
+				if strconv.FormatInt(int64(data.IdPegawai), 10) == tanggungan.IdPersonal {
+					data.IdStatusPernikahanPtkp = tanggungan.IdStatusPernikahanPtkp
+					data.KdStatusPernikahanPtkp = tanggungan.KdStatusPernikahanPtkp
+					data.StatusPernikahanPtkp = tanggungan.StatusPernikahanPtkp
+					data.JumlahTanggungan = tanggungan.JumlahTanggungan
+					data.JumlahTanggunganPtkp = tanggungan.JumlahTanggunganPtkp
+				}
+			}
+			pegawaiJabfungJabstrukAndKontrakAndTangungan = append(pegawaiJabfungJabstrukAndKontrakAndTangungan, data)
+		}
+
+		res.Data = pegawaiJabfungJabstrukAndKontrakAndTangungan
+		return c.JSON(http.StatusOK, res)
+	}
+	return echo.HandlerFunc(h)
+}
+
+func GetDataTanggungan(public bool) *model.TanggunganResponseBody {
+	// fmt.Println(env)
+	var baseURL string
+	baseURL = os.Getenv("URL_HCM_TANGGUNGAN")
+	if public {
+		// baseURL = "http://localhost:81/public/api/v1/tanggungan-private"
+		baseURL = "http://svc-dependents-go.hcm-dev.svc.cluster.local/public/api/v1/tanggungan-private"
+	}
+	var client = &http.Client{}
+	request, err := http.NewRequest(http.MethodGet, baseURL, nil)
+	if err != nil {
+		fmt.Println(err)
+		return nil
+	}
+	response, err := client.Do(request)
+	if err != nil {
+		fmt.Println(err)
+		return nil
+	}
+	defer response.Body.Close()
+	b, err := io.ReadAll(response.Body)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	data := &model.TanggunganResponseBody{}
+	err = json.Unmarshal(b, data)
+	if err != nil {
+		fmt.Println(err.Error())
+		return nil
+	}
+	return data
 }

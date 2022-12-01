@@ -26,6 +26,11 @@ func GetUnitKerjaPegawai(a *app.App, uuidPegawai string) (*model.UnitKerjaPegawa
 		&unitKerjaPegawai.LokasiDesc,
 		&unitKerjaPegawai.NoSkPertama,
 		&unitKerjaPegawai.TmtSkPertama,
+		&unitKerjaPegawai.NoSk,
+		&unitKerjaPegawai.TmtSk,
+		&unitKerjaPegawai.TglSk,
+		&unitKerjaPegawai.TmtAwalKontrak,
+		&unitKerjaPegawai.TmtAkhirKontrak,
 		&unitKerjaPegawai.UuidHomebasePddikti,
 		&unitKerjaPegawai.KdHomebasePddikti,
 		&unitKerjaPegawai.UuidHomebaseUii,
@@ -41,6 +46,10 @@ func GetUnitKerjaPegawai(a *app.App, uuidPegawai string) (*model.UnitKerjaPegawa
 	}
 
 	unitKerjaPegawai.SetTanggalIDN()
+	unitKerjaPegawai.SetTmtSkIDN()
+	unitKerjaPegawai.SetTanggalSkIDN()
+	unitKerjaPegawai.SetTmtAwalKontrakIDN()
+	unitKerjaPegawai.SetTmtAkhirKontrakIDN()
 
 	return &unitKerjaPegawai, nil
 }

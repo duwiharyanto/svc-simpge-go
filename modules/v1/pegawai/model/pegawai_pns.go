@@ -18,14 +18,22 @@ type PegawaiPNSUpdate struct {
 	UuidJabatanFungsional  *string `form:"uuid_jabatan_pns" gorm:"-"`                                                 //Perubahan
 	IdJabatanFungsional    *uint64 `form:"id_jabatan_fungsional" gorm:"default:null"`
 	KdJabatanFungsional    *string `form:"kd_jabatan_fungsional" gorm:"default:null"`
-	TmtJabatan             *string `form:"tmt_jabatan_pns" gorm:"tmt_jabatan;default:null"`                              //Perubahan
-	TmtJabatanIDN          *string `form:"tmt_jabatan_pns_idn" gorm:"-"`                                                 //Perubahan
-	NomorJabatanFungsional *string `form:"nomor_jabatan_fungsional" gorm:"column:nomor_jabatan_fungsional;default:null"` //Tambahan
-	MasaKerjaTahun         *string `form:"masa_kerja_pns_tahun" gorm:"column:masa_kerja_tahun;default:null"`             //Perubahan
-	MasaKerjaBulan         *string `form:"masa_kerja_pns_bulan" gorm:"column:masa_kerja_bulan;default:null"`             //Perubahan
-	AngkaKredit            *string `form:"angka_kredit_pns" gorm:"column:angka_kredit;default:null"`                     //Perubahan
-	Keterangan             *string `form:"keterangan_pns" gorm:"column:keterangan;default:null"`                         //Perubahan
-	Nira                   *string `form:"nira" gorm:"column:nira;default:null"`                                         //Perubahan
+	TmtJabatan             *string `form:"tmt_jabatan_pns" gorm:"tmt_jabatan;default:null"`                                //Perubahan
+	TmtJabatanIDN          *string `form:"tmt_jabatan_pns_idn" gorm:"-"`                                                   //Perubahan
+	NomorJabatanFungsional *string `form:"nomor_jabatan_fungsional" gorm:"column:nomor_jabatan_fungsional;default:null"`   //Tambahan
+	MasaKerjaTahun         *string `form:"masa_kerja_pns_tahun" gorm:"column:masa_kerja_tahun;default:null"`               //Perubahan
+	MasaKerjaBulan         *string `form:"masa_kerja_pns_bulan" gorm:"column:masa_kerja_bulan;default:null"`               //Perubahan
+	MasaKerjaGolonganTahun *string `form:"masa_kerja_golongan_tahun" gorm:"column:masa_kerja_golongan_tahun;default:null"` //Tambahan
+	MasaKerjaGolonganBulan *string `form:"masa_kerja_golongan_bulan" gorm:"column:masa_kerja_golongan_bulan;default:null"` //Tambahan
+	AngkaKredit            *string `form:"angka_kredit_pns" gorm:"column:angka_kredit;default:null"`                       //Perubahan
+	NomorPak               *string `form:"nomor_pak" gorm:"column:nomor_pak;default:null"`                                 //Tambahan
+	TmtPak                 *string `form:"tmt_pak" gorm:"tmt_pak;default:null"`                                            //Tambahan
+	NomorSkPensiun         *string `form:"nomor_sk_pensiun" gorm:"column:nomor_sk_pensiun;default:null"`                   //Tambahan
+	TmtSkPensiun           *string `form:"tmt_sk_pensiun" gorm:"tmt_sk_pensiun;default:null"`                              //Tambahan
+	MasaKerjaPensiunTahun  *string `form:"masa_kerja_pensiun_tahun" gorm:"masa_kerja_pensiun_tahun;default:null"`          //Tambahan
+	MasaKerjaPensiunBulan  *string `form:"masa_kerja_pensiun_bulan" gorm:"masa_kerja_pensiun_bulan;default:null"`          //Tambahan
+	Keterangan             *string `form:"keterangan_pns" gorm:"column:keterangan;default:null"`                           //Perubahan
+	Nira                   *string `form:"nira" gorm:"column:nira;default:null"`                                           //Perubahan
 	TglInput               *string `form:"-" gorm:"-"`
 	UserInput              *string `form:"-" gorm:"-"`
 	TglUpdate              *string `form:"-" gorm:"-"`
@@ -61,7 +69,15 @@ type PegawaiPNSPTT struct {
 	NomorJabatanFungsional string `json:"nomor_jabatan_fungsional"`
 	MasaKerjaPnsTahun      string `json:"masa_kerja_pns_tahun"`
 	MasaKerjaPnsBulan      string `json:"masa_kerja_pns_bulan"`
+	MasaKerjaGolonganTahun string `json:"masa_kerja_golongan_tahun"`
+	MasaKerjaGolonganBulan string `json:"masa_kerja_golongan_bulan"`
 	AngkaKreditPns         string `json:"angka_kredit_pns"`
+	NomorPak               string `json:"nomor_pak"`
+	TmtPak                 string `json:"tmt_pak"`
+	NomorSkPensiun         string `json:"nomor_sk_pensiun"`
+	TmtSkPensiun           string `json:"tmt_sk_pensiun"`
+	MasaKerjaPensiunTahun  string `json:"masa_kerja_pensiun_tahun"`
+	MasaKerjaPensiunBulan  string `json:"masa_kerja_pensiun_bulan"`
 	KeteranganPNS          string `json:"keterangan_pns"`
 	Nira                   string `json:"nira"`
 	UuidJenisPTT           string `json:"uuid_jenis_ptt"`
