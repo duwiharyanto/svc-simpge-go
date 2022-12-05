@@ -83,11 +83,12 @@ type PegawaiPrivate struct {
 	TmtSkPertama           string                                              `json:"tmt_sk_pertama" gorm:"type:varchar"`
 	MasaKerjaTahun         string                                              `json:"masa_kerja_tahun" gorm:"type:varchar"`
 	MasaKerjaBulan         string                                              `json:"masa_kerja_bulan" gorm:"type:varchar"`
+	JumlahKeluarga         string                                              `json:"jumlah_keluarga" gorm:"type:varchar"`
 	JumlahAnak             string                                              `json:"jumlah_anak" gorm:"type:varchar"`
 	Npwp                   string                                              `json:"npwp" gorm:"type:varchar"`
 	IdStatusPernikahan     uint64                                              `json:"id_status_nikah" gorm:"type:varchar"`
-	KdStatusPernikahan     string                                              `json:"status_nikah" gorm:"type:varchar"`
-	StatusPernikahan       string                                              `json:"kd_status_nikah" gorm:"type:varchar"`
+	KdStatusPernikahan     string                                              `json:"kd_status_nikah" gorm:"type:varchar"`
+	StatusPernikahan       string                                              `json:"status_nikah" gorm:"type:varchar"`
 	IdStatusPernikahanPtkp uint64                                              `json:"id_status_pernikahan_ptkp" gorm:"type:varchar"`
 	KdStatusPernikahanPtkp string                                              `json:"kd_status_pernikahan_ptkp" gorm:"type:varchar"`
 	StatusPernikahanPtkp   string                                              `json:"status_pernikahan_ptkp" gorm:"type:varchar"`
