@@ -93,7 +93,7 @@ spec:
             - name: URL_ACTIVATION_PERSONAL
               value: "http://svc-personal-go.hcm-stag.svc.cluster.local"
             - name: URL_HCM_TANGGUNGAN
-              value: "http://svc-dependents-go.hcm-dev.svc.cluster.local/private/api/v1/tanggungan-private"
+              value: "http://svc-dependents-go.hcm-stag.svc.cluster.local/private/api/v1/tanggungan-private"
 
 ---
 apiVersion: v1
@@ -113,7 +113,7 @@ metadata:
       prefix: /v1/insani
       rewrite: /public/api/v1
       service: svc-insani-go.hcm-stag
-      timeout_ms: 15000
+      timeout_ms: 21000
 spec:
   selector:
     svc: svc-insani-go

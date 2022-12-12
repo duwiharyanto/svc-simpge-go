@@ -409,54 +409,46 @@ func HandleGetPegawaiPrivate(a *app.App, public bool) echo.HandlerFunc {
 		res.Data = pp
 
 		// get data jabatan fungsional
-		stmt2, err := a.DB.Prepare(`SELECT COALESCE(p.id,0), COALESCE(jf.fungsional,''),
-		COALESCE(jf.id,0),
-		COALESCE(jf.kd_fungsional,'')
-		FROM pegawai p
-		JOIN pegawai_fungsional pf ON p.id = pf.id_pegawai
-		JOIN jabatan_fungsional jf ON pf.id_jabatan_fungsional = jf.id`)
-
-		var pegawaiFungsional []model.PegawaiFungsionalPrivate
-		rows2, err := stmt2.Query()
-		if err != nil {
-			fmt.Println(err)
-			return c.JSON(500, nil)
-		}
-		defer rows2.Close()
-		// Loop through rows, using Scan to assign column data to struct fields.
-		for rows2.Next() {
-			var pf model.PegawaiFungsionalPrivate
-			if err := rows2.Scan(&pf.IdPegawai, &pf.JabatanFungsional, &pf.IdJabatanFungsional, &pf.KdJabatanFungsional); err != nil {
+		var pegawaiAndFungsional []model.PegawaiPrivate
+		var fullJabatanFungsionalDataItem = model.PegawaiFungsionalDataItemY{}
+		for _, data := range res.Data {
+			pegawaiFungsionalYayasan, err := repo.GetJabatanFungsionalYayasan(a, strconv.FormatInt(int64(data.IdPegawai), 10))
+			if err != nil {
 				fmt.Println(err)
 				return c.JSON(500, nil)
 			}
-			pegawaiFungsional = append(pegawaiFungsional, pf)
-		}
-		if err := rows2.Err(); err != nil {
-			fmt.Println(err)
-			return c.JSON(500, nil)
-		}
 
-		var pegawaiAndFungsional []model.PegawaiPrivate
-		IsNotFungsional := true
-		for _, data := range res.Data {
-			for _, pegFung := range pegawaiFungsional {
-				if data.IdPegawai == pegFung.IdPegawai {
-					newPegfung := model.PegawaiFungsionalPrivate{JabatanFungsional: pegFung.JabatanFungsional, IdJabatanFungsional: pegFung.IdJabatanFungsional, KdJabatanFungsional: pegFung.KdJabatanFungsional}
-					data.JabatanFungsional = append(data.JabatanFungsional, newPegfung)
-					IsNotFungsional = false
-				}
+			pegawaiFungsionalNegara, err := repo.GetJabatanFungsionalNegara(a, strconv.FormatInt(int64(data.IdPegawai), 10))
+			if err != nil {
+				fmt.Println(err)
+				return c.JSON(500, nil)
 			}
 
-			if IsNotFungsional {
-				// data.JabatanFungsional = append(data.JabatanFungsional, model.PegawaiFungsionalPrivate{})
-				data.JabatanFungsional = make([]model.PegawaiFungsionalPrivate, 0)
+			fullJabatanFungsionalDataItem.FullPegawaiFungsional.PegawaiFungsionalYayasan = pegawaiFungsionalYayasan
+			if pegawaiFungsionalYayasan == nil {
+				fullJabatanFungsionalDataItem.FullPegawaiFungsional.PegawaiFungsionalYayasan = &model.PegawaiFungsionalYayasan{}
 			}
+
+			fullJabatanFungsionalDataItem.FullPegawaiFungsional.PegawaiFungsionalNegara = pegawaiFungsionalNegara
+
+			if pegawaiFungsionalNegara == nil {
+				// fmt.Println("kosong")
+				fullJabatanFungsionalDataItem.FullPegawaiFungsional.PegawaiFungsionalNegara = &model.PegawaiFungsionalNegara{}
+			}
+
+			data.JabatanFungsional = fullJabatanFungsionalDataItem
 			pegawaiAndFungsional = append(pegawaiAndFungsional, data)
 		}
 
 		// get data jabatan struktural
-		stmt, err := a.DB.Prepare(`SELECT COALESCE(p.id,0), COALESCE(po.id_jenis_jabatan,0),COALESCE(po.id_unit,0),COALESCE(u.id_jenis_unit,0) FROM pegawai p JOIN hcm_organisasi.pejabat_organisasi po ON po.id_pegawai = p.id JOIN hcm_organisasi.unit u ON u.id = po.id_unit`)
+		stmt, err := a.DB.Prepare(`SELECT COALESCE(p.id,0), 
+		COALESCE(po.id_jenis_jabatan,0),
+		COALESCE(po.id_unit,0),
+		COALESCE(u.id_jenis_unit,0) 
+		FROM pegawai p 
+		JOIN hcm_organisasi.pejabat_organisasi po ON po.id_pegawai = p.id 
+		JOIN hcm_organisasi.unit u ON u.id = po.id_unit
+		WHERE po.flag_aktif =1`)
 
 		var pejabat []organisaiPrivate.PejabatStrukturalPrivate
 		rows, err := stmt.Query()
