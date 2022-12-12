@@ -441,7 +441,14 @@ func HandleGetPegawaiPrivate(a *app.App, public bool) echo.HandlerFunc {
 		}
 
 		// get data jabatan struktural
-		stmt, err := a.DB.Prepare(`SELECT COALESCE(p.id,0), COALESCE(po.id_jenis_jabatan,0),COALESCE(po.id_unit,0),COALESCE(u.id_jenis_unit,0) FROM pegawai p JOIN hcm_organisasi.pejabat_organisasi po ON po.id_pegawai = p.id JOIN hcm_organisasi.unit u ON u.id = po.id_unit`)
+		stmt, err := a.DB.Prepare(`SELECT COALESCE(p.id,0), 
+		COALESCE(po.id_jenis_jabatan,0),
+		COALESCE(po.id_unit,0),
+		COALESCE(u.id_jenis_unit,0) 
+		FROM pegawai p 
+		JOIN hcm_organisasi.pejabat_organisasi po ON po.id_pegawai = p.id 
+		JOIN hcm_organisasi.unit u ON u.id = po.id_unit
+		WHERE po.flag_aktif =1`)
 
 		var pejabat []organisaiPrivate.PejabatStrukturalPrivate
 		rows, err := stmt.Query()
