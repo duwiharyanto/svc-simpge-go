@@ -78,6 +78,8 @@ type PegawaiPrivate struct {
 	JabatanFungsional      PegawaiFungsionalDataItemY                          `json:"jabatan_fungsional" gorm:"type:varchar"`
 	JabatanStruktural      []privatePejabatStruktural.PejabatStrukturalPrivate `json:"jabatan_struktural" gorm:"type:varchar"`
 	PegawaiKontrakPrivate  PegawaiKontrakPrivate                               `json:"kontrak" gorm:"type:varchar"`
+	IdDetailProfesi        uint64                                              `json:"id_detail_profesi" gorm:"type:varchar"`
+	DetailProfesi          string                                              `json:"detail_profesi" gorm:"type:varchar"`
 	IdJenjangPendidikan    uint64                                              `json:"id_jenjang_pendidikan" gorm:"type:varchar"`
 	KdJenjangPendidikan    string                                              `json:"kd_jenjang_pendidikan" gorm:"type:varchar"`
 	JenjangPendidikan      string                                              `json:"jenjang_pendidikan" gorm:"type:varchar"`

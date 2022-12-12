@@ -114,6 +114,8 @@ func getListAllPegawaiPrivateQuery(req *model.PegawaiPrivateRequest) string {
 	COALESCE(p.id_status_pegawai,0),
 	COALESCE(p.kd_status_pegawai,''),
 	COALESCE(p.jenis_kelamin,''),
+	COALESCE(p.id_detail_profesi,0),
+	COALESCE(dp.detail_profesi,''),
 	COALESCE(jp.id,0) id_jenjang_pendidikan,
 	COALESCE(jp.kd_jenjang,'') kd_jenjang_pendidikan,
 	COALESCE(jp.jenjang,'') jenjang_pendidikan,
@@ -170,6 +172,8 @@ func getListAllPegawaiPrivateQuery(req *model.PegawaiPrivateRequest) string {
 		jenjang_pendidikan jp ON p.id_pendidikan_terakhir = jp.id
 	LEFT JOIN
 		status_pernikahan spn ON p.kd_status_perkawinan = spn.kd_status
+	LEFT JOIN
+		detail_profesi dp ON p.id_detail_profesi = dp.id
 	WHERE p.flag_aktif=1 %s %s %s %s %s`, nikFilterQuery, namaFilterQuery, kdJenisPegawaiFilterQuery, kdKelompokFilterQuery, kdIndukKerjaFilterQuery)
 
 }
