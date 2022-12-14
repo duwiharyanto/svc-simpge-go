@@ -18,11 +18,11 @@ type UnitKerjaPegawai struct {
 	NoSkPertama         string `json:"nomor_sk_pertama_unit_kerja"`
 	TmtSkPertama        string `json:"tmt_sk_pertama_unit_kerja"`
 	TmtSkPertamaIdn     string `json:"tmt_sk_pertama_unit_kerja_idn"`
-	NoSk                string `json:"nomor_sk"`
-	TmtSk               string `json:"tmt_sk"`
-	TmtSkIdn            string `json:"tmt_sk_idn"`
-	TglSk               string `json:"tgl_sk"`
-	TglSkIdn            string `json:"tgl_sk_idn"`
+	NoSuratKontrak      string `json:"nomor_surat_kontrak"`
+	TmtSuratKontrak     string `json:"tmt_surat_kontrak"`
+	TmtSuratKontrakIdn  string `json:"tmt_surat_kontrak_idn"`
+	TglSuratKontrak     string `json:"tgl_surat_kontrak"`
+	TglSuratKontrakIdn  string `json:"tgl_surat_kontrak_idn"`
 	TmtAwalKontrak      string `json:"tmt_awal_kontrak"`
 	TmtAwalKontrakIdn   string `json:"tmt_awal_kontrak_idn"`
 	TmtAkhirKontrak     string `json:"tmt_akhir_kontrak"`

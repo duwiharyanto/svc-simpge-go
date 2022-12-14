@@ -505,9 +505,9 @@ func HandleGetPegawaiPrivate(a *app.App, public bool) echo.HandlerFunc {
 		}
 
 		// get data kontrak
-		stmt3, err := a.DB.Prepare(`SELECT p.id, COALESCE(pf.nomor_sk,'') no_surat,
-		COALESCE(pf.tmt_sk,'') tanggal_mulai,
-		COALESCE(pf.tgl_sk,'') tanggal_surat,
+		stmt3, err := a.DB.Prepare(`SELECT p.id, COALESCE(pf.nomor_surat_kontrak,'') no_surat,
+		COALESCE(pf.tmt_surat_kontrak,'') tanggal_mulai,
+		COALESCE(pf.tgl_surat_kontrak,'') tanggal_surat,
 		COALESCE(pf.tmt_awal_kontrak,'') awal_kontrak,
 		COALESCE(pf.tmt_akhir_kontrak,'') akhir_kontrak
 		FROM pegawai p

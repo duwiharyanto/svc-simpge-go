@@ -176,11 +176,11 @@ func (p *UnitKerjaPegawai) SetTanggalIDN() {
 	p.TmtSkPertamaIdn = GetIndonesianDate(p.TmtSkPertama)
 }
 
-func (p *UnitKerjaPegawai) SetTmtSkIDN() {
-	p.TmtSkIdn = GetIndonesianDate(p.TmtSk)
+func (p *UnitKerjaPegawai) SetTmtSuratKontrakIDN() {
+	p.TmtSuratKontrakIdn = GetIndonesianDate(p.TmtSuratKontrak)
 }
-func (p *UnitKerjaPegawai) SetTanggalSkIDN() {
-	p.TglSkIdn = GetIndonesianDate(p.TglSk)
+func (p *UnitKerjaPegawai) SetTanggalSuratKontrakIDN() {
+	p.TglSuratKontrakIdn = GetIndonesianDate(p.TglSuratKontrak)
 }
 func (p *UnitKerjaPegawai) SetTmtAwalKontrakIDN() {
 	p.TmtAwalKontrakIdn = GetIndonesianDate(p.TmtAwalKontrak)
