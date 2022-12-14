@@ -433,23 +433,23 @@ func ValidateUpdatePegawaiByUUID(a *app.App, c echo.Context) (model.PegawaiUpdat
 	if pegawaiReq.PegawaiFungsional.TmtSkPertama != nil {
 		pegawai.PegawaiFungsional.TmtSkPertama = pegawaiReq.PegawaiFungsional.TmtSkPertama
 	}
-	if ptr.StringValue(pegawaiReq.PegawaiFungsional.NomorSk, "") != "" {
-		if len(ptr.StringValue(pegawaiReq.PegawaiFungsional.NomorSk, "")) > 30 {
+	if ptr.StringValue(pegawaiReq.PegawaiFungsional.NomorSuratKontrak, "") != "" {
+		if len(ptr.StringValue(pegawaiReq.PegawaiFungsional.NomorSuratKontrak, "")) > 30 {
 			return model.PegawaiUpdate{}, fmt.Errorf("panjang karakter nomor sk maksimal 30")
 		}
-		pegawai.PegawaiFungsional.NomorSk = pegawaiReq.PegawaiFungsional.NomorSk
+		pegawai.PegawaiFungsional.NomorSuratKontrak = pegawaiReq.PegawaiFungsional.NomorSuratKontrak
 	}
-	if pegawaiReq.PegawaiFungsional.TmtSk != nil {
-		pegawai.PegawaiFungsional.TmtSk = pegawaiReq.PegawaiFungsional.TmtSk
+	if pegawaiReq.PegawaiFungsional.TmtSuratKontrak != nil {
+		pegawai.PegawaiFungsional.TmtSuratKontrak = pegawaiReq.PegawaiFungsional.TmtSuratKontrak
 	}
 
-	tglSk := ptr.StringValue(pegawaiReq.PegawaiFungsional.TglSk, "")
+	tglSk := ptr.StringValue(pegawaiReq.PegawaiFungsional.TglSuratKontrak, "")
 	_, err = time.Parse("2006-01-02", tglSk)
 	if tglSk != "" {
 		if err != nil {
 			return model.PegawaiUpdate{}, fmt.Errorf("tgl_sk harus sesuai format tanggal yyyy-mm-dd")
 		}
-		pegawai.PegawaiFungsional.TglSk = ptr.String(tglSk)
+		pegawai.PegawaiFungsional.TglSuratKontrak = ptr.String(tglSk)
 	}
 	if pegawaiReq.PegawaiFungsional.TmtAwalKontrak != nil {
 		pegawai.PegawaiFungsional.TmtAwalKontrak = pegawaiReq.PegawaiFungsional.TmtAwalKontrak
