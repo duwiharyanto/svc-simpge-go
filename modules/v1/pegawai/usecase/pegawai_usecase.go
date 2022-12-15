@@ -532,7 +532,7 @@ func HandleGetPegawaiPrivate(a *app.App, public bool) echo.HandlerFunc {
 		for _, data := range pegawaiJabfungJabstrukAndKontrak {
 			for _, tanggungan := range tanggunganResponse.Data {
 				// if data.IdPersonal == tanggungan.IdPersonal {
-				if strconv.FormatInt(int64(data.IdPegawai), 10) == tanggungan.IdPersonal {
+				if strconv.FormatInt(int64(data.IdPersonal), 10) == tanggungan.IdPersonal {
 					data.IdStatusPernikahanPtkp = tanggungan.IdStatusPernikahanPtkp
 					data.KdStatusPernikahanPtkp = tanggungan.KdStatusPernikahanPtkp
 					data.StatusPernikahanPtkp = tanggungan.StatusPernikahanPtkp
