@@ -408,38 +408,6 @@ func HandleGetPegawaiPrivate(a *app.App, public bool) echo.HandlerFunc {
 		}
 		res.Data = pp
 
-		// get data jabatan fungsional
-		var pegawaiAndFungsional []model.PegawaiPrivate
-		var fullJabatanFungsionalDataItem = model.PegawaiFungsionalDataItemY{}
-		for _, data := range res.Data {
-			pegawaiFungsionalYayasan, err := repo.GetJabatanFungsionalYayasan(a, strconv.FormatInt(int64(data.IdPegawai), 10))
-			if err != nil {
-				fmt.Println(err)
-				return c.JSON(500, nil)
-			}
-
-			pegawaiFungsionalNegara, err := repo.GetJabatanFungsionalNegara(a, strconv.FormatInt(int64(data.IdPegawai), 10))
-			if err != nil {
-				fmt.Println(err)
-				return c.JSON(500, nil)
-			}
-
-			fullJabatanFungsionalDataItem.FullPegawaiFungsional.PegawaiFungsionalYayasan = pegawaiFungsionalYayasan
-			if pegawaiFungsionalYayasan == nil {
-				fullJabatanFungsionalDataItem.FullPegawaiFungsional.PegawaiFungsionalYayasan = &model.PegawaiFungsionalYayasan{}
-			}
-
-			fullJabatanFungsionalDataItem.FullPegawaiFungsional.PegawaiFungsionalNegara = pegawaiFungsionalNegara
-
-			if pegawaiFungsionalNegara == nil {
-				// fmt.Println("kosong")
-				fullJabatanFungsionalDataItem.FullPegawaiFungsional.PegawaiFungsionalNegara = &model.PegawaiFungsionalNegara{}
-			}
-
-			data.JabatanFungsional = fullJabatanFungsionalDataItem
-			pegawaiAndFungsional = append(pegawaiAndFungsional, data)
-		}
-
 		// get data jabatan struktural
 		stmt, err := a.DB.Prepare(`SELECT COALESCE(p.id,0), 
 		COALESCE(po.id_jenis_jabatan,0),
@@ -473,7 +441,7 @@ func HandleGetPegawaiPrivate(a *app.App, public bool) echo.HandlerFunc {
 
 		var pegawaiAndFungsionalAndStruktural []model.PegawaiPrivate
 		IsNotStruktural := true
-		for _, data := range pegawaiAndFungsional {
+		for _, data := range res.Data {
 
 			tmtSkPertamaTime, err := time.Parse("2006-01-02", data.TmtSkPertama)
 			var tmtSkPertamaDuration time.Duration
@@ -564,7 +532,7 @@ func HandleGetPegawaiPrivate(a *app.App, public bool) echo.HandlerFunc {
 		for _, data := range pegawaiJabfungJabstrukAndKontrak {
 			for _, tanggungan := range tanggunganResponse.Data {
 				// if data.IdPersonal == tanggungan.IdPersonal {
-				if strconv.FormatInt(int64(data.IdPegawai), 10) == tanggungan.IdPersonal {
+				if strconv.FormatInt(int64(data.IdPersonal), 10) == tanggungan.IdPersonal {
 					data.IdStatusPernikahanPtkp = tanggungan.IdStatusPernikahanPtkp
 					data.KdStatusPernikahanPtkp = tanggungan.KdStatusPernikahanPtkp
 					data.StatusPernikahanPtkp = tanggungan.StatusPernikahanPtkp

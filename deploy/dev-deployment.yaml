@@ -36,7 +36,6 @@ spec:
               cpu: 100m
               memory: 64Mi
             limits:
-              cpu: 200m
               memory: 128Mi
           ports:
             - name: http-api
@@ -114,7 +113,7 @@ metadata:
       prefix: /v1/insani
       rewrite: /public/api/v1
       service: svc-insani-go.hcm-dev
-      timeout_ms: 21000
+      timeout_ms: 30000
 spec:
   selector:
     svc: svc-insani-go

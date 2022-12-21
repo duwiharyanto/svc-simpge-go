@@ -114,6 +114,12 @@ func getListAllPegawaiPrivateQuery(req *model.PegawaiPrivateRequest) string {
 	COALESCE(p.id_status_pegawai,0),
 	COALESCE(p.kd_status_pegawai,''),
 	COALESCE(p.jenis_kelamin,''),
+	COALESCE(jf.fungsional ,'') jabatan_fungsional_yayasan,
+	COALESCE(pf.id_jabatan_fungsional,0) id_jabatan_fungsional_yayasan,
+	COALESCE(pf.kd_jabatan_fungsional,'') kd_jabatan_fungsional_yayasan,
+	COALESCE(jf2.fungsional ,'') jabatan_fungsional_negara,
+	COALESCE(pp.id_jabatan_fungsional ,0) id_jabatan_fungsional_negara,
+	COALESCE(pp.kd_jabatan_fungsional ,'') kd_jabatan_fungsional_negara,
 	COALESCE(p.id_detail_profesi,0),
 	COALESCE(dp.detail_profesi,''),
 	COALESCE(jp.id,0) id_jenjang_pendidikan,
@@ -133,7 +139,9 @@ func getListAllPegawaiPrivateQuery(req *model.PegawaiPrivateRequest) string {
 	COALESCE((SELECT pdp.flag_ptkp from hcm_tanggungan.personal_data_pribadi pdp WHERE pdp.id = p.id_personal_data_pribadi AND pdp.flag_aktif = 1),0) flag_klaim_tanggungan,
 	COALESCE(p.flag_pensiun,0),
 	COALESCE(p.flag_meninggal,0),
-	COALESCE((SELECT DISTINCT phk.flag_sekantor from hcm_personal.personal_hubungan_keluarga phk WHERE phk.id_personal_data_pribadi = p.id_personal_data_pribadi AND phk.kd_hubungan_keluarga in ('SUA','IST') AND phk.flag_aktif = 1),0) flag_suami_istri_sekantor
+	COALESCE((SELECT DISTINCT phk.flag_sekantor from hcm_personal.personal_hubungan_keluarga phk WHERE phk.id_personal_data_pribadi = p.id_personal_data_pribadi AND phk.kd_hubungan_keluarga in ('SUA','IST') AND phk.flag_aktif = 1),0) flag_suami_istri_sekantor,
+	COALESCE((CASE WHEN pf.id_jabatan_fungsional != '' OR pp.id_jabatan_fungsional != '' THEN 1 END ),0) is_fungsional,
+	COALESCE((SELECT COUNT(*) from hcm_organisasi.pejabat_organisasi po JOIN hcm_organisasi.unit u ON u.id = po.id_unit WHERE po.id_pegawai = p.id AND po.flag_aktif =1),'') is_struktural
 	from
 	pegawai p
 	LEFT JOIN
@@ -168,6 +176,8 @@ func getListAllPegawaiPrivateQuery(req *model.PegawaiPrivateRequest) string {
 		status_pegawai sp ON p.kd_status_pegawai = sp.kd_status_pegawai
 	LEFT JOIN
 		jabatan_fungsional jf ON pf.id_jabatan_fungsional = jf.id
+	LEFT JOIN
+		jabatan_fungsional jf2 ON pp.id_jabatan_fungsional = jf2.id
 	LEFT JOIN
 		jenjang_pendidikan jp ON p.id_pendidikan_terakhir = jp.id
 	LEFT JOIN
