@@ -50,6 +50,15 @@ type PegawaiFungsionalCreate struct {
 	UuidHomebaseUii               string  `form:"uuid_homebase_uii" gorm:"-"`
 	IdHomebaseUii                 uint64  `form:"-" gorm:"default:null"`
 	KdHomebaseUii                 string  `form:"-" gorm:"default:null"`
+	NomorSuratKontrak             string  `form:"nomor_surat_kontrak" gorm:"default:null"`
+	TmtSuratKontrak               string  `form:"tmt_surat_kontrak" gorm:"default:null"`
+	TmtSuratKontrakIDN            string  `form:"tmt_surat_kontrak_idn" gorm:"-"`
+	TglSuratKontrak               string  `form:"tgl_surat_kontrak" gorm:"default:null"`
+	TglSuratKontrakIDN            string  `form:"tgl_surat_kontrak_idn" gorm:"default:null"`
+	TmtAwalKontrak                string  `form:"tmt_awal_kontrak" gorm:"default:null"`
+	TmtAwalKontrakIDN             string  `form:"tmt_awal_kontrak_idn" gorm:"default:null"`
+	TmtAkhirKontrak               string  `form:"tmt_akhir_kontrak" gorm:"default:null"`
+	TmtAkhirKontrakIDN            string  `form:"tmt_akhir_kontrak_idn" gorm:"default:null"`
 	TglInput                      string  `form:"-" gorm:"-"`
 	UserInput                     string  `form:"-"`
 	TglUpdate                     string  `form:"-" gorm:"-"`
@@ -77,6 +86,8 @@ type PegawaiFungsionalUpdate struct {
 	TmtJabatanIDN                 *string `form:"tmt_jabatan_idn" gorm:"-"`
 	MasaKerjaBawaanTahun          *string `form:"masa_kerja_bawaan_tahun" gorm:"default:null"`
 	MasaKerjaBawaanBulan          *string `form:"masa_kerja_bawaan_bulan" gorm:"default:null"`
+	MasaKerjaGolonganTahun        *string `form:"masa_kerja_golongan_tahun" gorm:"default:null"`
+	MasaKerjaGolonganBulan        *string `form:"masa_kerja_golongan_bulan" gorm:"default:null"`
 	MasaKerjaGajiTahun            *string `form:"masa_kerja_gaji_tahun" gorm:"default:null"`
 	MasaKerjaGajiBulan            *string `form:"masa_kerja_gaji_bulan" gorm:"default:null"`
 	MasaKerjaAwalKepegawaianTahun *string `form:"masa_kerja_awal_kepegawaian_tahun" gorm:"default:null"`
@@ -105,6 +116,13 @@ type PegawaiFungsionalUpdate struct {
 	UuidHomebaseUii          *string `form:"uuid_homebase_uii" gorm:"-"`
 	IdHomebaseUii            *uint64 `form:"-" gorm:"default:null"`
 	KdHomebaseUii            *string `form:"-" gorm:"default:null"`
+	NomorSuratKontrak        *string `form:"nomor_surat_kontrak" gorm:"default:null"`
+	TmtSuratKontrak          *string `form:"tmt_surat_kontrak" gorm:"default:null"`
+	TmtSuratKontrakIDN       *string `form:"tmt_surat_kontrak_idn" gorm:"-"`
+	TglSuratKontrak          *string `form:"tgl_surat_kontrak" gorm:"default:null"`
+	TglSuratKontrakIDN       *string `form:"tgl_surat_kontrak_idn" gorm:"-"`
+	TmtAwalKontrak           *string `form:"tmt_awal_kontrak" gorm:"default:null"`
+	TmtAkhirKontrak          *string `form:"tmt_akhir_kontrak" gorm:"default:null"`
 	TglInput                 *string `form:"-" gorm:"-"`
 	UserInput                *string `form:"-" gorm:"-"`
 	TglUpdate                *string `form:"-" gorm:"-"`

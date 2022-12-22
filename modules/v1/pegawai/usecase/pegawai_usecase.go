@@ -2,8 +2,10 @@ package usecase
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"log"
 	"os"
 	"strconv"
@@ -18,6 +20,9 @@ import (
 	pengaturan "svc-insani-go/modules/v1/pengaturan-insani/usecase"
 	personalRepo "svc-insani-go/modules/v1/personal/repo"
 	pegawaiOraHttp "svc-insani-go/modules/v1/simpeg-oracle/http"
+	_ "svc-insani-go/modules/v2/organisasi/model"
+	organisaiPrivate "svc-insani-go/modules/v2/organisasi/model"
+	_ "svc-insani-go/modules/v2/organisasi/repo"
 
 	ptr "github.com/openlyinc/pointy"
 
@@ -343,4 +348,237 @@ func HandleCheckNikPegawai(a *app.App) echo.HandlerFunc {
 		return c.JSON(http.StatusOK, nil)
 	}
 	return echo.HandlerFunc(h)
+}
+
+func HandleGetPegawaiByNik(a *app.App) echo.HandlerFunc {
+	h := func(c echo.Context) error {
+		nik := c.Param("nik")
+		if nik == "" {
+			return c.JSON(http.StatusBadRequest, map[string]string{"message": "parameter nik wajib diisi"})
+		}
+
+		pegawai, err := pegawaiRepo.GetPegawaiByNikPrivate(a, nik)
+		if err != nil {
+			log.Printf("[ERROR] repo get kepegawaian: %s\n", err.Error())
+			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
+		}
+
+		data := model.PegawaiByNikResponse{
+			Status:  200,
+			Pegawai: pegawai,
+		}
+
+		return c.JSON(http.StatusOK, data)
+	}
+	return echo.HandlerFunc(h)
+}
+
+func HandleGetPegawaiPrivate(a *app.App, public bool) echo.HandlerFunc {
+	h := func(c echo.Context) error {
+		env := os.Getenv("ENV")
+		fmt.Println(env)
+		if public {
+			if env == "staging" || env == "production" {
+				return c.JSON(404, "layanan tidak ditemukan")
+			}
+		}
+
+		reqNik := c.QueryParam("nik")
+		var nik string
+		if len(reqNik) > 0 {
+			nik = reqNik[:len(reqNik)-1]
+			nik = nik[1:]
+		}
+
+		req := &model.PegawaiPrivateRequest{}
+		err := c.Bind(req)
+		if err != nil {
+			fmt.Printf("[WARNING] binding pegawai request: %s\n", err.Error())
+		}
+
+		res := model.PegawaiPrivateResponse{
+			Data: []model.PegawaiPrivate{},
+		}
+		req.Nik = nik
+
+		pp, err := repo.GetAllPegawaiPrivate(a, req)
+		if err != nil {
+			fmt.Printf("[ERROR] repo get all pegawai: %s\n", err.Error())
+			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
+		}
+		res.Data = pp
+
+		// get data jabatan struktural
+		stmt, err := a.DB.Prepare(`SELECT COALESCE(p.id,0), 
+		COALESCE(po.id_jenis_jabatan,0),
+		COALESCE(po.id_unit,0),
+		COALESCE(u.id_jenis_unit,0) 
+		FROM pegawai p 
+		JOIN hcm_organisasi.pejabat_organisasi po ON po.id_pegawai = p.id 
+		JOIN hcm_organisasi.unit u ON u.id = po.id_unit
+		WHERE po.flag_aktif =1`)
+
+		var pejabat []organisaiPrivate.PejabatStrukturalPrivate
+		rows, err := stmt.Query()
+		if err != nil {
+			fmt.Println(err)
+			return c.JSON(500, nil)
+		}
+		defer rows.Close()
+		// Loop through rows, using Scan to assign column data to struct fields.
+		for rows.Next() {
+			var ps organisaiPrivate.PejabatStrukturalPrivate
+			if err := rows.Scan(&ps.IdPegawai, &ps.IdJenisUnit, &ps.IdJenisJabatan, &ps.IdUnit); err != nil {
+				fmt.Println(err)
+				return c.JSON(500, nil)
+			}
+			pejabat = append(pejabat, ps)
+		}
+		if err := rows.Err(); err != nil {
+			fmt.Println(err)
+			return c.JSON(500, nil)
+		}
+
+		var pegawaiAndFungsionalAndStruktural []model.PegawaiPrivate
+		IsNotStruktural := true
+		for _, data := range res.Data {
+
+			tmtSkPertamaTime, err := time.Parse("2006-01-02", data.TmtSkPertama)
+			var tmtSkPertamaDuration time.Duration
+			if err == nil {
+				tmtSkPertamaDuration = time.Now().Sub(tmtSkPertamaTime)
+			}
+			tmtSkPertamaDurationDays := tmtSkPertamaDuration.Hours() / 24
+			// tmtSkPertamaDurationDays := tmtSkPertamaDuration.Hours() / 24
+			tmtSkPertamaDurationRealMonths := int(tmtSkPertamaDurationDays / 365 * 12)
+			masaKerjaKepegawaianTahunInt, _ := strconv.Atoi(data.MasaKerjaTahun)
+			masaKerjaKepegawaianBulanInt, _ := strconv.Atoi(data.MasaKerjaBulan)
+			masaKerjaTotalKepegawaianRealBulan := ((masaKerjaKepegawaianTahunInt * 12) + masaKerjaKepegawaianBulanInt) + tmtSkPertamaDurationRealMonths
+			data.MasaKerjaTahun = fmt.Sprintf("%d", masaKerjaTotalKepegawaianRealBulan/12)
+			data.MasaKerjaBulan = fmt.Sprintf("%d", masaKerjaTotalKepegawaianRealBulan%12)
+
+			for _, pejabat := range pejabat {
+				if data.IdPegawai == pejabat.IdPegawai {
+					data.JabatanStruktural = append(data.JabatanStruktural, pejabat)
+					IsNotStruktural = false
+				}
+			}
+
+			if IsNotStruktural {
+				// data.JabatanStruktural = append(data.JabatanStruktural, organisaiPrivate.PejabatStrukturalPrivate{})
+				data.JabatanStruktural = make([]organisaiPrivate.PejabatStrukturalPrivate, 0)
+			}
+
+			pegawaiAndFungsionalAndStruktural = append(pegawaiAndFungsionalAndStruktural, data)
+		}
+
+		// get data kontrak
+		stmt3, err := a.DB.Prepare(`SELECT p.id, COALESCE(pf.nomor_surat_kontrak,'') no_surat,
+		COALESCE(pf.tmt_surat_kontrak,'') tanggal_mulai,
+		COALESCE(pf.tgl_surat_kontrak,'') tanggal_surat,
+		COALESCE(pf.tmt_awal_kontrak,'') awal_kontrak,
+		COALESCE(pf.tmt_akhir_kontrak,'') akhir_kontrak
+		FROM pegawai p
+		JOIN pegawai_fungsional pf ON p.id = pf.id_pegawai`)
+
+		var kontrakPegawai []model.PegawaiKontrakPrivate
+		rows3, err := stmt3.Query()
+		if err != nil {
+			fmt.Println(err)
+			return c.JSON(500, nil)
+		}
+		defer rows3.Close()
+		for rows3.Next() {
+			var pk model.PegawaiKontrakPrivate
+			if err := rows3.Scan(&pk.IdPegawai, &pk.NoSurat, &pk.TglMulai, &pk.TglSurat, &pk.AwalKontrak, &pk.AkhirKontrak); err != nil {
+				fmt.Println(err)
+				return c.JSON(500, nil)
+			}
+			kontrakPegawai = append(kontrakPegawai, pk)
+		}
+		if err := rows3.Err(); err != nil {
+			fmt.Println(err)
+			return c.JSON(500, nil)
+		}
+
+		var pegawaiJabfungJabstrukAndKontrak []model.PegawaiPrivate
+		IsNotKontrak := true
+		for _, data := range pegawaiAndFungsionalAndStruktural {
+			for _, kontrak := range kontrakPegawai {
+				if data.IdPegawai == kontrak.IdPegawai {
+					// fmt.Println(kontrak)
+					// data.PegawaiKontrakPrivate = append(data.PegawaiKontrakPrivate, kontrak)
+					// data.PegawaiKontrakPrivate = kontrak
+					data.PegawaiKontrakPrivate = model.PegawaiKontrakPrivate{NoSurat: kontrak.NoSurat, TglMulai: kontrak.TglMulai, TglSurat: kontrak.TglSurat, AwalKontrak: kontrak.AwalKontrak, AkhirKontrak: kontrak.AkhirKontrak}
+					IsNotKontrak = false
+					// fmt.Println("cek")
+				}
+			}
+			if IsNotKontrak {
+				// data.PegawaiKontrakPrivate = make([]model.PegawaiKontrakPrivate, 0)
+				// data.PegawaiKontrakPrivate =
+				// data.PegawaiKontrakPrivate = append(data.PegawaiKontrakPrivate, model.PegawaiKontrakPrivate{})
+			}
+
+			pegawaiJabfungJabstrukAndKontrak = append(pegawaiJabfungJabstrukAndKontrak, data)
+		}
+
+		// res.Data = pegawaiAndFungsionalAndStruktural
+		// res.Data = pegawaiJabfungJabstrukAndKontrak
+
+		tanggunganResponse := GetDataTanggungan(public)
+
+		var pegawaiJabfungJabstrukAndKontrakAndTangungan []model.PegawaiPrivate
+		for _, data := range pegawaiJabfungJabstrukAndKontrak {
+			for _, tanggungan := range tanggunganResponse.Data {
+				// if data.IdPersonal == tanggungan.IdPersonal {
+				if strconv.FormatInt(int64(data.IdPersonal), 10) == tanggungan.IdPersonal {
+					data.IdStatusPernikahanPtkp = tanggungan.IdStatusPernikahanPtkp
+					data.KdStatusPernikahanPtkp = tanggungan.KdStatusPernikahanPtkp
+					data.StatusPernikahanPtkp = tanggungan.StatusPernikahanPtkp
+					data.JumlahTanggungan = tanggungan.JumlahTanggungan
+					data.JumlahTanggunganPtkp = tanggungan.JumlahTanggunganPtkp
+				}
+			}
+			pegawaiJabfungJabstrukAndKontrakAndTangungan = append(pegawaiJabfungJabstrukAndKontrakAndTangungan, data)
+		}
+
+		res.Data = pegawaiJabfungJabstrukAndKontrakAndTangungan
+		return c.JSON(http.StatusOK, res)
+	}
+	return echo.HandlerFunc(h)
+}
+
+func GetDataTanggungan(public bool) *model.TanggunganResponseBody {
+	// fmt.Println(env)
+	var baseURL string
+	baseURL = os.Getenv("URL_HCM_TANGGUNGAN")
+	if public {
+		// baseURL = "http://localhost:81/public/api/v1/tanggungan-private"
+		baseURL = "http://svc-dependents-go.hcm-dev.svc.cluster.local/public/api/v1/tanggungan-private"
+	}
+	var client = &http.Client{}
+	request, err := http.NewRequest(http.MethodGet, baseURL, nil)
+	if err != nil {
+		fmt.Println(err)
+		return nil
+	}
+	response, err := client.Do(request)
+	if err != nil {
+		fmt.Println(err)
+		return nil
+	}
+	defer response.Body.Close()
+	b, err := io.ReadAll(response.Body)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	data := &model.TanggunganResponseBody{}
+	err = json.Unmarshal(b, data)
+	if err != nil {
+		fmt.Println(err.Error())
+		return nil
+	}
+	return data
 }

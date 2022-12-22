@@ -54,6 +54,140 @@ func getListAllPegawaiQuery(req *model.PegawaiRequest) string {
 	)
 }
 
+func getListAllPegawaiPrivateQuery(req *model.PegawaiPrivateRequest) string {
+	var nikFilterQuery string
+	if req.Nik != "" {
+		nikFilterQuery = fmt.Sprintf("AND p.nik IN (%s) ", req.Nik)
+	}
+	var namaFilterQuery string
+	if req.Nama != "" {
+		namaFilterQuery = fmt.Sprintf("AND p.nama like '%%%s%%' ", req.Nama)
+	}
+	var kdJenisPegawaiFilterQuery string
+	if req.KdJenisPegawai != "" {
+		kdJenisPegawaiFilterQuery = fmt.Sprintf("AND jpeg.kd_jenis_pegawai = '%s'", req.KdJenisPegawai)
+	}
+	var kdKelompokFilterQuery string
+	if req.KdKelompokPegawai != "" {
+		kdKelompokFilterQuery = fmt.Sprintf("AND kp.kd_kelompok_pegawai = '%s'", req.KdKelompokPegawai)
+	}
+	var kdIndukKerjaFilterQuery string
+	if req.KdIndukKerja != "" {
+		kdIndukKerjaFilterQuery = fmt.Sprintf("AND p.kd_unit1 = '%s'", req.KdIndukKerja)
+	}
+
+	return fmt.Sprintf(`SELECT
+	COALESCE(p.id,0) id_pegawai,
+	COALESCE(p.id_personal_data_pribadi,0),
+	p.nama,
+	p.nik,
+	COALESCE(jpeg.nama_jenis_pegawai,'') jenis_pegawai,
+	COALESCE(jpeg.id,0) id_jenis_pegawai,
+	COALESCE(jpeg.kd_jenis_pegawai,''),
+	COALESCE(kp.kelompok_pegawai,''),
+	COALESCE(kp.id,0) id_kelompok_pegawai,
+	COALESCE(kp.kd_kelompok_pegawai,''),
+	COALESCE(kp.id_kategori_kelompok_pegawai,0),
+	COALESCE(kkp.kd_kategori_kelompok_pegawai,''),
+	COALESCE(g.golongan,''),
+	COALESCE(pgp.id_golongan,0) id_golongan,
+	COALESCE(pgp.kd_golongan,'') kd_golongan,
+	COALESCE(g1.golongan,'') golongan_negara,
+	COALESCE(pgppns.id_golongan,0) id_golongan_negara,
+	COALESCE(pgppns.kd_golongan,'') kd_golongan_negara,
+	COALESCE(r.nama_ruang,'') ruang,
+	COALESCE(r.id,0) id_ruang,
+	COALESCE(r.kd_ruang,'') kd_ruang,
+	COALESCE(r_ngr.nama_ruang,'') ruang_negara,
+	COALESCE(r_ngr.id,0) id_ruang_negara,
+	COALESCE(r_ngr.kd_ruang,'') kd_ruang_negara,
+	COALESCE(u2.unit2,'') unit_kerja,
+	COALESCE(u2.id,0) id_unit,
+	COALESCE(u2.kd_unit2,'') kd_unit,
+	COALESCE(u1.unit1,'') induk_kerja,
+	COALESCE(u1.id,0) id_induk_kerja,
+	COALESCE(u1.kd_unit1,'') kd_induk_kerja,
+	COALESCE(pf.id_status_pegawai_aktif,0),
+	COALESCE(spa.status,'') status_pegawai_aktif,
+	COALESCE(spa.kd_status,'') kd_status_pegawai_aktif,
+	COALESCE(sp.status_pegawai,'') status_pegawai,
+	COALESCE(p.id_status_pegawai,0),
+	COALESCE(p.kd_status_pegawai,''),
+	COALESCE(p.jenis_kelamin,''),
+	COALESCE(jf.fungsional ,'') jabatan_fungsional_yayasan,
+	COALESCE(pf.id_jabatan_fungsional,0) id_jabatan_fungsional_yayasan,
+	COALESCE(pf.kd_jabatan_fungsional,'') kd_jabatan_fungsional_yayasan,
+	COALESCE(jf2.fungsional ,'') jabatan_fungsional_negara,
+	COALESCE(pp.id_jabatan_fungsional ,0) id_jabatan_fungsional_negara,
+	COALESCE(pp.kd_jabatan_fungsional ,'') kd_jabatan_fungsional_negara,
+	COALESCE(p.id_detail_profesi,0),
+	COALESCE(dp.detail_profesi,''),
+	COALESCE(jp.id,0) id_jenjang_pendidikan,
+	COALESCE(jp.kd_jenjang,'') kd_jenjang_pendidikan,
+	COALESCE(jp.jenjang,'') jenjang_pendidikan,
+	COALESCE(pf.tmt_sk_pertama,'') tmt_sk_pertama,
+	COALESCE(pf.masa_kerja_awal_kepegawaian_tahun,'') masa_kerja_tahun,
+	COALESCE(pf.masa_kerja_awal_kepegawaian_bulan,'') masa_kerja_bulan,
+	COALESCE((SELECT COUNT(*) FROM hcm_personal.personal_hubungan_keluarga phk WHERE phk.id_personal_data_pribadi =  p.id_personal_data_pribadi AND phk.kd_hubungan_keluarga IN ('AAK','AT','AN','SUA','IST') AND phk.flag_aktif = 1),'') jumlah_keluarga,
+	COALESCE((SELECT COUNT(*) from hcm_personal.personal_hubungan_keluarga phk WHERE phk.id_personal_data_pribadi = p.id_personal_data_pribadi AND phk.kd_hubungan_keluarga IN ('AAK','AT','AN') AND phk.flag_aktif = 1),'') jumlah_anak,
+	COALESCE((SELECT pi.npwp from hcm_personal.personal_identitas pi WHERE pi.id_personal_data_pribadi = p.id_personal_data_pribadi AND pi.flag_aktif = 1),'') npwp,
+	COALESCE(spn.id,0) id_status_nikah,
+	COALESCE(spn.kd_status,'') kd_status_nikah,
+	COALESCE(spn.status,'') status_nikah,
+	COALESCE(p.nik_suami_istri,''),
+	COALESCE(p.nik_ktp,'') nik_ktp,
+	COALESCE((SELECT pdp.flag_ptkp from hcm_tanggungan.personal_data_pribadi pdp WHERE pdp.id = p.id_personal_data_pribadi AND pdp.flag_aktif = 1),0) flag_klaim_tanggungan,
+	COALESCE(p.flag_pensiun,0),
+	COALESCE(p.flag_meninggal,0),
+	COALESCE((SELECT DISTINCT phk.flag_sekantor from hcm_personal.personal_hubungan_keluarga phk WHERE phk.id_personal_data_pribadi = p.id_personal_data_pribadi AND phk.kd_hubungan_keluarga in ('SUA','IST') AND phk.flag_aktif = 1),0) flag_suami_istri_sekantor,
+	COALESCE((CASE WHEN pf.id_jabatan_fungsional != '' OR pp.id_jabatan_fungsional != '' THEN 1 END ),0) is_fungsional,
+	COALESCE((SELECT COUNT(*) from hcm_organisasi.pejabat_organisasi po JOIN hcm_organisasi.unit u ON u.id = po.id_unit WHERE po.id_pegawai = p.id AND po.flag_aktif =1),'') is_struktural
+	from
+	pegawai p
+	LEFT JOIN
+		jenis_pegawai jpeg ON p.kd_jenis_pegawai = jpeg.kd_jenis_pegawai
+	LEFT JOIN
+		kelompok_pegawai kp ON p.kd_kelompok_pegawai = kp.kd_kelompok_pegawai
+	LEFT JOIN
+		kategori_kelompok_pegawai kkp on kp.id_kategori_kelompok_pegawai = kkp.id
+	LEFT JOIN
+		pegawai_pns pp on pp.id_pegawai = p.id
+	LEFT JOIN
+		pegawai_fungsional pf ON p.id = pf.id_pegawai
+	LEFT JOIN
+		pangkat_golongan_pegawai pgp ON pf.id_pangkat_golongan = pgp.id
+	LEFT JOIN
+		pangkat_golongan_pegawai pgppns ON pp.id_pangkat_golongan = pgppns.id
+	LEFT JOIN
+		golongan g on pgp.id_golongan = g.id
+	LEFT JOIN
+		golongan g1 on pgppns.id_golongan = g1.id
+	LEFT JOIN
+		ruang r on pgp.id_ruang = r.id
+	LEFT JOIN
+		ruang r_ngr on pgppns.id_ruang = r_ngr.id
+	LEFT JOIN
+		unit1 u1 ON p.kd_unit1 = u1.kd_unit1
+	LEFT JOIN
+		unit2 u2 ON p.kd_unit2  = u2.kd_unit2
+	LEFT JOIN
+		status_pegawai_aktif spa ON spa.id = pf.id_status_pegawai_aktif
+	LEFT JOIN
+		status_pegawai sp ON p.kd_status_pegawai = sp.kd_status_pegawai
+	LEFT JOIN
+		jabatan_fungsional jf ON pf.id_jabatan_fungsional = jf.id
+	LEFT JOIN
+		jabatan_fungsional jf2 ON pp.id_jabatan_fungsional = jf2.id
+	LEFT JOIN
+		jenjang_pendidikan jp ON p.id_pendidikan_terakhir = jp.id
+	LEFT JOIN
+		status_pernikahan spn ON p.kd_status_perkawinan = spn.kd_status
+	LEFT JOIN
+		detail_profesi dp ON p.id_detail_profesi = dp.id
+	WHERE p.flag_aktif=1 %s %s %s %s %s`, nikFilterQuery, namaFilterQuery, kdJenisPegawaiFilterQuery, kdKelompokFilterQuery, kdIndukKerjaFilterQuery)
+
+}
+
 func countPegawaiQuery(req *model.PegawaiRequest) string {
 	var uuidJenisPegawaiFilterQuery string
 	if req.UuidJenisPegawai != "" {
@@ -218,6 +352,11 @@ func getUnitKerjaPegawaiQuery(uuid string) string {
 		COALESCE(lk.lokasi_desc,''),
 		COALESCE(pf.nomor_sk_pertama,''),
 		COALESCE(pf.tmt_sk_pertama,''),
+		COALESCE(pf.nomor_surat_kontrak,''),
+		COALESCE(pf.tmt_surat_kontrak,''),
+		COALESCE(pf.tgl_surat_kontrak,''),
+		COALESCE(pf.tmt_awal_kontrak,''),
+		COALESCE(pf.tmt_akhir_kontrak,''),
 		COALESCE(u22.uuid,''),
 		COALESCE(u22.kd_pddikti,''),
 		COALESCE(u22.uuid,''),
@@ -260,13 +399,23 @@ func getPegawaiPNSQuery(uuid string) string {
 		COALESCE(pgp.kd_golongan,''),
 		COALESCE(pgp.kd_ruang,''),
 		COALESCE(pp.tmt_pangkat_golongan,''),
+		COALESCE(pp.nomor_pangkat_golongan,''),
 		COALESCE(jf.uuid,''),
 		COALESCE(jf.kd_fungsional,''),
 		COALESCE(jf.fungsional,''),
 		COALESCE(pp.tmt_jabatan,''),
+		COALESCE(pp.nomor_jabatan_fungsional,''),
 		COALESCE(pp.masa_kerja_tahun,''),
 		COALESCE(pp.masa_kerja_bulan,''),
+		COALESCE(pp.masa_kerja_golongan_tahun,''),
+		COALESCE(pp.masa_kerja_golongan_bulan,''),
 		COALESCE(pp.angka_kredit,''),
+		COALESCE(pp.nomor_pak,''),
+		COALESCE(pp.tmt_pak,''),
+		COALESCE(pp.nomor_sk_pensiun,''),
+		COALESCE(pp.tmt_sk_pensiun,''),
+		COALESCE(pp.masa_kerja_pensiun_tahun,''),
+		COALESCE(pp.masa_kerja_pensiun_bulan,''),
 		COALESCE(pp.keterangan,''),
 		COALESCE(pp.nira,'')
 	FROM 
@@ -456,4 +605,53 @@ func getPegawaiFilePendidikanQuery(idList ...string) string {
 
 func updatePegawaiQuery(pegwaiUpdate model.PegawaiUpdate) string {
 	return fmt.Sprintf(``)
+}
+
+func getPegawaiByNik(nik string) string {
+	q := fmt.Sprintf(`SELECT
+	p.nama,
+	COALESCE(p.gelar_depan,''),
+	COALESCE(p.gelar_belakang,''),
+	p.nik,
+	p.tempat_lahir,
+	p.tgl_lahir,
+	p.jenis_kelamin,
+	COALESCE(jp.kd_pendidikan_simpeg,''),
+	COALESCE(sp.kd_status_pegawai,''),
+	COALESCE(sp.status_pegawai,''),
+	COALESCE(kp.kd_kelompok_pegawai,''),
+	COALESCE(kp.kelompok_pegawai,''),
+	COALESCE(pgp.kd_pangkat_gol,''),
+	COALESCE(pgp.pangkat,''),
+	COALESCE(pgp.kd_golongan,''),
+	COALESCE(pgp.golongan,''),
+	COALESCE(pgp.kd_ruang,''),
+	COALESCE(pf.tmt_pangkat_golongan,''),
+	COALESCE(jf.kd_fungsional,''),
+	COALESCE(jf.fungsional,''),
+	COALESCE(pf.tmt_jabatan,''),
+	COALESCE(u1.kd_unit1,''),
+	COALESCE(u1.unit1,''),
+	COALESCE(u2.kd_unit2,''),
+	COALESCE(u2.unit2,'')
+	from
+	pegawai p
+	LEFT JOIN 
+		jenjang_pendidikan jp ON p.id_pendidikan_terakhir = jp.id
+	LEFT JOIN 
+		status_pegawai sp ON p.id_status_pegawai = sp.id 
+	LEFT JOIN
+		kelompok_pegawai kp ON p.id_kelompok_pegawai = kp.id 
+	LEFT JOIN
+		pegawai_fungsional pf ON p.id = pf.id_pegawai 
+	LEFT JOIN
+		pangkat_golongan_pegawai pgp ON pf.id_pangkat_golongan = pgp.id 
+	LEFT JOIN 
+		jabatan_fungsional jf ON pf.id_jabatan_fungsional = jf.id 
+	LEFT JOIN
+		unit1 u1 ON p.id_unit_kerja1 = u1.id 
+	LEFT JOIN
+		unit2 u2 ON p.id_unit_kerja2 = u2.id 
+	WHERE p.flag_aktif=1 AND p.nik = %q`, nik)
+	return helper.FlatQuery(q)
 }

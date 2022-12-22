@@ -2,6 +2,7 @@ package repo
 
 import (
 	"context"
+	"database/sql"
 	"errors"
 	"fmt"
 	"svc-insani-go/app"
@@ -87,4 +88,31 @@ func GetPejabatStrukturalByUUID(a *app.App, ctx context.Context, uuid string) (*
 	}
 
 	return &ps, nil
+}
+
+func GetPejabatStrukturalByNikPegawaiPrivate(a *app.App, uuidPegawai string, stmt *sql.Stmt) ([]model.PejabatStrukturalPrivate, error) {
+	var pejabat []model.PejabatStrukturalPrivate
+	// sqlQuery := getDataJabatanStrukturalByNikPegawai(uuidPegawai)
+	// stmt, err := a.DB.Prepare(sqlQuery)
+	// if err != nil {
+	// 	return nil, fmt.Errorf("pejabat %q: ", err)
+	// }
+
+	rows, err := stmt.Query(uuidPegawai)
+	if err != nil {
+		return nil, fmt.Errorf("pejabat %q: ", err)
+	}
+	defer rows.Close()
+	// Loop through rows, using Scan to assign column data to struct fields.
+	for rows.Next() {
+		var ps model.PejabatStrukturalPrivate
+		if err := rows.Scan(&ps.IdJenisUnit, &ps.IdJenisJabatan, &ps.IdUnit); err != nil {
+			return nil, fmt.Errorf("pejabat %q: ", err)
+		}
+		pejabat = append(pejabat, ps)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("pejabat %q: ", err)
+	}
+	return pejabat, nil
 }

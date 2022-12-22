@@ -31,7 +31,6 @@ spec:
               cpu: 100m
               memory: 64Mi
             limits:
-              cpu: 200m
               memory: 128Mi
           ports:
             - name: http-api
@@ -87,7 +86,8 @@ spec:
               value: "http://svc-presence-lumen.hcm-production.svc.cluster.local"
             - name: URL_ACTIVATION_PERSONAL
               value: "http://svc-personal-go.hcm-production.svc.cluster.local"
-
+            - name: URL_HCM_TANGGUNGAN
+              value: "http://svc-dependents-go.hcm-production.svc.cluster.local/private/api/v1/tanggungan-private"
 
 ---
 apiVersion: v1
@@ -107,7 +107,7 @@ metadata:
       prefix: /v1/insani
       rewrite: /public/api/v1
       service: svc-insani-go.hcm-production
-      timeout_ms: 15000
+      timeout_ms: 30000
 spec:
   selector:
     svc: svc-insani-go

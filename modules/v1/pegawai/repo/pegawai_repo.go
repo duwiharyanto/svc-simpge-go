@@ -67,6 +67,102 @@ func GetAllPegawai(a *app.App, req *model.PegawaiRequest) ([]model.Pegawai, erro
 	return pp, nil
 }
 
+func GetAllPegawaiPrivate(a *app.App, req *model.PegawaiPrivateRequest) ([]model.PegawaiPrivate, error) {
+	sqlQuery := getListAllPegawaiPrivateQuery(req)
+	// fmt.Println(sqlQuery)
+	rows, err := a.DB.Query(sqlQuery)
+	if err != nil {
+		return nil, fmt.Errorf("error querying get pegawai, %w", err)
+	}
+	defer rows.Close()
+
+	pp := []model.PegawaiPrivate{}
+	for rows.Next() {
+		var p model.PegawaiPrivate
+		err := rows.Scan(
+			&p.IdPegawai,
+			&p.IdPersonal,
+			&p.Nama,
+			&p.NIK,
+			&p.JenisPegawai,
+			&p.IdJenisPegawai,
+			&p.KdJenisPegawai,
+			&p.KelompokPegawai,
+			&p.IdKelompokPegawai,
+			&p.KdKelompokPegawai,
+			&p.IdKategoriKelompokPegawai,
+			&p.KdKategoriKelompokPegawai,
+			&p.Golongan,
+			&p.IdGolongan,
+			&p.KdGolongan,
+			&p.GolonganNegara,
+			&p.IdGolonganNegara,
+			&p.KdGolonganNegara,
+			&p.Ruang,
+			&p.IdRuang,
+			&p.KdRuang,
+			&p.RuangNegara,
+			&p.IdRuangNegara,
+			&p.KdRuangNegara,
+			&p.UnitKerja,
+			&p.IdUnit,
+			&p.KdUnit,
+			&p.IndukKerja,
+			&p.IdIndukKerja,
+			&p.KdIndukKerja,
+			&p.IdStatusPegawaiAktif,
+			&p.StatusPegawaiAktif,
+			&p.KdStatusPegawaiAktif,
+			&p.StatusPegawai,
+			&p.IdStatusPegawai,
+			&p.KdStatusPegawai,
+			&p.JenisKelamin,
+			&p.JabatanFungsionalYayasan,
+			&p.IdJabatanFungsionalYayasan,
+			&p.KdJabatanFungsionalYayasan,
+			&p.JabatanFungsionalNegara,
+			&p.IdJabatanFungsionalNegara,
+			&p.KdJabatanFungsionalNegara,
+			&p.IdDetailProfesi,
+			&p.DetailProfesi,
+			&p.IdJenjangPendidikan,
+			&p.KdJenjangPendidikan,
+			&p.JenjangPendidikan,
+			&p.TmtSkPertama,
+			&p.MasaKerjaTahun,
+			&p.MasaKerjaBulan,
+			&p.JumlahKeluarga,
+			&p.JumlahAnak,
+			&p.Npwp,
+			&p.IdStatusPernikahan,
+			&p.KdStatusPernikahan,
+			&p.StatusPernikahan,
+			// &p.StatusPernikahanPtkp,
+			&p.NikSuamiIstri,
+			&p.NikKtp,
+			// &p.JumlahTanggungan,
+			// &p.JumlahTanggunganPtkp,
+			&p.FlagKlaimTanggungan,
+			&p.FlagPensiun,
+			&p.FlagMeninggal,
+			&p.FlagSuamiIstriSekantor,
+			&p.IsFungsional,
+			&p.IsStruktural,
+		)
+		if err != nil {
+			return nil, fmt.Errorf("error scan pegawai row, %s", err.Error())
+		}
+
+		pp = append(pp, p)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("error pegawai rows, %s", err.Error())
+	}
+
+	return pp, nil
+}
+
 func CountPegawai(a *app.App, req *model.PegawaiRequest) (int, error) {
 	sqlQuery := countPegawaiQuery(req)
 	var count int
@@ -283,4 +379,46 @@ func GetPresignUrlFotoPegawai(a *app.App, pathFoto string) (string, error) {
 	}
 
 	return urlFileFoto, nil
+}
+
+func GetPegawaiByNikPrivate(a *app.App, nik string) (*model.PegawaiByNik, error) {
+	sqlQuery := getPegawaiByNik(nik)
+	var pegawai model.PegawaiByNik
+	err := a.DB.QueryRow(sqlQuery).Scan(
+		&pegawai.Nama,
+		&pegawai.GelarDepan,
+		&pegawai.GelarBelakang,
+		&pegawai.Nik,
+		&pegawai.TempatLahir,
+		&pegawai.TglLahir,
+		&pegawai.JenisKelamin,
+		&pegawai.KdPendidikanTerakhir,
+		&pegawai.KdStatusPegawai,
+		&pegawai.StatusPegawai,
+		&pegawai.KdKelompokPegawai,
+		&pegawai.KelompokPegawai,
+		&pegawai.KdPangkatGolongan,
+		&pegawai.Pangkat,
+		&pegawai.KdGolongan,
+		&pegawai.Golongan,
+		&pegawai.KdRuang,
+		&pegawai.TmtPangkatGolongan,
+		// &pegawai.TmtPangkatGolonganIDN,
+		&pegawai.KdJabatanFungsional,
+		&pegawai.Fungsional,
+		&pegawai.TmtJabatan,
+		// &pegawai.TmtJabatanIDN,
+		&pegawai.KdUnit1,
+		&pegawai.Unit1,
+		&pegawai.KdUnit2,
+		&pegawai.Unit2,
+	)
+	if err == sql.ErrNoRows {
+		return nil, nil
+	}
+	if err != nil {
+		return nil, fmt.Errorf("error querying get pegawai by nik, %s", err.Error())
+	}
+
+	return &pegawai, nil
 }
