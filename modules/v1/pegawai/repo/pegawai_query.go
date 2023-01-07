@@ -130,7 +130,7 @@ func getListAllPegawaiPrivateQuery(req *model.PegawaiPrivateRequest) string {
 	COALESCE(pf.masa_kerja_awal_kepegawaian_bulan,'') masa_kerja_bulan,
 	COALESCE((SELECT COUNT(*) FROM hcm_personal.personal_hubungan_keluarga phk WHERE phk.id_personal_data_pribadi =  p.id_personal_data_pribadi AND phk.kd_hubungan_keluarga IN ('AAK','AT','AN','SUA','IST') AND phk.flag_aktif = 1),'') jumlah_keluarga,
 	COALESCE((SELECT COUNT(*) from hcm_personal.personal_hubungan_keluarga phk WHERE phk.id_personal_data_pribadi = p.id_personal_data_pribadi AND phk.kd_hubungan_keluarga IN ('AAK','AT','AN') AND phk.flag_aktif = 1),'') jumlah_anak,
-	COALESCE((SELECT pi.npwp from hcm_personal.personal_identitas pi WHERE pi.id_personal_data_pribadi = p.id_personal_data_pribadi AND pi.flag_aktif = 1),'') npwp,
+	COALESCE((SELECT DISTINCT pi.npwp from hcm_personal.personal_identitas pi WHERE pi.id_personal_data_pribadi = p.id_personal_data_pribadi AND pi.flag_aktif = 1),'') npwp,
 	COALESCE(spn.id,0) id_status_nikah,
 	COALESCE(spn.kd_status,'') kd_status_nikah,
 	COALESCE(spn.status,'') status_nikah,
