@@ -112,7 +112,7 @@ metadata:
       prefix: /v1/insani
       rewrite: /public/api/v1
       service: svc-insani-go.hcm-stag
-      timeout_ms: 30000
+      timeout_ms: 50000
 spec:
   selector:
     svc: svc-insani-go
