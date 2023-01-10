@@ -121,6 +121,7 @@ func getListAllPegawaiPrivateQuery(req *model.PegawaiPrivateRequest) string {
 	COALESCE(pp.id_jabatan_fungsional ,0) id_jabatan_fungsional_negara,
 	COALESCE(pp.kd_jabatan_fungsional ,'') kd_jabatan_fungsional_negara,
 	COALESCE(p.id_detail_profesi,0),
+	COALESCE(dp.kd_detail_profesi,''),
 	COALESCE(dp.detail_profesi,''),
 	COALESCE(jp.id,0) id_jenjang_pendidikan,
 	COALESCE(jp.kd_jenjang,'') kd_jenjang_pendidikan,
