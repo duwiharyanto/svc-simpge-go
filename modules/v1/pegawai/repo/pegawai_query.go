@@ -121,6 +121,7 @@ func getListAllPegawaiPrivateQuery(req *model.PegawaiPrivateRequest) string {
 	COALESCE(pp.id_jabatan_fungsional ,0) id_jabatan_fungsional_negara,
 	COALESCE(pp.kd_jabatan_fungsional ,'') kd_jabatan_fungsional_negara,
 	COALESCE(p.id_detail_profesi,0),
+	COALESCE(dp.kd_detail_profesi,''),
 	COALESCE(dp.detail_profesi,''),
 	COALESCE(jp.id,0) id_jenjang_pendidikan,
 	COALESCE(jp.kd_jenjang,'') kd_jenjang_pendidikan,
@@ -128,20 +129,20 @@ func getListAllPegawaiPrivateQuery(req *model.PegawaiPrivateRequest) string {
 	COALESCE(pf.tmt_sk_pertama,'') tmt_sk_pertama,
 	COALESCE(pf.masa_kerja_awal_kepegawaian_tahun,'') masa_kerja_tahun,
 	COALESCE(pf.masa_kerja_awal_kepegawaian_bulan,'') masa_kerja_bulan,
-	COALESCE((SELECT COUNT(*) FROM hcm_personal.personal_hubungan_keluarga phk WHERE phk.id_personal_data_pribadi =  p.id_personal_data_pribadi AND phk.kd_hubungan_keluarga IN ('AAK','AT','AN','SUA','IST') AND phk.flag_aktif = 1),'') jumlah_keluarga,
-	COALESCE((SELECT COUNT(*) from hcm_personal.personal_hubungan_keluarga phk WHERE phk.id_personal_data_pribadi = p.id_personal_data_pribadi AND phk.kd_hubungan_keluarga IN ('AAK','AT','AN') AND phk.flag_aktif = 1),'') jumlah_anak,
-	COALESCE((SELECT pi.npwp from hcm_personal.personal_identitas pi WHERE pi.id_personal_data_pribadi = p.id_personal_data_pribadi AND pi.flag_aktif = 1),'') npwp,
+	COALESCE((SELECT COUNT(*) FROM personal_hubungan_keluarga phk WHERE phk.id_personal_data_pribadi =  p.id_personal_data_pribadi AND phk.kd_hubungan_keluarga IN ('AAK','AT','AN','SUA','IST') AND phk.flag_aktif = 1),'') jumlah_keluarga,
+	COALESCE((SELECT COUNT(*) from personal_hubungan_keluarga phk WHERE phk.id_personal_data_pribadi = p.id_personal_data_pribadi AND phk.kd_hubungan_keluarga IN ('AAK','AT','AN') AND phk.flag_aktif = 1),'') jumlah_anak,
+	COALESCE((SELECT DISTINCT pi.npwp from personal_identitas pi WHERE pi.id_personal_data_pribadi = p.id_personal_data_pribadi AND pi.flag_aktif = 1),'') npwp,
 	COALESCE(spn.id,0) id_status_nikah,
 	COALESCE(spn.kd_status,'') kd_status_nikah,
 	COALESCE(spn.status,'') status_nikah,
 	COALESCE(p.nik_suami_istri,''),
 	COALESCE(p.nik_ktp,'') nik_ktp,
-	COALESCE((SELECT pdp.flag_ptkp from hcm_tanggungan.personal_data_pribadi pdp WHERE pdp.id = p.id_personal_data_pribadi AND pdp.flag_aktif = 1),0) flag_klaim_tanggungan,
+	COALESCE((SELECT pdp.flag_ptkp from personal_data_pribadi_hcm_tanggungan pdp WHERE pdp.id = p.id_personal_data_pribadi AND pdp.flag_aktif = 1),0) flag_klaim_tanggungan,
 	COALESCE(p.flag_pensiun,0),
 	COALESCE(p.flag_meninggal,0),
-	COALESCE((SELECT DISTINCT phk.flag_sekantor from hcm_personal.personal_hubungan_keluarga phk WHERE phk.id_personal_data_pribadi = p.id_personal_data_pribadi AND phk.kd_hubungan_keluarga in ('SUA','IST') AND phk.flag_aktif = 1),0) flag_suami_istri_sekantor,
+	COALESCE((SELECT DISTINCT phk.flag_sekantor from personal_hubungan_keluarga phk WHERE phk.id_personal_data_pribadi = p.id_personal_data_pribadi AND phk.kd_hubungan_keluarga in ('SUA','IST') AND phk.flag_aktif = 1),0) flag_suami_istri_sekantor,
 	COALESCE((CASE WHEN pf.id_jabatan_fungsional != '' OR pp.id_jabatan_fungsional != '' THEN 1 END ),0) is_fungsional,
-	COALESCE((SELECT COUNT(*) from hcm_organisasi.pejabat_organisasi po JOIN hcm_organisasi.unit u ON u.id = po.id_unit WHERE po.id_pegawai = p.id AND po.flag_aktif =1),'') is_struktural
+	COALESCE((CASE WHEN (SELECT COUNT(*) from pejabat_organisasi po JOIN unit u ON u.id = po.id_unit WHERE po.id_pegawai = p.id AND po.flag_aktif =1) != 0 THEN 1 END ),0) is_struktural
 	from
 	pegawai p
 	LEFT JOIN

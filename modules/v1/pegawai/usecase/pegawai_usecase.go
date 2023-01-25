@@ -378,7 +378,7 @@ func HandleGetPegawaiPrivate(a *app.App, public bool) echo.HandlerFunc {
 		env := os.Getenv("ENV")
 		fmt.Println(env)
 		if public {
-			if env == "staging" || env == "production" {
+			if env == "production" {
 				return c.JSON(404, "layanan tidak ditemukan")
 			}
 		}
@@ -407,15 +407,14 @@ func HandleGetPegawaiPrivate(a *app.App, public bool) echo.HandlerFunc {
 			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
 		}
 		res.Data = pp
-
 		// get data jabatan struktural
 		stmt, err := a.DB.Prepare(`SELECT COALESCE(p.id,0), 
 		COALESCE(po.id_jenis_jabatan,0),
 		COALESCE(po.id_unit,0),
 		COALESCE(u.id_jenis_unit,0) 
 		FROM pegawai p 
-		JOIN hcm_organisasi.pejabat_organisasi po ON po.id_pegawai = p.id 
-		JOIN hcm_organisasi.unit u ON u.id = po.id_unit
+		JOIN pejabat_organisasi po ON po.id_pegawai = p.id 
+		JOIN unit u ON u.id = po.id_unit
 		WHERE po.flag_aktif =1`)
 
 		var pejabat []organisaiPrivate.PejabatStrukturalPrivate
@@ -538,12 +537,14 @@ func HandleGetPegawaiPrivate(a *app.App, public bool) echo.HandlerFunc {
 					data.StatusPernikahanPtkp = tanggungan.StatusPernikahanPtkp
 					data.JumlahTanggungan = tanggungan.JumlahTanggungan
 					data.JumlahTanggunganPtkp = tanggungan.JumlahTanggunganPtkp
+					data.JumlahAnakPtkp = tanggungan.JumlahAnakPtkp
 				}
 			}
 			pegawaiJabfungJabstrukAndKontrakAndTangungan = append(pegawaiJabfungJabstrukAndKontrakAndTangungan, data)
 		}
 
 		res.Data = pegawaiJabfungJabstrukAndKontrakAndTangungan
+
 		return c.JSON(http.StatusOK, res)
 	}
 	return echo.HandlerFunc(h)
@@ -553,10 +554,12 @@ func GetDataTanggungan(public bool) *model.TanggunganResponseBody {
 	// fmt.Println(env)
 	var baseURL string
 	baseURL = os.Getenv("URL_HCM_TANGGUNGAN")
-	if public {
-		// baseURL = "http://localhost:81/public/api/v1/tanggungan-private"
-		baseURL = "http://svc-dependents-go.hcm-dev.svc.cluster.local/public/api/v1/tanggungan-private"
-	}
+	fmt.Println("baseUrl = " + baseURL)
+	// if public {
+	// baseURL = "http://localhost:81/public/api/v1/tanggungan-private"
+	// baseURL = "http://svc-dependents-go.hcm-dev.svc.cluster.local/public/api/v1/tanggungan-private"
+	// }
+
 	var client = &http.Client{}
 	request, err := http.NewRequest(http.MethodGet, baseURL, nil)
 	if err != nil {

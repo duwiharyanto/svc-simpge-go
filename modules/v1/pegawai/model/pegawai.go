@@ -85,6 +85,7 @@ type PegawaiPrivate struct {
 	JabatanStruktural      []privatePejabatStruktural.PejabatStrukturalPrivate `json:"jabatan_struktural" gorm:"type:varchar"`
 	PegawaiKontrakPrivate  PegawaiKontrakPrivate                               `json:"kontrak" gorm:"type:varchar"`
 	IdDetailProfesi        uint64                                              `json:"id_detail_profesi" gorm:"type:varchar"`
+	KdDetailProfesi        string                                              `json:"kd_detail_profesi" gorm:"type:varchar"`
 	DetailProfesi          string                                              `json:"detail_profesi" gorm:"type:varchar"`
 	IdJenjangPendidikan    uint64                                              `json:"id_jenjang_pendidikan" gorm:"type:varchar"`
 	KdJenjangPendidikan    string                                              `json:"kd_jenjang_pendidikan" gorm:"type:varchar"`
@@ -105,6 +106,7 @@ type PegawaiPrivate struct {
 	NikKtp                 string                                              `json:"nik_ktp" gorm:"type:varchar"`
 	JumlahTanggungan       int                                                 `json:"jumlah_tanggungan" gorm:"type:varchar"`
 	JumlahTanggunganPtkp   int                                                 `json:"jumlah_tanggungan_ptkp" gorm:"type:varchar"`
+	JumlahAnakPtkp         int                                                 `json:"jumlah_anak_ptkp" gorm:"type:varchar"`
 	FlagKlaimTanggungan    int                                                 `json:"flag_klaim_tanggungan" gorm:"type:varchar"`
 	FlagPensiun            int                                                 `json:"flag_pensiun" gorm:"type:varchar"`
 	FlagMeninggal          int                                                 `json:"flag_meninggal" gorm:"type:varchar"`
@@ -128,6 +130,7 @@ type Tanggungan struct {
 	StatusPernikahanPtkp   string `json:"status_pernikahan_ptkp"`
 	JumlahTanggungan       int    `json:"jumlah_tanggungan"`
 	JumlahTanggunganPtkp   int    `json:"jumlah_tanggungan_ptkp"`
+	JumlahAnakPtkp         int    `json:"jumlah_anak_ptkp"`
 }
 
 type TanggunganResponseBody struct {
