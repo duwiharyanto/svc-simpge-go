@@ -537,6 +537,7 @@ func HandleGetPegawaiPrivate(a *app.App, public bool) echo.HandlerFunc {
 					data.StatusPernikahanPtkp = tanggungan.StatusPernikahanPtkp
 					data.JumlahTanggungan = tanggungan.JumlahTanggungan
 					data.JumlahTanggunganPtkp = tanggungan.JumlahTanggunganPtkp
+					data.JumlahAnakPtkp = tanggungan.JumlahAnakPtkp
 				}
 			}
 			pegawaiJabfungJabstrukAndKontrakAndTangungan = append(pegawaiJabfungJabstrukAndKontrakAndTangungan, data)

@@ -142,7 +142,7 @@ func getListAllPegawaiPrivateQuery(req *model.PegawaiPrivateRequest) string {
 	COALESCE(p.flag_meninggal,0),
 	COALESCE((SELECT DISTINCT phk.flag_sekantor from personal_hubungan_keluarga phk WHERE phk.id_personal_data_pribadi = p.id_personal_data_pribadi AND phk.kd_hubungan_keluarga in ('SUA','IST') AND phk.flag_aktif = 1),0) flag_suami_istri_sekantor,
 	COALESCE((CASE WHEN pf.id_jabatan_fungsional != '' OR pp.id_jabatan_fungsional != '' THEN 1 END ),0) is_fungsional,
-	COALESCE((SELECT COUNT(*) from pejabat_organisasi po JOIN unit u ON u.id = po.id_unit WHERE po.id_pegawai = p.id AND po.flag_aktif =1),'') is_struktural
+	COALESCE((CASE WHEN (SELECT COUNT(*) from pejabat_organisasi po JOIN unit u ON u.id = po.id_unit WHERE po.id_pegawai = p.id AND po.flag_aktif =1) != 0 THEN 1 END ),0) is_struktural
 	from
 	pegawai p
 	LEFT JOIN
