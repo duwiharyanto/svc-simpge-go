@@ -94,7 +94,7 @@ type PegawaiPrivate struct {
 	MasaKerjaTahun         string                                              `json:"masa_kerja_tahun" gorm:"type:varchar"`
 	MasaKerjaBulan         string                                              `json:"masa_kerja_bulan" gorm:"type:varchar"`
 	JumlahKeluarga         string                                              `json:"jumlah_keluarga" gorm:"type:varchar"`
-	JumlahAnak             string                                              `json:"jumlah_anak" gorm:"type:varchar"`
+	JumlahAnak             int                                                 `json:"jumlah_anak" gorm:"type:varchar"`
 	Npwp                   string                                              `json:"npwp" gorm:"type:varchar"`
 	IdStatusPernikahan     uint64                                              `json:"id_status_nikah" gorm:"type:varchar"`
 	KdStatusPernikahan     string                                              `json:"kd_status_nikah" gorm:"type:varchar"`
