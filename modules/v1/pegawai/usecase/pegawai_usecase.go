@@ -411,7 +411,8 @@ func HandleGetPegawaiPrivate(a *app.App, public bool) echo.HandlerFunc {
 		stmt, err := a.DB.Prepare(`SELECT COALESCE(p.id,0), 
 		COALESCE(po.id_jenis_jabatan,0),
 		COALESCE(po.id_unit,0),
-		COALESCE(u.id_jenis_unit,0) 
+		COALESCE(u.id_jenis_unit,0),
+		0 flag_aktif
 		FROM pegawai p 
 		JOIN pejabat_organisasi po ON po.id_pegawai = p.id 
 		JOIN unit u ON u.id = po.id_unit
@@ -427,7 +428,7 @@ func HandleGetPegawaiPrivate(a *app.App, public bool) echo.HandlerFunc {
 		// Loop through rows, using Scan to assign column data to struct fields.
 		for rows.Next() {
 			var ps organisaiPrivate.PejabatStrukturalPrivate
-			if err := rows.Scan(&ps.IdPegawai, &ps.IdJenisUnit, &ps.IdJenisJabatan, &ps.IdUnit); err != nil {
+			if err := rows.Scan(&ps.IdPegawai, &ps.IdJenisUnit, &ps.IdJenisJabatan, &ps.IdUnit, &ps.FlagAktif); err != nil {
 				fmt.Println(err)
 				return c.JSON(500, nil)
 			}

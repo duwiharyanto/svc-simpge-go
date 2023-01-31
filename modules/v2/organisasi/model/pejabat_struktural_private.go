@@ -5,4 +5,5 @@ type PejabatStrukturalPrivate struct {
 	IdJenisUnit    uint64 `json:"id_jenis_unit"`
 	IdJenisJabatan uint64 `json:"id_jenis_jabatan"`
 	IdUnit         uint64 `json:"id_unit"`
+	FlagAktif      int    `json:"flag_aktif" gorm:"type:varchar"`
 }
