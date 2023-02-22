@@ -7,37 +7,72 @@ import (
 	"svc-insani-go/modules/v1/master-bidang-sub-bidang/model"
 )
 
-func GetBidangSubBidang(a *app.App, ctx context.Context) ([]model.BidangSubBidang, error) {
-	sqlQuery := getBidangSubBidangQuery()
+func GetBidang(a *app.App, ctx context.Context) ([]model.Bidang, error) {
+	sqlQuery := getBidangQuery()
 	rows, err := a.DB.Query(sqlQuery)
 	if err != nil {
-		return nil, fmt.Errorf("error querying get bidang sub bidang, %s", err.Error())
+		return nil, fmt.Errorf("error querying get bidang, %s", err.Error())
 	}
 	defer rows.Close()
 
-	BidangSubBidang := []model.BidangSubBidang{}
+	Bidang := []model.Bidang{}
 	for rows.Next() {
-		var b model.BidangSubBidang
-		err := rows.Scan(&b.KdBidangSubBidang, &b.BidangSubBidang, &b.UUID)
+		var b model.Bidang
+		err := rows.Scan(&b.KdBidang, &b.Bidang, &b.UUID)
 		if err != nil {
-			return nil, fmt.Errorf("error scan bidang sub bidang row, %s", err.Error())
+			return nil, fmt.Errorf("error scan bidang row, %s", err.Error())
 		}
-		BidangSubBidang = append(BidangSubBidang, b)
+		Bidang = append(Bidang, b)
 	}
 
 	if err := rows.Err(); err != nil {
-		return nil, fmt.Errorf("error bidang sub bidang rows, %s", err.Error())
+		return nil, fmt.Errorf("error bidang rows, %s", err.Error())
 	}
 
-	return BidangSubBidang, nil
+	return Bidang, nil
 }
 
-func GetBidangSubBidangByUUID(a *app.App, ctx context.Context, uuid string) (*model.BidangSubBidang, error) {
-	var bidangSubBidang model.BidangSubBidang
+func GetBidangByUUID(a *app.App, ctx context.Context, uuid string) (*model.Bidang, error) {
+	var bidang model.Bidang
 	tx := a.GormDB.WithContext(ctx)
-	res := tx.First(&bidangSubBidang, "uuid = ?", uuid)
+	res := tx.First(&bidang, "uuid = ?", uuid)
 	if res.Error != nil {
-		return nil, fmt.Errorf("error querying bidang sub bidang by uuid %s", res.Error)
+		return nil, fmt.Errorf("error querying bidang by uuid %s", res.Error)
 	}
-	return &bidangSubBidang, nil
+	return &bidang, nil
+}
+
+func GetSubBidang(a *app.App, ctx context.Context) ([]model.SubBidang, error) {
+	sqlQuery := getSubBidangQuery()
+	rows, err := a.DB.Query(sqlQuery)
+	if err != nil {
+		return nil, fmt.Errorf("error querying get bidang, %s", err.Error())
+	}
+	defer rows.Close()
+
+	SubBidang := []model.SubBidang{}
+	for rows.Next() {
+		var sb model.SubBidang
+		err := rows.Scan(&sb.KdBidang, &sb.Bidang, &sb.KdSubBidang, &sb.SubBidang, &sb.UUID)
+		if err != nil {
+			return nil, fmt.Errorf("error scan bidang row, %s", err.Error())
+		}
+		SubBidang = append(SubBidang, sb)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("error bidang rows, %s", err.Error())
+	}
+
+	return SubBidang, nil
+}
+
+func GetSubBidangByUUID(a *app.App, ctx context.Context, uuid string) (*model.SubBidang, error) {
+	var subBidang model.SubBidang
+	tx := a.GormDB.WithContext(ctx)
+	res := tx.First(&subBidang, "uuid = ?", uuid)
+	if res.Error != nil {
+		return nil, fmt.Errorf("error querying sub bidang by uuid %s", res.Error)
+	}
+	return &subBidang, nil
 }

@@ -88,7 +88,8 @@ func InitRoute(a *app.App, appCtx context.Context, e *echo.Echo, slackErrChan ch
 	insaniGroupingPath.GET("/master-status-pengangkatan", sk.HandleGetAllStatusPengangkat(a))
 	insaniGroupingPath.GET("/master-unit-kerja", unitKerja.HandleGetUnitKerja(a)) // unit kerja lama, masih dipake atau tidak
 	insaniGroupingPath.GET("/master-unit-pengangkat", unitKerja.HandleGetUnitPengangkat(a))
-	insaniGroupingPath.GET("/master-bidang-sub-bidang", bidangSubBidang.HandleGetBidangSubBidang(a))
+	insaniGroupingPath.GET("/master-bidang", bidangSubBidang.HandleGetBidang(a))
+	insaniGroupingPath.GET("/master-sub-bidang", bidangSubBidang.HandleGetSubBidang(a))
 
 	// insaniGroupingPath.POST("/sk-pengangkatan-tendik", skPengangkatan.HandleCreateSKPengangkatanTendik(a))
 	insaniGroupingPath.POST("/sk-pengangkatan-tendik", skV2.HandleCreateSkPengangkatanTendik(a))
