@@ -2,6 +2,7 @@ package repo
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
 	"svc-insani-go/app"
 	"svc-insani-go/modules/v1/master-bidang-sub-bidang/model"
@@ -33,11 +34,14 @@ func GetBidang(a *app.App, ctx context.Context) ([]model.Bidang, error) {
 }
 
 func GetBidangByUUID(a *app.App, ctx context.Context, uuid string) (*model.Bidang, error) {
+	sqlQuery := getBidangByUUIDQuery(uuid)
 	var bidang model.Bidang
-	tx := a.GormDB.WithContext(ctx)
-	res := tx.First(&bidang, "uuid = ?", uuid)
-	if res.Error != nil {
-		return nil, fmt.Errorf("error querying bidang by uuid %s", res.Error)
+	err := a.DB.QueryRow(sqlQuery).Scan(&bidang.ID, &bidang.KdBidang, &bidang.Bidang, &bidang.UUID)
+	if err == sql.ErrNoRows {
+		return nil, nil
+	}
+	if err != nil {
+		return nil, fmt.Errorf("error querying get bidang by uuid %s", err.Error())
 	}
 	return &bidang, nil
 }
@@ -68,11 +72,14 @@ func GetSubBidang(a *app.App, ctx context.Context) ([]model.SubBidang, error) {
 }
 
 func GetSubBidangByUUID(a *app.App, ctx context.Context, uuid string) (*model.SubBidang, error) {
+	sqlQuery := getSubBidangByUUIDQuery(uuid)
 	var subBidang model.SubBidang
-	tx := a.GormDB.WithContext(ctx)
-	res := tx.First(&subBidang, "uuid = ?", uuid)
-	if res.Error != nil {
-		return nil, fmt.Errorf("error querying sub bidang by uuid %s", res.Error)
+	err := a.DB.QueryRow(sqlQuery).Scan(&subBidang.ID, &subBidang.KdSubBidang, &subBidang.SubBidang, &subBidang.UUID)
+	if err == sql.ErrNoRows {
+		return nil, nil
+	}
+	if err != nil {
+		return nil, fmt.Errorf("error querying get sub bidang by uuid %s", err.Error())
 	}
 	return &subBidang, nil
 }
