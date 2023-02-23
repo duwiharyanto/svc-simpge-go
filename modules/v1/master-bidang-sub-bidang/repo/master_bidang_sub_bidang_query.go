@@ -11,7 +11,7 @@ func getBidangByUUIDQuery(uuid string) string {
 
 // sub bidang
 func getSubBidangQuery() string {
-	return "SELECT b.kd_bidang, b.bidang,sb.kd_sub_bidang,sb.sub_bidang, sb.uuid FROM sub_bidang sb JOIN bidang b ON sb.id_bidang = b.id WHERE sb.flag_aktif=1"
+	return "SELECT b.kd_bidang, b.bidang,sb.kd_sub_bidang,sb.sub_bidang, sb.uuid FROM sub_bidang sb JOIN bidang b ON sb.id_bidang = b.id WHERE sb.flag_aktif=1 order by b.id"
 }
 func getSubBidangByUUIDQuery(uuid string) string {
 	return fmt.Sprintf(`SELECT sb.id,sb.kd_sub_bidang,sb.sub_bidang, sb.uuid FROM sub_bidang sb WHERE sb.flag_aktif=1 AND sb.uuid = %q`, uuid)
