@@ -358,6 +358,12 @@ func getUnitKerjaPegawaiQuery(uuid string) string {
 		COALESCE(pf.tgl_surat_kontrak,''),
 		COALESCE(pf.tmt_awal_kontrak,''),
 		COALESCE(pf.tmt_akhir_kontrak,''),
+		COALESCE(b.uuid,''),
+		COALESCE(b.kd_bidang,''),
+		COALESCE(b.bidang,''),
+		COALESCE(sb.uuid,''),
+		COALESCE(sb.kd_sub_bidang,''),
+		COALESCE(sb.sub_bidang,''),
 		COALESCE(u22.uuid,''),
 		COALESCE(u22.kd_pddikti,''),
 		COALESCE(u22.uuid,''),
@@ -376,6 +382,10 @@ func getUnitKerjaPegawaiQuery(uuid string) string {
 		lokasi_kerja lk ON p.lokasi_kerja = lk.lokasi_kerja 
 	LEFT JOIN
 		unit2 u22 ON pf.id_homebase_uii = u22.id 
+	LEFT JOIN 
+		bidang b on pf.id_bidang = b.id
+	LEFT JOIN
+		sub_bidang sb on pf.id_sub_bidang = sb.id
 	WHERE 
 		p.uuid = %q AND p.flag_aktif = 1`, uuid)
 
