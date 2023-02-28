@@ -1,0 +1,1 @@
+ENV="production" DBMS="mysql" DB_USER="hcminsani_app" DB_PASSWORD="Lp8kWCUt89qJ9Kd74QtC" DB_HOST="dbproduction.bsi.io" DB_PORT="6033" DB_NAME="hcm_insani" timeout_ms="10" URL_HCM_TANGGUNGAN="http://localhost:81/private/api/v1/tanggungan-private" nodemon --exec go run *.go --signal SIGTERM

@@ -1,0 +1,1 @@
+ENV="staging" DBMS="mysql" DB_USER="sholichin" DB_PASSWORD="bismillahstaging123" DB_HOST="dbstaging.bsi.io" DB_PORT="6033" DB_NAME="hcm_insani" URL_V2_PRESENCE_SERVICE="http://localhost:8002" URL_HCM_TANGGUNGAN="http://localhost:81/private/api/v1/tanggungan-private" nodemon --exec go run *.go --signal SIGTERM
