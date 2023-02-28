@@ -120,9 +120,12 @@ func getListAllPegawaiPrivateQuery(req *model.PegawaiPrivateRequest) string {
 	COALESCE(jf2.fungsional ,'') jabatan_fungsional_negara,
 	COALESCE(pp.id_jabatan_fungsional ,0) id_jabatan_fungsional_negara,
 	COALESCE(pp.kd_jabatan_fungsional ,'') kd_jabatan_fungsional_negara,
-	COALESCE(p.id_detail_profesi,0),
-	COALESCE(dp.kd_detail_profesi,''),
-	COALESCE(dp.detail_profesi,''),
+	COALESCE(b.id,0) id_bidang,
+	COALESCE(b.kd_bidang,''),
+	COALESCE(b.bidang,''),
+	COALESCE(sb.id,0) id_sub_bidang,
+	COALESCE(sb.kd_sub_bidang,''),
+	COALESCE(sb.sub_bidang,''),
 	COALESCE(jp.id,0) id_jenjang_pendidikan,
 	COALESCE(jp.kd_jenjang,'') kd_jenjang_pendidikan,
 	COALESCE(jp.jenjang,'') jenjang_pendidikan,
@@ -188,7 +191,9 @@ func getListAllPegawaiPrivateQuery(req *model.PegawaiPrivateRequest) string {
 	LEFT JOIN
 		status_pernikahan spn ON p.kd_status_perkawinan = spn.kd_status
 	LEFT JOIN
-		detail_profesi dp ON p.id_detail_profesi = dp.id
+		bidang b ON pf.id_bidang = b.id
+	LEFT JOIN
+		sub_bidang sb ON pf.id_sub_bidang = sb.id
 	WHERE p.flag_aktif=1 %s %s %s %s %s`, nikFilterQuery, namaFilterQuery, kdJenisPegawaiFilterQuery, kdKelompokFilterQuery, kdIndukKerjaFilterQuery)
 
 }
