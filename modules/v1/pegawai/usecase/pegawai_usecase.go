@@ -442,6 +442,8 @@ func HandleGetPegawaiPrivate(a *app.App, public bool) echo.HandlerFunc {
 		var pegawaiAndFungsionalAndStruktural []model.PegawaiPrivate
 		IsNotStruktural := true
 		for _, data := range res.Data {
+			masaKerjaBawaanTahunInt, _ := strconv.Atoi(data.MasaKerjaBawaanTahun)
+			masaKerjaBawaanBulanInt, _ := strconv.Atoi(data.MasaKerjaBawaanBulan)
 
 			tmtSkPertamaTime, err := time.Parse("2006-01-02", data.TmtSkPertama)
 			var tmtSkPertamaDuration time.Duration
@@ -451,6 +453,13 @@ func HandleGetPegawaiPrivate(a *app.App, public bool) echo.HandlerFunc {
 			tmtSkPertamaDurationDays := tmtSkPertamaDuration.Hours() / 24
 			// tmtSkPertamaDurationDays := tmtSkPertamaDuration.Hours() / 24
 			tmtSkPertamaDurationRealMonths := int(tmtSkPertamaDurationDays / 365 * 12)
+
+			// masa kerja gaji total
+			masaKerjaTotalRealBulan := ((masaKerjaBawaanTahunInt * 12) + masaKerjaBawaanBulanInt) + tmtSkPertamaDurationRealMonths
+			data.MasaKerjaTotalTahun = fmt.Sprintf("%d", masaKerjaTotalRealBulan/12)
+			data.MasaKerjaTotalBulan = fmt.Sprintf("%d", masaKerjaTotalRealBulan%12)
+
+			// masa kerja kepegawaian total
 			masaKerjaKepegawaianTahunInt, _ := strconv.Atoi(data.MasaKerjaTahun)
 			masaKerjaKepegawaianBulanInt, _ := strconv.Atoi(data.MasaKerjaBulan)
 			masaKerjaTotalKepegawaianRealBulan := ((masaKerjaKepegawaianTahunInt * 12) + masaKerjaKepegawaianBulanInt) + tmtSkPertamaDurationRealMonths

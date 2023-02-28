@@ -91,6 +91,12 @@ type PegawaiPrivate struct {
 	KdJenjangPendidikan    string                                              `json:"kd_jenjang_pendidikan" gorm:"type:varchar"`
 	JenjangPendidikan      string                                              `json:"jenjang_pendidikan" gorm:"type:varchar"`
 	TmtSkPertama           string                                              `json:"tmt_sk_pertama" gorm:"type:varchar"`
+	MasaKerjaBawaanTahun   string                                              `json:"masa_kerja_bawaan_tahun" gorm:"type:varchar"`
+	MasaKerjaBawaanBulan   string                                              `json:"masa_kerja_bawaan_bulan" gorm:"type:varchar"`
+	MasaKerjaGajiTahun     string                                              `json:"masa_kerja_gaji_tahun" gorm:"type:varchar"`
+	MasaKerjaGajiBulan     string                                              `json:"masa_kerja_gaji_bulan" gorm:"type:varchar"`
+	MasaKerjaTotalTahun    string                                              `json:"masa_kerja_total_tahun" gorm:"type:varchar"`
+	MasaKerjaTotalBulan    string                                              `json:"masa_kerja_total_bulan" gorm:"type:varchar"`
 	MasaKerjaTahun         string                                              `json:"masa_kerja_tahun" gorm:"type:varchar"`
 	MasaKerjaBulan         string                                              `json:"masa_kerja_bulan" gorm:"type:varchar"`
 	JumlahKeluarga         string                                              `json:"jumlah_keluarga" gorm:"type:varchar"`
