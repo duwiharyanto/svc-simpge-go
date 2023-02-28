@@ -139,6 +139,7 @@ func getListAllPegawaiPrivateQuery(req *model.PegawaiPrivateRequest) string {
 	COALESCE((SELECT COUNT(*) FROM personal_hubungan_keluarga phk WHERE phk.id_personal_data_pribadi =  p.id_personal_data_pribadi AND phk.kd_hubungan_keluarga IN ('AAK','AT','AN','SUA','IST') AND phk.flag_aktif = 1),'') jumlah_keluarga,
 	COALESCE((SELECT COUNT(*) from personal_hubungan_keluarga phk WHERE phk.id_personal_data_pribadi = p.id_personal_data_pribadi AND phk.kd_hubungan_keluarga IN ('AAK','AT','AN') AND phk.flag_aktif = 1),'') jumlah_anak,
 	COALESCE((SELECT DISTINCT pi.npwp from personal_identitas pi WHERE pi.id_personal_data_pribadi = p.id_personal_data_pribadi AND pi.flag_aktif = 1),'') npwp,
+	COALESCE('','') alamat_npwp,
 	COALESCE(spn.id,0) id_status_nikah,
 	COALESCE(spn.kd_status,'') kd_status_nikah,
 	COALESCE(spn.status,'') status_nikah,
