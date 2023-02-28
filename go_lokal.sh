@@ -1,1 +1,0 @@
-ENV="lokal" DBMS="mysql" DB_USER="root" DB_PASSWORD="" DB_HOST="127.0.0.1" DB_PORT="3306" DB_NAME="hcm_insani" URL_V2_PRESENCE_SERVICE="http://localhost:8002" URL_HCM_TANGGUNGAN="http://localhost:81/public/api/v1/tanggungan-private" nodemon --exec go run *.go --signal SIGTERM
