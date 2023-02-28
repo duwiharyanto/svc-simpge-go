@@ -1,1 +1,0 @@
-ENV="dev" DBMS="mysql" DB_USER="dev" DB_PASSWORD="bismillah" DB_HOST="dbdev.bsi.io" DB_PORT="6033" DB_NAME="hcm_insani" timeout_ms="10" URL_V2_PRESENCE_SERVICE="http://localhost:8002" URL_HCM_TANGGUNGAN="http://localhost:81/private/api/v1/tanggungan-private" nodemon --exec go run *.go --signal SIGTERM
