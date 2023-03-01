@@ -534,11 +534,51 @@ func HandleGetPegawaiPrivate(a *app.App, public bool) echo.HandlerFunc {
 
 		// res.Data = pegawaiAndFungsionalAndStruktural
 		// res.Data = pegawaiJabfungJabstrukAndKontrak
+		stmt4, err := a.DB.Prepare(`SELECT
+		COALESCE(pp.id_personal_data_pribadi,''),
+		COALESCE(pp.kd_jenjang,''),
+		COALESCE(pp.flag_ijazah_diakui,''),
+		COALESCE(pp.nama_institusi,'')
+		FROM pegawai_pendidikan pp
+		LEFT JOIN pegawai p ON pp.id_personal_data_pribadi = p.id_personal_data_pribadi
+		WHERE pp.flag_aktif = 1`)
+
+		var pendidikanPegawai []model.PegawaiPendidikanPrivate
+		rows4, err := stmt4.Query()
+		if err != nil {
+			fmt.Println(err)
+			return c.JSON(500, nil)
+		}
+		defer rows4.Close()
+		for rows4.Next() {
+			var pp model.PegawaiPendidikanPrivate
+			if err := rows4.Scan(&pp.IdPersonal, &pp.KdJenjang, &pp.FlagIjazahDiakui, &pp.NamaInstitusi); err != nil {
+				fmt.Println(err)
+				return c.JSON(500, nil)
+			}
+			pendidikanPegawai = append(pendidikanPegawai, pp)
+		}
+		var pegawaiJabfungJabstrukAndKontrakAndPendidikan []model.PegawaiPrivate
+		IsPendidikanNull := true
+		for _, data := range pegawaiJabfungJabstrukAndKontrak {
+			for _, pendidikan := range pendidikanPegawai {
+				if data.IdPersonal == pendidikan.IdPersonal {
+					data.Pendidikan = append(data.Pendidikan, pendidikan)
+					IsPendidikanNull = false
+				}
+			}
+
+			if IsPendidikanNull {
+				data.Pendidikan = make([]model.PegawaiPendidikanPrivate, 0)
+			}
+
+			pegawaiJabfungJabstrukAndKontrakAndPendidikan = append(pegawaiJabfungJabstrukAndKontrakAndPendidikan, data)
+		}
 
 		tanggunganResponse := GetDataTanggungan(public)
 
-		var pegawaiJabfungJabstrukAndKontrakAndTangungan []model.PegawaiPrivate
-		for _, data := range pegawaiJabfungJabstrukAndKontrak {
+		var pegawaiJabfungJabstrukAndKontrakAndPendidikanAndTangungan []model.PegawaiPrivate
+		for _, data := range pegawaiJabfungJabstrukAndKontrakAndPendidikan {
 			for _, tanggungan := range tanggunganResponse.Data {
 				// if data.IdPersonal == tanggungan.IdPersonal {
 				if strconv.FormatInt(int64(data.IdPersonal), 10) == tanggungan.IdPersonal {
@@ -550,10 +590,10 @@ func HandleGetPegawaiPrivate(a *app.App, public bool) echo.HandlerFunc {
 					data.JumlahAnakPtkp = tanggungan.JumlahAnakPtkp
 				}
 			}
-			pegawaiJabfungJabstrukAndKontrakAndTangungan = append(pegawaiJabfungJabstrukAndKontrakAndTangungan, data)
+			pegawaiJabfungJabstrukAndKontrakAndPendidikanAndTangungan = append(pegawaiJabfungJabstrukAndKontrakAndPendidikanAndTangungan, data)
 		}
 
-		res.Data = pegawaiJabfungJabstrukAndKontrakAndTangungan
+		res.Data = pegawaiJabfungJabstrukAndKontrakAndPendidikanAndTangungan
 
 		return c.JSON(http.StatusOK, res)
 	}

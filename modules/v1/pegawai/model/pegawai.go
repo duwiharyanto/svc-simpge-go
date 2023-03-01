@@ -93,6 +93,7 @@ type PegawaiPrivate struct {
 	IdJenjangPendidikan    uint64                                              `json:"id_jenjang_pendidikan" gorm:"type:varchar"`
 	KdJenjangPendidikan    string                                              `json:"kd_jenjang_pendidikan" gorm:"type:varchar"`
 	JenjangPendidikan      string                                              `json:"jenjang_pendidikan" gorm:"type:varchar"`
+	Pendidikan             []PegawaiPendidikanPrivate                          `json:"data_pendidikan" gorm:"type:varchar"`
 	TmtSkPertama           string                                              `json:"tmt_sk_pertama" gorm:"type:varchar"`
 	MasaKerjaBawaanTahun   string                                              `json:"masa_kerja_bawaan_tahun" gorm:"type:varchar"`
 	MasaKerjaBawaanBulan   string                                              `json:"masa_kerja_bawaan_bulan" gorm:"type:varchar"`
