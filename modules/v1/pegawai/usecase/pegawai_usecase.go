@@ -412,10 +412,14 @@ func HandleGetPegawaiPrivate(a *app.App, public bool) echo.HandlerFunc {
 		COALESCE(po.id_jenis_jabatan,0),
 		COALESCE(po.id_unit,0),
 		COALESCE(u.id_jenis_unit,0),
-		0 flag_aktif
+		CASE WHEN MONTH(now())-MONTH(sk.tmt_surat_keputusan) = 0 THEN 1 
+		WHEN MONTH(now())-MONTH(sk.tmt_surat_keputusan) = 1 THEN 1 
+		WHEN MONTH(now())-MONTH(sk.tmt_surat_keputusan) = -11 THEN 1 
+		ELSE 0 END AS flag_aktif
 		FROM pegawai p 
 		JOIN pejabat_organisasi po ON po.id_pegawai = p.id 
 		JOIN unit u ON u.id = po.id_unit
+		JOIN surat_keputusan sk ON po.id_surat_keputusan = sk.id 
 		WHERE po.flag_aktif =1`)
 
 		var pejabat []organisaiPrivate.PejabatStrukturalPrivate
