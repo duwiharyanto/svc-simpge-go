@@ -421,7 +421,6 @@ func HandleGetPegawaiPrivate(a *app.App, public bool) echo.HandlerFunc {
 		JOIN unit u ON u.id = po.id_unit
 		JOIN surat_keputusan sk ON po.id_surat_keputusan = sk.id 
 		WHERE po.flag_aktif =1`)
-
 		var pejabat []organisaiPrivate.PejabatStrukturalPrivate
 		rows, err := stmt.Query()
 		if err != nil {
