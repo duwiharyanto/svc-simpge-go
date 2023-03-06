@@ -561,6 +561,7 @@ func HandleGetPegawaiPrivate(a *app.App, public bool) echo.HandlerFunc {
 			}
 			pendidikanPegawai = append(pendidikanPegawai, pp)
 		}
+
 		var pegawaiJabfungJabstrukAndKontrakAndPendidikan []model.PegawaiPrivate
 		IsPendidikanNull := true
 		for _, data := range pegawaiJabfungJabstrukAndKontrak {
@@ -592,6 +593,8 @@ func HandleGetPegawaiPrivate(a *app.App, public bool) echo.HandlerFunc {
 					data.JumlahAnakDitanggung = tanggungan.JumlahAnakDitanggung
 					data.JumlahKeluargaDitanggungPtkp = tanggungan.JumlahKeluargaDitanggungPtkp
 					data.JumlahAnakPtkp = tanggungan.JumlahAnakPtkp
+					data.DetailTanggunganKeluarga = tanggungan.DetailTanggunganKeluarga
+					data.DetailTanggunganPtkp = tanggungan.DetailTanggunganPtkp
 				}
 			}
 			pegawaiJabfungJabstrukAndKontrakAndPendidikanAndTangungan = append(pegawaiJabfungJabstrukAndKontrakAndPendidikanAndTangungan, data)

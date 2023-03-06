@@ -120,6 +120,8 @@ type PegawaiPrivate struct {
 	JumlahKeluargaDitanggungPtkp int                                                 `json:"jumlah_keluarga_ditanggung_ptkp" gorm:"type:varchar"`
 	JumlahAnakPtkp               int                                                 `json:"jumlah_anak_ptkp" gorm:"type:varchar"`
 	FlagKlaimTanggungan          int                                                 `json:"flag_klaim_tanggungan" gorm:"type:varchar"`
+	DetailTanggunganKeluarga     []DetailTanggunganKeluarga                          `json:"data_tanggungan_keluarga"`
+	DetailTanggunganPtkp         []DetailTanggunganPtkp                              `json:"data_tanggungan_ptkp"`
 	FlagPensiun                  int                                                 `json:"flag_pensiun" gorm:"type:varchar"`
 	FlagMeninggal                int                                                 `json:"flag_meninggal" gorm:"type:varchar"`
 	FlagSuamiIstriSekantor       int                                                 `json:"flag_suami_istri_sekantor" gorm:"type:varchar"`
@@ -136,19 +138,35 @@ type PegawaiKontrakPrivate struct {
 	AkhirKontrak string `json:"akhir_kontrak"`
 }
 type Tanggungan struct {
-	IdPersonal                   string `json:"id_personal"`
-	IdStatusPernikahanPtkp       uint64 `json:"id_status_pernikahan_ptkp"`
-	KdStatusPernikahanPtkp       string `json:"kd_status_pernikahan_ptkp"`
-	StatusPernikahanPtkp         string `json:"status_pernikahan_ptkp"`
-	JumlahKeluargaDitanggung     int    `json:"jumlah_keluarga_ditanggung"`
-	JumlahAnakDitanggung         int    `json:"jumlah_anak_ditanggung"`
-	JumlahKeluargaDitanggungPtkp int    `json:"jumlah_keluarga_ditanggung_ptkp"`
-	JumlahAnakPtkp               int    `json:"jumlah_anak_ptkp"`
+	IdPersonal                   string                     `json:"id_personal"`
+	IdStatusPernikahanPtkp       uint64                     `json:"id_status_pernikahan_ptkp"`
+	KdStatusPernikahanPtkp       string                     `json:"kd_status_pernikahan_ptkp"`
+	StatusPernikahanPtkp         string                     `json:"status_pernikahan_ptkp"`
+	JumlahKeluargaDitanggung     int                        `json:"jumlah_keluarga_ditanggung"`
+	JumlahAnakDitanggung         int                        `json:"jumlah_anak_ditanggung"`
+	JumlahKeluargaDitanggungPtkp int                        `json:"jumlah_keluarga_ditanggung_ptkp"`
+	JumlahAnakPtkp               int                        `json:"jumlah_anak_ptkp"`
+	DetailTanggunganKeluarga     []DetailTanggunganKeluarga `json:"data_tanggungan_keluarga"`
+	DetailTanggunganPtkp         []DetailTanggunganPtkp     `json:"data_tanggungan_ptkp"`
 }
 
 type TanggunganResponseBody struct {
 	Message string `json:"message"`
 	Data    []Tanggungan
+}
+
+type DetailTanggunganKeluarga struct {
+	IdPersonal        string `json:"id_personal"`
+	Nama              string `json:"nama"`
+	JenisKelamin      string `json:"jenis_kelamin"`
+	KdJenisTanggungan string `json:"kd_jenis_tanggungan"`
+}
+
+type DetailTanggunganPtkp struct {
+	IdPersonal        string `json:"id_personal"`
+	Nama              string `json:"nama"`
+	JenisKelamin      string `json:"jenis_kelamin"`
+	KdJenisTanggungan string `json:"kd_jenis_tanggungan"`
 }
 
 type PegawaiCreate struct {
