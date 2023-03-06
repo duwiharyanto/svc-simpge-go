@@ -538,7 +538,7 @@ func HandleGetPegawaiPrivate(a *app.App, public bool) echo.HandlerFunc {
 		// res.Data = pegawaiAndFungsionalAndStruktural
 		// res.Data = pegawaiJabfungJabstrukAndKontrak
 		stmt4, err := a.DB.Prepare(`SELECT
-		COALESCE(pp.id_personal_data_pribadi,''),
+		COALESCE(pp.id_personal_data_pribadi,0),
 		COALESCE(pp.kd_jenjang,''),
 		COALESCE(pp.flag_ijazah_diakui,''),
 		COALESCE(pp.nama_institusi,'')
@@ -588,8 +588,9 @@ func HandleGetPegawaiPrivate(a *app.App, public bool) echo.HandlerFunc {
 					data.IdStatusPernikahanPtkp = tanggungan.IdStatusPernikahanPtkp
 					data.KdStatusPernikahanPtkp = tanggungan.KdStatusPernikahanPtkp
 					data.StatusPernikahanPtkp = tanggungan.StatusPernikahanPtkp
-					data.JumlahTanggungan = tanggungan.JumlahTanggungan
-					data.JumlahTanggunganPtkp = tanggungan.JumlahTanggunganPtkp
+					data.JumlahKeluargaDitanggung = tanggungan.JumlahKeluargaDitanggung
+					data.JumlahAnakDitanggung = tanggungan.JumlahAnakDitanggung
+					data.JumlahKeluargaDitanggungPtkp = tanggungan.JumlahKeluargaDitanggungPtkp
 					data.JumlahAnakPtkp = tanggungan.JumlahAnakPtkp
 				}
 			}
