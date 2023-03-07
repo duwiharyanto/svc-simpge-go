@@ -160,6 +160,7 @@ type DetailTanggunganKeluarga struct {
 	Nama              string `json:"nama"`
 	JenisKelamin      string `json:"jenis_kelamin"`
 	KdJenisTanggungan string `json:"kd_jenis_tanggungan"`
+	HubunganKeluarga  string `json:"hubungan_keluarga"`
 }
 
 type DetailTanggunganPtkp struct {
@@ -167,6 +168,7 @@ type DetailTanggunganPtkp struct {
 	Nama              string `json:"nama"`
 	JenisKelamin      string `json:"jenis_kelamin"`
 	KdJenisTanggungan string `json:"kd_jenis_tanggungan"`
+	HubunganKeluarga  string `json:"hubungan_keluarga"`
 }
 
 type PegawaiCreate struct {
