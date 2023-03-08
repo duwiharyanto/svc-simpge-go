@@ -592,7 +592,7 @@ func HandleGetPegawaiPrivate(a *app.App, public bool) echo.HandlerFunc {
 					data.JumlahKeluargaDitanggung = tanggungan.JumlahKeluargaDitanggung
 					data.JumlahAnakDitanggung = tanggungan.JumlahAnakDitanggung
 					data.JumlahKeluargaDitanggungPtkp = tanggungan.JumlahKeluargaDitanggungPtkp
-					data.JumlahAnakPtkp = tanggungan.JumlahAnakPtkp
+					data.JumlahAnakDitanggungPtkp = tanggungan.JumlahAnakDitanggungPtkp
 					data.DetailTanggunganKeluarga = tanggungan.DetailTanggunganKeluarga
 					data.DetailTanggunganPtkp = tanggungan.DetailTanggunganPtkp
 				}

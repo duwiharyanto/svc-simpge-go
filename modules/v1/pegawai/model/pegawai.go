@@ -118,7 +118,7 @@ type PegawaiPrivate struct {
 	JumlahKeluargaDitanggung     int                                                 `json:"jumlah_keluarga_ditanggung" gorm:"type:varchar"`
 	JumlahAnakDitanggung         int                                                 `json:"jumlah_anak_ditanggung" gorm:"type:varchar"`
 	JumlahKeluargaDitanggungPtkp int                                                 `json:"jumlah_keluarga_ditanggung_ptkp" gorm:"type:varchar"`
-	JumlahAnakPtkp               int                                                 `json:"jumlah_anak_ptkp" gorm:"type:varchar"`
+	JumlahAnakDitanggungPtkp     int                                                 `json:"jumlah_anak_ditanggung_ptkp" gorm:"type:varchar"`
 	FlagKlaimTanggungan          int                                                 `json:"flag_klaim_tanggungan" gorm:"type:varchar"`
 	DetailTanggunganKeluarga     []DetailTanggunganKeluarga                          `json:"data_tanggungan_keluarga"`
 	DetailTanggunganPtkp         []DetailTanggunganPtkp                              `json:"data_tanggungan_ptkp"`
@@ -145,7 +145,7 @@ type Tanggungan struct {
 	JumlahKeluargaDitanggung     int                        `json:"jumlah_keluarga_ditanggung"`
 	JumlahAnakDitanggung         int                        `json:"jumlah_anak_ditanggung"`
 	JumlahKeluargaDitanggungPtkp int                        `json:"jumlah_keluarga_ditanggung_ptkp"`
-	JumlahAnakPtkp               int                        `json:"jumlah_anak_ptkp"`
+	JumlahAnakDitanggungPtkp     int                        `json:"jumlah_anak_ditanggung_ptkp"`
 	DetailTanggunganKeluarga     []DetailTanggunganKeluarga `json:"data_tanggungan_keluarga"`
 	DetailTanggunganPtkp         []DetailTanggunganPtkp     `json:"data_tanggungan_ptkp"`
 }
