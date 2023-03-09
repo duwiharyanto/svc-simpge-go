@@ -409,12 +409,10 @@ func HandleGetPegawaiPrivate(a *app.App, public bool) echo.HandlerFunc {
 		res.Data = pp
 		// get data jabatan struktural
 		stmt, err := a.DB.Prepare(`SELECT COALESCE(p.id,0), 
+		COALESCE(u.id_jenis_unit,0),
 		COALESCE(po.id_jenis_jabatan,0),
 		COALESCE(po.id_unit,0),
-		COALESCE(u.id_jenis_unit,0),
-		CASE WHEN MONTH(now())-MONTH(sk.tmt_surat_keputusan) = 0 THEN 1 
-		WHEN MONTH(now())-MONTH(sk.tmt_surat_keputusan) = 1 THEN 1 
-		WHEN MONTH(now())-MONTH(sk.tmt_surat_keputusan) = -11 THEN 1 
+		CASE WHEN DATE_FORMAT(sk.tst_surat_keputusan, '%Y-%m') >= DATE_FORMAT(now(), '%Y-%m') THEN 1
 		ELSE 0 END AS flag_aktif
 		FROM pegawai p 
 		JOIN pejabat_organisasi po ON po.id_pegawai = p.id 
