@@ -5,6 +5,7 @@ import (
 	"strconv"
 	"svc-insani-go/app"
 	"svc-insani-go/app/helper"
+	bidangSubBidangRepo "svc-insani-go/modules/v1/master-bidang-sub-bidang/repo"
 	detailProfesiRepo "svc-insani-go/modules/v1/master-detail-profesi/repo"
 	jabatanFungsionalRepo "svc-insani-go/modules/v1/master-jabatan-fungsional/repo"
 	jenisNoRegisRepo "svc-insani-go/modules/v1/master-jenis-nomor-registrasi/repo"
@@ -41,7 +42,6 @@ func ValidateUpdatePegawaiByUUID(a *app.App, c echo.Context) (model.PegawaiUpdat
 	user := c.Request().Header.Get("X-Member")
 
 	pegawaiReq := &model.PegawaiUpdate{}
-
 	err = c.Bind(pegawaiReq)
 	if err != nil {
 		fmt.Printf("[ERROR] binding request pegawai , %s\n", err.Error())
@@ -458,6 +458,25 @@ func ValidateUpdatePegawaiByUUID(a *app.App, c echo.Context) (model.PegawaiUpdat
 		pegawai.PegawaiFungsional.TmtAkhirKontrak = pegawaiReq.PegawaiFungsional.TmtAkhirKontrak
 	}
 
+	// Pengecekan Bidang
+	if ptr.StringValue(pegawaiReq.PegawaiFungsional.UuidBidang, "") != "" {
+		bidang, err := bidangSubBidangRepo.GetBidangByUUID(a, c.Request().Context(), ptr.StringValue(pegawaiReq.PegawaiFungsional.UuidBidang, ""))
+		if err != nil {
+			return model.PegawaiUpdate{}, fmt.Errorf("error from repo bidang by uuid: %w", err)
+		}
+		pegawai.PegawaiFungsional.IdBidang = ptr.Uint64(bidang.ID)
+		pegawai.PegawaiFungsional.KdBidang = ptr.String(bidang.KdBidang)
+	}
+
+	// Pengecekan Sub Bidang
+	if ptr.StringValue(pegawaiReq.PegawaiFungsional.UuidSubBidang, "") != "" {
+		subBidang, err := bidangSubBidangRepo.GetSubBidangByUUID(a, c.Request().Context(), ptr.StringValue(pegawaiReq.PegawaiFungsional.UuidSubBidang, ""))
+		if err != nil {
+			return model.PegawaiUpdate{}, fmt.Errorf("error from repo sub bidang by uuid: %w", err)
+		}
+		pegawai.PegawaiFungsional.IdSubBidang = ptr.Uint64(subBidang.ID)
+		pegawai.PegawaiFungsional.KdSubBidang = ptr.String(subBidang.KdSubBidang)
+	}
 	if ptr.StringValue(pegawaiReq.PegawaiPNS.InstansiAsal, "") != "" {
 		pegawai.PegawaiPNS.InstansiAsal = pegawaiReq.PegawaiPNS.InstansiAsal
 	}

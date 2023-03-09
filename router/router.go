@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"svc-insani-go/app"
 	"svc-insani-go/app/database"
+	bidangSubBidang "svc-insani-go/modules/v1/master-bidang-sub-bidang/usecase"
 	detailProfesi "svc-insani-go/modules/v1/master-detail-profesi/usecase"
 	jabatanFungsional "svc-insani-go/modules/v1/master-jabatan-fungsional/usecase"
 	jenisNoRegis "svc-insani-go/modules/v1/master-jenis-nomor-registrasi/usecase"
@@ -87,6 +88,8 @@ func InitRoute(a *app.App, appCtx context.Context, e *echo.Echo, slackErrChan ch
 	insaniGroupingPath.GET("/master-status-pengangkatan", sk.HandleGetAllStatusPengangkat(a))
 	insaniGroupingPath.GET("/master-unit-kerja", unitKerja.HandleGetUnitKerja(a)) // unit kerja lama, masih dipake atau tidak
 	insaniGroupingPath.GET("/master-unit-pengangkat", unitKerja.HandleGetUnitPengangkat(a))
+	insaniGroupingPath.GET("/master-bidang", bidangSubBidang.HandleGetBidang(a))
+	insaniGroupingPath.GET("/master-sub-bidang", bidangSubBidang.HandleGetSubBidang(a))
 
 	// insaniGroupingPath.POST("/sk-pengangkatan-tendik", skPengangkatan.HandleCreateSKPengangkatanTendik(a))
 	insaniGroupingPath.POST("/sk-pengangkatan-tendik", skV2.HandleCreateSkPengangkatanTendik(a))

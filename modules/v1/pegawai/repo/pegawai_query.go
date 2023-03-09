@@ -120,18 +120,26 @@ func getListAllPegawaiPrivateQuery(req *model.PegawaiPrivateRequest) string {
 	COALESCE(jf2.fungsional ,'') jabatan_fungsional_negara,
 	COALESCE(pp.id_jabatan_fungsional ,0) id_jabatan_fungsional_negara,
 	COALESCE(pp.kd_jabatan_fungsional ,'') kd_jabatan_fungsional_negara,
-	COALESCE(p.id_detail_profesi,0),
-	COALESCE(dp.kd_detail_profesi,''),
-	COALESCE(dp.detail_profesi,''),
-	COALESCE(jp.id,0) id_jenjang_pendidikan,
-	COALESCE(jp.kd_jenjang,'') kd_jenjang_pendidikan,
-	COALESCE(jp.jenjang,'') jenjang_pendidikan,
+	COALESCE(b.id,0) id_bidang,
+	COALESCE(b.kd_bidang,''),
+	COALESCE(b.bidang,''),
+	COALESCE(sb.id,0) id_sub_bidang,
+	COALESCE(sb.kd_sub_bidang,''),
+	COALESCE(sb.sub_bidang,''),
+	COALESCE((SELECT jp.id FROM pegawai_pendidikan pp JOIN jenjang_pendidikan jp on pp.kd_jenjang = jp.jenjang WHERE pp.id_personal_data_pribadi =  p.id_personal_data_pribadi AND pp.flag_ijazah_diakui = 1),0) id_jenjang_pendidikan,
+	COALESCE((SELECT jp.jenjang FROM pegawai_pendidikan pp JOIN jenjang_pendidikan jp on pp.kd_jenjang = jp.jenjang WHERE pp.id_personal_data_pribadi =  p.id_personal_data_pribadi AND pp.flag_ijazah_diakui = 1),0) kd_jenjang_pendidikan,
+	COALESCE((SELECT jp.jenjang FROM pegawai_pendidikan pp JOIN jenjang_pendidikan jp on pp.kd_jenjang = jp.jenjang WHERE pp.id_personal_data_pribadi =  p.id_personal_data_pribadi AND pp.flag_ijazah_diakui = 1),0) jenjang_pendidikan,
 	COALESCE(pf.tmt_sk_pertama,'') tmt_sk_pertama,
+	COALESCE(pf.masa_kerja_bawaan_tahun,'') masa_kerja_bawaan_tahun,
+	COALESCE(pf.masa_kerja_bawaan_bulan,'') masa_kerja_bawaan_bulan,
+	COALESCE(pf.masa_kerja_gaji_tahun,'') masa_kerja_gaji_tahun,
+	COALESCE(pf.masa_kerja_gaji_bulan,'') masa_kerja_gaji_bulan,
 	COALESCE(pf.masa_kerja_awal_kepegawaian_tahun,'') masa_kerja_tahun,
 	COALESCE(pf.masa_kerja_awal_kepegawaian_bulan,'') masa_kerja_bulan,
 	COALESCE((SELECT COUNT(*) FROM personal_hubungan_keluarga phk WHERE phk.id_personal_data_pribadi =  p.id_personal_data_pribadi AND phk.kd_hubungan_keluarga IN ('AAK','AT','AN','SUA','IST') AND phk.flag_aktif = 1),'') jumlah_keluarga,
 	COALESCE((SELECT COUNT(*) from personal_hubungan_keluarga phk WHERE phk.id_personal_data_pribadi = p.id_personal_data_pribadi AND phk.kd_hubungan_keluarga IN ('AAK','AT','AN') AND phk.flag_aktif = 1),'') jumlah_anak,
 	COALESCE((SELECT DISTINCT pi.npwp from personal_identitas pi WHERE pi.id_personal_data_pribadi = p.id_personal_data_pribadi AND pi.flag_aktif = 1),'') npwp,
+	COALESCE('','') alamat_npwp,
 	COALESCE(spn.id,0) id_status_nikah,
 	COALESCE(spn.kd_status,'') kd_status_nikah,
 	COALESCE(spn.status,'') status_nikah,
@@ -184,7 +192,9 @@ func getListAllPegawaiPrivateQuery(req *model.PegawaiPrivateRequest) string {
 	LEFT JOIN
 		status_pernikahan spn ON p.kd_status_perkawinan = spn.kd_status
 	LEFT JOIN
-		detail_profesi dp ON p.id_detail_profesi = dp.id
+		bidang b ON pf.id_bidang = b.id
+	LEFT JOIN
+		sub_bidang sb ON pf.id_sub_bidang = sb.id
 	WHERE p.flag_aktif=1 %s %s %s %s %s`, nikFilterQuery, namaFilterQuery, kdJenisPegawaiFilterQuery, kdKelompokFilterQuery, kdIndukKerjaFilterQuery)
 
 }
@@ -358,6 +368,12 @@ func getUnitKerjaPegawaiQuery(uuid string) string {
 		COALESCE(pf.tgl_surat_kontrak,''),
 		COALESCE(pf.tmt_awal_kontrak,''),
 		COALESCE(pf.tmt_akhir_kontrak,''),
+		COALESCE(b.uuid,''),
+		COALESCE(b.kd_bidang,''),
+		COALESCE(b.bidang,''),
+		COALESCE(sb.uuid,''),
+		COALESCE(sb.kd_sub_bidang,''),
+		COALESCE(sb.sub_bidang,''),
 		COALESCE(u22.uuid,''),
 		COALESCE(u22.kd_pddikti,''),
 		COALESCE(u22.uuid,''),
@@ -376,6 +392,10 @@ func getUnitKerjaPegawaiQuery(uuid string) string {
 		lokasi_kerja lk ON p.lokasi_kerja = lk.lokasi_kerja 
 	LEFT JOIN
 		unit2 u22 ON pf.id_homebase_uii = u22.id 
+	LEFT JOIN 
+		bidang b on pf.id_bidang = b.id
+	LEFT JOIN
+		sub_bidang sb on pf.id_sub_bidang = sb.id
 	WHERE 
 		p.uuid = %q AND p.flag_aktif = 1`, uuid)
 

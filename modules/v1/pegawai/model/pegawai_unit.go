@@ -27,6 +27,12 @@ type UnitKerjaPegawai struct {
 	TmtAwalKontrakIdn   string `json:"tmt_awal_kontrak_idn"`
 	TmtAkhirKontrak     string `json:"tmt_akhir_kontrak"`
 	TmtAkhirKontrakIdn  string `json:"tmt_akhir_kontrak_idn"`
+	UuidBidang          string `json:"uuid_bidang"`
+	KdBidang            string `json:"kd_bidang"`
+	Bidang              string `json:"bidang"`
+	UuidSubBidang       string `json:"uuid_sub_bidang"`
+	KdSubBidang         string `json:"kd_sub_bidang"`
+	SubBidang           string `json:"sub_bidang"`
 	KdHomebasePddikti   string `json:"kd_homebase_pddikti"`
 	UuidHomebasePddikti string `json:"uuid_homebase_pddikti"`
 	KdHomebaseUii       string `json:"kd_homebase_uii"`
