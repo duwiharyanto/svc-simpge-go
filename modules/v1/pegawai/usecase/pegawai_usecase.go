@@ -409,15 +409,16 @@ func HandleGetPegawaiPrivate(a *app.App, public bool) echo.HandlerFunc {
 		res.Data = pp
 		// get data jabatan struktural
 		stmt, err := a.DB.Prepare(`SELECT COALESCE(p.id,0), 
+		COALESCE(u.id_jenis_unit,0),
 		COALESCE(po.id_jenis_jabatan,0),
 		COALESCE(po.id_unit,0),
-		COALESCE(u.id_jenis_unit,0),
-		0 flag_aktif
+		CASE WHEN DATE_FORMAT(sk.tst_surat_keputusan, '%Y-%m') >= DATE_FORMAT(now(), '%Y-%m') THEN 1
+		ELSE 0 END AS flag_aktif
 		FROM pegawai p 
 		JOIN pejabat_organisasi po ON po.id_pegawai = p.id 
 		JOIN unit u ON u.id = po.id_unit
+		JOIN surat_keputusan sk ON po.id_surat_keputusan = sk.id 
 		WHERE po.flag_aktif =1`)
-
 		var pejabat []organisaiPrivate.PejabatStrukturalPrivate
 		rows, err := stmt.Query()
 		if err != nil {
@@ -442,6 +443,8 @@ func HandleGetPegawaiPrivate(a *app.App, public bool) echo.HandlerFunc {
 		var pegawaiAndFungsionalAndStruktural []model.PegawaiPrivate
 		IsNotStruktural := true
 		for _, data := range res.Data {
+			masaKerjaBawaanTahunInt, _ := strconv.Atoi(data.MasaKerjaBawaanTahun)
+			masaKerjaBawaanBulanInt, _ := strconv.Atoi(data.MasaKerjaBawaanBulan)
 
 			tmtSkPertamaTime, err := time.Parse("2006-01-02", data.TmtSkPertama)
 			var tmtSkPertamaDuration time.Duration
@@ -451,6 +454,13 @@ func HandleGetPegawaiPrivate(a *app.App, public bool) echo.HandlerFunc {
 			tmtSkPertamaDurationDays := tmtSkPertamaDuration.Hours() / 24
 			// tmtSkPertamaDurationDays := tmtSkPertamaDuration.Hours() / 24
 			tmtSkPertamaDurationRealMonths := int(tmtSkPertamaDurationDays / 365 * 12)
+
+			// masa kerja gaji total
+			masaKerjaTotalRealBulan := ((masaKerjaBawaanTahunInt * 12) + masaKerjaBawaanBulanInt) + tmtSkPertamaDurationRealMonths
+			data.MasaKerjaTotalTahun = fmt.Sprintf("%d", masaKerjaTotalRealBulan/12)
+			data.MasaKerjaTotalBulan = fmt.Sprintf("%d", masaKerjaTotalRealBulan%12)
+
+			// masa kerja kepegawaian total
 			masaKerjaKepegawaianTahunInt, _ := strconv.Atoi(data.MasaKerjaTahun)
 			masaKerjaKepegawaianBulanInt, _ := strconv.Atoi(data.MasaKerjaBulan)
 			masaKerjaTotalKepegawaianRealBulan := ((masaKerjaKepegawaianTahunInt * 12) + masaKerjaKepegawaianBulanInt) + tmtSkPertamaDurationRealMonths
@@ -525,26 +535,70 @@ func HandleGetPegawaiPrivate(a *app.App, public bool) echo.HandlerFunc {
 
 		// res.Data = pegawaiAndFungsionalAndStruktural
 		// res.Data = pegawaiJabfungJabstrukAndKontrak
+		stmt4, err := a.DB.Prepare(`SELECT
+		COALESCE(pp.id_personal_data_pribadi,0),
+		COALESCE(pp.kd_jenjang,''),
+		COALESCE(pp.flag_ijazah_diakui,''),
+		COALESCE(pp.nama_institusi,'')
+		FROM pegawai_pendidikan pp
+		LEFT JOIN pegawai p ON pp.id_personal_data_pribadi = p.id_personal_data_pribadi
+		WHERE pp.flag_aktif = 1`)
+
+		var pendidikanPegawai []model.PegawaiPendidikanPrivate
+		rows4, err := stmt4.Query()
+		if err != nil {
+			fmt.Println(err)
+			return c.JSON(500, nil)
+		}
+		defer rows4.Close()
+		for rows4.Next() {
+			var pp model.PegawaiPendidikanPrivate
+			if err := rows4.Scan(&pp.IdPersonal, &pp.KdJenjang, &pp.FlagIjazahDiakui, &pp.NamaInstitusi); err != nil {
+				fmt.Println(err)
+				return c.JSON(500, nil)
+			}
+			pendidikanPegawai = append(pendidikanPegawai, pp)
+		}
+
+		var pegawaiJabfungJabstrukAndKontrakAndPendidikan []model.PegawaiPrivate
+		IsPendidikanNull := true
+		for _, data := range pegawaiJabfungJabstrukAndKontrak {
+			for _, pendidikan := range pendidikanPegawai {
+				if data.IdPersonal == pendidikan.IdPersonal {
+					data.Pendidikan = append(data.Pendidikan, pendidikan)
+					IsPendidikanNull = false
+				}
+			}
+
+			if IsPendidikanNull {
+				data.Pendidikan = make([]model.PegawaiPendidikanPrivate, 0)
+			}
+
+			pegawaiJabfungJabstrukAndKontrakAndPendidikan = append(pegawaiJabfungJabstrukAndKontrakAndPendidikan, data)
+		}
 
 		tanggunganResponse := GetDataTanggungan(public)
 
-		var pegawaiJabfungJabstrukAndKontrakAndTangungan []model.PegawaiPrivate
-		for _, data := range pegawaiJabfungJabstrukAndKontrak {
+		var pegawaiJabfungJabstrukAndKontrakAndPendidikanAndTangungan []model.PegawaiPrivate
+		for _, data := range pegawaiJabfungJabstrukAndKontrakAndPendidikan {
 			for _, tanggungan := range tanggunganResponse.Data {
 				// if data.IdPersonal == tanggungan.IdPersonal {
 				if strconv.FormatInt(int64(data.IdPersonal), 10) == tanggungan.IdPersonal {
 					data.IdStatusPernikahanPtkp = tanggungan.IdStatusPernikahanPtkp
 					data.KdStatusPernikahanPtkp = tanggungan.KdStatusPernikahanPtkp
 					data.StatusPernikahanPtkp = tanggungan.StatusPernikahanPtkp
-					data.JumlahTanggungan = tanggungan.JumlahTanggungan
-					data.JumlahTanggunganPtkp = tanggungan.JumlahTanggunganPtkp
-					data.JumlahAnakPtkp = tanggungan.JumlahAnakPtkp
+					data.JumlahKeluargaDitanggung = tanggungan.JumlahKeluargaDitanggung
+					data.JumlahAnakDitanggung = tanggungan.JumlahAnakDitanggung
+					data.JumlahKeluargaDitanggungPtkp = tanggungan.JumlahKeluargaDitanggungPtkp
+					data.JumlahAnakDitanggungPtkp = tanggungan.JumlahAnakDitanggungPtkp
+					data.DetailTanggunganKeluarga = tanggungan.DetailTanggunganKeluarga
+					data.DetailTanggunganPtkp = tanggungan.DetailTanggunganPtkp
 				}
 			}
-			pegawaiJabfungJabstrukAndKontrakAndTangungan = append(pegawaiJabfungJabstrukAndKontrakAndTangungan, data)
+			pegawaiJabfungJabstrukAndKontrakAndPendidikanAndTangungan = append(pegawaiJabfungJabstrukAndKontrakAndPendidikanAndTangungan, data)
 		}
 
-		res.Data = pegawaiJabfungJabstrukAndKontrakAndTangungan
+		res.Data = pegawaiJabfungJabstrukAndKontrakAndPendidikanAndTangungan
 
 		return c.JSON(http.StatusOK, res)
 	}

@@ -19,6 +19,8 @@ import (
 	"github.com/labstack/gommon/log"
 )
 
+// test redepoloy
+
 func main() {
 	// Membuat koneksi ke database, koneksi hanya dibuat satu kali dan akan digunakan di seluruh proses service
 	db, err := database.Connect()

@@ -82,37 +82,51 @@ type PegawaiPrivate struct {
 	// JabatanFungsional     []privateJabatanFungsional.JabatanFungsionalPrivate `json:"jabatan_fungsional" gorm:"type:varchar"`
 	// JabatanFungsional      []PegawaiFungsionalPrivate                          `json:"jabatan_fungsional" gorm:"type:varchar"`
 	// JabatanFungsional      PegawaiFungsionalDataItemY                          `json:"jabatan_fungsional" gorm:"type:varchar"`
-	JabatanStruktural      []privatePejabatStruktural.PejabatStrukturalPrivate `json:"jabatan_struktural" gorm:"type:varchar"`
-	PegawaiKontrakPrivate  PegawaiKontrakPrivate                               `json:"kontrak" gorm:"type:varchar"`
-	IdDetailProfesi        uint64                                              `json:"id_detail_profesi" gorm:"type:varchar"`
-	KdDetailProfesi        string                                              `json:"kd_detail_profesi" gorm:"type:varchar"`
-	DetailProfesi          string                                              `json:"detail_profesi" gorm:"type:varchar"`
-	IdJenjangPendidikan    uint64                                              `json:"id_jenjang_pendidikan" gorm:"type:varchar"`
-	KdJenjangPendidikan    string                                              `json:"kd_jenjang_pendidikan" gorm:"type:varchar"`
-	JenjangPendidikan      string                                              `json:"jenjang_pendidikan" gorm:"type:varchar"`
-	TmtSkPertama           string                                              `json:"tmt_sk_pertama" gorm:"type:varchar"`
-	MasaKerjaTahun         string                                              `json:"masa_kerja_tahun" gorm:"type:varchar"`
-	MasaKerjaBulan         string                                              `json:"masa_kerja_bulan" gorm:"type:varchar"`
-	JumlahKeluarga         string                                              `json:"jumlah_keluarga" gorm:"type:varchar"`
-	JumlahAnak             int                                                 `json:"jumlah_anak" gorm:"type:varchar"`
-	Npwp                   string                                              `json:"npwp" gorm:"type:varchar"`
-	IdStatusPernikahan     uint64                                              `json:"id_status_nikah" gorm:"type:varchar"`
-	KdStatusPernikahan     string                                              `json:"kd_status_nikah" gorm:"type:varchar"`
-	StatusPernikahan       string                                              `json:"status_nikah" gorm:"type:varchar"`
-	IdStatusPernikahanPtkp uint64                                              `json:"id_status_pernikahan_ptkp" gorm:"type:varchar"`
-	KdStatusPernikahanPtkp string                                              `json:"kd_status_pernikahan_ptkp" gorm:"type:varchar"`
-	StatusPernikahanPtkp   string                                              `json:"status_pernikahan_ptkp" gorm:"type:varchar"`
-	NikSuamiIstri          string                                              `json:"nik_suami_istri" gorm:"type:varchar"`
-	NikKtp                 string                                              `json:"nik_ktp" gorm:"type:varchar"`
-	JumlahTanggungan       int                                                 `json:"jumlah_tanggungan" gorm:"type:varchar"`
-	JumlahTanggunganPtkp   int                                                 `json:"jumlah_tanggungan_ptkp" gorm:"type:varchar"`
-	JumlahAnakPtkp         int                                                 `json:"jumlah_anak_ptkp" gorm:"type:varchar"`
-	FlagKlaimTanggungan    int                                                 `json:"flag_klaim_tanggungan" gorm:"type:varchar"`
-	FlagPensiun            int                                                 `json:"flag_pensiun" gorm:"type:varchar"`
-	FlagMeninggal          int                                                 `json:"flag_meninggal" gorm:"type:varchar"`
-	FlagSuamiIstriSekantor int                                                 `json:"flag_suami_istri_sekantor" gorm:"type:varchar"`
-	IsFungsional           int                                                 `json:"is_fungsional" gorm:"type:varchar"`
-	IsStruktural           int                                                 `json:"is_struktural" gorm:"type:varchar"`
+	JabatanStruktural            []privatePejabatStruktural.PejabatStrukturalPrivate `json:"jabatan_struktural" gorm:"type:varchar"`
+	PegawaiKontrakPrivate        PegawaiKontrakPrivate                               `json:"kontrak" gorm:"type:varchar"`
+	IdBidang                     uint64                                              `json:"id_bidang" gorm:"type:varchar"`
+	KdBidang                     string                                              `json:"kd_bidang" gorm:"type:varchar"`
+	Bidang                       string                                              `json:"bidang" gorm:"type:varchar"`
+	IdSubBidang                  uint64                                              `json:"id_sub_bidang" gorm:"type:varchar"`
+	KdSubBidang                  string                                              `json:"kd_sub_bidang" gorm:"type:varchar"`
+	SubBidang                    string                                              `json:"sub_bidang" gorm:"type:varchar"`
+	IdJenjangPendidikan          uint64                                              `json:"id_jenjang_pendidikan" gorm:"type:varchar"`
+	KdJenjangPendidikan          string                                              `json:"kd_jenjang_pendidikan" gorm:"type:varchar"`
+	JenjangPendidikan            string                                              `json:"jenjang_pendidikan" gorm:"type:varchar"`
+	Pendidikan                   []PegawaiPendidikanPrivate                          `json:"data_pendidikan" gorm:"type:varchar"`
+	TmtSkPertama                 string                                              `json:"tmt_sk_pertama" gorm:"type:varchar"`
+	MasaKerjaBawaanTahun         string                                              `json:"masa_kerja_bawaan_tahun" gorm:"type:varchar"`
+	MasaKerjaBawaanBulan         string                                              `json:"masa_kerja_bawaan_bulan" gorm:"type:varchar"`
+	MasaKerjaGajiTahun           string                                              `json:"masa_kerja_gaji_tahun" gorm:"type:varchar"`
+	MasaKerjaGajiBulan           string                                              `json:"masa_kerja_gaji_bulan" gorm:"type:varchar"`
+	MasaKerjaTotalTahun          string                                              `json:"masa_kerja_total_tahun" gorm:"type:varchar"`
+	MasaKerjaTotalBulan          string                                              `json:"masa_kerja_total_bulan" gorm:"type:varchar"`
+	MasaKerjaTahun               string                                              `json:"masa_kerja_tahun" gorm:"type:varchar"`
+	MasaKerjaBulan               string                                              `json:"masa_kerja_bulan" gorm:"type:varchar"`
+	JumlahKeluarga               string                                              `json:"jumlah_keluarga" gorm:"type:varchar"`
+	JumlahAnak                   int                                                 `json:"jumlah_anak" gorm:"type:varchar"`
+	Npwp                         string                                              `json:"npwp" gorm:"type:varchar"`
+	AlamatNpwp                   string                                              `json:"alamat_npwp" gorm:"type:varchar"`
+	IdStatusPernikahan           uint64                                              `json:"id_status_nikah" gorm:"type:varchar"`
+	KdStatusPernikahan           string                                              `json:"kd_status_nikah" gorm:"type:varchar"`
+	StatusPernikahan             string                                              `json:"status_nikah" gorm:"type:varchar"`
+	IdStatusPernikahanPtkp       uint64                                              `json:"id_status_pernikahan_ptkp" gorm:"type:varchar"`
+	KdStatusPernikahanPtkp       string                                              `json:"kd_status_pernikahan_ptkp" gorm:"type:varchar"`
+	StatusPernikahanPtkp         string                                              `json:"status_pernikahan_ptkp" gorm:"type:varchar"`
+	NikSuamiIstri                string                                              `json:"nik_suami_istri" gorm:"type:varchar"`
+	NikKtp                       string                                              `json:"nik_ktp" gorm:"type:varchar"`
+	JumlahKeluargaDitanggung     int                                                 `json:"jumlah_keluarga_ditanggung" gorm:"type:varchar"`
+	JumlahAnakDitanggung         int                                                 `json:"jumlah_anak_ditanggung" gorm:"type:varchar"`
+	JumlahKeluargaDitanggungPtkp int                                                 `json:"jumlah_keluarga_ditanggung_ptkp" gorm:"type:varchar"`
+	JumlahAnakDitanggungPtkp     int                                                 `json:"jumlah_anak_ditanggung_ptkp" gorm:"type:varchar"`
+	FlagKlaimTanggungan          int                                                 `json:"flag_klaim_tanggungan" gorm:"type:varchar"`
+	DetailTanggunganKeluarga     []DetailTanggunganKeluarga                          `json:"data_tanggungan_keluarga"`
+	DetailTanggunganPtkp         []DetailTanggunganPtkp                              `json:"data_tanggungan_ptkp"`
+	FlagPensiun                  int                                                 `json:"flag_pensiun" gorm:"type:varchar"`
+	FlagMeninggal                int                                                 `json:"flag_meninggal" gorm:"type:varchar"`
+	FlagSuamiIstriSekantor       int                                                 `json:"flag_suami_istri_sekantor" gorm:"type:varchar"`
+	IsFungsional                 int                                                 `json:"is_fungsional" gorm:"type:varchar"`
+	IsStruktural                 int                                                 `json:"is_struktural" gorm:"type:varchar"`
 }
 
 type PegawaiKontrakPrivate struct {
@@ -124,18 +138,37 @@ type PegawaiKontrakPrivate struct {
 	AkhirKontrak string `json:"akhir_kontrak"`
 }
 type Tanggungan struct {
-	IdPersonal             string `json:"id_personal"`
-	IdStatusPernikahanPtkp uint64 `json:"id_status_pernikahan_ptkp"`
-	KdStatusPernikahanPtkp string `json:"kd_status_pernikahan_ptkp"`
-	StatusPernikahanPtkp   string `json:"status_pernikahan_ptkp"`
-	JumlahTanggungan       int    `json:"jumlah_tanggungan"`
-	JumlahTanggunganPtkp   int    `json:"jumlah_tanggungan_ptkp"`
-	JumlahAnakPtkp         int    `json:"jumlah_anak_ptkp"`
+	IdPersonal                   string                     `json:"id_personal"`
+	IdStatusPernikahanPtkp       uint64                     `json:"id_status_pernikahan_ptkp"`
+	KdStatusPernikahanPtkp       string                     `json:"kd_status_pernikahan_ptkp"`
+	StatusPernikahanPtkp         string                     `json:"status_pernikahan_ptkp"`
+	JumlahKeluargaDitanggung     int                        `json:"jumlah_keluarga_ditanggung"`
+	JumlahAnakDitanggung         int                        `json:"jumlah_anak_ditanggung"`
+	JumlahKeluargaDitanggungPtkp int                        `json:"jumlah_keluarga_ditanggung_ptkp"`
+	JumlahAnakDitanggungPtkp     int                        `json:"jumlah_anak_ditanggung_ptkp"`
+	DetailTanggunganKeluarga     []DetailTanggunganKeluarga `json:"data_tanggungan_keluarga"`
+	DetailTanggunganPtkp         []DetailTanggunganPtkp     `json:"data_tanggungan_ptkp"`
 }
 
 type TanggunganResponseBody struct {
 	Message string `json:"message"`
 	Data    []Tanggungan
+}
+
+type DetailTanggunganKeluarga struct {
+	IdPersonal        string `json:"id_personal"`
+	Nama              string `json:"nama"`
+	JenisKelamin      string `json:"jenis_kelamin"`
+	KdJenisTanggungan string `json:"kd_jenis_tanggungan"`
+	HubunganKeluarga  string `json:"hubungan_keluarga"`
+}
+
+type DetailTanggunganPtkp struct {
+	IdPersonal        string `json:"id_personal"`
+	Nama              string `json:"nama"`
+	JenisKelamin      string `json:"jenis_kelamin"`
+	KdJenisTanggungan string `json:"kd_jenis_tanggungan"`
+	HubunganKeluarga  string `json:"hubungan_keluarga"`
 }
 
 type PegawaiCreate struct {

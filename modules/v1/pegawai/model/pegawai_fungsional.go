@@ -59,6 +59,12 @@ type PegawaiFungsionalCreate struct {
 	TmtAwalKontrakIDN             string  `form:"tmt_awal_kontrak_idn" gorm:"default:null"`
 	TmtAkhirKontrak               string  `form:"tmt_akhir_kontrak" gorm:"default:null"`
 	TmtAkhirKontrakIDN            string  `form:"tmt_akhir_kontrak_idn" gorm:"default:null"`
+	UuidBidang                    string  `form:"uuid_bidang" gorm:"-"`
+	IdBidang                      uint64  `form:"-" gorm:"default:null"`
+	KdBidang                      string  `form:"kd_bidang" gorm:"default:null"`
+	UuidSubBidang                 string  `form:"uuid_sub_bidang" gorm:"-"`
+	IdSubBidang                   uint64  `form:"-" gorm:"default:null"`
+	KdSubBidang                   string  `form:"kd_sub_bidang" gorm:"default:null"`
 	TglInput                      string  `form:"-" gorm:"-"`
 	UserInput                     string  `form:"-"`
 	TglUpdate                     string  `form:"-" gorm:"-"`
@@ -123,6 +129,12 @@ type PegawaiFungsionalUpdate struct {
 	TglSuratKontrakIDN       *string `form:"tgl_surat_kontrak_idn" gorm:"-"`
 	TmtAwalKontrak           *string `form:"tmt_awal_kontrak" gorm:"default:null"`
 	TmtAkhirKontrak          *string `form:"tmt_akhir_kontrak" gorm:"default:null"`
+	UuidBidang               *string `form:"uuid_bidang" gorm:"-"`
+	IdBidang                 *uint64 `form:"-" gorm:"default:null"`
+	KdBidang                 *string `form:"kd_bidang" gorm:"default:null"`
+	UuidSubBidang            *string `form:"uuid_sub_bidang" gorm:"-"`
+	IdSubBidang              *uint64 `form:"-" gorm:"default:null"`
+	KdSubBidang              *string `form:"kd_sub_bidang" gorm:"default:null"`
 	TglInput                 *string `form:"-" gorm:"-"`
 	UserInput                *string `form:"-" gorm:"-"`
 	TglUpdate                *string `form:"-" gorm:"-"`
