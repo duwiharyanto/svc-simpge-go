@@ -461,11 +461,11 @@ func HandleGetPegawaiPrivate(a *app.App, public bool) echo.HandlerFunc {
 			data.MasaKerjaTotalBulan = fmt.Sprintf("%d", masaKerjaTotalRealBulan%12)
 
 			// masa kerja kepegawaian total
-			masaKerjaKepegawaianTahunInt, _ := strconv.Atoi(data.MasaKerjaTahun)
-			masaKerjaKepegawaianBulanInt, _ := strconv.Atoi(data.MasaKerjaBulan)
+			masaKerjaKepegawaianTahunInt, _ := strconv.Atoi(data.MasaKerjaAwalKepegawaianTahun)
+			masaKerjaKepegawaianBulanInt, _ := strconv.Atoi(data.MasaKerjaAwalKepegawaianBulan)
 			masaKerjaTotalKepegawaianRealBulan := ((masaKerjaKepegawaianTahunInt * 12) + masaKerjaKepegawaianBulanInt) + tmtSkPertamaDurationRealMonths
-			data.MasaKerjaTahun = fmt.Sprintf("%d", masaKerjaTotalKepegawaianRealBulan/12)
-			data.MasaKerjaBulan = fmt.Sprintf("%d", masaKerjaTotalKepegawaianRealBulan%12)
+			data.MasaKerjaAwalKepegawaianTahun = fmt.Sprintf("%d", masaKerjaTotalKepegawaianRealBulan/12)
+			data.MasaKerjaAwalKepegawaianBulan = fmt.Sprintf("%d", masaKerjaTotalKepegawaianRealBulan%12)
 
 			for _, pejabat := range pejabat {
 				if data.IdPegawai == pejabat.IdPegawai {
