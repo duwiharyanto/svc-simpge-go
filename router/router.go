@@ -37,6 +37,8 @@ func InitRoute(a *app.App, appCtx context.Context, e *echo.Echo, slackErrChan ch
 	insaniPrivateGroupingPath := e.Group("/private/api/v1")
 
 	// Route di bawah akan dikelola oleh handler
+	insaniGroupingPath.GET("/healthz", healthz())
+
 	insaniGroupingPath.GET("/pegawai", pegawai.HandleGetPegawai(a))
 	insaniGroupingPath.GET("/pegawai-nik", pegawai.HandleCheckNikPegawai(a))
 	// insaniGroupingPath.GET("/filter-pegawai-simpeg", pegawai.HandleSearchPegawaiSimpeg(a))
@@ -156,4 +158,9 @@ func dummyError() echo.HandlerFunc {
 	return echo.HandlerFunc(h)
 }
 
-// test
+func healthz() echo.HandlerFunc {
+	h := func(c echo.Context) error {
+		return c.JSON(http.StatusOK, map[string]string{"message": "success"})
+	}
+	return echo.HandlerFunc(h)
+}
