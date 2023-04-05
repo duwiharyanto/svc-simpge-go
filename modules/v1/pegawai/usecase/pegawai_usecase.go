@@ -403,7 +403,7 @@ func HandleGetPegawaiPrivate(a *app.App, public bool) echo.HandlerFunc {
 
 		pp, err := repo.GetAllPegawaiPrivate(a, req)
 		if err != nil {
-			fmt.Printf("[ERROR] repo get all pegawai: %s\n", err.Error())
+			log.Printf("[ERROR] repo get all pegawai private: %s\n", err.Error())
 			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
 		}
 		res.Data = pp
