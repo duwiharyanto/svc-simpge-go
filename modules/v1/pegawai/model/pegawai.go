@@ -159,6 +159,7 @@ type DetailTanggunganKeluarga struct {
 	IdPersonal        string `json:"id_personal"`
 	Nama              string `json:"nama"`
 	JenisKelamin      string `json:"jenis_kelamin"`
+	TanggalLahir      string `json:"tgl_lahir"`
 	KdJenisTanggungan string `json:"kd_jenis_tanggungan"`
 	HubunganKeluarga  string `json:"hubungan_keluarga"`
 }
@@ -167,6 +168,7 @@ type DetailTanggunganPtkp struct {
 	IdPersonal        string `json:"id_personal"`
 	Nama              string `json:"nama"`
 	JenisKelamin      string `json:"jenis_kelamin"`
+	TanggalLahir      string `json:"tgl_lahir"`
 	KdJenisTanggungan string `json:"kd_jenis_tanggungan"`
 	HubunganKeluarga  string `json:"hubungan_keluarga"`
 }
