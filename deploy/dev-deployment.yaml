@@ -107,13 +107,16 @@ metadata:
   annotations:
     getambassador.io/config: |
       ---
-      apiVersion: ambassador/v1
+      apiVersion: getambassador.io/v3alpha1
       kind:  Mapping
-      name:  svc-insani-go-mapping
-      prefix: /v1/insani
-      rewrite: /public/api/v1
-      service: svc-insani-go.hcm-dev
-      timeout_ms: 15000
+      metadata:
+        name:  svc-insani-go-mapping
+      spec:
+        prefix: /v1/insani
+        rewrite: /public/api/v1
+        service: svc-insani-go.hcm-dev
+        timeout_ms: 60000
+        hostname: '*'
 spec:
   selector:
     svc: svc-insani-go
