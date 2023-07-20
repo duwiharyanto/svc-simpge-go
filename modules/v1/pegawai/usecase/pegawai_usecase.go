@@ -374,7 +374,7 @@ func HandleGetPegawaiByNik(a *app.App) echo.HandlerFunc {
 }
 
 // ini digunakan kalo uiitanggungan sudah digunakan
-func HandleGetPegawaiPrivateSatuu(a *app.App, public bool) echo.HandlerFunc {
+func HandleGetPegawaiPrivateSatu(a *app.App, public bool) echo.HandlerFunc {
 	h := func(c echo.Context) error {
 		env := os.Getenv("ENV")
 		fmt.Println(env)
@@ -578,7 +578,7 @@ func HandleGetPegawaiPrivateSatuu(a *app.App, public bool) echo.HandlerFunc {
 			pegawaiJabfungJabstrukAndKontrakAndPendidikan = append(pegawaiJabfungJabstrukAndKontrakAndPendidikan, data)
 		}
 
-		tanggunganResponse := GetDataTanggunganSatuu(public)
+		tanggunganResponse := GetDataTanggunganSatu(public)
 
 		var pegawaiJabfungJabstrukAndKontrakAndPendidikanAndTangungan []model.PegawaiPrivate
 		for _, data := range pegawaiJabfungJabstrukAndKontrakAndPendidikan {
@@ -607,7 +607,7 @@ func HandleGetPegawaiPrivateSatuu(a *app.App, public bool) echo.HandlerFunc {
 }
 
 // ini digunakan kalo uiitanggungan sudah digunakan
-func GetDataTanggunganSatuu(public bool) *model.TanggunganResponseBody {
+func GetDataTanggunganSatu(public bool) *model.TanggunganResponseBody {
 	// fmt.Println(env)
 	var baseURL string
 	baseURL = os.Getenv("URL_HCM_TANGGUNGAN")
@@ -649,7 +649,7 @@ func HandleGetPegawaiPrivate(a *app.App, public bool) echo.HandlerFunc {
 		fmt.Println(env)
 		if public {
 			if env == "production" {
-				// return c.JSON(404, "layanan tidak ditemukan")
+				return c.JSON(404, "layanan tidak ditemukan")
 			}
 		}
 
