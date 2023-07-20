@@ -93,6 +93,8 @@ spec:
               value: "http://svc-personal-go.hcm-stag.svc.cluster.local"
             - name: URL_HCM_TANGGUNGAN
               value: "http://svc-dependents-go.hcm-stag.svc.cluster.local/public/api/v1/tanggungan-private"
+            - name: URL_HCM_PERSONAL
+              value: http://svc-personal-go.hcm-stag.svc.cluster.local/public/api/v1/tanggungan-private"
 
 ---
 apiVersion: v1
