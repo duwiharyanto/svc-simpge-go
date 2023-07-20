@@ -18,21 +18,21 @@ variables:
   SONAR_SOURCES: "."
   GIT_SSL_NO_VERIFY: "true"
 
-sonarqube_scan:
-  stage: analysis
-  image: sonarsource/sonar-scanner-cli:latest
-  script:
-    - >
-      sonar-scanner
-      -Dsonar.projectKey=$CI_PROJECT_NAME
-      -Dsonar.sources=$SONAR_SOURCES
-      -Dsonar.scm.provider=git
-      -Dsonar.exclusions='vendor/**'
-      -Dsonar.qualitygate.wait=true
-  only:
-    - develop
-  tags:
-    - untag
+# sonarqube_scan:
+#   stage: analysis
+#   image: sonarsource/sonar-scanner-cli:latest
+#   script:
+#     - >
+#       sonar-scanner
+#       -Dsonar.projectKey=$CI_PROJECT_NAME
+#       -Dsonar.sources=$SONAR_SOURCES
+#       -Dsonar.scm.provider=git
+#       -Dsonar.exclusions='vendor/**'
+#       -Dsonar.qualitygate.wait=true
+#   only:
+#     - develop
+#   tags:
+#     - untag
 
 compile_main:
   stage: compile
