@@ -140,7 +140,7 @@ type PegawaiKontrakPrivate struct {
 	AkhirKontrak string `json:"akhir_kontrak"`
 }
 
-// ini digunakan kalo uiitanggungan sudah digunakan
+// ini digunakan kalo uiitanggungan sudah digunakaan
 type Tanggungan_v1 struct {
 	IdPersonal                   string                     `json:"id_personal"`
 	IdStatusPernikahanPtkp       uint64                     `json:"id_status_pernikahan_ptkp"`
