@@ -141,7 +141,7 @@ type PegawaiKontrakPrivate struct {
 }
 
 // ini digunakan kalo uiitanggungan sudah digunakaan
-type Tanggungan_v1 struct {
+type TanggunganSatu struct {
 	IdPersonal                   string                     `json:"id_personal"`
 	IdStatusPernikahanPtkp       uint64                     `json:"id_status_pernikahan_ptkp"`
 	KdStatusPernikahanPtkp       string                     `json:"kd_status_pernikahan_ptkp"`
