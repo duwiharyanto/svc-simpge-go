@@ -906,6 +906,7 @@ func GetDataTanggungan(public bool) (*model.TanggunganResponseBody, error) {
 		return nil, err
 	}
 	defer response.Body.Close()
+
 	b, err := io.ReadAll(response.Body)
 	if err != nil {
 		fmt.Printf("[ERROR] %s - at readAll\n", err)
@@ -914,10 +915,12 @@ func GetDataTanggungan(public bool) (*model.TanggunganResponseBody, error) {
 
 	data := &model.TanggunganResponseBody{}
 	err = json.Unmarshal(b, data)
+	fmt.Println("data: ", data)
 	if err != nil {
 		fmt.Printf("[ERROR] %s - at unmarshal\n", err)
 		// return nil
 		return nil, err
 	}
+
 	return data, nil
 }
