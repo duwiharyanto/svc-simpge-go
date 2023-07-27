@@ -1,4 +1,4 @@
-FROM asia.gcr.io/uii-cloud-project/hcm/go/golang:1.17-ubuntu
+FROM arisatrio03/golang:1.17-ubuntu
 
 LABEL MAINTAINER="Ari Satrio<ari.satrio@uii.ac.id>"
 
@@ -14,6 +14,6 @@ RUN go install github.com/cosmtrek/air@latest
 
 COPY . ./
 
-RUN go build -o /main
+# RUN go build -o /main
 
 CMD [ "air" ]
