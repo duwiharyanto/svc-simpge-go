@@ -131,8 +131,6 @@ func GetAllPegawaiPrivate(a *app.App, req *model.PegawaiPrivateRequest) ([]model
 			&p.SubBidang,
 			&p.IdJenjangPendidikan,
 			&p.KdJenjangPendidikan,
-			&p.IdPendidikanMasuk,
-			&p.KdPendidikanMasuk,
 			&p.JenjangPendidikan,
 			&p.TmtSkPertama,
 			&p.MasaKerjaBawaanTahun,

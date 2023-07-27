@@ -128,8 +128,6 @@ func getListAllPegawaiPrivateQuery(req *model.PegawaiPrivateRequest) string {
 	COALESCE(sb.sub_bidang,''),
 	COALESCE(p.id_pendidikan_masuk,0) id_jenjang_pendidikan,
 	COALESCE(p.kd_pendidikan_masuk,'') kd_jenjang_pendidikan,
-	COALESCE((SELECT jp.id FROM pegawai_pendidikan pp JOIN jenjang_pendidikan jp on pp.kd_jenjang = jp.jenjang WHERE pp.id_personal_data_pribadi =  p.id_personal_data_pribadi AND pp.flag_ijazah_diakui = 1),0) id_pendidikan_masuk,
-	COALESCE((SELECT jp.jenjang FROM pegawai_pendidikan pp JOIN jenjang_pendidikan jp on pp.kd_jenjang = jp.jenjang WHERE pp.id_personal_data_pribadi =  p.id_personal_data_pribadi AND pp.flag_ijazah_diakui = 1),'') kd_pendidikan_masuk,
 	COALESCE(p.kd_pendidikan_masuk,'') jenjang_pendidikan,
 	COALESCE(pf.tmt_sk_pertama,'') tmt_sk_pertama,
 	COALESCE(pf.masa_kerja_bawaan_tahun,'') masa_kerja_bawaan_tahun,
