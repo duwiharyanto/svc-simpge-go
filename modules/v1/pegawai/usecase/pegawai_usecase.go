@@ -896,25 +896,26 @@ func GetDataTanggungan(public bool) (*model.TanggunganResponseBody, error) {
 	if err != nil {
 		// fmt.Println(err)
 		// return nil
+		fmt.Println(err)
+		fmt.Printf("[ERROR] %s - at NewRequest\n", err)
 		return nil, err
 	}
 	response, err := client.Do(request)
 	if err != nil {
-		fmt.Println(err)
-		// return nil
+		fmt.Println("[ERROR] error get data tanggungan", err)
 		return nil, err
 	}
 	defer response.Body.Close()
 	b, err := io.ReadAll(response.Body)
 	if err != nil {
-		log.Fatalln(err)
+		fmt.Printf("[ERROR] %s - at readAll\n", err)
 		return nil, err
 	}
 
 	data := &model.TanggunganResponseBody{}
 	err = json.Unmarshal(b, data)
 	if err != nil {
-		fmt.Println(err.Error())
+		fmt.Printf("[ERROR] %s - at unmarshal\n", err)
 		// return nil
 		return nil, err
 	}
