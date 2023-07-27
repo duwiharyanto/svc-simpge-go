@@ -847,7 +847,12 @@ func HandleGetPegawaiPrivate(a *app.App, public bool) echo.HandlerFunc {
 			pegawaiJabfungJabstrukAndKontrakAndPendidikan = append(pegawaiJabfungJabstrukAndKontrakAndPendidikan, data)
 		}
 
-		tanggunganResponse := GetDataTanggungan(public)
+		tanggunganResponse, err := GetDataTanggungan(public)
+		if err != nil {
+			// fmt.Println(err)
+			// return nil
+			return c.JSON(http.StatusInternalServerError, nil)
+		}
 
 		var pegawaiJabfungJabstrukAndKontrakAndPendidikanAndTangungan []model.PegawaiPrivate
 		for _, data := range pegawaiJabfungJabstrukAndKontrakAndPendidikan {
@@ -876,7 +881,7 @@ func HandleGetPegawaiPrivate(a *app.App, public bool) echo.HandlerFunc {
 }
 
 //
-func GetDataTanggungan(public bool) *model.TanggunganResponseBody {
+func GetDataTanggungan(public bool) (*model.TanggunganResponseBody, error) {
 	// fmt.Println(env)
 	var baseURL string
 	baseURL = os.Getenv("URL_HCM_PERSONAL")
@@ -889,25 +894,29 @@ func GetDataTanggungan(public bool) *model.TanggunganResponseBody {
 	var client = &http.Client{}
 	request, err := http.NewRequest(http.MethodGet, baseURL, nil)
 	if err != nil {
-		fmt.Println(err)
-		return nil
+		// fmt.Println(err)
+		// return nil
+		return nil, err
 	}
 	response, err := client.Do(request)
 	if err != nil {
 		fmt.Println(err)
-		return nil
+		// return nil
+		return nil, err
 	}
 	defer response.Body.Close()
 	b, err := io.ReadAll(response.Body)
 	if err != nil {
 		log.Fatalln(err)
+		return nil, err
 	}
 
 	data := &model.TanggunganResponseBody{}
 	err = json.Unmarshal(b, data)
 	if err != nil {
 		fmt.Println(err.Error())
-		return nil
+		// return nil
+		return nil, err
 	}
-	return data
+	return data, nil
 }
