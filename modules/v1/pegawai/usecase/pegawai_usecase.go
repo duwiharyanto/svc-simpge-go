@@ -884,15 +884,15 @@ func HandleGetPegawaiPrivate(a *app.App, public bool) echo.HandlerFunc {
 func GetDataTanggungan(public bool) (*model.TanggunganResponseBody, error) {
 	// fmt.Println(env)
 	var baseURL string
-	baseURL = os.Getenv("URL_HCM_PERSONAL")
-	fmt.Println("baseUrl = " + baseURL)
-	// if public {
-	// baseURL = "http://localhost:81/public/api/v1/tanggungan-private"
-	// baseURL = "http://svc-dependents-go.hcm-dev.svc.cluster.local/public/api/v1/tanggungan-private"
-	// }
+	baseURL = os.Getenv("URL_ACTIVATION_PERSONAL")
+	endpoint := "/public/api/v1/tanggungan-private"
+	destinationURL := baseURL + endpoint
+
+	// fmt.Println(destinationURL)
+	fmt.Println("baseUrl = " + destinationURL)
 
 	var client = &http.Client{}
-	request, err := http.NewRequest(http.MethodGet, baseURL, nil)
+	request, err := http.NewRequest("GET", baseURL, nil)
 	if err != nil {
 		// fmt.Println(err)
 		// return nil
@@ -900,6 +900,7 @@ func GetDataTanggungan(public bool) (*model.TanggunganResponseBody, error) {
 		fmt.Printf("[ERROR] %s - at NewRequest\n", err)
 		return nil, err
 	}
+	fmt.Println(request)
 	response, err := client.Do(request)
 	if err != nil {
 		fmt.Println("[ERROR] error get data tanggungan", err)
