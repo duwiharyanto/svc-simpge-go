@@ -892,7 +892,7 @@ func GetDataTanggungan(public bool) (*model.TanggunganResponseBody, error) {
 	fmt.Println("baseUrl = " + destinationURL)
 
 	var client = &http.Client{}
-	request, err := http.NewRequest("GET", baseURL, nil)
+	request, err := http.NewRequest("GET", destinationURL, nil)
 	if err != nil {
 		// fmt.Println(err)
 		// return nil
