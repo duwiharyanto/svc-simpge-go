@@ -161,6 +161,7 @@ type Tanggungan struct {
 	JumlahAnakDitanggung         int    `json:"jumlah_anak_ditanggung"`
 	JumlahKeluargaDitanggungPtkp int    `json:"jumlah_keluarga_ditanggung_ptkp"`
 	JumlahAnakDitanggungPtkp     int    `json:"jumlah_anak_ditanggung_ptkp"`
+	FlagKlaimTanggungan          int    `json:"flag_klaim_tanggungan"`
 	// DetailTanggunganKeluarga     []DetailTanggunganKeluarga `json:"data_tanggungan_keluarga"`
 	// DetailTanggunganPtkp         []DetailTanggunganPtkp     `json:"data_tanggungan_ptkp"`
 }

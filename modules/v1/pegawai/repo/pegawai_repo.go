@@ -151,7 +151,7 @@ func GetAllPegawaiPrivate(a *app.App, req *model.PegawaiPrivateRequest) ([]model
 			&p.NikKtp,
 			// &p.JumlahTanggungan,
 			// &p.JumlahTanggunganPtkp,
-			&p.FlagKlaimTanggungan,
+			// &p.FlagKlaimTanggungan,
 			&p.FlagPensiun,
 			&p.FlagMeninggal,
 			&p.FlagSuamiIstriSekantor,
