@@ -866,6 +866,7 @@ func HandleGetPegawaiPrivate(a *app.App, public bool) echo.HandlerFunc {
 					data.JumlahAnakDitanggung = tanggungan.JumlahAnakDitanggung
 					data.JumlahKeluargaDitanggungPtkp = tanggungan.JumlahKeluargaDitanggungPtkp
 					data.JumlahAnakDitanggungPtkp = tanggungan.JumlahAnakDitanggungPtkp
+					data.FlagKlaimTanggungan = tanggungan.FlagKlaimTanggungan
 					// 	data.DetailTanggunganKeluarga = tanggungan.DetailTanggunganKeluarga
 					// 	data.DetailTanggunganPtkp = tanggungan.DetailTanggunganPtkp
 				}
@@ -896,7 +897,6 @@ func GetDataTanggungan(public bool) (*model.TanggunganResponseBody, error) {
 	if err != nil {
 		// fmt.Println(err)
 		// return nil
-		fmt.Println(err)
 		fmt.Printf("[ERROR] %s - at NewRequest\n", err)
 		return nil, err
 	}
