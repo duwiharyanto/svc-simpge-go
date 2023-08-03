@@ -900,7 +900,7 @@ func GetDataTanggungan(public bool) (*model.TanggunganResponseBody, error) {
 		fmt.Printf("[ERROR] %s - at NewRequest\n", err)
 		return nil, err
 	}
-	fmt.Println(request)
+
 	response, err := client.Do(request)
 	if err != nil {
 		fmt.Println("[ERROR] error get data tanggungan", err)
