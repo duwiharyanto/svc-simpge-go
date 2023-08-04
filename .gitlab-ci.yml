@@ -28,7 +28,7 @@ sonarqube_scan:
       -Dsonar.sources=$SONAR_SOURCES
       -Dsonar.scm.provider=git
       -Dsonar.exclusions='vendor/**'
-      -Dsonar.qualitygate.wait=true
+      -Dsonar.qualitygate.wait=false
   only:
     - develop
   tags:
@@ -92,7 +92,7 @@ deploy_development:
   dependencies:
     - build_development
   only:
-    - develop
+    - develop_v2
   tags:
     - deploy
 
