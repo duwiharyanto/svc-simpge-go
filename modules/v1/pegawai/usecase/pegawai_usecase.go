@@ -916,7 +916,7 @@ func GetDataTanggungan(public bool) (*model.TanggunganResponseBody, error) {
 
 	data := &model.TanggunganResponseBody{}
 	err = json.Unmarshal(b, data)
-	fmt.Println("data: ", data)
+
 	if err != nil {
 		fmt.Printf("[ERROR] %s - at unmarshal\n", err)
 		// return nil
