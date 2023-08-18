@@ -294,9 +294,12 @@ func HandleCreatePegawai(a *app.App, ctx context.Context, errChan chan error) ec
 			// }
 		}(a, errChan, pegawai.Uuid)
 
-		go func(uuidPersonal string) {
-			err = personalRepo.PersonalActivation(c.FormValue("uuid_personal"))
-		}(c.FormValue("uuid_personal"))
+		// aktivasi data personal pegawai
+		err = personalRepo.PersonalActivation(c.FormValue("uuid_personal"))
+		if err != nil {
+			fmt.Printf("[ERROR] activate personal: %s\n", err.Error())
+			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
+		}
 
 		return c.JSON(http.StatusOK, pegawaiDetail)
 	}
