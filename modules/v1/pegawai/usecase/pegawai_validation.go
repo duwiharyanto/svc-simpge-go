@@ -641,6 +641,8 @@ func PrepareCreateSimpeg(a *app.App, c echo.Context) (model.PegawaiCreate, error
 	if personal.Pegawai.PegawaiFungsional.StatusPegawaiAktif.IsActive() {
 		return model.PegawaiCreate{}, fmt.Errorf("tidak dapat menambah data dari pegawai yang sudah aktif")
 	}
+
+	fmt.Printf("Nomor KTP: %s\n", personal.NikKtp)
 	if personal.NikKtp == "" {
 		return model.PegawaiCreate{}, fmt.Errorf("harap mengisikan nomor ktp terlebih dahulu")
 	}
