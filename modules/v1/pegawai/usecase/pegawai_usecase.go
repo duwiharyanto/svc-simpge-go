@@ -9,6 +9,7 @@ import (
 	"log"
 	"os"
 	"strconv"
+	"strings"
 	"time"
 
 	"net/http"
@@ -17,6 +18,7 @@ import (
 	"svc-insani-go/modules/v1/pegawai/repo"
 	pegawaiRepo "svc-insani-go/modules/v1/pegawai/repo"
 	pengaturan "svc-insani-go/modules/v1/pengaturan-insani/usecase"
+	personalRepo "svc-insani-go/modules/v1/personal/repo"
 	pegawaiOraHttp "svc-insani-go/modules/v1/simpeg-oracle/http"
 	_ "svc-insani-go/modules/v2/organisasi/model"
 	organisaiPrivate "svc-insani-go/modules/v2/organisasi/model"
@@ -245,8 +247,7 @@ func HandleUpdatePegawai(a *app.App, ctx context.Context, errChan chan error) ec
 func HandleCreatePegawai(a *app.App, ctx context.Context, errChan chan error) echo.HandlerFunc {
 	h := func(c echo.Context) error {
 		// Validasi Data
-		// pegawai, err := PrepareCreateSimpeg(a, c)
-		_, err := PrepareCreateSimpeg(a, c)
+		pegawai, err := PrepareCreateSimpeg(a, c)
 		if errors.Unwrap(err) != nil {
 			fmt.Printf("[ERROR] prepare create simpeg: %s\n", err.Error())
 			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
@@ -256,51 +257,51 @@ func HandleCreatePegawai(a *app.App, ctx context.Context, errChan chan error) ec
 		}
 
 		// Create Data
-		// err = repo.CreatePegawai(a, c.Request().Context(), pegawai)
-		// if errors.Unwrap(err) != nil && strings.Contains(err.Error(), "presensi") {
-		// 	fmt.Printf("[ERROR] prepare create simpeg: %s\n", err.Error())
-		// 	return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Gagal simpan user presensi pegawai"})
-		// }
-		// if err != nil {
-		// 	fmt.Printf("[ERROR] create pegawai: %s\n", err.Error())
-		// 	return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
-		// }
+		err = repo.CreatePegawai(a, c.Request().Context(), pegawai)
+		if errors.Unwrap(err) != nil && strings.Contains(err.Error(), "presensi") {
+			fmt.Printf("[ERROR] prepare create simpeg: %s\n", err.Error())
+			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Gagal simpan user presensi pegawai"})
+		}
+		if err != nil {
+			fmt.Printf("[ERROR] create pegawai: %s\n", err.Error())
+			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
+		}
 
-		// // Menampilkan response
-		// pegawaiDetail, err := PrepareGetSimpegPegawaiByUUID(a, pegawai.Uuid)
-		// if err != nil {
-		// 	fmt.Printf("[ERROR] repo get kepegawaian: %s\n", err.Error())
-		// 	return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
-		// }
+		// Menampilkan response
+		pegawaiDetail, err := PrepareGetSimpegPegawaiByUUID(a, pegawai.Uuid)
+		if err != nil {
+			fmt.Printf("[ERROR] repo get kepegawaian: %s\n", err.Error())
+			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
+		}
 
-		// go func(a *app.App, errChan chan error, uuidPegawai string) {
-		// 	dur, err := time.ParseDuration(os.Getenv("RESPONSE_TIMEOUT_MS" + "ms"))
-		// 	if err != nil {
-		// 		dur = time.Second * 40
-		// 	}
-		// 	ctx, cancel := context.WithTimeout(ctx, dur)
-		// 	// ctx, cancel := context.WithTimeout(context.Background(), dur) // kalau ke cancel pake yang ini
-		// 	defer cancel()
-		// 	err = SendPegawaiToOracle(a, ctx, uuidPegawai)
-		// 	if err != nil {
-		// 		errChan <- err
-		// 		return
-		// 	}
-		// 	// err = personalRepo.PersonalActivation(c.FormValue("uuid_personal"))
-		// 	// if err != nil {
-		// 	// 	errChan <- err
-		// 	// 	return
-		// 	// }
-		// }(a, errChan, pegawai.Uuid)
+		go func(a *app.App, errChan chan error, uuidPegawai string) {
+			dur, err := time.ParseDuration(os.Getenv("RESPONSE_TIMEOUT_MS" + "ms"))
+			if err != nil {
+				dur = time.Second * 40
+			}
+			ctx, cancel := context.WithTimeout(ctx, dur)
+			// ctx, cancel := context.WithTimeout(context.Background(), dur) // kalau ke cancel pake yang ini
+			defer cancel()
+			err = SendPegawaiToOracle(a, ctx, uuidPegawai)
+			if err != nil {
+				errChan <- err
+				return
+			}
+			// err = personalRepo.PersonalActivation(c.FormValue("uuid_personal"))
+			// if err != nil {
+			// 	errChan <- err
+			// 	return
+			// }
+		}(a, errChan, pegawai.Uuid)
 
-		// // aktivasi data personal pegawai
-		// err = personalRepo.PersonalActivation(c.FormValue("uuid_personal"))
-		// if err != nil {
-		// 	fmt.Printf("[ERROR] activate personal: %s\n", err.Error())
-		// 	return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
-		// }
+		// aktivasi data personal pegawai
+		err = personalRepo.PersonalActivation(c.FormValue("uuid_personal"))
+		if err != nil {
+			fmt.Printf("[ERROR] activate personal: %s\n", err.Error())
+			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
+		}
 
-		return c.JSON(http.StatusOK, nil)
+		return c.JSON(http.StatusOK, pegawaiDetail)
 	}
 
 	return echo.HandlerFunc(h)
