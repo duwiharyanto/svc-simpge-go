@@ -92,7 +92,7 @@ deploy_development:
   dependencies:
     - build_development
   only:
-    - develop_v2
+    - develop
   tags:
     - deploy
 

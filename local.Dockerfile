@@ -10,7 +10,7 @@ COPY go.sum ./
 RUN go mod download
 
 # Install library auto-reload
-RUN go install github.com/cosmtrek/air@latest
+RUN go install github.com/cosmtrek/air@v1.42.0
 
 COPY . ./
 
