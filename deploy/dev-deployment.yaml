@@ -121,6 +121,7 @@ spec:
   selector:
     svc: svc-insani-go
     tier: backend
+  type: NodePort
   ports:
     - name: http
       port: 80
