@@ -29,6 +29,8 @@ import (
 	organisasiV2 "svc-insani-go/modules/v2/organisasi/usecase"
 	skV2 "svc-insani-go/modules/v2/sk/usecase"
 
+	generate "svc-insani-go/modules/v1/generate/delivery"
+
 	"github.com/labstack/echo/v4"
 )
 
@@ -127,6 +129,10 @@ func InitRoute(a *app.App, appCtx context.Context, e *echo.Echo, slackErrChan ch
 	insaniPrivateGroupingPath.GET("/pegawai-by-nik/:nik", pegawai.HandleGetPegawaiByNik(a))
 	insaniGroupingPath.GET("/pegawai-private", pegawai.HandleGetPegawaiPrivate(a, true))
 	insaniPrivateGroupingPath.GET("/pegawai-private", pegawai.HandleGetPegawaiPrivate(a, false))
+
+	// generate
+	generate := generate.Route{}
+	generate.Init(e, a)
 
 	// Testing
 	// insaniGroupingPath.GET("/testing", detailProfesi.HandleDetailProfesiByUUID(a))
