@@ -2,10 +2,13 @@ package usecase
 
 import (
 	"fmt"
+	"strconv"
 	"svc-insani-go/app"
+	"svc-insani-go/app/helper"
 	"svc-insani-go/modules/v1/generate/delivery/api"
 	"svc-insani-go/modules/v1/master-kelompok-pegawai/repo"
 	unitKerjaRepo "svc-insani-go/modules/v1/master-unit-kerja/repo"
+	pegawaiRepo "svc-insani-go/modules/v1/pegawai/repo"
 
 	"github.com/labstack/echo/v4"
 	"golang.org/x/net/context"
@@ -34,7 +37,35 @@ func (u *GenerateUsecaseImpl) GenerateNik(a *app.App, ctx context.Context, paylo
 		return "", echo.ErrBadRequest
 	}
 
-	return "23" + unitKerja.KdUnitKerja + kelompokPegawai.KdKelompokPegawai, nil
+	now, err := helper.DateNow()
+	if err != nil {
+		return "", fmt.Errorf("error validate generate nik read request: %s; ", err.Error())
+	}
+
+	tempNik := now.Format("06") + unitKerja.KdUnitKerja + kelompokPegawai.KdKelompokPegawai
+	counter, err := generateCounter(a, tempNik)
+	if err != nil {
+		return "", fmt.Errorf("error validate generate nik read request: %s; ", err.Error())
+	}
+
+	return tempNik + counter, nil
+}
+
+func generateCounter(a *app.App, tempNik string) (string, error) {
+	count, err := pegawaiRepo.CountNikPegawai(a, tempNik)
+	if err != nil {
+		return "", fmt.Errorf("error generate counter: %s; ", err.Error())
+	}
+
+	return doGenerateCounter(count), nil
+}
+
+func doGenerateCounter(count int) string {
+	if count < 10 {
+		return "0" + strconv.Itoa(count+1)
+	}
+
+	return strconv.Itoa(count)
 }
 
 func NewGenerateUsecase() GenerateUsecase {

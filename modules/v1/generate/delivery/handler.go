@@ -49,7 +49,10 @@ func (h *GenerateHandlerImpl) GenerateNik(a *app.App) echo.HandlerFunc {
 			return ctx.JSON(http.StatusInternalServerError, map[string]string{"message": "terjadi kesalahan pada server"})
 		}
 
-		return ctx.JSON(http.StatusOK, map[string]string{"data": nik})
+		return ctx.JSON(http.StatusOK, map[string]string{
+			"message": "berhasil mendapatkan nik",
+			"data":    nik,
+		})
 	}
 	return echo.HandlerFunc(f)
 }

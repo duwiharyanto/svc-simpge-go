@@ -186,6 +186,19 @@ func CountPegawai(a *app.App, req *model.PegawaiRequest) (int, error) {
 	return count, nil
 }
 
+func CountNikPegawai(a *app.App, keyword string) (int, error) {
+	var count int
+	err := a.DB.QueryRow("SELECT COUNT(*) FROM pegawai WHERE nik LIKE ?", keyword+"%").Scan(&count)
+	if err == sql.ErrNoRows {
+		return 0, nil
+	}
+	if err != nil {
+		return 0, fmt.Errorf("error querying count nik pegawai, %w", err)
+	}
+	fmt.Println("count: ", count)
+	return count, nil
+}
+
 func GetPegawaiByUUID(a *app.App, uuid string) (*model.Pegawai, error) {
 	sqlQuery := getPegawaiByUUID(uuid)
 	var pegawai model.Pegawai
