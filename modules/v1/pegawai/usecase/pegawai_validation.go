@@ -690,11 +690,11 @@ func ValidateCreatePegawai(a *app.App, c echo.Context) (model.PegawaiCreate, err
 		return model.PegawaiCreate{}, fmt.Errorf("kd_jenis_presensi tidak boleh kosong")
 	}
 
-	pegawai, err := pegawaiRepo.GetPegawaiByNIK(a, c.Request().Context(), pegawaiReq.Nik)
+	pegawai, err := pegawaiRepo.CountNikPegawai(a, pegawaiReq.Nik)
 	if err != nil {
 		return model.PegawaiCreate{}, fmt.Errorf("error from repo pegawai by  nik: %w", err)
 	}
-	if pegawai != nil {
+	if pegawai != 0 {
 		return model.PegawaiCreate{}, fmt.Errorf("nik %s telah digunakan", pegawaiReq.Nik)
 	}
 
