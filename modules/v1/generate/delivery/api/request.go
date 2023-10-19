@@ -7,8 +7,8 @@ import (
 )
 
 type GenerateNikReadRequest struct {
-	UuidKelompokPegawai string `json:"uuid_kelompok_pegawai" form:"uuid_kelompok_pegawai"`
-	UuidUnitPegawai     string `json:"uuid_unit_pegawai" form:"uuid_unit_pegawai"`
+	UuidKelompokPegawai string `json:"uuid_kelompok_pegawai" form:"uuid_kelompok_pegawai" query:"uuid_kelompok_pegawai"`
+	UuidUnitPegawai     string `json:"uuid_unit_pegawai" form:"uuid_unit_pegawai" query:"uuid_unit_pegawai"`
 }
 
 type GenerateRequest interface {

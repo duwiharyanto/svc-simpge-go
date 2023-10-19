@@ -27,6 +27,10 @@ func (h *GenerateHandlerImpl) GenerateNik(a *app.App) echo.HandlerFunc {
 	f := func(ctx echo.Context) error {
 		payload, err := h.Request.GetGenerateNikReadRequest(ctx)
 		if err != nil {
+			if errors.Is(err, echo.ErrBadRequest) {
+				return ctx.JSON(http.StatusBadRequest, map[string]string{"message": "masukan yang diberikan tidak valid"})
+			}
+			fmt.Printf("[ERROR] error get generate nik, %s\n", err.Error())
 			return ctx.JSON(http.StatusInternalServerError, map[string]string{"message": "terjadi kesalahan pada server"})
 		}
 
@@ -35,7 +39,7 @@ func (h *GenerateHandlerImpl) GenerateNik(a *app.App) echo.HandlerFunc {
 			if errors.Is(err, echo.ErrBadRequest) {
 				return ctx.JSON(http.StatusBadRequest, map[string]string{"message": "masukan yang diberikan tidak valid"})
 			}
-			fmt.Printf("[ERROR] error generate nik, %s\n", err.Error())
+			fmt.Printf("[ERROR] error validate generate nik, %s\n", err.Error())
 			return ctx.JSON(http.StatusInternalServerError, map[string]string{"message": "terjadi kesalahan pada server"})
 		}
 
