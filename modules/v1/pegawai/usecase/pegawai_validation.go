@@ -20,6 +20,7 @@ import (
 	statusPegawaiRepo "svc-insani-go/modules/v1/master-status-pegawai/repo"
 	"svc-insani-go/modules/v1/pegawai/model"
 	"svc-insani-go/modules/v1/pegawai/repo"
+	pegawaiRepo "svc-insani-go/modules/v1/pegawai/repo"
 	personalRepo "svc-insani-go/modules/v1/personal/repo"
 	"time"
 
@@ -687,6 +688,14 @@ func ValidateCreatePegawai(a *app.App, c echo.Context) (model.PegawaiCreate, err
 		return model.PegawaiCreate{}, fmt.Errorf("uuid_lokasi_kerja tidak boleh kosong")
 	case pegawaiReq.KdJenisPresensi == "":
 		return model.PegawaiCreate{}, fmt.Errorf("kd_jenis_presensi tidak boleh kosong")
+	}
+
+	pegawai, err := pegawaiRepo.CountNikPegawai(a, pegawaiReq.Nik)
+	if err != nil {
+		return model.PegawaiCreate{}, fmt.Errorf("error from repo pegawai by  nik: %w", err)
+	}
+	if pegawai != 0 {
+		return model.PegawaiCreate{}, fmt.Errorf("nik %s telah digunakan", pegawaiReq.Nik)
 	}
 
 	// Pengecekan Kelompok Pegawai

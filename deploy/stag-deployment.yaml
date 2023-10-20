@@ -2,16 +2,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: svc-insani-go
+  name: project-name
   labels:
-    svc: svc-insani-go
+    svc: project-name
     tier: backend
-  namespace: hcm-stag
+  namespace: namespaces
 spec:
   replicas: 1
   selector:
     matchLabels:
-      svc: svc-insani-go
+      svc: project-name
       tier: backend
   strategy:
     type: RollingUpdate
@@ -22,15 +22,15 @@ spec:
   template:
     metadata:
       labels:
-        svc: svc-insani-go
+        svc: project-name
         tier: backend
     spec:
       imagePullSecrets:
-        - name: gcr-uii-key
+        - name: harbor-uii-key
       containers:
-        - name: svc-insani-go
-          image: asia.gcr.io/uii-cloud-project/hcm/backend/svc-insani-go:stag
-          imagePullPolicy: Always
+        - name: project-name
+          image: images
+          imagePullPolicy: IfNotPresent
           resources:
             requests:
               cpu: 100m
@@ -93,16 +93,15 @@ spec:
               value: "http://svc-personal-go.hcm-stag.svc.cluster.local"
             - name: URL_HCM_TANGGUNGAN
               value: "http://svc-dependents-go.hcm-stag.svc.cluster.local/public/api/v1/tanggungan-private"
-
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: svc-insani-go
+  name: project-name
   labels:
-    svc: svc-insani-go
+    svc: project-name
     tier: backend
-  namespace: hcm-stag
+  namespace: namespaces
   annotations:
     getambassador.io/config: |
       ---
@@ -118,7 +117,7 @@ metadata:
         hostname: '*'
 spec:
   selector:
-    svc: svc-insani-go
+    svc: project-name
     tier: backend
   type: NodePort
   ports:
@@ -127,19 +126,25 @@ spec:
       targetPort: http-api
       protocol: TCP
 ---
-apiVersion: autoscaling/v1
+apiVersion: autoscaling/v2beta2
 kind: HorizontalPodAutoscaler
 metadata:
   labels:
-    svc: svc-insani-go
+    svc: project-name
     tier: backend
-  name: svc-insani-go
-  namespace: hcm-stag
+  name: project-name
+  namespace: namespaces
 spec:
-  maxReplicas: 2
   minReplicas: 1
+  maxReplicas: 1
+  metrics:
+    - resource:
+        name: cpu
+        target:
+          averageUtilization: 50
+          type: Utilization
+      type: Resource
   scaleTargetRef:
-    apiVersion: apps/v1beta1
+    apiVersion: apps/v1beta2
     kind: Deployment
-    name: svc-insani-go
-  targetCPUUtilizationPercentage: 50
+    name: project-name
