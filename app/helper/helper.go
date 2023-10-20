@@ -46,6 +46,15 @@ type DateInIndonesia struct {
 	FullDate []Date
 }
 
+func DateNow() (time.Time, error) {
+	loc, err := time.LoadLocation("Asia/Jakarta")
+	if err != nil {
+		return time.Now(), fmt.Errorf("error loading timezone: %s; ", err.Error())
+	}
+
+	return time.Now().In(loc), nil
+}
+
 func GetIndonesianMonth(format, date string) (int, string) {
 	t, _ := time.Parse(format, date)
 	month := t.Month()

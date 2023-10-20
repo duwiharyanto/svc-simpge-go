@@ -2,16 +2,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: svc-insani-go
+  name: project-name
   labels:
-    svc: svc-insani-go
+    svc: project-name
     tier: backend
-  namespace: hcm-dev
+  namespace: namespaces
 spec:
   replicas: 1
   selector:
     matchLabels:
-      svc: svc-insani-go
+      svc: project-name
       tier: backend
   strategy:
     type: RollingUpdate
@@ -22,15 +22,15 @@ spec:
   template:
     metadata:
       labels:
-        svc: svc-insani-go
+        svc: project-name
         tier: backend
     spec:
       imagePullSecrets:
-        - name: gcr-uii-key
+        - name: harbor-uii-key
       containers:
-        - name: svc-insani-go
-          image: asia.gcr.io/uii-cloud-project/hcm/backend/svc-insani-go:dev
-          imagePullPolicy: Always
+        - name: project-name
+          image: images
+          imagePullPolicy: IfNotPresent
           resources:
             requests:
               cpu: 100m
@@ -99,11 +99,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: svc-insani-go
+  name: project-name
   labels:
-    svc: svc-insani-go
+    svc: project-name
     tier: backend
-  namespace: hcm-dev
+  namespace: namespaces
   annotations:
     getambassador.io/config: |
       ---
@@ -119,7 +119,7 @@ metadata:
         hostname: '*'
 spec:
   selector:
-    svc: svc-insani-go
+    svc: project-name
     tier: backend
   type: NodePort
   ports:

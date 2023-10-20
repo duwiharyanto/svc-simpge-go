@@ -11,5 +11,5 @@ func getUnitKerjaByUUID(uuid string) string {
 }
 
 func getUnit2ByUUID(uuid string) string {
-	return fmt.Sprintf(`SELECT id, kd_unit2, nama_unit2, uuid FROM unit2 WHERE uuid = %q`, uuid)
+	return fmt.Sprintf(`SELECT id, kd_unit2, unit2, uuid FROM unit2 WHERE uuid = %q`, uuid)
 }

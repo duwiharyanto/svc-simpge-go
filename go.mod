@@ -12,6 +12,7 @@ require (
 	github.com/mitchellh/go-homedir v1.1.0 // indirect
 	github.com/openlyinc/pointy v1.1.2
 	github.com/smartystreets/goconvey v1.6.4 // indirect
+	golang.org/x/net v0.0.0-20210405180319-a5a99cb37ef4
 	gopkg.in/ini.v1 v1.62.0 // indirect
 	gorm.io/driver/mysql v1.1.1
 	gorm.io/gorm v1.21.12
