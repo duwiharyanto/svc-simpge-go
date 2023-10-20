@@ -29,7 +29,7 @@ func (u *GenerateUsecaseImpl) GenerateNik(a *app.App, ctx context.Context, paylo
 		return "", echo.ErrBadRequest
 	}
 
-	unitKerja, err := unitKerjaRepo.GetUnitKerjaByUUID(a, payload.UuidUnitPegawai)
+	unitKerja, err := unitKerjaRepo.GetUnit2ByUUID(a, payload.UuidUnitPegawai)
 	if err != nil {
 		return "", fmt.Errorf("error validate generate nik read request %s", err.Error())
 	}
@@ -42,7 +42,7 @@ func (u *GenerateUsecaseImpl) GenerateNik(a *app.App, ctx context.Context, paylo
 		return "", fmt.Errorf("error validate generate nik read request: %s; ", err.Error())
 	}
 
-	tempNik := now.Format("06") + unitKerja.KdUnitKerja + kelompokPegawai.KdKelompokPegawai
+	tempNik := now.Format("06") + unitKerja.KdUnit + kelompokPegawai.KdKelompokPegawai
 	counter, err := generateCounter(a, tempNik)
 	if err != nil {
 		return "", fmt.Errorf("error validate generate nik read request: %s; ", err.Error())

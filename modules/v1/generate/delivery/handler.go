@@ -76,7 +76,7 @@ func validateGenerateNikReadRequest(a *app.App, ctx context.Context, payload *ap
 	if payload.UuidUnitPegawai == "" {
 		return fmt.Errorf("uuid unit kerja wajib diisi")
 	}
-	unitKerja, err := unitKerjaRepo.GetUnitKerjaByUUID(a, payload.UuidUnitPegawai)
+	unitKerja, err := unitKerjaRepo.GetUnit2ByUUID(a, payload.UuidUnitPegawai)
 	if err != nil {
 		return fmt.Errorf("error validate generate nik read request %s", err.Error())
 	}
