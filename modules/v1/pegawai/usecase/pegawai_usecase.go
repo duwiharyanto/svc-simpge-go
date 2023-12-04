@@ -862,6 +862,9 @@ func HandleGetPegawaiPrivate(a *app.App, public bool) echo.HandlerFunc {
 			for _, tanggungan := range tanggunganResponse.Data {
 				// if data.IdPersonal == tanggungan.IdPersonal {
 				if strconv.FormatInt(int64(data.IdPersonal), 10) == tanggungan.IdPersonal {
+					data.IdStatusPernikahan = tanggungan.IdStatusPernikahan
+					data.KdStatusPernikahan = tanggungan.KdStatusPernikahan
+					data.StatusPernikahan = tanggungan.StatusPernikahan
 					data.IdStatusPernikahanPtkp = tanggungan.IdStatusPernikahanPtkp
 					data.KdStatusPernikahanPtkp = tanggungan.KdStatusPernikahanPtkp
 					data.StatusPernikahanPtkp = tanggungan.StatusPernikahanPtkp
