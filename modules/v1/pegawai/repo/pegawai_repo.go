@@ -83,6 +83,8 @@ func GetAllPegawaiPrivate(a *app.App, req *model.PegawaiPrivateRequest) ([]model
 			&p.IdPegawai,
 			&p.IdPersonal,
 			&p.Nama,
+			&p.GelarDepan,
+			&p.GelarBelakang,
 			&p.NIK,
 			&p.JenisPegawai,
 			&p.IdJenisPegawai,
