@@ -38,6 +38,8 @@ type PegawaiPrivate struct {
 	IdPegawai                  uint64 `json:"id_pegawai" gorm:"type:varchar;not null"`
 	IdPersonal                 uint64 `json:"id_personal_data_pribadi" gorm:"type:varchar;"`
 	Nama                       string `json:"nama" gorm:"type:varchar;not null"`
+	GelarDepan                 string `json:"gelar_depan" gorm:"type:varchar;not null"`
+	GelarBelakang              string `json:"gelar_belakang" gorm:"type:varchar;not null"`
 	NIK                        string `json:"nik" gorm:"type:varchar;not null"`
 	JenisPegawai               string `json:"jenis_pegawai" gorm:"type:varchar"`
 	IdJenisPegawai             uint64 `json:"id_jenis_pegawai" gorm:"type:varchar"`

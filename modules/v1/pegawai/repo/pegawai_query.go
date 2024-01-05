@@ -227,6 +227,8 @@ func getListAllPegawaiPrivateQuery(req *model.PegawaiPrivateRequest) string {
 	COALESCE(p.id,0) id_pegawai,
 	COALESCE(p.id_personal_data_pribadi,0),
 	p.nama,
+	COALESCE(p.gelar_depan,'') gelar_depan,
+	COALESCE(p.gelar_belakang,'') gelar_belakang,
 	p.nik,
 	COALESCE(jpeg.nama_jenis_pegawai,'') jenis_pegawai,
 	COALESCE(jpeg.id,0) id_jenis_pegawai,
