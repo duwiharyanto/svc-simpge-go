@@ -260,6 +260,7 @@ func GetPegawaiPribadi(a *app.App, uuid string) (*model.PegawaiPribadi, error) {
 		&pegawaiPribadi.KdStatusPendidikanMasuk,
 		&pegawaiPribadi.KdJenisPendidikan,
 		&pegawaiPribadi.UrlFileFoto,
+		&pegawaiPribadi.UuidPersonalDataPribadi,
 		&pegawaiPribadi.UserInput,
 		&pegawaiPribadi.UserUpdate,
 		&pegawaiPribadi.UUID,
