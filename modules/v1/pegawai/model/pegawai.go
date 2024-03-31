@@ -361,6 +361,38 @@ type PegawaiPrivateResponse struct {
 	Data []PegawaiPrivate `json:"data"`
 }
 
+type PegawaiPrivateAkademik struct {
+	Nama                       	string `json:"nama" gorm:"type:varchar;not null"`
+	GelarDepan                 	string `json:"gelar_depan" gorm:"type:varchar;not null"`
+	GelarBelakang              	string `json:"gelar_belakang" gorm:"type:varchar;not null"`
+	NIK                        	string `json:"nik" gorm:"type:varchar;not null"`
+	KdUnitSatu                 	string `json:"kd_unit1" gorm:"type:varchar"`
+	Fakultas                	string `json:"fakultas" gorm:"type:varchar"`
+	KdUnitDua                   string `json:"kd_unit2" gorm:"type:varchar"`
+	Prodi                 		string `json:"prodi" gorm:"type:varchar"`
+	JenisPegawai               string `json:"jenis_pegawai" gorm:"type:varchar"`
+	KdJenisPegawai             string `json:"kd_jenis_pegawai" gorm:"type:varchar"`
+	KelompokPegawai            string `json:"kelompok_pegawai" gorm:"type:varchar"`
+	KdKelompokPegawai          string `json:"kd_kelompok_pegawai" gorm:"type:varchar"`
+	JenisKelamin               string `json:"jenis_kelamin" gorm:"type:varchar"`
+	JabatanFungsionalYayasan   string `json:"jabatan_fungsional_yayasan" gorm:"type:varchar"`
+	KdJabatanFungsionalYayasan string `json:"kd_jabatan_fungsional_yayasan" gorm:"type:varchar"`
+	JabatanFungsionalNegara    string `json:"jabatan_fungsional_negara" gorm:"type:varchar"`
+	KdJabatanFungsionalNegara  string `json:"kd_jabatan_fungsional_negara" gorm:"type:varchar"`
+	KdLokasiKerja               string `json:"kd_lokasi_kerja" gorm:"type:varchar"`
+	LokasiKerja					string `json:"lokasi_kerja" gorm:"type:varchar"`
+}
+type PegawaiPrivateAkademikRequest struct {
+	Nik               string `query:"nik"`
+	Nama              string `query:"nama"`
+	// KdJenisPegawai    string `query:"kd_jenis_pegawai"`
+	// KdKelompokPegawai string `query:"kd_kelompok_pegawai"`
+	// KdIndukKerja      string `query:"kd_induk_kerja"`
+}
+type PegawaiPrivateAkademikResponse struct {
+	Data []PegawaiPrivateAkademik `json:"data"`
+}
+
 type PegawaiPribadi struct {
 	ID                 uint64 `json:"-"`
 	NIK                string `json:"nik"`

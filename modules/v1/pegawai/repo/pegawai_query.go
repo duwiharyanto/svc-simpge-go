@@ -343,6 +343,60 @@ func getListAllPegawaiPrivateQuery(req *model.PegawaiPrivateRequest) string {
 	WHERE p.flag_aktif=1 %s %s %s %s %s`, nikFilterQuery, namaFilterQuery, kdJenisPegawaiFilterQuery, kdKelompokFilterQuery, kdIndukKerjaFilterQuery)
 }
 
+func getListAllPegawaiPrivateAkademikQuery(req *model.PegawaiPrivateAkademikRequest) string {
+	var kdJenisPegawai string = "ED"
+	var nikFilterQuery string
+	if req.Nik != "" {
+		nikFilterQuery = fmt.Sprintf("AND p.nik IN (%s) ", req.Nik)
+	}
+	var namaFilterQuery string
+	if req.Nama != "" {
+		namaFilterQuery = fmt.Sprintf("AND p.nama like '%%%s%%' ", req.Nama)
+	}
+
+	return fmt.Sprintf(`SELECT
+	p.nama,
+	COALESCE(p.gelar_depan,'') gelar_depan,
+	COALESCE(p.gelar_belakang,'') gelar_belakang,
+	p.nik,
+	COALESCE(u1.kd_unit1,'') kd_unit1,
+	COALESCE(u1.unit1,'') fakultas,
+	COALESCE(u2.kd_unit2,'') kd_unit2,
+	COALESCE(u2.unit2,'') prodi,
+	COALESCE(jpeg.nama_jenis_pegawai,'') jenis_pegawai,
+	COALESCE(jpeg.kd_jenis_pegawai,''),
+	COALESCE(kp.kelompok_pegawai,''),
+	COALESCE(kp.kd_kelompok_pegawai,''),
+	COALESCE(p.jenis_kelamin,''),
+	COALESCE(jf.fungsional ,'') jabatan_fungsional_yayasan,
+	COALESCE(pf.kd_jabatan_fungsional,'') kd_jabatan_fungsional_yayasan,
+	COALESCE(jf2.fungsional ,'') jabatan_fungsional_negara,
+	COALESCE(pp.kd_jabatan_fungsional ,'') kd_jabatan_fungsional_negara,
+	COALESCE(lk.lokasi_kerja,'') kd_lokasi_kerja,
+	COALESCE(lk.lokasi_desc,'') lokasi_kerja
+	from
+	pegawai p
+	LEFT JOIN
+		jenis_pegawai jpeg ON p.kd_jenis_pegawai = jpeg.kd_jenis_pegawai
+	LEFT JOIN
+		kelompok_pegawai kp ON p.kd_kelompok_pegawai = kp.kd_kelompok_pegawai
+	LEFT JOIN
+		unit1 u1 ON p.kd_unit1 = u1.kd_unit1
+	LEFT JOIN
+		unit2 u2 ON p.kd_unit2  = u2.kd_unit2
+	LEFT JOIN
+		pegawai_pns pp on pp.id_pegawai = p.id
+	LEFT JOIN
+		pegawai_fungsional pf ON p.id = pf.id_pegawai
+	LEFT JOIN
+		jabatan_fungsional jf ON pf.id_jabatan_fungsional = jf.id
+	LEFT JOIN
+		jabatan_fungsional jf2 ON pp.id_jabatan_fungsional = jf2.id
+	LEFT JOIN
+		lokasi_kerja lk ON p.lokasi_kerja = lk.lokasi_kerja 
+	WHERE p.flag_aktif=1 AND jpeg.kd_jenis_pegawai='%s' %s %s`, kdJenisPegawai, nikFilterQuery,namaFilterQuery)
+}
+
 func countPegawaiQuery(req *model.PegawaiRequest) string {
 	var uuidJenisPegawaiFilterQuery string
 	if req.UuidJenisPegawai != "" {

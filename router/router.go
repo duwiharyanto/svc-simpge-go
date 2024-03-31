@@ -129,6 +129,8 @@ func InitRoute(a *app.App, appCtx context.Context, e *echo.Echo, slackErrChan ch
 	insaniPrivateGroupingPath.GET("/pegawai-by-nik/:nik", pegawai.HandleGetPegawaiByNik(a))
 	insaniGroupingPath.GET("/pegawai-private", pegawai.HandleGetPegawaiPrivate(a, true))
 	insaniPrivateGroupingPath.GET("/pegawai-private", pegawai.HandleGetPegawaiPrivate(a, false))
+	insaniGroupingPath.GET("/pegawai-private-akademik", pegawai.HandleGetPegawaiPrivateAkademik(a, true))
+	insaniPrivateGroupingPath.GET("/pegawai-private-akademik", pegawai.HandleGetPegawaiPrivateAkademik(a, false))
 
 	// generate
 	generate := generate.Route{}

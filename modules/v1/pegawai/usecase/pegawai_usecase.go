@@ -931,3 +931,44 @@ func GetDataTanggungan(public bool) (*model.TanggunganResponseBody, error) {
 
 	return data, nil
 }
+
+func HandleGetPegawaiPrivateAkademik(a *app.App, public bool) echo.HandlerFunc {
+	h := func(c echo.Context) error {
+		env := os.Getenv("ENV")
+		fmt.Println(env)
+		if public {
+			if env == "production" {
+				return c.JSON(404, "layanan tidak ditemukan")
+			}
+		}
+
+		reqNik := c.QueryParam("nik")
+		var nik string
+		if len(reqNik) > 0 {
+			nik = reqNik[:len(reqNik)-1]
+			nik = nik[1:]
+		}
+
+		req := &model.PegawaiPrivateAkademikRequest{}
+		err := c.Bind(req)
+		if err != nil {
+			fmt.Printf("[WARNING] binding pegawai request: %s\n", err.Error())
+		}
+
+		res := model.PegawaiPrivateAkademikResponse{
+			Data: []model.PegawaiPrivateAkademik{},
+		}
+		req.Nik = nik
+
+		pp, err := repo.GetAllPegawaiPrivateAkademik(a, req)
+		if err != nil {
+			log.Printf("[ERROR] repo get all pegawai private: %s\n", err.Error())
+			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Layanan sedang bermasalah"})
+		}
+		res.Data = pp
+		
+		return c.JSON(http.StatusOK, res)
+	}
+
+	return echo.HandlerFunc(h)
+}
