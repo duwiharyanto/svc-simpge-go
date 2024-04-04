@@ -355,25 +355,42 @@ func getListAllPegawaiPrivateAkademikQuery(req *model.PegawaiPrivateAkademikRequ
 	}
 
 	return fmt.Sprintf(`SELECT
+	p.nik,
+	COALESCE(pf.nidn,'') nidn,
 	p.nama,
 	COALESCE(p.gelar_depan,'') gelar_depan,
 	COALESCE(p.gelar_belakang,'') gelar_belakang,
-	p.nik,
-	COALESCE(u1.kd_unit1,'') kd_unit1,
+	COALESCE(pdp.tempat_lahir,'') tempat_lahir,
+	COALESCE(pdp.tgl_lahir,'') tgl_lahir,
 	COALESCE(u1.unit1,'') fakultas,
-	COALESCE(u2.kd_unit2,'') kd_unit2,
 	COALESCE(u2.unit2,'') prodi,
+	COALESCE(spa.kd_status,'') kd_status,
+	COALESCE(spa.status,'') status,
 	COALESCE(jpeg.nama_jenis_pegawai,'') jenis_pegawai,
 	COALESCE(jpeg.kd_jenis_pegawai,''),
 	COALESCE(kp.kelompok_pegawai,''),
 	COALESCE(kp.kd_kelompok_pegawai,''),
+	COALESCE(pgp.pangkat,'') pangkat,
+	COALESCE(pgp.golongan,'') golongan,
+	COALESCE(pf.tmt_pangkat_golongan,'') tmt_pangkat_golongan,
+	COALESCE(pa.alamat_lengkap,'') alamat,
+	COALESCE(p.kd_pendidikan_masuk,'') kd_pendidikan_masuk,
+	COALESCE(p.kd_pendidikan_terakhir,'') kd_pendidikan_terakhir,
 	COALESCE(p.jenis_kelamin,''),
-	COALESCE(jf.fungsional ,'') jabatan_fungsional_yayasan,
-	COALESCE(pf.kd_jabatan_fungsional,'') kd_jabatan_fungsional_yayasan,
-	COALESCE(jf2.fungsional ,'') jabatan_fungsional_negara,
+	COALESCE(pf.kd_jabatan_fungsional,'') kd_jabatan_fungsional,
+	COALESCE(jf.fungsional ,'') jabatan_fungsional,
+	COALESCE(pf.tmt_jabatan ,'') tmt_fungsional,
 	COALESCE(pp.kd_jabatan_fungsional ,'') kd_jabatan_fungsional_negara,
+	COALESCE(jf2.fungsional ,'') jabatan_fungsional_negara,
+	COALESCE(u1.kd_unit1,'') kd_unit1,
+	COALESCE(u1.unit1,'') unit_1,
+	COALESCE(u2.kd_unit2,'') kd_unit2,
+	COALESCE(u2.unit2,'') unit_2,
 	COALESCE(lk.lokasi_kerja,'') kd_lokasi_kerja,
-	COALESCE(lk.lokasi_desc,'') lokasi_kerja
+	COALESCE(lk.lokasi_desc,'') lokasi_kerja,
+	COALESCE(pf.nomor_sk_pertama,'') nomor_sk_pertama,
+	COALESCE(pf.tmt_sk_pertama,'') tmt_sk_pertama,
+	COALESCE(pk.no_hp,'') nomor_telepon
 	from
 	pegawai p
 	LEFT JOIN
@@ -394,6 +411,16 @@ func getListAllPegawaiPrivateAkademikQuery(req *model.PegawaiPrivateAkademikRequ
 		jabatan_fungsional jf2 ON pp.id_jabatan_fungsional = jf2.id
 	LEFT JOIN
 		lokasi_kerja lk ON p.lokasi_kerja = lk.lokasi_kerja 
+	LEFT JOIN
+		personal_data_pribadi_hcm_tanggungan pdp ON p.id_personal_data_pribadi = pdp.id
+	LEFT JOIN
+		status_pegawai_aktif spa ON spa.kd_status = pf.kd_status_pegawai_aktif
+	LEFT JOIN
+		pangkat_golongan_pegawai pgp ON pgp.id = pf.id_pangkat_golongan
+	LEFT JOIN
+		hcm_personal.personal_alamat pa ON pdp.id = pa.id_personal_data_pribadi
+	LEFT JOIN
+		hcm_personal.personal_kontak pk ON pdp.id = pk.id_personal_data_pribadi
 	WHERE p.flag_aktif=1 AND jpeg.kd_jenis_pegawai='%s' %s %s`, kdJenisPegawai, nikFilterQuery,namaFilterQuery)
 }
 
