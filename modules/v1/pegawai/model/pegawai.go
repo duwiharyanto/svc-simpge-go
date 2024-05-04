@@ -389,6 +389,8 @@ type PegawaiPrivateAkademik struct {
 	TmtFungsional   string `json:"tmt_fungsional" gorm:"type:varchar"`
 	KdJabatanFungsionalNegara  string `json:"kd_jabatan_fungsional_negara" gorm:"type:varchar"`
 	JabatanFungsionalNegara    string `json:"jabatan_fungsional_negara" gorm:"type:varchar"`
+	JabatanStruktural    string `json:"jabatan_struktural" gorm:"type:varchar"`
+	TmtStruktural   string `json:"tmt_struktural" gorm:"type:varchar"`
 	KdUnitSatu                 	string `json:"kd_unit1" gorm:"type:varchar"`
 	UnitSatu                 	string `json:"unit_1" gorm:"type:varchar"`
 	KdUnitDua                   string `json:"kd_unit2" gorm:"type:varchar"`

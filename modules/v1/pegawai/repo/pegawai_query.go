@@ -382,6 +382,8 @@ func getListAllPegawaiPrivateAkademikQuery(req *model.PegawaiPrivateAkademikRequ
 	COALESCE(pf.tmt_jabatan ,'') tmt_fungsional,
 	COALESCE(pp.kd_jabatan_fungsional ,'') kd_jabatan_fungsional_negara,
 	COALESCE(jf2.fungsional ,'') jabatan_fungsional_negara,
+	COALESCE(po.nama_jabatan ,'') jabatan_struktural,
+	COALESCE(sk.tmt_surat_keputusan ,'') tmt_struktural,
 	COALESCE(u1.kd_unit1,'') kd_unit1,
 	COALESCE(u1.unit1,'') unit_1,
 	COALESCE(u2.kd_unit2,'') kd_unit2,
@@ -421,6 +423,12 @@ func getListAllPegawaiPrivateAkademikQuery(req *model.PegawaiPrivateAkademikRequ
 		hcm_personal.personal_alamat pa ON pdp.id = pa.id_personal_data_pribadi
 	LEFT JOIN
 		hcm_personal.personal_kontak pk ON pdp.id = pk.id_personal_data_pribadi
+	LEFT JOIN
+		pejabat_struktural pj on pj.id_pegawai = p.id
+	LEFT JOIN
+		pejabat_organisasi po on po.id = pj.id_pejabat_organisasi
+	LEFT JOIN
+		surat_keputusan sk on sk.id = po.id_surat_keputusan
 	WHERE p.flag_aktif=1 AND jpeg.kd_jenis_pegawai='%s' %s %s`, kdJenisPegawai, nikFilterQuery,namaFilterQuery)
 }
 

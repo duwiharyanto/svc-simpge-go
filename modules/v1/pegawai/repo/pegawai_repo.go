@@ -214,6 +214,8 @@ func GetAllPegawaiPrivateAkademik(a *app.App, req *model.PegawaiPrivateAkademikR
 			&p.TmtFungsional,
 			&p.KdJabatanFungsionalNegara,
 			&p.JabatanFungsionalNegara,
+			&p.JabatanStruktural,
+			&p.TmtStruktural,
 			&p.KdUnitSatu,
 			&p.UnitSatu,
 			&p.KdUnitDua,
