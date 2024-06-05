@@ -343,6 +343,95 @@ func getListAllPegawaiPrivateQuery(req *model.PegawaiPrivateRequest) string {
 	WHERE p.flag_aktif=1 %s %s %s %s %s`, nikFilterQuery, namaFilterQuery, kdJenisPegawaiFilterQuery, kdKelompokFilterQuery, kdIndukKerjaFilterQuery)
 }
 
+func getListAllPegawaiPrivateAkademikQuery(req *model.PegawaiPrivateAkademikRequest) string {
+	var kdJenisPegawai string = "ED"
+	var nikFilterQuery string
+	if req.Nik != "" {
+		nikFilterQuery = fmt.Sprintf("AND p.nik IN (%s) ", req.Nik)
+	}
+	var namaFilterQuery string
+	if req.Nama != "" {
+		namaFilterQuery = fmt.Sprintf("AND p.nama like '%%%s%%' ", req.Nama)
+	}
+
+	return fmt.Sprintf(`SELECT
+	p.nik,
+	COALESCE(pf.nidn,'') nidn,
+	p.nama,
+	COALESCE(p.gelar_depan,'') gelar_depan,
+	COALESCE(p.gelar_belakang,'') gelar_belakang,
+	COALESCE(pdp.tempat_lahir,'') tempat_lahir,
+	COALESCE(pdp.tgl_lahir,'') tgl_lahir,
+	COALESCE(u1.unit1,'') fakultas,
+	COALESCE(u2.unit2,'') prodi,
+	COALESCE(spa.kd_status,'') kd_status,
+	COALESCE(spa.status,'') status,
+	COALESCE(jpeg.nama_jenis_pegawai,'') jenis_pegawai,
+	COALESCE(jpeg.kd_jenis_pegawai,''),
+	COALESCE(kp.kelompok_pegawai,''),
+	COALESCE(kp.kd_kelompok_pegawai,''),
+	COALESCE(pgp.pangkat,'') pangkat,
+	COALESCE(pgp.golongan,'') golongan,
+	COALESCE(pf.tmt_pangkat_golongan,'') tmt_pangkat_golongan,
+	COALESCE(pa.alamat_lengkap,'') alamat,
+	COALESCE(p.kd_pendidikan_masuk,'') kd_pendidikan_masuk,
+	COALESCE(p.kd_pendidikan_terakhir,'') kd_pendidikan_terakhir,
+	COALESCE(p.jenis_kelamin,''),
+	COALESCE(pf.kd_jabatan_fungsional,'') kd_jabatan_fungsional,
+	COALESCE(jf.fungsional ,'') jabatan_fungsional,
+	COALESCE(pf.tmt_jabatan ,'') tmt_fungsional,
+	COALESCE(pp.kd_jabatan_fungsional ,'') kd_jabatan_fungsional_negara,
+	COALESCE(jf2.fungsional ,'') jabatan_fungsional_negara,
+	COALESCE(po.nama_jabatan ,'') jabatan_struktural,
+	COALESCE(sk.tmt_surat_keputusan ,'') tmt_struktural,
+	COALESCE(u1.kd_unit1,'') kd_unit1,
+	COALESCE(u1.unit1,'') unit_1,
+	COALESCE(u2.kd_unit2,'') kd_unit2,
+	COALESCE(u2.unit2,'') unit_2,
+	COALESCE(lk.lokasi_kerja,'') kd_lokasi_kerja,
+	COALESCE(lk.lokasi_desc,'') lokasi_kerja,
+	COALESCE(pf.nomor_sk_pertama,'') nomor_sk_pertama,
+	COALESCE(pf.tmt_sk_pertama,'') tmt_sk_pertama,
+	COALESCE(pk.no_hp,'') nomor_telepon
+	from
+	pegawai p
+	LEFT JOIN
+		jenis_pegawai jpeg ON p.kd_jenis_pegawai = jpeg.kd_jenis_pegawai
+	LEFT JOIN
+		kelompok_pegawai kp ON p.kd_kelompok_pegawai = kp.kd_kelompok_pegawai
+	LEFT JOIN
+		unit1 u1 ON p.kd_unit1 = u1.kd_unit1
+	LEFT JOIN
+		unit2 u2 ON p.kd_unit2  = u2.kd_unit2
+	LEFT JOIN
+		pegawai_pns pp on pp.id_pegawai = p.id
+	LEFT JOIN
+		pegawai_fungsional pf ON p.id = pf.id_pegawai
+	LEFT JOIN
+		jabatan_fungsional jf ON pf.id_jabatan_fungsional = jf.id
+	LEFT JOIN
+		jabatan_fungsional jf2 ON pp.id_jabatan_fungsional = jf2.id
+	LEFT JOIN
+		lokasi_kerja lk ON p.lokasi_kerja = lk.lokasi_kerja 
+	LEFT JOIN
+		personal_data_pribadi_hcm_tanggungan pdp ON p.id_personal_data_pribadi = pdp.id
+	LEFT JOIN
+		status_pegawai_aktif spa ON spa.kd_status = pf.kd_status_pegawai_aktif
+	LEFT JOIN
+		pangkat_golongan_pegawai pgp ON pgp.id = pf.id_pangkat_golongan
+	LEFT JOIN
+		hcm_personal.personal_alamat pa ON pdp.id = pa.id_personal_data_pribadi
+	LEFT JOIN
+		hcm_personal.personal_kontak pk ON pdp.id = pk.id_personal_data_pribadi
+	LEFT JOIN
+		pejabat_struktural pj on pj.id_pegawai = p.id
+	LEFT JOIN
+		pejabat_organisasi po on po.id = pj.id_pejabat_organisasi
+	LEFT JOIN
+		surat_keputusan sk on sk.id = po.id_surat_keputusan
+	WHERE p.flag_aktif=1 AND jpeg.kd_jenis_pegawai='%s' %s %s`, kdJenisPegawai, nikFilterQuery,namaFilterQuery)
+}
+
 func countPegawaiQuery(req *model.PegawaiRequest) string {
 	var uuidJenisPegawaiFilterQuery string
 	if req.UuidJenisPegawai != "" {
