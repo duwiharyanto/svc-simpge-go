@@ -361,6 +361,57 @@ type PegawaiPrivateResponse struct {
 	Data []PegawaiPrivate `json:"data"`
 }
 
+type PegawaiPrivateAkademik struct {
+	NIK                        	string `json:"nik" gorm:"type:varchar;not null"`
+	Nidn                     	string `json:"nidn" gorm:"type:varchar`
+	Nama                       	string `json:"nama" gorm:"type:varchar;not null"`
+	GelarDepan                 	string `json:"gelar_depan" gorm:"type:varchar;not null"`
+	GelarBelakang              	string `json:"gelar_belakang" gorm:"type:varchar;not null"`
+	TempatLahir                 string `json:"tempat_lahir" gorm:"type:varchar"`
+	TanggalLahir                 string `json:"tgl_lahir" gorm:"type:varchar"`
+	Fakultas                	string `json:"fakultas" gorm:"type:varchar"`
+	Prodi                 		string `json:"prodi" gorm:"type:varchar"`
+	KdStatus                 		string `json:"kd_status" gorm:"type:varchar"`
+	Status                 		string `json:"status" gorm:"type:varchar"`
+	JenisPegawai               string `json:"jenis_pegawai" gorm:"type:varchar"`
+	KdJenisPegawai             string `json:"kd_jenis_pegawai" gorm:"type:varchar"`
+	KelompokPegawai            string `json:"kelompok_pegawai" gorm:"type:varchar"`
+	KdKelompokPegawai          string `json:"kd_kelompok_pegawai" gorm:"type:varchar"`
+	Pangkat          string `json:"pangkat" gorm:"type:varchar"`
+	KdPendidikanMasuk          string `json:"kd_pendidikan_masuk" gorm:"type:varchar"`
+	KdPendidikanTerakhir          string `json:"kd_pendidikan_terakhir" gorm:"type:varchar"`
+	Golongan          string `json:"golongan" gorm:"type:varchar"`
+	TmtPangkat          string `json:"tmt_pangkat_golongan" gorm:"type:varchar"`
+	Alamat          string `json:"alamat" gorm:"type:varchar"`
+	JenisKelamin               string `json:"jenis_kelamin" gorm:"type:varchar"`
+	KdJabatanFungsional string `json:"kd_jabatan_fungsional" gorm:"type:varchar"`
+	JabatanFungsional   string `json:"jabatan_fungsional" gorm:"type:varchar"`
+	TmtFungsional   string `json:"tmt_fungsional" gorm:"type:varchar"`
+	KdJabatanFungsionalNegara  string `json:"kd_jabatan_fungsional_negara" gorm:"type:varchar"`
+	JabatanFungsionalNegara    string `json:"jabatan_fungsional_negara" gorm:"type:varchar"`
+	JabatanStruktural    string `json:"jabatan_struktural" gorm:"type:varchar"`
+	TmtStruktural   string `json:"tmt_struktural" gorm:"type:varchar"`
+	KdUnitSatu                 	string `json:"kd_unit1" gorm:"type:varchar"`
+	UnitSatu                 	string `json:"unit_1" gorm:"type:varchar"`
+	KdUnitDua                   string `json:"kd_unit2" gorm:"type:varchar"`
+	UnitDua                   string `json:"unit_2" gorm:"type:varchar"`
+	KdLokasiKerja               string `json:"kd_lokasi_kerja" gorm:"type:varchar"`
+	LokasiKerja					string `json:"lokasi_kerja" gorm:"type:varchar"`
+	NomorSkPertama					string `json:"nomor_sk_pertama" gorm:"type:varchar"`
+	TmtSkPertama					string `json:"tmt_sk_pertama" gorm:"type:varchar"`
+	NomorTelepon					string `json:"nomor_telepon" gorm:"type:varchar"`
+}
+type PegawaiPrivateAkademikRequest struct {
+	Nik               string `query:"nik"`
+	Nama              string `query:"nama"`
+	// KdJenisPegawai    string `query:"kd_jenis_pegawai"`
+	// KdKelompokPegawai string `query:"kd_kelompok_pegawai"`
+	// KdIndukKerja      string `query:"kd_induk_kerja"`
+}
+type PegawaiPrivateAkademikResponse struct {
+	Data []PegawaiPrivateAkademik `json:"data"`
+}
+
 type PegawaiPribadi struct {
 	ID                 uint64 `json:"-"`
 	NIK                string `json:"nik"`

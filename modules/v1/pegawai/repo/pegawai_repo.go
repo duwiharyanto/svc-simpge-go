@@ -174,6 +174,74 @@ func GetAllPegawaiPrivate(a *app.App, req *model.PegawaiPrivateRequest) ([]model
 	return pp, nil
 }
 
+func GetAllPegawaiPrivateAkademik(a *app.App, req *model.PegawaiPrivateAkademikRequest) ([]model.PegawaiPrivateAkademik, error) {
+	sqlQuery := getListAllPegawaiPrivateAkademikQuery(req)
+	// fmt.Println(sqlQuery)
+	rows, err := a.DB.Query(sqlQuery)
+	if err != nil {
+		return nil, fmt.Errorf("error querying get pegawai, %w", err)
+	}
+	defer rows.Close()
+
+	pp := []model.PegawaiPrivateAkademik{}
+	for rows.Next() {
+		var p model.PegawaiPrivateAkademik
+		err := rows.Scan(
+			&p.NIK,
+			&p.Nidn,
+			&p.Nama,
+			&p.GelarDepan,
+			&p.GelarBelakang,
+			&p.TempatLahir,
+			&p.TanggalLahir,
+			&p.Fakultas,
+			&p.Prodi,
+			&p.KdStatus,
+			&p.Status,
+			&p.JenisPegawai,
+			&p.KdJenisPegawai,
+			&p.KelompokPegawai,
+			&p.KdKelompokPegawai,
+			&p.Pangkat,
+			&p.Golongan,
+			&p.TmtPangkat,
+			&p.Alamat,
+			&p.KdPendidikanMasuk,
+			&p.KdPendidikanTerakhir,
+			&p.JenisKelamin,
+			&p.KdJabatanFungsional,
+			&p.JabatanFungsional,
+			&p.TmtFungsional,
+			&p.KdJabatanFungsionalNegara,
+			&p.JabatanFungsionalNegara,
+			&p.JabatanStruktural,
+			&p.TmtStruktural,
+			&p.KdUnitSatu,
+			&p.UnitSatu,
+			&p.KdUnitDua,
+			&p.UnitDua,
+			&p.KdLokasiKerja,
+			&p.LokasiKerja,
+			&p.NomorSkPertama,
+			&p.TmtSkPertama,
+			&p.NomorTelepon,
+
+		)
+
+		if err != nil {
+			return nil, fmt.Errorf("error scan pegawai row, %s", err.Error())
+		}
+
+		pp = append(pp, p)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("error pegawai rows, %s", err.Error())
+	}
+
+	return pp, nil
+}
+
 func CountPegawai(a *app.App, req *model.PegawaiRequest) (int, error) {
 	sqlQuery := countPegawaiQuery(req)
 	var count int
