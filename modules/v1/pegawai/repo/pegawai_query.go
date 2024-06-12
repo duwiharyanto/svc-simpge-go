@@ -429,7 +429,7 @@ func getListAllPegawaiPrivateAkademikQuery(req *model.PegawaiPrivateAkademikRequ
 		pejabat_organisasi po on po.id = pj.id_pejabat_organisasi
 	LEFT JOIN
 		surat_keputusan sk on sk.id = po.id_surat_keputusan
-	WHERE p.flag_aktif=1 AND jpeg.kd_jenis_pegawai='%s' %s %s`, kdJenisPegawai, nikFilterQuery,namaFilterQuery)
+	WHERE p.flag_aktif=1 AND pa.flag_aktif=1 AND pa.kd_jenis_alamat in ('DOM',1) AND pk.flag_aktif=1 AND jpeg.kd_jenis_pegawai='%s' %s %s`, kdJenisPegawai, nikFilterQuery,namaFilterQuery)
 }
 
 func countPegawaiQuery(req *model.PegawaiRequest) string {
