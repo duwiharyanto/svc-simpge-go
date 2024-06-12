@@ -420,16 +420,16 @@ func getListAllPegawaiPrivateAkademikQuery(req *model.PegawaiPrivateAkademikRequ
 	LEFT JOIN
 		pangkat_golongan_pegawai pgp ON pgp.id = pf.id_pangkat_golongan
 	LEFT JOIN
-		hcm_personal.personal_alamat pa ON pdp.id = pa.id_personal_data_pribadi
+		personal_alamat pa ON pdp.id = pa.id_personal_data_pribadi
 	LEFT JOIN
-		hcm_personal.personal_kontak pk ON pdp.id = pk.id_personal_data_pribadi
+		personal_kontak pk ON pdp.id = pk.id_personal_data_pribadi
 	LEFT JOIN
 		pejabat_struktural pj on pj.id_pegawai = p.id
 	LEFT JOIN
 		pejabat_organisasi po on po.id = pj.id_pejabat_organisasi
 	LEFT JOIN
 		surat_keputusan sk on sk.id = po.id_surat_keputusan
-	WHERE p.flag_aktif=1 AND jpeg.kd_jenis_pegawai='%s' %s %s`, kdJenisPegawai, nikFilterQuery,namaFilterQuery)
+	WHERE p.flag_aktif=1 AND pa.flag_aktif=1 AND pa.kd_jenis_alamat in ('DOM',1) AND pk.flag_aktif=1 AND jpeg.kd_jenis_pegawai='%s' %s %s`, kdJenisPegawai, nikFilterQuery,namaFilterQuery)
 }
 
 func countPegawaiQuery(req *model.PegawaiRequest) string {
