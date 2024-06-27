@@ -278,6 +278,8 @@ func getListAllPegawaiPrivateQuery(req *model.PegawaiPrivateRequest) string {
 	COALESCE(p.id_pendidikan_masuk,0) id_jenjang_pendidikan,
 	COALESCE(p.kd_pendidikan_masuk,'') kd_jenjang_pendidikan,
 	COALESCE(p.kd_pendidikan_masuk,'') jenjang_pendidikan,
+	COALESCE(p.kd_pendidikan_diakui,'') kd_jenjang_pendidikan_diakui,
+	COALESCE(p.kd_pendidikan_diakui,'') jenjang_pendidikan_diakui,
 	COALESCE(pf.tmt_sk_pertama,'') tmt_sk_pertama,
 	COALESCE(pf.masa_kerja_bawaan_tahun,'') masa_kerja_bawaan_tahun,
 	COALESCE(pf.masa_kerja_bawaan_bulan,'') masa_kerja_bawaan_bulan,
