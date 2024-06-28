@@ -375,7 +375,7 @@ func getListAllPegawaiPrivateAkademikQuery(req *model.PegawaiPrivateAkademikRequ
 	COALESCE(pgp.pangkat,'') pangkat,
 	COALESCE(pgp.golongan,'') golongan,
 	COALESCE(pf.tmt_pangkat_golongan,'') tmt_pangkat_golongan,
-	COALESCE(pa.alamat_lengkap,'') alamat,
+	COALESCE((SELECT pa.alamat_lengkap from personal_alamat pa WHERE pa.id_personal_data_pribadi = p.id_personal_data_pribadi AND pa.flag_aktif = 1 AND pa.kd_jenis_alamat in ('DOM',1)),'') alamat_lengkap,
 	COALESCE(p.kd_pendidikan_masuk,'') kd_pendidikan_masuk,
 	COALESCE(p.kd_pendidikan_terakhir,'') kd_pendidikan_terakhir,
 	COALESCE(p.jenis_kelamin,''),
@@ -394,7 +394,7 @@ func getListAllPegawaiPrivateAkademikQuery(req *model.PegawaiPrivateAkademikRequ
 	COALESCE(lk.lokasi_desc,'') lokasi_kerja,
 	COALESCE(pf.nomor_sk_pertama,'') nomor_sk_pertama,
 	COALESCE(pf.tmt_sk_pertama,'') tmt_sk_pertama,
-	COALESCE(pk.no_hp,'') nomor_telepon
+	COALESCE((SELECT pk.no_hp from personal_kontak pk WHERE pk.id_personal_data_pribadi = p.id_personal_data_pribadi AND pk.flag_aktif = 1),'') nomor_telepon
 	from
 	pegawai p
 	LEFT JOIN
@@ -422,16 +422,12 @@ func getListAllPegawaiPrivateAkademikQuery(req *model.PegawaiPrivateAkademikRequ
 	LEFT JOIN
 		pangkat_golongan_pegawai pgp ON pgp.id = pf.id_pangkat_golongan
 	LEFT JOIN
-		personal_alamat pa ON pdp.id = pa.id_personal_data_pribadi
-	LEFT JOIN
-		personal_kontak pk ON pdp.id = pk.id_personal_data_pribadi
-	LEFT JOIN
 		pejabat_struktural pj on pj.id_pegawai = p.id
 	LEFT JOIN
 		pejabat_organisasi po on po.id = pj.id_pejabat_organisasi
 	LEFT JOIN
 		surat_keputusan sk on sk.id = po.id_surat_keputusan
-	WHERE p.flag_aktif=1 AND pa.flag_aktif=1 AND pa.kd_jenis_alamat in ('DOM',1) AND pk.flag_aktif=1 AND jpeg.kd_jenis_pegawai='%s' %s %s`, kdJenisPegawai, nikFilterQuery,namaFilterQuery)
+	WHERE p.flag_aktif=1 AND jpeg.kd_jenis_pegawai='%s' %s %s`, kdJenisPegawai, nikFilterQuery,namaFilterQuery)
 }
 
 func countPegawaiQuery(req *model.PegawaiRequest) string {
