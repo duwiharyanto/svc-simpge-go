@@ -161,6 +161,10 @@ func GetAllPegawaiPrivate(a *app.App, req *model.PegawaiPrivateRequest) ([]model
 			&p.FlagSuamiIstriSekantor,
 			&p.IsFungsional,
 			&p.IsStruktural,
+			&p.JumlahKeluargaDitanggung,
+			&p.JumlahAnakDitanggung,
+			&p.JumlahKeluargaDitanggungPtkp,
+			&p.JumlahAnakDitanggungPtkp,
 		)
 		if err != nil {
 			return nil, fmt.Errorf("error scan pegawai row, %s", err.Error())

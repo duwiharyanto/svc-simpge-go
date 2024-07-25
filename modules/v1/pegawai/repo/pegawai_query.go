@@ -297,7 +297,11 @@ func getListAllPegawaiPrivateQuery(req *model.PegawaiPrivateRequest) string {
 	COALESCE(p.flag_meninggal,0),
 	COALESCE((SELECT DISTINCT phk.flag_sekantor from personal_hubungan_keluarga phk WHERE phk.id_personal_data_pribadi = p.id_personal_data_pribadi AND phk.kd_hubungan_keluarga in ('SUA','IST') AND phk.flag_aktif = 1),0) flag_suami_istri_sekantor,
 	COALESCE((CASE WHEN pf.id_jabatan_fungsional != '' OR pp.id_jabatan_fungsional != '' THEN 1 END ),0) is_fungsional,
-	COALESCE((CASE WHEN (SELECT COUNT(*) from pejabat_organisasi po JOIN unit u ON u.id = po.id_unit WHERE po.id_pegawai = p.id AND po.flag_aktif =1) != 0 THEN 1 END ),0) is_struktural
+	COALESCE((CASE WHEN (SELECT COUNT(*) from pejabat_organisasi po JOIN unit u ON u.id = po.id_unit WHERE po.id_pegawai = p.id AND po.flag_aktif =1) != 0 THEN 1 END ),0) is_struktural,
+	COALESCE(to2.jumlah_keluarga,'') jumlah_keluarga_ditanggung,
+	COALESCE(to2.jumlah_anak ,'') jumlah_anak_ditanggung,
+	COALESCE(to2.jumlah_ditanggung_ptkp  ,'') jumlah_keluarga_ditanggung_ptkp,
+	COALESCE(0 ,0) jumlah_anak_ditanggung_ptkp
 	from
 	pegawai p
 	LEFT JOIN
@@ -342,6 +346,8 @@ func getListAllPegawaiPrivateQuery(req *model.PegawaiPrivateRequest) string {
 		bidang b ON pf.id_bidang = b.id
 	LEFT JOIN
 		sub_bidang sb ON pf.id_sub_bidang = sb.id
+	LEFT JOIN
+		tanggungan_oracle to2 on to2.nik = p.nik 
 	WHERE p.flag_aktif=1 %s %s %s %s %s`, nikFilterQuery, namaFilterQuery, kdJenisPegawaiFilterQuery, kdKelompokFilterQuery, kdIndukKerjaFilterQuery)
 }
 

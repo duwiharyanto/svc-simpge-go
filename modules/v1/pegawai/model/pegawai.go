@@ -119,10 +119,6 @@ type PegawaiPrivate struct {
 	StatusPernikahanPtkp          string                                              `json:"status_pernikahan_ptkp" gorm:"type:varchar"`
 	NikSuamiIstri                 string                                              `json:"nik_suami_istri" gorm:"type:varchar"`
 	NikKtp                        string                                              `json:"nik_ktp" gorm:"type:varchar"`
-	JumlahKeluargaDitanggung      int                                                 `json:"jumlah_keluarga_ditanggung" gorm:"type:varchar"`
-	JumlahAnakDitanggung          int                                                 `json:"jumlah_anak_ditanggung" gorm:"type:varchar"`
-	JumlahKeluargaDitanggungPtkp  int                                                 `json:"jumlah_keluarga_ditanggung_ptkp" gorm:"type:varchar"`
-	JumlahAnakDitanggungPtkp      int                                                 `json:"jumlah_anak_ditanggung_ptkp" gorm:"type:varchar"`
 	FlagKlaimTanggungan           int                                                 `json:"flag_klaim_tanggungan" gorm:"type:varchar"`
 	// DetailTanggunganKeluarga      []DetailTanggunganKeluarga                          `json:"data_tanggungan_keluarga"`
 	// DetailTanggunganPtkp          []DetailTanggunganPtkp                              `json:"data_tanggungan_ptkp"`
@@ -131,6 +127,10 @@ type PegawaiPrivate struct {
 	FlagSuamiIstriSekantor int `json:"flag_suami_istri_sekantor" gorm:"type:varchar"`
 	IsFungsional           int `json:"is_fungsional" gorm:"type:varchar"`
 	IsStruktural           int `json:"is_struktural" gorm:"type:varchar"`
+	JumlahKeluargaDitanggung      int                                                 `json:"jumlah_keluarga_ditanggung" gorm:"type:varchar"`
+	JumlahAnakDitanggung          int                                                 `json:"jumlah_anak_ditanggung" gorm:"type:varchar"`
+	JumlahKeluargaDitanggungPtkp  int                                                 `json:"jumlah_keluarga_ditanggung_ptkp" gorm:"type:varchar"`
+	JumlahAnakDitanggungPtkp      int                                                 `json:"jumlah_anak_ditanggung_ptkp" gorm:"type:varchar"`
 }
 
 type PegawaiKontrakPrivate struct {
