@@ -66,8 +66,7 @@ func GetAllPegawai(a *app.App, req *model.PegawaiRequest) ([]model.Pegawai, erro
 
 	return pp, nil
 }
-
-func GetAllPegawaiPrivate(a *app.App, req *model.PegawaiPrivateRequest) ([]model.PegawaiPrivate, error) {
+func GetAllPegawaiPrivateSatu(a *app.App, req *model.PegawaiPrivateRequest) ([]model.PegawaiPrivate, error) {
 	sqlQuery := getListAllPegawaiPrivateQuery(req)
 	// fmt.Println(sqlQuery)
 	rows, err := a.DB.Query(sqlQuery)
@@ -161,6 +160,121 @@ func GetAllPegawaiPrivate(a *app.App, req *model.PegawaiPrivateRequest) ([]model
 			&p.FlagSuamiIstriSekantor,
 			&p.IsFungsional,
 			&p.IsStruktural,
+		)
+		if err != nil {
+			return nil, fmt.Errorf("error scan pegawai row, %s", err.Error())
+		}
+
+		pp = append(pp, p)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("error pegawai rows, %s", err.Error())
+	}
+
+	return pp, nil
+}
+
+
+func GetAllPegawaiPrivate(a *app.App, req *model.PegawaiPrivateRequest) ([]model.PegawaiPrivate, error) {
+	sqlQuery := getListAllPegawaiPrivateQuery(req)
+	// fmt.Println(sqlQuery)
+	rows, err := a.DB.Query(sqlQuery)
+	if err != nil {
+		return nil, fmt.Errorf("error querying get pegawai, %w", err)
+	}
+	defer rows.Close()
+
+	pp := []model.PegawaiPrivate{}
+	for rows.Next() {
+		var p model.PegawaiPrivate
+		err := rows.Scan(
+			&p.IdPegawai,
+			&p.IdPersonal,
+			&p.Nama,
+			&p.GelarDepan,
+			&p.GelarBelakang,
+			&p.NIK,
+			&p.JenisPegawai,
+			&p.IdJenisPegawai,
+			&p.KdJenisPegawai,
+			&p.KelompokPegawai,
+			&p.IdKelompokPegawai,
+			&p.KdKelompokPegawai,
+			&p.IdKategoriKelompokPegawai,
+			&p.KdKategoriKelompokPegawai,
+			&p.Golongan,
+			&p.IdGolongan,
+			&p.KdGolongan,
+			&p.GolonganNegara,
+			&p.IdGolonganNegara,
+			&p.KdGolonganNegara,
+			&p.Ruang,
+			&p.IdRuang,
+			&p.KdRuang,
+			&p.RuangNegara,
+			&p.IdRuangNegara,
+			&p.KdRuangNegara,
+			&p.UnitKerja,
+			&p.IdUnit,
+			&p.KdUnit,
+			&p.IndukKerja,
+			&p.IdIndukKerja,
+			&p.KdIndukKerja,
+			&p.IdStatusPegawaiAktif,
+			&p.StatusPegawaiAktif,
+			&p.KdStatusPegawaiAktif,
+			&p.StatusPegawai,
+			&p.IdStatusPegawai,
+			&p.KdStatusPegawai,
+			&p.JenisKelamin,
+			&p.JabatanFungsionalYayasan,
+			&p.IdJabatanFungsionalYayasan,
+			&p.KdJabatanFungsionalYayasan,
+			&p.JabatanFungsionalNegara,
+			&p.IdJabatanFungsionalNegara,
+			&p.KdJabatanFungsionalNegara,
+			&p.IdBidang,
+			&p.KdBidang,
+			&p.Bidang,
+			&p.IdSubBidang,
+			&p.KdSubBidang,
+			&p.SubBidang,
+			&p.IdJenjangPendidikan,
+			&p.KdJenjangPendidikan,
+			&p.JenjangPendidikan,
+			&p.IdJenjangPendidikanDiakui,
+			&p.KdJenjangPendidikanDiakui,
+			&p.JenjangPendidikanDiakui,
+			&p.TmtSkPertama,
+			&p.MasaKerjaBawaanTahun,
+			&p.MasaKerjaBawaanBulan,
+			&p.MasaKerjaGajiTahun,
+			&p.MasaKerjaGajiBulan,
+			&p.MasaKerjaAwalKepegawaianTahun,
+			&p.MasaKerjaAwalKepegawaianBulan,
+			&p.JumlahKeluarga,
+			&p.JumlahAnak,
+			&p.Npwp,
+			&p.AlamatNpwp,
+			// &p.IdStatusPernikahan,
+			// &p.KdStatusPernikahan,
+			// &p.StatusPernikahan,
+			// &p.StatusPernikahanPtkp,
+			&p.NikSuamiIstri,
+			&p.NikKtp,
+			// &p.JumlahTanggungan,
+			// &p.JumlahTanggunganPtkp,
+			// &p.FlagKlaimTanggungan,
+			&p.FlagPensiun,
+			&p.FlagMeninggal,
+			&p.FlagSuamiIstriSekantor,
+			&p.IsFungsional,
+			&p.IsStruktural,
+			&p.JumlahKeluargaDitanggung,
+			&p.JumlahAnakDitanggung,
+			&p.JumlahKeluargaDitanggungPtkp,
+			&p.JumlahAnakDitanggungPtkp,
 		)
 		if err != nil {
 			return nil, fmt.Errorf("error scan pegawai row, %s", err.Error())
